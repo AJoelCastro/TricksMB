@@ -1,14 +1,15 @@
 import {View, Text} from 'react-native';
-import "../../global.css";
+import "../global.css";
+
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link } from 'expo-router';
+import { Link, Redirect } from 'expo-router';
 
 
-export default function editar() {
+export default function index() {
     return (
         <SafeAreaView>
             <Text className='text-white'>a</Text>
-            <Link href={"/"}>Home</Link>
+            <Link href={"/(ordenes_produccion)/crear"} className='text-black bg-white'>crear</Link>
         </SafeAreaView>
     );
 }
