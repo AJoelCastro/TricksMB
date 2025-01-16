@@ -14,7 +14,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'dark'].tint,
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
@@ -27,16 +27,16 @@ export default function TabLayout() {
         }),
       }}>
       <Tabs.Screen
-        name="actualizar"
+        name="crear"
         options={{
-          title: 'actualizar',
+          title: 'crear',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="crear"
+        name="editar"
         options={{
-          title: 'crear',
+          title: 'editar',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
@@ -48,12 +48,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="editar"
+        name="actualizar"
         options={{
-          title: 'editar',
+          title: 'actualizar',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
+      
     </Tabs>
   );
 }
