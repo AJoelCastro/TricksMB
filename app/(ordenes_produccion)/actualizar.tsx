@@ -8,7 +8,7 @@ export default function actualizar() {
     return (
         <SafeAreaView>
             <Text className='text-white'>a</Text>
-            <Link href={"/"}>Home</Link>
+            <Link href={"/"} className='text-white'>Home</Link>
         </SafeAreaView>
     );
 }
