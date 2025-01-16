@@ -27,13 +27,33 @@ export default function TabLayout() {
         }),
       }}>
       <Tabs.Screen
-        name="index"
+        name="actualizar"
         options={{
-          title: 'Home',
+          title: 'actualizar',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
-      
+      <Tabs.Screen
+        name="crear"
+        options={{
+          title: 'crear',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="cancelar"
+        options={{
+          title: 'cancelar',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="editar"
+        options={{
+          title: 'editar',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+        }}
+      />
     </Tabs>
   );
 }
