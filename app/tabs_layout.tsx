@@ -36,7 +36,7 @@ export default function RootLayout() {
   return (
     <Tabs
         screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'dark'].tint,
+        
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
