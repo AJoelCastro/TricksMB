@@ -8,8 +8,8 @@ import { Link, Redirect } from 'expo-router';
 export default function index() {
     return (
         <SafeAreaView>
-            <Text className='text-white'>a</Text>
-            <Link href={"/(ordenes_produccion)/crear"} className='text-white bg-white'>crear</Link>
+            
+            <Link href={"/(ordenes_produccion)/crear"} className='text-black bg-white'>crear</Link>
         </SafeAreaView>
     );
 }
