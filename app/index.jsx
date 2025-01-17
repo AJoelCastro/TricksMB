@@ -9,7 +9,7 @@ import Header from '@/components/Header';
 export default function index() {
     return (
         <SafeAreaView className='h-full bg-white flex items-center'>
-            <Header className = "w-full "
+            <Header
                 title="Almacén seleccionado"
                 //leftIcon=""
                 //rightIcon=""
