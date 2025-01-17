@@ -5,7 +5,7 @@ import CustomButtom from '@/components/customButtom';
 import Header from '@/components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function Index() {
+export default function Home() {
     return (
         <SafeAreaView className="h-full bg-white flex">
             {/* Componente Header */}
