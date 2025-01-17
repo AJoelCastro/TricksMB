@@ -32,6 +32,7 @@ export default function RootLayout() {
       <Stack>
         
         <Stack.Screen name="(ordenes_produccion)" options={{ headerShown: false }} />
+        <Stack.Screen name="(home)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
         <StatusBar style="auto" />
       </Stack>
