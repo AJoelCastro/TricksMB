@@ -1,32 +1,29 @@
-import { View, Text, TextInput, TouchableOpacity } from 'react-native'
-import  { React,useState } from 'react'
+import { View, Text, TouchableOpacity } from 'react-native';
+import React from 'react';
+import "../global.css";
+import Icon from 'react-native-vector-icons/FontAwesome'; // Usa FontAwesome o la librería que necesites
 
-import "../global.css"
-import Icon from 'react-native-vector-icons/FontAwesome'; // O cualquier otra librería de íconos
-
-const Header = ({ title, onLeftPress, onRightPress }) => {
+const Header = ({ title, LeftIcon, RightIcon, onLeftPress, onRightPress }) => {
     return (
-        <View className='w-full '>
-            <View 
-            className='h-16 items-center'>
-                {/* Botón izquierdo (icono opcional) */}
-                <TouchableOpacity onPress={onLeftPress}>
-                
-                </TouchableOpacity>
+        <View className="flex-row items-center justify-between p-4 bg-white border-b border-gray-300">
+            {/* Botón izquierdo (ícono opcional) */}
+            <TouchableOpacity onPress={onLeftPress}>
+                {LeftIcon && <LeftIcon size={24} color="black" />}
+            </TouchableOpacity>
 
-                {/* Título */}
-                <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'black' }}>
-                    {title}
-                </Text>
+            {/* Título central */}
+            <Text className="text-lg font-bold text-black">
+                {title}
+            </Text>
 
-                {/* Botón derecho (icono opcional) */}
-                <TouchableOpacity onPress={onRightPress}>
-                
-                </TouchableOpacity>
-            </View>
+            {/* Botón derecho (ícono opcional) */}
+            <TouchableOpacity onPress={onRightPress}>
+                {RightIcon && <RightIcon size={24} color="black" />}
+            </TouchableOpacity>
         </View>
-        
     );
 };
+
 export default Header;
+
 
