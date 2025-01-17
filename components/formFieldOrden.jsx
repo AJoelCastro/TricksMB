@@ -8,13 +8,13 @@ const FormFieldOrden = ({title, value, placeholder, handleChangeText, otherStyle
     const [showComponent, setshowComponent] = useState(false)
 
     return(
-        <View>
-            <Text>
+        <View className='flex gap-2'>
+            <Text className='mx-5'>
                 {title}
             </Text>
             <View>
                 <TextInput
-                className='text-black bg-black h-24 '
+                className='text-black border border-black rounded-lg h-10 mx-5'
                 value={value}
                 placeholder={placeholder}
                 placeholderTextColor="#7b7b8b"
