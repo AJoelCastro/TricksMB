@@ -1,10 +1,13 @@
 import React from 'react';
-import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, Text, View } from 'react-native';
 import { Link } from 'expo-router';
-import CustomButtom from '@/components/customButtom';
-import Header from '@/components/Header';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { Image } from 'expo-image';
+
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+import Input from '@/components/input';
+
+import "../global.css"
 
 export default function Home() {
     return (
@@ -20,12 +23,21 @@ export default function Home() {
                     </Link>
                 </View>
             </View>
-            <View className=' flex items-center justify-center mt-16'>
-                <Image className='h-32 w-32  rounded-full' source="https://imgcdn.stablediffusionweb.com/2024/11/10/cb8425d9-0d81-4075-8f4d-91dfe3267ff4.jpg">
-
-                </Image>
+            <View className=' flex items-center justify-center mt-16 '>
+                <Image source={require('@/assets/images/namiTest.jpg')} style={{ width: 168, height: 168, borderRadius:84 }}></Image>
+                
             </View>
             <View>
+                <View>
+                    <Input placeholder={"Usuario"}></Input>
+                </View>
+                <View >
+                    <Input
+                        placeholder={"Contraseña"}
+                        RightIcon={() => <Icon name="eye" size={16} color="black" />}
+                        >
+                    </Input>
+                </View>
                 
             </View>
         </SafeAreaView>
