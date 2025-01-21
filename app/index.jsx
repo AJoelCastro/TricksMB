@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Input from '@/components/input';
 
 import "../global.css"
+import CustomButtom from '@/components/customButtom';
 
 export default function Home() {
     return (
@@ -38,7 +39,16 @@ export default function Home() {
                         >
                     </Input>
                 </View>
-                
+                <View className='flex-row items-center gap-4 mt-6 ml-16'>
+                    <Icon name="check" size={16} color="black">    
+                    </Icon>
+                    <Text>Recordar Contraseña</Text>
+                </View>
+                <View>
+                    <CustomButtom
+                    title={"Iniciar Sesión"}>
+                    </CustomButtom>
+                </View>
             </View>
         </SafeAreaView>
     );
