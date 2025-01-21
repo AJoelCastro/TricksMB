@@ -50,6 +50,11 @@ export default function Home() {
                     </CustomButtom>
                 </View>
             </View>
+            <View>
+                <Link href="/(almacen)/almacen">
+                    <Text className='text-black'>Almacen</Text> 
+                </Link>
+            </View>
         </SafeAreaView>
     );
 }
