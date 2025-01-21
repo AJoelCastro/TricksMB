@@ -1,6 +1,6 @@
 import React from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, Redirect } from 'expo-router';
 import { Image } from 'expo-image';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -45,16 +45,14 @@ export default function Home() {
                     <Text>Recordar Contraseña</Text>
                 </View>
                 <View>
-                    <CustomButtom
-                    title={"Iniciar Sesión"}>
+                    <CustomButtom 
+                    title={"Iniciar Sesión"}
+                    >
+
                     </CustomButtom>
                 </View>
             </View>
-            <View>
-                <Link href="/(almacen)/almacen">
-                    <Text className='text-black'>Almacen</Text> 
-                </Link>
-            </View>
+            
         </SafeAreaView>
     );
 }
