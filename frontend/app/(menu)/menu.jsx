@@ -1,11 +1,12 @@
 import React from 'react';
 import { SafeAreaView, Text, TouchableOpacity } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import CustomButtom from '@/components/customButtom';
 import Header from '@/components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function Home() {
+    const route = useRouter();
     return (
         <SafeAreaView className="h-full bg-white flex">
             {/* Componente Header */}
@@ -18,13 +19,7 @@ export default function Home() {
             />
 
             {/* Contenido principal */}
-            <TouchableOpacity className="bg-black h-8 w-32 mt-5">
-                <Link href="/editar">
-                    <Text className="text-white">Editar</Text>
-                </Link>
-            </TouchableOpacity>
-
-            <CustomButtom title="Ordenes de Producción" />
+            <CustomButtom title="Ordenes de Producción" touch={()=>route.push("/ordenes_produccion")} />
         </SafeAreaView>
     );
 }
