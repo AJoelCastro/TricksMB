@@ -26,5 +26,5 @@ export default function Home() {
 
             <CustomButtom title="Ordenes de Producción" />
         </SafeAreaView>
-    );
+    );
 }
