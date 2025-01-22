@@ -1,7 +1,7 @@
 import React from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
 
-import { Link, Redirect } from 'expo-router';
+import { Link, Redirect, useRouter } from 'expo-router';
 
 import { Image } from 'expo-image';
 
@@ -13,6 +13,7 @@ import "../global.css"
 import CustomButtom from '@/components/customButtom';
 
 export default function Home() {
+    const router = useRouter(); 
     return (
         <SafeAreaView className="h-full bg-white flex">
             {/*Este es el header*/}
@@ -47,11 +48,12 @@ export default function Home() {
                     <Text>Recordar Contraseña</Text>
                 </View>
                 <View>
-
                     <CustomButtom 
                     title={"Iniciar Sesión"}
+                    touch={() => {
+                        router.push("/menu");
+                    }}
                     >
-
                     </CustomButtom>
                 </View>
             </View>
