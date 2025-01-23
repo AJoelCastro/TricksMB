@@ -49,7 +49,7 @@ const Home=()=> {
                     </Icon>
                     <Text>Recordar Contraseña</Text>
                 </View>
-                <View>
+                <View className='mx-16 mt-2'>
                     <CustomButtom 
                     title={"Iniciar Sesión"}
                     touch={() => {

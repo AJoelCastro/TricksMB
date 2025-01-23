@@ -7,7 +7,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
 
-const TabLayout=()=> {
+const MenuLayout=()=> {
   return (
     <GestureHandlerRootView >
       <Drawer  
@@ -16,14 +16,21 @@ const TabLayout=()=> {
         <Drawer.Screen
           name="menu"
           options={{
-            title: 'home',
+            title: 'Inicio',
             drawerIcon: ({ color }) => (<IconSymbol size={28} name="house.fill" color={color} />),
           }}
         />
         <Drawer.Screen
-          name="crear"
+          name="ordenes_produccion"
           options={{
             title: 'Ordenes de Producción',
+            drawerIcon: ({ color }) => (<IconSymbol size={28} name="house.fill" color={color} />),
+          }}
+        />
+        <Drawer.Screen
+          name="almacen"
+          options={{
+            title: 'Almacen',
             drawerIcon: ({ color }) => (<IconSymbol size={28} name="house.fill" color={color} />),
           }}
         />
@@ -31,4 +38,4 @@ const TabLayout=()=> {
     </GestureHandlerRootView>
   );
 }
-export default TabLayout;
+export default MenuLayout;
