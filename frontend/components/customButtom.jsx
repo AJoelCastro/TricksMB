@@ -5,7 +5,7 @@ import "../global.css"
 
 const CustomButtom = ({title, touch}) =>{
     return(
-        <TouchableOpacity className='bg-black p-2 rounded-lg mt-6 mb-4 mx-32' onPress={touch}>
+        <TouchableOpacity className='bg-black p-2 rounded-lg mt-4 mb-4 w-full' onPress={touch}>
             <Text className='text-center text-white'>
                 {title}
             </Text>

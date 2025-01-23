@@ -3,9 +3,9 @@ import React, { Component } from 'react'
 import { Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import CustomButtom from '../../components/customButtom'
+import CustomButtom from '../../../components/customButtom'
 
-import './../../global.css';
+import './../../../global.css';
 
 export default function Almacen(){
     return (
