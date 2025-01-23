@@ -1,37 +1,34 @@
 import { Tabs, Stack } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
-
 
 import { IconSymbol } from '@/components/ui/IconSymbol';
-
-import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Drawer } from 'expo-router/drawer';
 
+const TabLayout=()=> {
   return (
-    <Tabs
-      screenOptions={{
-        
-        headerShown: false,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="home"
-        options={{
-          title: 'home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      
-    </Tabs>
+    <GestureHandlerRootView >
+      <Drawer  
+
+      >
+        <Drawer.Screen
+          name="menu"
+          options={{
+            title: 'home',
+            drawerIcon: ({ color }) => (<IconSymbol size={28} name="house.fill" color={color} />),
+          }}
+        />
+        <Drawer.Screen
+          name="crear"
+          options={{
+            title: 'Ordenes de Producción',
+            drawerIcon: ({ color }) => (<IconSymbol size={28} name="house.fill" color={color} />),
+          }}
+        />
+      </Drawer>
+    </GestureHandlerRootView>
   );
 }
+export default TabLayout;

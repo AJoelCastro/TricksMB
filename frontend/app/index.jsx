@@ -1,7 +1,7 @@
 import React from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
 
-import { Link, Redirect, useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 
 import { Image } from 'expo-image';
 
@@ -10,9 +10,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Input from '@/components/input';
 
 import "../global.css"
+
 import CustomButtom from '@/components/customButtom';
 
-export default function Home() {
+
+const Home=()=> {
     const router = useRouter(); 
     return (
         <SafeAreaView className="h-full bg-white flex">
@@ -57,8 +59,7 @@ export default function Home() {
                     </CustomButtom>
                 </View>
             </View>
-            
-
         </SafeAreaView>
-    );
+    )
 }
+export default Home;

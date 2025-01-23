@@ -5,6 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import CustomButtom from '../../components/customButtom'
 
+import './../../global.css';
+
 export default function Almacen(){
     return (
       <SafeAreaView>

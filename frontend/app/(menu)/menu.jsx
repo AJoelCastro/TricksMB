@@ -5,7 +5,7 @@ import CustomButtom from '@/components/customButtom';
 import Header from '@/components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function Home() {
+export default function Menu() {
     const route = useRouter();
     return (
         <SafeAreaView className="h-full bg-white flex">
@@ -19,7 +19,7 @@ export default function Home() {
             />
 
             {/* Contenido principal */}
-            <CustomButtom title="Ordenes de Producción" touch={()=>route.push("/ordenes_produccion")} />
+            <CustomButtom title="Ordenes de Producción" touch={()=>route.push("/(ordenes_produccion)/crear")} />
         </SafeAreaView>
     );
 }

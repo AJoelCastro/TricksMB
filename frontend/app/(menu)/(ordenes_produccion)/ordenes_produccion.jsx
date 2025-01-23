@@ -1,10 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-export default function OrdenesProduccion() {
+const ordenes_produccion = () => {
   return (
     <View>
       <Text>ordenes_produccion</Text>
     </View>
   )
 }
+
+export default ordenes_produccion
