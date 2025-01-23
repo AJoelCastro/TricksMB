@@ -1,5 +1,5 @@
 import {View,Image,Text} from 'react-native';
-import "../../global.css";
+import "../../../global.css";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
 import CustomButtom from '@/components/customButtom';
