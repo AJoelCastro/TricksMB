@@ -12,7 +12,7 @@ export default function Menu() {
             {/* Componente Header */}
             <View>
                 <Header
-                title="Menu"
+                title={"Menu"}
                 LeftIcon={() => <Icon name ="cog" size = {24} color="black"/>} // Pasas el componente Icon como LeftIcon
                 RightIcon={() => <Icon name="user-circle" size={24} color="black" />} // Ícono derecho
                 onLeftPress={() => console.log("Configuración presionada")}
@@ -22,13 +22,13 @@ export default function Menu() {
 
             {/* Contenido principal */}
             <View className='mx-6'>
-                <CustomButtom title="Ordenes de Producción" touch={()=>route.push("/ordenes_produccion/crear")} />
+                <CustomButtom title={"Ordenes de Producción"} touch={()=>route.push("/ordenes_produccion/crear")} />
             </View>
             <View className='mx-6'>
-                <CustomButtom title="Almacen" touch={()=>route.push("/almacen/almacenes")} />
+                <CustomButtom title={"Almacen"} touch={()=>route.push("/almacen/almacenes")} />
             </View>
             <View className='mx-6'>
-                <CustomButtom title="Usuarios" touch={()=>route.push("/usuarios")} />
+                <CustomButtom title={"Usuarios"} touch={()=>route.push("/usuarios")} />
             </View>
         </SafeAreaView>
     );
