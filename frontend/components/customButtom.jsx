@@ -3,9 +3,9 @@ import  { React,useState } from 'react'
 
 import "../global.css"
 
-const CustomButtom = ({title, touch}) =>{
+const CustomButtom = ({title, touch, disabled}) =>{
     return(
-        <TouchableOpacity className='bg-black p-2 rounded-lg mt-4 mb-4 w-full' onPress={touch}>
+        <TouchableOpacity className='bg-black p-2 rounded-lg mt-4 mb-4 w-full' onPress={touch} disabled={disabled}>
             <Text className='text-center text-white'>
                 {title}
             </Text>
