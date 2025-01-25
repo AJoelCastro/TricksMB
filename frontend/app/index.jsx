@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useState } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
 
 import { Link, useRouter } from 'expo-router';
@@ -15,7 +15,7 @@ import CustomButtom from '@/components/customButtom';
 
 
 const Home=()=> {
-    const router = useRouter(); 
+    const router = useRouter();
     return (
         <SafeAreaView className="h-full bg-white flex">
             {/*Este es el header*/}
@@ -55,6 +55,7 @@ const Home=()=> {
                     touch={() => {
                         router.push("/menu");
                     }}
+                    
                     >
                     </CustomButtom>
                 </View>
