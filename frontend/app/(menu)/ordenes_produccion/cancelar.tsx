@@ -8,7 +8,7 @@ export default function cancelar() {
     return (
         <SafeAreaView>
             <Text className='text-white'>a</Text>
-            <Link href={"/"} className='text-white'>Home</Link>
+            <Link href={"../../modal"} ><Text className='text-black'>Modal</Text></Link>
         </SafeAreaView>
     );
 }
