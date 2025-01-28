@@ -1,7 +1,7 @@
-import React from 'react';
+import { React, useState } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
 
-import { Link, Redirect } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 
 import { Image } from 'expo-image';
 
@@ -10,9 +10,18 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Input from '@/components/input';
 
 import "../global.css"
+
 import CustomButtom from '@/components/customButtom';
 
-export default function Home() {
+
+const Home=()=> {
+    const router = useRouter();
+    const [username, setUsername] = useState(""); // Estado para el usuario
+    const [password, setPassword] = useState(""); // Estado para la contraseña
+    const [showPassword, setShowPassword] = useState(false); // Estado para mostrar la contraseña
+
+    const isFormValid = username.trim() !== "" && password.trim() !== ""; // Validación de campos llenos
+
     return (
         <SafeAreaView className="h-full bg-white flex">
             {/*Este es el header*/}
@@ -32,13 +41,20 @@ export default function Home() {
             </View>
             <View>
                 <View>
-                    <Input placeholder={"Usuario"}></Input>
+                    <Input placeholder={"Usuario"}
+                    value={username}
+                    onChangeText={setUsername}
+                    >
+                    </Input>
                 </View>
                 <View >
                     <Input
                         placeholder={"Contraseña"}
                         RightIcon={() => <Icon name="eye" size={16} color="black" />}
+                        value={password}
+                        onChangeText={setPassword}
                         >
+
                     </Input>
                 </View>
                 <View className='flex-row items-center gap-4 mt-6 ml-16'>
@@ -46,17 +62,18 @@ export default function Home() {
                     </Icon>
                     <Text>Recordar Contraseña</Text>
                 </View>
-                <View>
-
+                <View className='mx-16 mt-2'>
                     <CustomButtom 
                     title={"Iniciar Sesión"}
+                    touch={() => {
+                        router.push("/menu");
+                    }}
+                    disabled={!isFormValid}
                     >
-
                     </CustomButtom>
                 </View>
             </View>
-            
-
         </SafeAreaView>
-    );
+    )
 }
+export default Home;
