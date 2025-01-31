@@ -28,7 +28,7 @@ export default function Menu() {
             <View className='mx-6'>
                 <ComboBox 
                     data={[ {label:"Almacen Trujillo Centro", value:"Almacen Trujillo Centro"}, {label:"Almacen de Fabrica",value:"Almacen de Fabrica"} ]}
-                    onChange={console.log}
+                    onChange={()=>route.push("/almacen")}
                     placeholder="Almacenes" 
                 />
             </View>
