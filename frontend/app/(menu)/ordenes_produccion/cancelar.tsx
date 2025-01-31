@@ -7,8 +7,9 @@ import { Link } from 'expo-router';
 export default function cancelar() {
     return (
         <SafeAreaView>
-            <Text className='text-white'>a</Text>
-            <Link href={"../../modal"} ><Text className='text-black'>Modal</Text></Link>
+            <Link href={"../../modal"} >
+                <Text className='text-black'>Modal</Text>
+            </Link>
         </SafeAreaView>
     );
 }

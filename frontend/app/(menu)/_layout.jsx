@@ -18,6 +18,7 @@ const MenuLayout=()=> {
           options={{
             title: 'Inicio',
             drawerIcon: ({ color }) => (<IconSymbol size={28} name="house.fill" color={color} />),
+            
           }}
         />
         <Drawer.Screen
@@ -31,6 +32,13 @@ const MenuLayout=()=> {
           name="almacen"
           options={{
             title: 'Almacen',
+            drawerIcon: ({ color }) => (<IconSymbol size={28} name="house.fill" color={color} />),
+          }}
+        />
+        <Drawer.Screen
+          name="inventariado"
+          options={{
+            title: 'Inventario',
             drawerIcon: ({ color }) => (<IconSymbol size={28} name="house.fill" color={color} />),
           }}
         />

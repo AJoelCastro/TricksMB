@@ -56,7 +56,7 @@ const ComboBox = ({data, onChange, placeholder}: DropDownProps) =>{
                 <Modal visible={expanded} transparent={true} animationType="fade">
                     <TouchableWithoutFeedback onPress={() => setExpanded(false)}>
                         <View className="justify-center  items-center flex-1 p-6 mt-2.5 ">
-                            <View className="absolute bg-gray-800 w-[100%] mt-52 max-h-[300] rounded-lg " style={[{ top }]}
+                            <View className="absolute bg-slate-700 w-[100%] mt-52 max-h-[300] rounded-lg " style={[{ top }]}
                             >
                                 <FlatList
                                     keyExtractor={(item) => item.value}
