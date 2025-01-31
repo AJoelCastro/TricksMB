@@ -41,7 +41,7 @@ const ComboBox = ({data, onChange, placeholder}: DropDownProps) =>{
         }}
         >
             <TouchableOpacity
-                className="justify-between bg-black flex-row items-center w-[100%] p-2 rounded-lg mt-4 mb-4"
+                className="justify-between bg-gray-800 flex-row items-center w-[100%] p-2 rounded-lg mt-4 mb-4"
                 activeOpacity={0.8}
                 onPress={toggleExpanded}
             >
@@ -53,10 +53,10 @@ const ComboBox = ({data, onChange, placeholder}: DropDownProps) =>{
                 
             </TouchableOpacity>
             {expanded ? (
-                <Modal visible={expanded} transparent>
+                <Modal visible={expanded} transparent={true} animationType="fade">
                     <TouchableWithoutFeedback onPress={() => setExpanded(false)}>
-                        <View className=" items-center flex-1 p-20 ">
-                            <View className="w-full bg-black absolute items-center vh-12" style={[{ top }]}
+                        <View className="justify-center  items-center flex-1 p-6 mt-2.5 ">
+                            <View className="absolute bg-gray-800 w-[100%] mt-52 max-h-[300] rounded-lg " style={[{ top }]}
                             >
                                 <FlatList
                                     keyExtractor={(item) => item.value}
@@ -64,11 +64,14 @@ const ComboBox = ({data, onChange, placeholder}: DropDownProps) =>{
                                     renderItem={({ item }) => (
                                         <TouchableOpacity
                                             activeOpacity={0.8}
-                                            className=""
+                                            className="h-10 items-center justify-center"
                                             onPress={() => onSelect(item)}
                                         >
                                             <Text className="text-white">{item.label}</Text>
                                         </TouchableOpacity>
+                                    )}
+                                    ItemSeparatorComponent={() => (
+                                        <View className="h-1 "/>
                                     )}
                                 />
                             </View>

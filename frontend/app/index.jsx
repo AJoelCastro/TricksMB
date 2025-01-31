@@ -25,7 +25,7 @@ const Home=()=> {
     return (
         <SafeAreaView className="h-full bg-white flex">
             {/*Este es el header*/}
-            <View className='h-16 bg-gray-800 flex flex-row justify-between p-4 px-8'>
+            <View className='h-16 bg-gray-700 flex flex-row justify-between p-4 px-8'>
                 <View>
                     <Icon name="cog" size={20} color="white"></Icon>
                 </View>
