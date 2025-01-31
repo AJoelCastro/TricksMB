@@ -27,3 +27,5 @@ class Tipo{
         }
     }
 }
+
+module.exports = Tipo;
