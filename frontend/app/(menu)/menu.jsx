@@ -4,6 +4,7 @@ import { Link, useRouter } from 'expo-router';
 import CustomButtom from '@/components/customButtom';
 import Header from '@/components/Header';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import ComboBox from '@/components/ComboBox';
 
 export default function Menu() {
     const route = useRouter();
@@ -25,7 +26,11 @@ export default function Menu() {
                 <CustomButtom title={"Ordenes de Producción"} touch={()=>route.push("/ordenes_produccion/crear")} />
             </View>
             <View className='mx-6'>
-                <CustomButtom title={"Almacen"} touch={()=>route.push("/almacen/almacenes")} />
+                <ComboBox 
+                    data={[ {label:"Almacen Trujillo Centro", value:"Almacen Trujillo Centro"}, {label:"Almacen de Fabrica",value:"Almacen de Fabrica"} ]}
+                    onChange={console.log}
+                    placeholder="Almacenes" 
+                />
             </View>
             <View className='mx-6'>
                 <CustomButtom title={"Usuarios"} touch={()=>route.push("/usuarios")} />
