@@ -9,7 +9,7 @@ import './../../../global.css';
 
 export default function Almacen(){
     return (
-      <SafeAreaView>
+      <View>
         <View>
           <Header title={"Almacén Seleccionado"}
             LeftIcon = {() => <Icon name ="cog" size = {24} color="black"/>}
@@ -20,14 +20,14 @@ export default function Almacen(){
           <CustomButtom title={"Ingresar Productos"} ></CustomButtom>
           <CustomButtom title={"Registrar Venta"}></CustomButtom>
         </View>
-        <View className= 'mt-20'>
+        <View className= 'mt-5'>
           <Text className='text-center text-black font-bold text-xl'>Tipo de movimiento</Text>
         </View>
         <View>
           <CustomButtom title={"Translado"} ></CustomButtom>
           <CustomButtom title={"Devolución"}></CustomButtom>
         </View>
-      </SafeAreaView>
+      </View>
       
 
 

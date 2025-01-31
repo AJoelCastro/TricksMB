@@ -10,16 +10,6 @@ export default function Menu() {
     const route = useRouter();
     return (
         <SafeAreaView className="h-full bg-white flex">
-            {/* Componente Header */}
-            <View>
-                <Header
-                title={"Menu"}
-                LeftIcon={() => <Icon name ="cog" size = {24} color="black"/>} // Pasas el componente Icon como LeftIcon
-                RightIcon={() => <Icon name="user-circle" size={24} color="black" />} // Ícono derecho
-                onLeftPress={() => console.log("Configuración presionada")}
-                onRightPress={() => console.log("Perfil presionado")}
-                />
-            </View>
 
             {/* Contenido principal */}
             <View className='mx-6'>
@@ -33,7 +23,7 @@ export default function Menu() {
                 />
             </View>
             <View className='mx-6'>
-                <CustomButtom title={"Usuarios"} touch={()=>route.push("/usuarios")} />
+                <CustomButtom title={"Inventario"} touch={()=>route.push("/inventario")} />
             </View>
         </SafeAreaView>
     );
