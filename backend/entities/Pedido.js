@@ -1,7 +1,8 @@
 class Pedido{
-    constructor(idPedido, idCliente, cantidad, fechaPedido, fechaEntrega, serieInicio, serieFinal) {
-        this._idPedido = idPedido; // Usa la propiedad interna
+    constructor(idPedido, idCliente, codigoOrden,cantidad, fechaPedido, fechaEntrega, serieInicio, serieFinal) {
+        this._idPedido = idPedido;
         this._idCliente = idCliente;
+        this._codigoOrden = codigoOrden;
         this._cantidad = cantidad;
         this._fechaPedido = fechaPedido;
         this._fechaEntrega = fechaEntrega;
@@ -30,6 +31,18 @@ class Pedido{
             throw new Error('idCliente debe ser un número positivo');
         }
         this._idCliente = value;
+    }
+
+    get codigoOrden(){
+        return this._codigoOrden;
+    }
+
+    set codigoOrden(value){
+        if (typeof value === 'string' && value.trim() !== '') {
+            this._codigoOrden = value;
+        } else {
+            throw new Error('codigoOrden debe ser un string no vacío');
+        }
     }
 
     get cantidad(){
