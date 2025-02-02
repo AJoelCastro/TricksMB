@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { getAllUsers, insertUser } = require('../models/userModel');
+const { getAllUsers, insertUser } = require('../service/userService');
 
 // Obtener todos los usuarios
 const getUsers = async (req, res) => {

@@ -9,12 +9,7 @@ import FormFieldOrden from '../../../components/formFieldOrden';
 
 export default function editar() {
     return (
-        <SafeAreaView className=' gap-3'>
-            <View className=' justify-center h-8 w-24  bg-red-500 items-center rounded-lg'>
-                <Link href={"/"} className=''>
-                    <Text className='flex'>Inicio</Text>
-                </Link>
-            </View>
+        <SafeAreaView className=' gap-4'>
             <FormFieldOrden
             className='h-24 mx-5 '
             title="Codigo"

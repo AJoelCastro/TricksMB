@@ -7,8 +7,9 @@ import { Link } from 'expo-router';
 export default function crear() {
     return (
         <SafeAreaView>
-            <Text className='text-white'>a</Text>
-            <Link href={"/"} className='text-white'>Home</Link>
+            <Link href={"/"} className='text-white'>
+                <Text>Home</Text>
+            </Link>
         </SafeAreaView>
     );
 }

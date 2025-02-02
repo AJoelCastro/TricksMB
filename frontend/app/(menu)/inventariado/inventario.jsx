@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const ordenes_produccion = () => {
+const Inventario = () => {
   return (
     <View>
-      <Text>ordenes_produccion</Text>
+      <Text>inventario</Text>
     </View>
   )
 }
 
-export default ordenes_produccion
+export default Inventario

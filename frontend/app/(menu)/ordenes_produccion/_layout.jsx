@@ -7,15 +7,13 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
-export default function TabLayout() {
+export default function OrdenesLayout() {
   const colorScheme = useColorScheme();
 
   return (
     <Tabs
       screenOptions={{
-        
         headerShown: false,
-
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect
