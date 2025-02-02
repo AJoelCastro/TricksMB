@@ -3,22 +3,20 @@ import  { React,useState } from 'react'
 
 import "../global.css"
 
-const FormFieldOrden = ({title, value, placeholder, handleChangeText, otherStyles, ...props }) =>{
+const FormFieldOrden = ({title, value, onChangeText, otherStyles, ...props }) =>{
 
     const [showComponent, setshowComponent] = useState(false)
 
     return(
-        <View className='flex gap-2'>
-            <Text className='mx-5'>
+        <View className=' '>
+            <Text className=''>
                 {title}
             </Text>
-            <View>
+            <View className='my-1'>
                 <TextInput
-                className='text-black border border-black rounded-lg h-10 mx-5'
+                className='text-black border border-black rounded-lg h-10'
                 value={value}
-                placeholder={placeholder}
-                placeholderTextColor="#7b7b8b"
-                onChangeText={handleChangeText}
+                onChangeText={onChangeText}
                 secureTextEntry={title==='Component' && !showComponent}
                 >
                 </TextInput>
