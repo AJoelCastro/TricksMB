@@ -9,7 +9,7 @@ const FormFieldOrden = ({title, value, onChangeText, otherStyles, ...props }) =>
 
     return(
         <View className=' '>
-            <Text className=''>
+            <Text className='font-bold'>
                 {title}
             </Text>
             <View className='my-1'>
