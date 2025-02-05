@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, Platform, TextInput, FlatList} from 'react-native';
+import {View, ScrollView, Text, TouchableOpacity, Platform, TextInput, FlatList} from 'react-native';
 
 import { useState } from 'react';
 
@@ -43,10 +43,25 @@ export default function crear() {
                 setSelectSerieFin(item.name);
             }
         };
-        const [agregarFila, setAgregarFila] = useState(true);
+        const [filas, setFilas] = useState([]);
+
+        const handleAgregarFila = () => {
+            // Agregar nueva fila con valores iniciales
+            setFilas([...filas, { 
+                id: Date.now().toString(), 
+                talla: '', 
+                pares: '', 
+                color: '' 
+            }]);
+        };
+
+        const handleEliminarFila = (id) => {
+            // Filtrar las filas para eliminar la seleccionada
+            setFilas(filas.filter(fila => fila.id !== id));
+        };
         
     return (
-        <View className='mx-6 gap-2 '>
+        <ScrollView className='mx-6 gap-2 '>
             <ComboBox 
                 data={[ {label:"Juan Buendia", value:"Juan Buendia"}, {label:"Alvaro gay",value:"Alvaro gay"}]}
                 onChange={setCliente}
@@ -119,25 +134,61 @@ export default function crear() {
                 <Text className='font-bold'>Talla</Text>
                 <Text className='font-bold'>Pares</Text>
                 <Text className='font-bold'>Color</Text>
+                <Text className='font-bold w-6'>   </Text> {/* Espacio para el botón eliminar */}
             </View>
-            {agregarFila && (
-                <View>
-                    
-                </View>
-            )}
-            <TouchableOpacity 
-            className='flex-row gap-2 justify-center items-center'
-            onPress={()=>{
-                <View>ana carepotito</View>
-            }}
-            >
-                <Text>
-                    Agregar
-                </Text>
-                    <Icon
-                        name="plus-circle" size="20"
+
+            {filas.map((fila, index) => (
+                <View key={fila.id} className='flex-row justify-between items-center gap-2 mb-2'>
+                    <TextInput
+                        className='border p-2 rounded flex-1'
+                        placeholder='Talla'
+                        value={fila.talla}
+                        onChangeText={(text) => {
+                            const nuevasFilas = [...filas];
+                            nuevasFilas[index].talla = text;
+                            setFilas(nuevasFilas);
+                        }}
                     />
+                    
+                    <TextInput
+                        className='border p-2 rounded flex-1'
+                        placeholder='Pares'
+                        keyboardType='numeric'
+                        value={fila.pares}
+                        onChangeText={(text) => {
+                            const nuevasFilas = [...filas];
+                            nuevasFilas[index].pares = text;
+                            setFilas(nuevasFilas);
+                        }}
+                    />
+                    
+                    <TextInput
+                        className='border p-2 rounded flex-1'
+                        placeholder='Color'
+                        value={fila.color}
+                        onChangeText={(text) => {
+                            const nuevasFilas = [...filas];
+                            nuevasFilas[index].color = text;
+                            setFilas(nuevasFilas);
+                        }}
+                    />
+                    
+                    <TouchableOpacity 
+                        onPress={() => handleEliminarFila(fila.id)}
+                        className='p-2'
+                    >
+                        <Icon name="trash" size={20} color="red" />
+                    </TouchableOpacity>
+                </View>
+            ))}
+
+            <TouchableOpacity 
+                className='flex-row gap-2 justify-center items-center'
+                onPress={handleAgregarFila}
+            >
+                <Text>Agregar Fila</Text>
+                <Icon name="plus-circle" size={20} />
             </TouchableOpacity>
-        </View>
+        </ScrollView>
     );
 }
