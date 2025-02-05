@@ -20,7 +20,7 @@ const data = [
     { id: '7', name: 'Talla 37' },
     { id: '8', name: 'Talla 38' },
     // Más elementos...
-  ];
+];
 
 export default function crear() {
         const [cliente, setCliente] = useState("");
@@ -33,9 +33,17 @@ export default function crear() {
             const day = String(date.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`; // Formato: YYYY-MM-DD
         };
-    
         const [currentDate] = useState(getCurrentDate()); // Estado para almacenar la fecha formateada
-        const [selectSerie, setSelectSerie] = useState();
+        const [selectSerieInicio, setSelectSerieInicio] = useState("");
+        const [selectSerieFin, setSelectSerieFin] = useState("");
+        const handleSelectSerie = (type, item) => {
+            if (type === 'inicio') {
+                setSelectSerieInicio(item.name);
+            } else if (type === 'fin') {
+                setSelectSerieFin(item.name);
+            }
+        };
+        
         
     return (
         <View className='mx-6 gap-2 '>
@@ -70,29 +78,39 @@ export default function crear() {
             <View className='flex-row justify-between'>
                 <View className='flex-row items-center gap-2'>
                     <Text className='font-bold'>Serie Inicio</Text>
-                    <View className='w-20 h-8 bg-gray-100 border-l-2 items-center'>
+                    <View className='w-22 h-8 bg-gray-100 border-l-2 items-center'>
                         <FlatList
                             data={data}
                             renderItem={({ item }) => (
-                                <TouchableOpacity >
-                                    <Text className='text-black text-lg'>{item.name}</Text>
+                                <TouchableOpacity
+                                    className={`p-2 ${selectSerieInicio === item.name ? 'bg-blue-200' : ''} rounded`}
+                                    onPress={() => handleSelectSerie('inicio', item)}
+                                >
+                                    <Text className='text-lg'>{item.name}</Text>
                                 </TouchableOpacity>
                             )}
                             keyExtractor={(item) => item.id}
+                            showsVerticalScrollIndicator={false}
                         />
+                        
                     </View>
+                    
                 </View>
                 <View className='flex-row items-center gap-2'>
                     <Text className='font-bold'>Serie Fin</Text>
-                    <View className='w-20 h-8 bg-gray-100 border-l-2 items-center'>
+                    <View className='w-22 h-8 bg-gray-100 border-l-2 items-center'>
                         <FlatList
                             data={data}
                             renderItem={({ item }) => (
-                                <TouchableOpacity >
-                                    <Text className='text-black text-lg '>{item.name}</Text>
+                                <TouchableOpacity
+                                    className={`p-2 ${selectSerieFin === item.name ? 'bg-blue-200' : ''} rounded`}
+                                    onPress={() => handleSelectSerie('fin', item)}
+                                >
+                                    <Text className='text-lg'>{item.name}</Text>
                                 </TouchableOpacity>
                             )}
                             keyExtractor={(item) => item.id}
+                            showsVerticalScrollIndicator={false}
                         />
                     </View>
                 </View>
