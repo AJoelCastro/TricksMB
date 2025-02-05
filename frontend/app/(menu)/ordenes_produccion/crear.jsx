@@ -70,7 +70,7 @@ export default function crear() {
             <View className='flex-row justify-between'>
                 <View className='flex-row items-center gap-2'>
                     <Text className='font-bold'>Serie Inicio</Text>
-                    <View className='w-20 h-8 bg-gray-100 border items-center'>
+                    <View className='w-20 h-8 bg-gray-100 border-l-2 items-center'>
                         <FlatList
                             data={data}
                             renderItem={({ item }) => (
@@ -84,7 +84,7 @@ export default function crear() {
                 </View>
                 <View className='flex-row items-center gap-2'>
                     <Text className='font-bold'>Serie Fin</Text>
-                    <View className='w-20 h-8 bg-gray-100 border items-center'>
+                    <View className='w-20 h-8 bg-gray-100 border-l-2 items-center'>
                         <FlatList
                             data={data}
                             renderItem={({ item }) => (
