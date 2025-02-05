@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 
 import FormFieldOrden from '@/components/formFieldOrden';
 import ComboBox from '@/components/ComboBox';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import "../../../global.css";
 
@@ -43,7 +43,7 @@ export default function crear() {
                 setSelectSerieFin(item.name);
             }
         };
-        
+        const [agregarFila, setAgregarFila] = useState(true);
         
     return (
         <View className='mx-6 gap-2 '>
@@ -75,7 +75,7 @@ export default function crear() {
                 onChange={setCliente}
                 placeholder="Asignar trabajador" 
             />
-            <View className='flex-row justify-between'>
+            <View className='flex-row justify-between mt-1'>
                 <View className='flex-row items-center gap-2'>
                     <Text className='font-bold'>Serie Inicio</Text>
                     <View className='w-22 h-8 bg-gray-100 border-l-2 items-center'>
@@ -115,6 +115,29 @@ export default function crear() {
                     </View>
                 </View>
             </View>
+            <View className='flex-row justify-between mt-3'>
+                <Text className='font-bold'>Talla</Text>
+                <Text className='font-bold'>Pares</Text>
+                <Text className='font-bold'>Color</Text>
+            </View>
+            {agregarFila && (
+                <View>
+                    
+                </View>
+            )}
+            <TouchableOpacity 
+            className='flex-row gap-2 justify-center items-center'
+            onPress={()=>{
+                <View>ana carepotito</View>
+            }}
+            >
+                <Text>
+                    Agregar
+                </Text>
+                    <Icon
+                        name="plus-circle" size="20"
+                    />
+            </TouchableOpacity>
         </View>
     );
 }
