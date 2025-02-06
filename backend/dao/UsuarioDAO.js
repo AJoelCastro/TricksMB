@@ -8,10 +8,15 @@ const UsuarioDAO = {
         return { id: result.insertId, correo };
     },
 
-    async findUser(correo) {
+    async encUser(correo) {
         const query = 'SELECT * FROM usuario WHERE Correo = ?';
         const [rows] = await db.execute(query, [correo]);
-        return rows[0] || null;
+        if (rows[0] === null) {
+            console.log("No se encontró ningún usuario con el correo proporcionado.");
+        } else {
+            console.log("Usuario encontrado:", rows[0]);
+        }
+        return rows[0] ;
     },
 
     async getAll() {

@@ -21,14 +21,20 @@ const UsuarioService = {
     },
 
     async findUser(correo, contrasenia) {
-        const user = await UsuarioDAO.findUser(correo);
+        const user = await UsuarioDAO.encUser(correo);
+        console.log(user);
         if (!user) return null;
 
         // Comparar la contraseña proporcionada con la contraseña encriptada en la base de datos
         //const isPasswordValid = await bcrypt.compare(contrasenia, user.contrasenia);
-        const isPasswordValid = contrasenia === user.contrasenia;
-        if (!isPasswordValid) return null;
-
+        const isPasswordValid = contrasenia === user.Contraseña;
+        if (!isPasswordValid) {
+            console.log("Contrasenias invalidas");  
+            console.log(user.contrasenia);
+            console.log(user.correo);
+            console.log(contrasenia);
+            return null;
+        };
         return user;
     },
 
