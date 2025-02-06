@@ -5,7 +5,7 @@ const UsuarioDAO = {
     async createUser(correo, contrasenia) {
         const query = 'INSERT INTO usuario (Correo, Contraseña) VALUES (?, ?)';
         const [result] = await db.execute(query, [correo, contrasenia]);
-        return { id: result.insertId, username };
+        return { id: result.insertId, correo };
     },
 
     async findUser(correo) {
