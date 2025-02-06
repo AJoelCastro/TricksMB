@@ -23,7 +23,8 @@ const UsuarioController = {
         }
 
         try {
-            const user = await UsuarioService.findUser(correo, contrasenia );
+            const user = await UsuarioService.findUser(correo, contrasenia);
+            console.log("Usuario encontrado:", user);
             if (user) {
                 res.json({ success: true, message: "Inicio de sesión exitoso", user });
             } else {
