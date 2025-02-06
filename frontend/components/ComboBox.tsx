@@ -15,18 +15,12 @@ interface DropDownProps {
     placeholder: string;
 }
 
-const ComboBox = ({data, onChange, placeholder}: DropDownProps) =>{
-
+const ComboBox = ({data, onChange, placeholder, ...props}: DropDownProps) =>{
     const [expanded, setExpanded] = useState(false);
-
     const toggleExpanded = useCallback(() => setExpanded(!expanded), [expanded]);
-
     const [value, setValue] = useState("");
-
     const buttonRef = useRef<View>(null);
-
     const [top, setTop] = useState(0);
-
     const onSelect = useCallback((item: OptionItem) => {onChange(item); setValue(item.label); setExpanded(false)}, []);
     return (
         <View
@@ -36,12 +30,12 @@ const ComboBox = ({data, onChange, placeholder}: DropDownProps) =>{
             const topOffset = layout.y;
             const heightOfComponent = layout.height;
             const finalValue =
-            topOffset + heightOfComponent + (Platform.OS === "android" ? -32 : 3);
+            topOffset + heightOfComponent + (Platform.OS === "android" ? + 32 : 3);
             setTop(finalValue);
         }}
         >
             <TouchableOpacity
-                className="justify-between bg-gray-800 flex-row items-center w-[100%] p-2 rounded-lg mt-4 mb-4"
+                className="h-10 mx-auto bg-slate-800 flex-row w-full items-center px-4 my-2 rounded-lg "
                 activeOpacity={0.8}
                 onPress={toggleExpanded}
             >
@@ -55,8 +49,10 @@ const ComboBox = ({data, onChange, placeholder}: DropDownProps) =>{
             {expanded ? (
                 <Modal visible={expanded} transparent={true} animationType="fade">
                     <TouchableWithoutFeedback onPress={() => setExpanded(false)}>
-                        <View className="justify-center  items-center flex-1 p-6 mt-2.5 ">
-                            <View className="absolute bg-slate-700 w-[100%] mt-52 max-h-[300] rounded-lg " style={[{ top }]}
+                        <View className="flex-1 justify-center items-center p-5 ">
+                            <View 
+                                className="absolute bg-slate-700 w-full p-2 rounded-lg max-h-60 " 
+                                style={[{ top }]}
                             >
                                 <FlatList
                                     keyExtractor={(item) => item.value}
