@@ -10,11 +10,11 @@ import "../global.css"
 
 const Home = () => {
     const router = useRouter();
-    const [email, setEmail] = useState(""); // Estado para el email
-    const [password, setPassword] = useState(""); // Estado para la contraseña
+    const [correo, setCorreo] = useState(""); // Estado para el email
+    const [contrasenia, setContrasenia] = useState(""); // Estado para la contraseña
     const [loading, setLoading] = useState(false); // Estado para indicar si está cargando
 
-    const isFormValid = email.trim() !== "" && password.trim() !== ""; // Validación de campos llenos
+    const isFormValid = correo.trim() !== "" && contrasenia.trim() !== ""; // Validación de campos llenos
 
     const handleLogin = async () => {
         if (!isFormValid) {
@@ -24,9 +24,9 @@ const Home = () => {
 
         setLoading(true);
         try {
-            const data = await AuthService.login(email, password);
-            Alert.alert("Éxito", "Inicio de sesión exitoso.");
+            const data = await AuthService.login(correo, contrasenia);
             router.push("/menu"); // Redirigir al usuario al menú
+            Alert.alert("Éxito", "Inicio de sesión exitoso.");
         } catch (error) {
             Alert.alert("Error", "Correo o contraseña incorrectos.");
         }
@@ -55,10 +55,10 @@ const Home = () => {
             {/* Inputs */}
             <View>
                 <View>
-                    <Input placeholder="Correo electrónico" value={email} onChangeText={setEmail} />
+                    <Input placeholder="Correo electrónico" value={correo} onChangeText={setCorreo} />
                 </View>
                 <View>
-                    <Input placeholder="Contraseña" value={password} onChangeText={setPassword} secureTextEntry />
+                    <Input placeholder="Contraseña" value={contrasenia} onChangeText={setContrasenia} secureTextEntry />
                 </View>
                 
                 <View className='flex-row items-center gap-4 mt-6 ml-16'>
@@ -74,7 +74,7 @@ const Home = () => {
                             console.log("Botón presionado");
                             handleLogin();
                         }}
-                        disabled={!isFormValid || loading} 
+                        disabled={!isFormValid} 
                     />
                 </View>
             </View>
