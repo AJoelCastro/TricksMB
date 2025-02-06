@@ -1,41 +1,37 @@
 const UsuarioService = require('../services/UsuarioService');
-const errorHandler = require('../utils/errorHandler');
 
 const UsuarioController = {
-    async getUsers(req, res) {
+    async register(req, res) {
+        const { username, password } = req.body;
+        if (!username || !password) {
+            return res.status(400).json({ message: "Todos los campos son obligatorios" });
+        }
+
         try {
-            const users = await UsuarioService.getUsers();
-            res.json(users);
+            const result = await UsuarioService.createUser(username, password);
+            res.status(201).json({ success: true, message: "Usuario registrado exitosamente", userId: result.id });
         } catch (error) {
-            errorHandler(res, error);
+            console.error(error);
+            res.status(500).json({ success: false, message: "Error al registrar usuario" });
         }
     },
 
-    async getUserById(req, res) {
-        try {
-            const user = await UsuarioService.getUserById(req.params.id);
-            res.json(user);
-        } catch (error) {
-            errorHandler(res, error, 404);
+    async login(req, res) {
+        const { username, password } = req.body;
+        if (!username || !password) {
+            return res.status(400).json({ message: "Todos los campos son obligatorios" });
         }
-    },
 
-    async createUser(req, res) {
         try {
-            const { email, contraseña } = req.body;
-            const newUser = await UsuarioService.createUser(email, contraseña);
-            res.status(201).json({ message: 'Usuario creado', user: newUser });
+            const user = await UsuarioService.findUser(username, password);
+            if (user) {
+                res.json({ success: true, message: "Inicio de sesión exitoso", user });
+            } else {
+                res.status(401).json({ success: false, message: "Credenciales incorrectas" });
+            }
         } catch (error) {
-            errorHandler(res, error, 400);
-        }
-    },
-
-    async deleteUser(req, res) {
-        try {
-            await UsuarioService.deleteUser(req.params.id);
-            res.json({ message: 'Usuario eliminado' });
-        } catch (error) {
-            errorHandler(res, error, 400);
+            console.error(error);
+            res.status(500).json({ success: false, message: "Error al iniciar sesión" });
         }
     }
 };

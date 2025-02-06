@@ -1,24 +1,34 @@
-const db = require('../config/db');
+// UsuarioDAO.js
+const db = require('../config/db'); // Asegúrate de tener tu conexión a la base de datos configurada
 
 const UsuarioDAO = {
+    async createUser(username, password) {
+        const query = 'INSERT INTO usuario (Correo, Contraseña) VALUES (?, ?)';
+        const [result] = await db.execute(query, [username, password]);
+        return { id: result.insertId, username };
+    },
+
+    async findUser(username) {
+        const query = 'SELECT * FROM usuario WHERE Correo = ?';
+        const [rows] = await db.execute(query, [username]);
+        return rows[0] || null;
+    },
+
     async getAll() {
-        const [rows] = await db.promise().query('SELECT idUsuario, Correo FROM usuario');
+        const query = 'SELECT * FROM usuario';
+        const [rows] = await db.execute(query);
         return rows;
     },
 
     async getById(id) {
-    const [rows] = await db.promise().query('SELECT idUsuario, Correo FROM usuario WHERE idUsuario = ?', [id]);
-    return rows[0];
-    },
-
-
-    async insert(correo, contrasenia) {
-        const [result] = await db.promise().query('INSERT INTO usuario (Correo, Contraseña) VALUES (?, ?)', [correo, contrasenia]);
-        return { idUsuario: result.insertId, correo };
+        const query = 'SELECT * FROM usuario WHERE id = ?';
+        const [rows] = await db.execute(query, [id]);
+        return rows[0] || null;
     },
 
     async delete(id) {
-        await db.promise().query('DELETE FROM usuario WHERE idUsuario = ?', [id]);
+        const query = 'DELETE FROM usuario WHERE idUsuario = ?';
+        await db.execute(query, [id]);
     }
 };
 

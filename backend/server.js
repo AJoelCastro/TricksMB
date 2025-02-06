@@ -29,6 +29,10 @@ requiredEnv.forEach((key) => {
 // Rutas
 app.use('/usuario', userRoutes);
 
+app.get('/', (req, res) => {
+    res.send('¡Bienvenido al backend!');
+});
+
 // Manejo de rutas no encontradas
 app.use((req, res, next) => {
     res.status(404).json({ error: 'Ruta no encontrada' });
