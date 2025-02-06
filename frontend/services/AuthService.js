@@ -3,9 +3,9 @@ import axios from 'axios';
 const API_URL = process.env.EXPO_PUBLIC_API_URL 
 
 const AuthService = {
-    login: async (email, contraseña) => {
+    login: async (correo, contrasenia) => {
         try {
-            const response = await axios.post(`${API_URL}/usuario/login`, { email, contraseña });
+            const response = await axios.post(`${API_URL}/usuario/login`, { correo, contrasenia });
             return response.data;
         } catch (error) {
             console.error("Error en el login:", error.response?.data || error.message);
@@ -14,9 +14,9 @@ const AuthService = {
         }
     },
 
-    register: async (email, contraseña) => {
+    register: async (correo, contrasenia) => {
         try {
-            const response = await axios.post(`${API_URL}/usuario/register`, { email, contraseña });
+            const response = await axios.post(`${API_URL}/usuario/register`, { correo, contrasenia });
             return response.data;
         } catch (error) {
             console.error("Error en el registro:", error.response?.data || error.message);
