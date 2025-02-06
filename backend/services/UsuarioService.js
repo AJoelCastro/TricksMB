@@ -16,8 +16,8 @@ const UsuarioService = {
         if (!correo || !contrasenia) throw new Error('Nombre de usuario y contraseña son requeridos');
 
         // Encriptar contraseña antes de guardar
-        const hashedContrasenia = await bcrypt.hash(contrasenia, 10);
-        return await UsuarioDAO.createUser(correo, hashedContrasenia);
+        //const hashedContrasenia = await bcrypt.hash(contrasenia, 10);
+        return await UsuarioDAO.createUser(correo, contrasenia);
     },
 
     async findUser(correo, contrasenia) {
@@ -25,7 +25,8 @@ const UsuarioService = {
         if (!user) return null;
 
         // Comparar la contraseña proporcionada con la contraseña encriptada en la base de datos
-        const isPasswordValid = await bcrypt.compare(contrasenia, user.contrasenia);
+        //const isPasswordValid = await bcrypt.compare(contrasenia, user.contrasenia);
+        const isPasswordValid = contrasenia === user.contrasenia;
         if (!isPasswordValid) return null;
 
         return user;
