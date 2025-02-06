@@ -186,7 +186,7 @@ export default function crear() {
                 className='flex-row gap-2 justify-center items-center'
                 onPress={handleAgregarFila}
             >
-                <Text>Agregar Fila</Text>
+                <Text>Agregar</Text>
                 <Icon name="plus-circle" size={20} />
             </TouchableOpacity>
         </ScrollView>
