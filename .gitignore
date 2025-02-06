@@ -1,40 +1,73 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
-# dependencies
+# Node.js dependencies
 node_modules/
+npm-debug.log*
+yarn-error.log
+yarn-debug.log
+.pnpm-debug.log*
 
-# Expo
+# Directorios de compilación y configuración
+android/.gradle
+android/app/build/
+ios/Pods/
+ios/build/
+
+# Archivos del entorno
+.env
+.env.local
+.env.*.local
+
+# Archivos de caché y logs
 .expo/
+.expo-shared/
 dist/
-web-build/
-expo-env.d.ts
+logs/
+*.log
+*.lock
 
-# Native
-*.orig.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
+# Archivos de Metro Bundler y Babel
+.cache
+babel-loader/
+metro-cache/
+*.swp
 
-# Metro
-.metro-health-check*
+# Archivos de configuración del editor
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
 
-# debug
-npm-debug.*
-yarn-debug.*
-yarn-error.*
+# Archivos de Xcode y Android Studio
+ios/*.xcodeproj/
+ios/*.xcworkspace/
+ios/*.xcuserdata/
+ios/*.pbxuser
+android/.cxx/
+android/local.properties
+android/app/debug.keystore
 
-# macOS
-.DS_Store
-*.pem
+# Archivos de imágenes generados
+react-native.config.js
 
-# local env files
-.env*.local
+# Archivos de React Native específicos
+*.hmap
+*.tlog
+*.apk
+*.ipa
 
-# typescript
-*.tsbuildinfo
+# Archivos de CI/CD (GitHub Actions, Fastlane, etc.)
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
 
-app-example
+# Archivos de empaquetado (cuando generas una versión final)
+*.tar.gz
+*.tgz
+*.zip
+*.aab
+
+# Archivos de estado de Git
+.git/
+
 backend/.env
 frontend/.env
