@@ -2,13 +2,13 @@ const UsuarioService = require('../services/UsuarioService');
 
 const UsuarioController = {
     async register(req, res) {
-        const { username, password } = req.body;
-        if (!username || !password) {
+        const { correo, contrasenia } = req.body;
+        if (!correo || !contrasenia) {
             return res.status(400).json({ message: "Todos los campos son obligatorios" });
         }
 
         try {
-            const result = await UsuarioService.createUser(username, password);
+            const result = await UsuarioService.createUser(correo, contrasenia);
             res.status(201).json({ success: true, message: "Usuario registrado exitosamente", userId: result.id });
         } catch (error) {
             console.error(error);
@@ -17,13 +17,13 @@ const UsuarioController = {
     },
 
     async login(req, res) {
-        const { username, password } = req.body;
-        if (!username || !password) {
+        const { correo, contrasenia } = req.body;
+        if (!correo || !contrasenia) {
             return res.status(400).json({ message: "Todos los campos son obligatorios" });
         }
 
         try {
-            const user = await UsuarioService.findUser(username, password);
+            const user = await UsuarioService.findUser(correo, contrasenia );
             if (user) {
                 res.json({ success: true, message: "Inicio de sesión exitoso", user });
             } else {
