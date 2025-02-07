@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const userRoutes = require('./routes/usuarioRoutes');
+const errorHandler = require('./utils/errorHandler'); // Importamos errorHandler
 require('dotenv').config();
 
 // Crear la aplicación
@@ -18,7 +19,7 @@ app.use(cors(corsOptions)); // Usar la configuración de CORS
 app.use(express.json()); // Para parsear JSON en las solicitudes
 
 // Verificar que las variables de entorno estén configuradas
-const requiredEnv = ['PORT', 'DB_HOST', 'DB_PORT', 'DB_USER', 'DB_PASSWORD', 'DB_NAME'];
+const requiredEnv = ['PORT', 'DB_HOST', 'DB_PORT', 'DB_USER', 'DB_PASSWORD', 'DB_NAME', 'JWT_SECRET'];
 requiredEnv.forEach((key) => {
     if (!process.env[key]) {
         console.error(`⚠️  La variable de entorno ${key} no está configurada.`);
@@ -29,6 +30,7 @@ requiredEnv.forEach((key) => {
 // Rutas
 app.use('/usuario', userRoutes);
 
+// Ruta de prueba (opcional)
 app.get('/', (req, res) => {
     res.send('¡Bienvenido al backend!');
 });
@@ -38,10 +40,10 @@ app.use((req, res, next) => {
     res.status(404).json({ error: 'Ruta no encontrada' });
 });
 
-// Manejo de errores global
+// Manejo de errores global con `errorHandler`
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).json({ error: 'Ocurrió un error en el servidor' });
+    errorHandler(res, err, 500);
 });
 
 // Inicia el servidor
