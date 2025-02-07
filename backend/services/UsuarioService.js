@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+
 const UsuarioDAO = require('../dao/UsuarioDAO');
 
 const UsuarioService = {
