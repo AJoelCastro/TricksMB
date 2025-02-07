@@ -5,8 +5,8 @@ import "../global.css"
 
 const Input = ({placeholder, RightIcon, value, onChangeText}) =>{
     return(
-        <View className=' border mx-16 mt-6 rounded-xl flex-row justify-between items-center '>
-            <TextInput className='w-[90%] ' placeholder={placeholder}
+        <View className='h-8 border mt-6 rounded-xl flex-row justify-between items-center '>
+            <TextInput className='w-[85%] ' placeholder={placeholder}
             value={value} 
             onChangeText={onChangeText} 
             />

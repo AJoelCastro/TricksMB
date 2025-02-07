@@ -8,7 +8,7 @@ import FormFieldOrden from '@/components/formFieldOrden';
 import ComboBox from '@/components/ComboBox';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import "../../../global.css";
+import "../../../../global.css";
 
 const data = [
     { id: '1', name: 'Talla 31' },
