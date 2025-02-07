@@ -11,7 +11,7 @@ const authMiddleware = (req, res, next) => {
 
     try {
         // Verificar el token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secreto_super_seguro');
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded; // Añadir el usuario decodificado a la solicitud
         next(); // Continuar con el siguiente middleware o controlador
     } catch (error) {
