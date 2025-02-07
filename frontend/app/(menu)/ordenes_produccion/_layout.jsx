@@ -24,21 +24,21 @@ export default function OrdenesLayout() {
         }),
       }}>
       <Tabs.Screen
-        name="crear"
+        name="crear/index"
         options={{
           title: 'Crear',
           tabBarIcon: ({ color }) => <Icon name="plus" size={22}/>,
         }}
       />
       <Tabs.Screen
-        name="editar"
+        name="editar/index"
         options={{
           title: 'Editar',
           tabBarIcon: ({ color }) => <Icon name="edit" size={22}/>,
         }}
       />
       <Tabs.Screen
-        name="cancelar"
+        name="cancelar/index"
         options={{
           title: 'Cancelar',
           tabBarIcon: ({ color }) => <Icon name="times-circle" size={22}/>,
