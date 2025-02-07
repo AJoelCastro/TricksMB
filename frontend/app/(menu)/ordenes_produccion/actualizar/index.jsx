@@ -8,7 +8,7 @@ import { useRouter } from 'expo-router';
 
 import "../../../../global.css";
 
-export default function actualizar() {
+export default function index() {
     const router = useRouter();
     const[codigo, setCodigo]= useState("");
     return (

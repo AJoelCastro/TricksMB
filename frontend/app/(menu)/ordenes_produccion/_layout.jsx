@@ -45,7 +45,7 @@ export default function OrdenesLayout() {
         }}
       />
       <Tabs.Screen
-        name="actualizar/index"
+        name="actualizar"
         options={{
           title: 'Actualizar',
           tabBarIcon: ({ color }) => <Icon name="refresh" size={22}/>,
