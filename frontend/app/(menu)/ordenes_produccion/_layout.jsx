@@ -2,14 +2,9 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
 
-import { IconSymbol } from '@/components/ui/IconSymbol';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
-
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function OrdenesLayout() {
-  const colorScheme = useColorScheme();
 
   return (
     <Tabs

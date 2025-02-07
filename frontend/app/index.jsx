@@ -24,7 +24,7 @@ const Home = () => {
 
         setLoading(true);
         try {
-            const data = await AuthService.login(correo, contrasenia);
+            await AuthService.login(correo, contrasenia);
             router.push("/menu"); // Redirigir al usuario al menú
             Alert.alert("Éxito", "Inicio de sesión exitoso.");
         } catch (error) {
