@@ -6,7 +6,9 @@ const API_URL = process.env.EXPO_PUBLIC_API_URL;
 const AuthService = {
     login: async (correo, contrasenia) => {
         try {
+            console.log("URL de la API:", API_URL);
             const response = await axios.post(`${API_URL}/usuario/login`, { correo, contrasenia });
+            console.log("Respuesta del backend:", response.data);
             const { token } = response.data;
             if (token) {
                 await AsyncStorage.setItem('token', token); // Guardar token en almacenamiento local

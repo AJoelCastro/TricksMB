@@ -4,7 +4,7 @@ import { Link, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Input from '@/components/input';
-import CustomButtom from '@/components/customButtom';
+import CustomButtom from '../components/customButtom'
 import AuthService from '@/services/AuthService'; // Importar servicio de autenticación
 import "../global.css"
 
@@ -25,10 +25,10 @@ const Home = () => {
         setLoading(true);
         try {
             await AuthService.login(correo, contrasenia);
-            router.push("/menu"); // Redirigir al usuario al menú
-            Alert.alert("Éxito", "Inicio de sesión exitoso.");
+            console.log("Respuesta en el componente:", response);            
+            router.push("/menu"); // Redirigir después de actualizar el estado
         } catch (error) {
-            Alert.alert("Error", "Correo o contraseña incorrectos.");
+            Alert.alert("Error", "Credenciales incorrectas");
         }
         setLoading(false);
     };
