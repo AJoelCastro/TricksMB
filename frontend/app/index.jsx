@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaView, Text, View, Alert } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
@@ -25,7 +25,7 @@ const Home = () => {
         setLoading(true);
         try {
             await AuthService.login(correo, contrasenia);
-            router.push("/menu"); // Redirigir después de actualizar el estado
+            router.replace("/menu"); // Redirigir después de actualizar el estado
             
             
         } catch (error) {
@@ -33,6 +33,17 @@ const Home = () => {
         }
         setLoading(false);
     };
+    useEffect(() => {
+        const checkAuth = async () => {
+            const token = await AuthService.getToken();
+            if (token) {
+                router.replace("/menu"); // Si el usuario tiene token, va directo al menú
+            }
+            setLoading(false);
+        };
+        checkAuth();
+    }, []);
+    if (loading) return null;
 
     return (
         <SafeAreaView className="h-full bg-white flex">
