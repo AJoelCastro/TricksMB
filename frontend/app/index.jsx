@@ -25,8 +25,9 @@ const Home = () => {
         setLoading(true);
         try {
             await AuthService.login(correo, contrasenia);
-            console.log("Respuesta en el componente:", response);            
             router.push("/menu"); // Redirigir después de actualizar el estado
+            
+            
         } catch (error) {
             Alert.alert("Error", "Credenciales incorrectas");
         }
