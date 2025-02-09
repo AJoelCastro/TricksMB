@@ -14,9 +14,16 @@ export const AuthProvider = ({ children }) => {
         const loadToken = async () => {
             const token = await AsyncStorage.getItem('token');
             console.log("Token cargado desde AsyncStorage:", token);
-            if (token && !isTokenExpired(token)) {
-                setUserToken(token);
+            if (token) {
+                if (isTokenExpired(token)) {
+                    // Eliminar el token expirado
+                    await AsyncStorage.removeItem('token');
+                    setUserToken(null);
+                } else {
+                    setUserToken(token);
+                }
             }
+            
             setIsLoading(false);
         };
         loadToken();

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaView, Text, View, Alert } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
@@ -6,6 +6,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Input from '@/components/input';
 import CustomButtom from '../components/customButtom'
 import AuthService from '@/services/AuthService'; // Importar servicio de autenticación
+import { useAuth } from '@/contexts/AuthContext';
+
 import "../global.css"
 
 const Home = () => {
@@ -13,6 +15,7 @@ const Home = () => {
     const [correo, setCorreo] = useState(""); // Estado para el email
     const [contrasenia, setContrasenia] = useState(""); // Estado para la contraseña
     const [loading, setLoading] = useState(false); // Estado para indicar si está cargando
+    const { userToken, isLoading } = useAuth();
 
     const isFormValid = correo.trim() !== "" && contrasenia.trim() !== ""; // Validación de campos llenos
 
@@ -25,15 +28,18 @@ const Home = () => {
         setLoading(true);
         try {
             await AuthService.login(correo, contrasenia);
-            router.push("/menu"); // Redirigir después de actualizar el estado
-            
-            
+            router.replace("/menu"); // Redirigir después de actualizar el estado
         } catch (error) {
             Alert.alert("Error", "Credenciales incorrectas");
         }
         setLoading(false);
     };
-
+    useEffect(() => {
+        if (!isLoading && userToken) {
+            router.replace("/menu");
+        }
+    }, [userToken, isLoading]);
+    
     return (
         <SafeAreaView className="h-full bg-white flex">
             {/* Header */}
@@ -59,7 +65,7 @@ const Home = () => {
                     <Input placeholder="Correo electrónico" value={correo} onChangeText={setCorreo} />
                 </View>
                 <View>
-                    <Input placeholder="Contraseña" value={contrasenia} onChangeText={setContrasenia} secureTextEntry />
+                    <Input placeholder="Contraseña" value={contrasenia} onChangeText={setContrasenia} secure={true} />
                 </View>
                 
                 <View className='flex-row items-center gap-4 mt-6 ml-16'>
