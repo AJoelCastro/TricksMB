@@ -13,8 +13,6 @@ const UsuarioDAO = {
         const [rows] = await db.execute(query, [correo]);
         if (rows[0] === null) {
             console.log("No se encontró ningún usuario con el correo proporcionado.");
-        } else {
-            console.log("Usuario encontrado:", rows[0]);
         }
         return rows[0] ;
     },

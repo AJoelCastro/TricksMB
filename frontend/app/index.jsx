@@ -14,7 +14,7 @@ const Home = () => {
     const router = useRouter();
     const [correo, setCorreo] = useState(""); // Estado para el email
     const [contrasenia, setContrasenia] = useState(""); // Estado para la contraseña
-    const [loading, setLoading] = useState(false); // Estado para indicar si está cargando
+    const [loading, setLoading] = useState(true); // Estado para indicar si está cargando
     const { userToken, isLoading } = useAuth();
 
     const isFormValid = correo.trim() !== "" && contrasenia.trim() !== ""; // Validación de campos llenos
@@ -35,10 +35,20 @@ const Home = () => {
         setLoading(false);
     };
     useEffect(() => {
-        if (!isLoading && userToken) {
-            router.replace("/menu");
-        }
-    }, [userToken, isLoading]);
+        const checkAuth = async () => {
+            const token = await AuthService.getToken();
+            console.log("Token en Home.js:", token);
+
+            if (token) {
+                router.replace("/menu"); 
+            } else {
+                setLoading(false);
+            }
+        };
+        
+        checkAuth();
+    }, []);
+
     
     return (
         <SafeAreaView className="h-full bg-white flex">
