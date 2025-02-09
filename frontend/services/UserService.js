@@ -7,12 +7,6 @@ const UserService = {
     getPerfil: async () => {
         const token = await AuthService.getToken();
         if (!token) throw new Error("No hay token disponible");
-        // Verificar expiración
-        const decoded = jwtDecode(token);
-        if (decoded.exp * 1000 < Date.now()) {
-            await AuthService.logout(); // Eliminar token expirado
-            throw new Error("Token expirado");
-        }
 
         try {
             const response = await axios.get(`${API_URL}/usuario/perfil`, {
