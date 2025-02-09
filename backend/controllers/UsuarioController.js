@@ -30,7 +30,7 @@ const UsuarioController = {
                 const token = jwt.sign(
                     { userId: user.idUsuario, correo: user.Correo },
                     process.env.JWT_SECRET || 'secreto_super_seguro',
-                    { expiresIn: '1h' }
+                    { expiresIn: '1m' }
                 );
                 console.log(token)
 

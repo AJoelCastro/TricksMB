@@ -22,7 +22,6 @@ const UsuarioService = {
 
     async findUser(correo, contrasenia) {
         const user = await UsuarioDAO.encUser(correo);
-        //Depuración
         console.log(user);
         if (!user) return null;
 
