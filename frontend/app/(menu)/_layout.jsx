@@ -1,8 +1,5 @@
-import { Tabs, Stack } from 'expo-router';
 import React from 'react';
-
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { useColorScheme } from '@/hooks/useColorScheme';
 
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
@@ -11,7 +8,6 @@ const MenuLayout=()=> {
   return (
     <GestureHandlerRootView >
       <Drawer  
-
       >
         <Drawer.Screen
           name="menu"
@@ -29,14 +25,14 @@ const MenuLayout=()=> {
           }}
         />
         <Drawer.Screen
-          name="almacen"
+          name="almacen/index"
           options={{
             title: 'Almacen',
             drawerIcon: ({ color }) => (<IconSymbol size={28} name="house.fill" color={color} />),
           }}
         />
         <Drawer.Screen
-          name="inventariado"
+          name="inventariado/index"
           options={{
             title: 'Inventario',
             drawerIcon: ({ color }) => (<IconSymbol size={28} name="house.fill" color={color} />),

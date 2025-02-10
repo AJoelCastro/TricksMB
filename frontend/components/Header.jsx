@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 import "../global.css";
-import Icon from 'react-native-vector-icons/FontAwesome'; // Usa FontAwesome o la librería que necesites
 
 const Header = ({ title, LeftIcon, RightIcon, onLeftPress, onRightPress }) => {
     return (

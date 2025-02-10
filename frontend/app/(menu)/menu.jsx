@@ -1,9 +1,8 @@
 import React from 'react';
 import { SafeAreaView, View, TouchableOpacity } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import CustomButtom from '@/components/customButtom';
-import Header from '@/components/Header';
-import Icon from 'react-native-vector-icons/FontAwesome';
+
 import ComboBox from '@/components/ComboBox';
 
 export default function Menu() {
