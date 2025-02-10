@@ -3,7 +3,7 @@ const db = require('../config/db'); // Asegúrate de tener tu conexión a la bas
 
 const UsuarioDAO = {
     async createUser(correo, contrasenia) {
-        const query = 'INSERT INTO usuario (Correo, Contraseña) VALUES (?, ?)';
+        const query = 'INSERT INTO usuario (Correo, Contrasenia) VALUES (?, ?)';
         const [result] = await db.execute(query, [correo, contrasenia]);
         return { id: result.insertId, correo };
     },
