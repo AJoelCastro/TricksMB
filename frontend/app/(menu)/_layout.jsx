@@ -1,9 +1,19 @@
 import React from 'react';
+import { Text, TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
+
 export default function MenuLayout() {
-  
+
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('token');
+    router.replace('/'); // Redirigir al login
+  };
   return (
     <GestureHandlerRootView >
       <Drawer  
@@ -13,8 +23,13 @@ export default function MenuLayout() {
           options={{
             title: 'Inicio',
             drawerIcon: () => (<Icon name="home" size={20} color="blue"/>),
-            
+            headerRight: () => (
+              <TouchableOpacity onPress={handleLogout}>
+                <Text className='font-bold '>Cerrar sesion</Text>
+              </TouchableOpacity>
+            ),
           }}
+          
         />
         <Drawer.Screen
           name="ordenes_produccion"
