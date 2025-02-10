@@ -16,16 +16,18 @@ export default function Almacen(){
             RightIcon= { () => <Icon name ="user" size = {24} color="black"/>}
             onLeftPress={ () => console.log("Configuración presionada")}
             onRightPress={() => console.log("Perfil Seleccionado")} 
-          ></Header>
-          <CustomButtom title={"Ingresar Productos"} ></CustomButtom>
-          <CustomButtom title={"Registrar Venta"}></CustomButtom>
+          >
+          </Header>
+          <CustomButtom title="Ingresar Productos"
+          />
+          <CustomButtom title="Registrar Venta"></CustomButtom>
         </View>
         <View className= 'mt-5'>
           <Text className='text-center text-black font-bold text-xl'>Tipo de movimiento</Text>
         </View>
         <View>
-          <CustomButtom title={"Translado"} ></CustomButtom>
-          <CustomButtom title={"Devolución"}></CustomButtom>
+          <CustomButtom title="Translado" />
+          <CustomButtom title="Devolución"/>
         </View>
       </View>
       
