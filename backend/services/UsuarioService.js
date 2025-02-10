@@ -25,7 +25,7 @@ const UsuarioService = {
         console.log(user);
         if (!user) return null;
 
-        const isPasswordValid = await bcrypt.compare(contrasenia, user.Contraseña);
+        const isPasswordValid = await bcrypt.compare(contrasenia, user.Contrasenia);
         if (!isPasswordValid) return null;
         return user;
     },
