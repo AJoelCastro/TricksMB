@@ -13,7 +13,6 @@ export default function RootLayout() {
         <Stack.Screen name="modal" options={{ presentation: 'modal' }}/>
         <Stack.Screen name="(menu)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
-        <StatusBar style="auto" />
       </Stack>
     </AuthProvider>
     

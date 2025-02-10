@@ -77,5 +77,6 @@ const ComboBox = ({data, onChange, placeholder, ...props}: DropDownProps) =>{
             ) : null}
         </View>
     );
+    console.log("ComboBox: ", data);
 }
 export default ComboBox

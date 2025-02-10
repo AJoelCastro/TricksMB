@@ -15,7 +15,6 @@ const Home = () => {
     const [correo, setCorreo] = useState(""); // Estado para el email
     const [contrasenia, setContrasenia] = useState(""); // Estado para la contraseña
     const [loading, setLoading] = useState(true); // Estado para indicar si está cargando
-    const { userToken, isLoading } = useAuth();
 
     const isFormValid = correo.trim() !== "" && contrasenia.trim() !== ""; // Validación de campos llenos
 
