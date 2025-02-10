@@ -15,6 +15,7 @@ const AuthService = {
             return response.data;
         } catch (error) {
             console.error("Error en el login:", error.response?.data || error.message);
+            console.log(error);
             throw error;
         }
     },

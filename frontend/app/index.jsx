@@ -6,7 +6,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Input from '@/components/input';
 import CustomButtom from '../components/customButtom'
 import AuthService from '@/services/AuthService'; // Importar servicio de autenticación
-import { useAuth } from '@/contexts/AuthContext';
 
 import "../global.css"
 
