@@ -6,7 +6,7 @@ const Header = ({ title, LeftIcon, RightIcon, onLeftPress, onRightPress }) => {
     return (
         <View className="flex-row items-center justify-between p-4 bg-white border-b border-gray-300">
             {/* Botón izquierdo (ícono opcional) */}
-            <TouchableOpacity onPress={onLeftPress}>
+            <TouchableOpacity onPress={()=>onLeftPress}>
                 {LeftIcon && <LeftIcon size={24} color="black" />}
             </TouchableOpacity>
 
@@ -16,7 +16,7 @@ const Header = ({ title, LeftIcon, RightIcon, onLeftPress, onRightPress }) => {
             </Text>
 
             {/* Botón derecho (ícono opcional) */}
-            <TouchableOpacity onPress={onRightPress}>
+            <TouchableOpacity onPress={()=>onRightPress}>
                 {RightIcon && <RightIcon size={24} color="black" />}
             </TouchableOpacity>
         </View>

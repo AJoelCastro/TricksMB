@@ -12,7 +12,7 @@ export default function Menu() {
 
             {/* Contenido principal */}
             <View className='mx-6'>
-                <CustomButtom title={"Ordenes de Producción"} touch={()=>route.push("/ordenes_produccion/crear")} />
+                <CustomButtom title="Ordenes de Producción" touch={()=>route.push("/ordenes_produccion/crear")} />
             </View>
             <View className='mx-6'>
                 <ComboBox 
@@ -22,7 +22,7 @@ export default function Menu() {
                 />
             </View>
             <View className='mx-6'>
-                <CustomButtom title={"Inventario"} touch={()=>route.push("/inventario")} />
+                <CustomButtom title="Inventario" touch={()=>route.push("/inventario")} />
             </View>
         </SafeAreaView>
     );

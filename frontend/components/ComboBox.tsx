@@ -67,7 +67,7 @@ const ComboBox = ({data, onChange, placeholder, ...props}: DropDownProps) =>{
                                         </TouchableOpacity>
                                     )}
                                     ItemSeparatorComponent={() => (
-                                        <View className="h-1 "/>
+                                        <View className="h-1 "></View>
                                     )}
                                 />
                             </View>

@@ -25,7 +25,7 @@ const data = [
 export default function crear() {
         const [cliente, setCliente] = useState("");
         const [modelo, setModelo] = useState("");
-        const route = useRouter();
+        const router = useRouter();
         const getCurrentDate = () => {
             const date = new Date();
             const year = date.getFullYear();

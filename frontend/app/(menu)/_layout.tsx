@@ -4,7 +4,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
 
-const MenuLayout=()=> {
+export default function MenuLayout() {
   return (
     <GestureHandlerRootView >
       <Drawer  
@@ -42,4 +42,3 @@ const MenuLayout=()=> {
     </GestureHandlerRootView>
   );
 }
-export default MenuLayout;

@@ -1,5 +1,4 @@
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import { AuthProvider } from '../contexts/AuthContext';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
