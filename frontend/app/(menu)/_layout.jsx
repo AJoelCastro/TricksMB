@@ -1,10 +1,9 @@
 import React from 'react';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 export default function MenuLayout() {
+  
   return (
     <GestureHandlerRootView >
       <Drawer  
@@ -13,7 +12,7 @@ export default function MenuLayout() {
           name="menu"
           options={{
             title: 'Inicio',
-            drawerIcon: ({ color }) => (<IconSymbol size={28} name="house.fill" color={color} />),
+            drawerIcon: () => (<Icon name="home" size={20} color="blue"/>),
             
           }}
         />
@@ -21,21 +20,21 @@ export default function MenuLayout() {
           name="ordenes_produccion"
           options={{
             title: 'Ordenes de Producción',
-            drawerIcon: ({ color }) => (<IconSymbol size={28} name="house.fill" color={color} />),
+            drawerIcon: () => (<Icon name="list-alt" size={20} color="blue"/>),
           }}
         />
         <Drawer.Screen
           name="almacen/index"
           options={{
             title: 'Almacen',
-            drawerIcon: ({ color }) => (<IconSymbol size={28} name="house.fill" color={color} />),
+            drawerIcon: () => (<Icon name="archive" size={20} color="blue"/>),
           }}
         />
         <Drawer.Screen
           name="inventariado/index"
           options={{
             title: 'Inventario',
-            drawerIcon: ({ color }) => (<IconSymbol size={28} name="house.fill" color={color} />),
+            drawerIcon: () => (<Icon name="cubes" size={20} color="blue"/>),
           }}
         />
       </Drawer>
