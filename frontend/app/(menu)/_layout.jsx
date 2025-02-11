@@ -21,6 +21,14 @@ export default function MenuLayout() {
   return (
     <GestureHandlerRootView >
       <Drawer  
+        screenOptions={{
+          drawerStyle:{
+            backgroundColor: backgroundColor,
+            
+          },
+          drawerInactiveTintColor: textColor,
+          drawerActiveTintColor: textColor,
+        }}
       >
         <Drawer.Screen
           name="menu"
@@ -48,6 +56,13 @@ export default function MenuLayout() {
               backgroundColor: backgroundColor, // Cambia el color de fondo del header
             },
             headerTintColor: textColor,
+            headerRight:() => (
+              <TouchableOpacity onPress={()=>router.push("/modal")}>
+                <Text style={{color:textColor}}>
+                  Cliente Nuevo
+                </Text>
+              </TouchableOpacity>
+            )
           }}
         />
         <Drawer.Screen
