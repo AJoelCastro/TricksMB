@@ -5,9 +5,13 @@ import { Drawer } from 'expo-router/drawer';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { Colors } from '@/constants/Colors';
 
 export default function MenuLayout() {
-
+  
+  const backgroundColor = useThemeColor({ light: Colors.light.background, dark: Colors.dark.background }, 'background');
+  const textColor = useThemeColor({ light: Colors.light.text, dark: Colors.dark.text }, 'text');
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -28,6 +32,10 @@ export default function MenuLayout() {
                 <Text className='font-bold '>Cerrar sesion</Text>
               </TouchableOpacity>
             ),
+            headerStyle: {
+              backgroundColor: backgroundColor, // Cambia el color de fondo del header
+            },
+            headerTintColor: textColor,
           }}
           
         />
@@ -36,6 +44,10 @@ export default function MenuLayout() {
           options={{
             title: 'Ordenes de Producción',
             drawerIcon: () => (<Icon name="list-alt" size={20} color="blue"/>),
+            headerStyle: {
+              backgroundColor: backgroundColor, // Cambia el color de fondo del header
+            },
+            headerTintColor: textColor,
           }}
         />
         <Drawer.Screen
@@ -43,6 +55,10 @@ export default function MenuLayout() {
           options={{
             title: 'Almacen',
             drawerIcon: () => (<Icon name="archive" size={20} color="blue"/>),
+            headerStyle: {
+              backgroundColor: backgroundColor, // Cambia el color de fondo del header
+            },
+            headerTintColor: textColor,
           }}
         />
         <Drawer.Screen
@@ -50,6 +66,10 @@ export default function MenuLayout() {
           options={{
             title: 'Inventario',
             drawerIcon: () => (<Icon name="cubes" size={20} color="blue"/>),
+            headerStyle: {
+              backgroundColor: backgroundColor, // Cambia el color de fondo del header
+            },
+            headerTintColor: textColor,
           }}
         />
       </Drawer>

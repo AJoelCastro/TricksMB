@@ -1,17 +1,55 @@
 import { Stack } from 'expo-router';
 import 'react-native-reanimated';
+import { Text } from 'react-native';
 import { AuthProvider } from '../contexts/AuthContext';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { Colors } from '@/constants/Colors';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-
+import "../global.css";
 export default function RootLayout() {
-
+  const backgroundColor = useThemeColor({ light: Colors.light.background, dark: Colors.dark.background }, 'background');
+  const textColor = useThemeColor({ light: Colors.light.text, dark: Colors.dark.text }, 'text');
   return (
     <AuthProvider>
       <Stack>  
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }}/>
-        <Stack.Screen name="(menu)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
+        <Stack.Screen 
+          name="index" 
+          options={{ 
+            headerTitle:"Tricks",
+            headerStyle:{
+              backgroundColor:backgroundColor,
+            },
+            headerTintColor:textColor,
+            headerRight:()=>(
+              <Text className='text-white'>Registrarse</Text>
+            )
+          }} 
+        />
+        <Stack.Screen 
+          name="modal" 
+          options={{ 
+            presentation: 'modal' 
+          }}
+        />
+        <Stack.Screen 
+          name="(menu)" 
+          options={{ 
+            headerShown: false,
+            headerStyle:{
+              backgroundColor:backgroundColor
+            },
+            headerTintColor:textColor,
+          }} 
+        />
+        <Stack.Screen 
+          name="+not-found"
+          options={{
+            headerStyle:{
+              backgroundColor:backgroundColor
+            },
+            headerTintColor:textColor,
+          }}
+        />
       </Stack>
     </AuthProvider>
     

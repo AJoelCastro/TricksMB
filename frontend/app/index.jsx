@@ -50,17 +50,7 @@ const Home = () => {
     
     return (
         <SafeAreaView className="h-full bg-white flex">
-            {/* Header */}
-            <View className='h-16 bg-gray-700 flex flex-row justify-between p-4 px-8'>
-                <View>
-                    <Icon name="cog" size={20} color="white" />
-                </View>
-                <View>
-                    <Link href={"/register"}>
-                        <Text className='text-white'>Registrarse</Text>
-                    </Link>
-                </View>
-            </View>
+            
 
             {/* Logo */}
             <View className='flex items-center justify-center mt-16 '>

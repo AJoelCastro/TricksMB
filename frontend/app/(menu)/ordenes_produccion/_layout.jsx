@@ -1,8 +1,9 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, TouchableOpacity, Text } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
+import "../../../global.css";
 
 export default function OrdenesLayout() {
 
