@@ -30,14 +30,14 @@ class UsuarioDAO {
         }
     }
 
-    static async getById(idUsuario) {
+    static async getByCorreo(correo) {
         try {
-            const query = 'SELECT * FROM usuario WHERE idUsuario = ?';
-            const [rows] = await db.execute(query, [idUsuario]);
+            const query = 'SELECT * FROM usuario WHERE Correo = ?';
+            const [rows] = await db.execute(query, [correo]);
 
-            return rows[0] || null;
+            return rows[0];
         } catch (error) {
-            console.error("Error al buscar usuario por ID:", error);
+            console.error("Error al buscar usuario por Correo:", error);
             throw error;
         }
     }

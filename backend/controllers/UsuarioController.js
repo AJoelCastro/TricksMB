@@ -42,6 +42,21 @@ const UsuarioController = {
             console.error(error);
             res.status(500).json({ success: false, message: "Error al iniciar sesión" });
         }
+    },
+
+    async getByCorrreo(req, res) {
+        const { correo } = req.params;
+        if (!correo) {
+            return res.status(400).json({ message: "Correo es requerido" });
+        }
+
+        try {
+            const user = await UsuarioService.getUserByCorreo(correo);
+            res.json(user);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: "Error al obtener usuario" });
+        }
     }
 };
 
