@@ -4,7 +4,7 @@ import "../global.css"
 const Modal = () => {
   return (
     <View className='h-[30%]'>
-      <Text>Seguro de que quiere cancelar la orden?</Text>
+      <Text>Crear Cliente Nuevo</Text>
       <TouchableOpacity>
         <Text>Si</Text>
       </TouchableOpacity>
