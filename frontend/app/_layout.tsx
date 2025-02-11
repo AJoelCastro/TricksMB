@@ -21,7 +21,7 @@ export default function RootLayout() {
             },
             headerTintColor:textColor,
             headerRight:()=>(
-              <Text className='text-white'>Registrarse</Text>
+              <Text style={{ color:textColor}}>Registrarse</Text>
             )
           }} 
         />
@@ -35,10 +35,6 @@ export default function RootLayout() {
           name="(menu)" 
           options={{ 
             headerShown: false,
-            headerStyle:{
-              backgroundColor:backgroundColor
-            },
-            headerTintColor:textColor,
           }} 
         />
         <Stack.Screen 
