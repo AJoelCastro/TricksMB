@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const userRoutes = require('./routes/usuarioRoutes');
+const clienteRoutes = require('./routes/ClienteRoutes');
 const errorHandler = require('./utils/errorHandler'); // Importamos errorHandler
 require('dotenv').config();
 
@@ -29,11 +30,7 @@ requiredEnv.forEach((key) => {
 
 // Rutas
 app.use('/usuario', userRoutes);
-
-// Ruta de prueba (opcional)
-app.get('/', (req, res) => {
-    res.send('¡Bienvenido al backend!');
-});
+app.use('/cliente', clienteRoutes);
 
 // Manejo de rutas no encontradas
 app.use((req, res, next) => {

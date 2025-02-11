@@ -1,38 +1,46 @@
-// UsuarioDAO.js
 const db = require('../config/db'); // Asegúrate de tener tu conexión a la base de datos configurada
 
-const UsuarioDAO = {
-    async createUser(correo, contrasenia) {
-        const query = 'INSERT INTO usuario (Correo, Contrasenia) VALUES (?, ?)';
-        const [result] = await db.execute(query, [correo, contrasenia]);
-        return { id: result.insertId, correo };
-    },
-
-    async encUser(correo) {
-        const query = 'SELECT * FROM usuario WHERE Correo = ?';
-        const [rows] = await db.execute(query, [correo]);
-        if (rows[0] === null) {
-            console.log("No se encontró ningún usuario con el correo proporcionado.");
+class UsuarioDAO {
+    static async createUser(correo, contrasenia) {
+        try {
+            const query = 'INSERT INTO usuario (Correo, Contrasenia) VALUES (?, ?)';
+            const [result] = await db.execute(query, [correo, contrasenia]);
+            return { id: result.insertId, correo };
+        } catch (error) {
+            console.error("Error al crear usuario:", error);
+            throw error;
         }
-        return rows[0] ;
-    },
-
-    async getAll() {
-        const query = 'SELECT * FROM usuario';
-        const [rows] = await db.execute(query);
-        return rows;
-    },
-
-    async getById(idUsuario) {
-        const query = 'SELECT * FROM usuario WHERE idUsuario = ?';
-        const [rows] = await db.execute(query, [idUsuario]);
-        return rows[0] || null;
-    },
-
-    async delete(idUsuario) {
-        const query = 'DELETE FROM usuario WHERE idUsuario = ?';
-        await db.execute(query, [idUsuario]);
     }
-};
+
+    static async encUser(correo) {
+        try {
+            const query = 'SELECT * FROM usuario WHERE Correo = ?';
+            const [rows] = await db.execute(query, [correo]);
+            
+            // Corrección: Verificar si `rows` está vacío
+            if (!rows.length) {
+                console.log("No se encontró ningún usuario con el correo proporcionado.");
+                return null;
+            }
+
+            return rows[0];
+        } catch (error) {
+            console.error("Error al buscar usuario por correo:", error);
+            throw error;
+        }
+    }
+
+    static async getById(idUsuario) {
+        try {
+            const query = 'SELECT * FROM usuario WHERE idUsuario = ?';
+            const [rows] = await db.execute(query, [idUsuario]);
+
+            return rows[0] || null;
+        } catch (error) {
+            console.error("Error al buscar usuario por ID:", error);
+            throw error;
+        }
+    }
+}
 
 module.exports = UsuarioDAO;
