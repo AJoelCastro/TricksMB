@@ -50,6 +50,6 @@ const ClienteController = {
             return res.status(500).json({ error: "Error al obtener clientes" });
         }
     }
-
-
 }
+
+module.exports = ClienteController;
