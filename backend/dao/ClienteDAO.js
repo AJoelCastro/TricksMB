@@ -4,6 +4,9 @@ class ClienteDAO {
     // Crear un cliente base
     static async createCliente(tipoCliente) {
         try {
+            if(!tipoCliente){
+                throw new Error("Tipo de cliente es obligatorio");
+            }
             const query = 'INSERT INTO Cliente (Tipo_cliente) VALUES (?)';
             const [result] = await db.execute(query, [tipoCliente]);
             return { idCliente: result.insertId, tipoCliente };
