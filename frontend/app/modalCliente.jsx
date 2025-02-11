@@ -7,6 +7,9 @@ const Modal = () => {
   const [representanteLegal, setrepresentanteLegal] = useState("");
   const [dni, setdni] = useState("");
   const [ruc, setruc] = useState("");
+  const [telefonoNatural, settelefonoNatural] = useState("");
+  const [telefonoJuridico, settelefonoJuridico] = useState("");
+  const [razonSocial, setrazonSocial] = useState("");
   return (
     <View className='p-2'>
         <Text className='mx-auto font-bold text-xl'>Seleccionar tipo de cliente</Text>
@@ -37,13 +40,19 @@ const Modal = () => {
                   <Text className='mt-2 font-semibold'>
                     Documento de identidad (DNI)
                   </Text>
-                  <TextInput placeholder='Ingrese sus nombres y apellidos' value={dni} onChangeText={setdni} className='border p-2 mt-2 rounded-lg'/>
+                  <TextInput placeholder='DNI' value={dni} onChangeText={setdni} className='border p-2 mt-2 rounded-lg'/>
                 </View>
                 <View>
                   <Text className='mt-2 font-semibold'>
                     Nombres y Apellidos
                   </Text>
                   <TextInput placeholder='Ingrese sus nombres y apellidos' value={clienteNatural} onChangeText={setclienteNatural} className='border p-2 mt-2 rounded-lg'/>
+                </View>
+                <View>
+                  <Text className='mt-2 font-semibold'>
+                    Numero de contacto
+                  </Text>
+                  <TextInput placeholder='Numero de telefono' value={telefonoNatural} onChangeText={settelefonoNatural} className='border p-2 mt-2 rounded-lg'/>
                 </View>
               </View>
             </View>
@@ -60,13 +69,25 @@ const Modal = () => {
                   <Text className='mt-2 font-semibold'>
                     Ingrese RUC
                   </Text>
-                  <TextInput placeholder='Ingrese sus nombres y apellidos' value={ruc} onChangeText={setruc} className='border p-2 mt-2 rounded-lg'/>
+                  <TextInput placeholder='Numero RUC' value={ruc} onChangeText={setruc} className='border p-2 mt-2 rounded-lg'/>
+                </View>
+                <View>
+                  <Text className='mt-2 font-semibold'>
+                    Razon social
+                  </Text>
+                  <TextInput placeholder='Razon social' value={razonSocial} onChangeText={setrazonSocial} className='border p-2 mt-2 rounded-lg'/>
                 </View>
                 <View>
                   <Text className='mt-2 font-semibold'>
                     Representante Legal
                   </Text>
-                  <TextInput placeholder='Ingrese sus nombres y apellidos' value={representanteLegal} onChangeText={setrepresentanteLegal} className='border p-2 mt-2 rounded-lg'/>
+                  <TextInput placeholder='Datos del RL' value={representanteLegal} onChangeText={setrepresentanteLegal} className='border p-2 mt-2 rounded-lg'/>
+                </View>
+                <View>
+                  <Text className='mt-2 font-semibold'>
+                    Numero de contacto
+                  </Text>
+                  <TextInput placeholder='Numero de telefono' value={telefonoJuridico} onChangeText={settelefonoJuridico} className='border p-2 mt-2 rounded-lg'/>
                 </View>
               </View>
             </View>
