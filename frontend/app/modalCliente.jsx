@@ -1,6 +1,10 @@
 import { View, Text, TouchableOpacity, TextInput } from 'react-native'
 import React, { useState } from 'react'
+import ClienteService from '../services/ClienteService';
+import { Alert } from 'react-native';
 import "../global.css"
+
+
 const Modal = () => {
   const [btnActivo, setBtnActivo] = useState(null);
   const [clienteNatural, setclienteNatural] = useState("");
@@ -10,6 +14,39 @@ const Modal = () => {
   const [telefonoNatural, settelefonoNatural] = useState("");
   const [telefonoJuridico, settelefonoJuridico] = useState("");
   const [razonSocial, setrazonSocial] = useState("");
+
+   const handleCrearCliente = async () => {
+        try {
+            let datosCliente = {};
+            let tipo = btnActivo;
+
+            if (tipo === "Natural") {
+                datosCliente = { dni, nombre: clienteNatural, telefono: telefonoNatural };
+            } else if (tipo === "Juridico") {
+                datosCliente = { ruc, razonSocial, representanteLegal, telefono: telefonoJuridico };
+            }
+
+            if (!Object.values(datosCliente).every(valor => valor.trim() !== "")) {
+                Alert.alert("Error", "Por favor, completa todos los campos.");
+                return;
+            }
+
+            const respuesta = await ClienteService.crearCliente(datosCliente, tipo);
+            Alert.alert("Éxito", `Cliente ${tipo} creado correctamente`);
+            
+            // Reiniciar los campos
+            setDni("");
+            setClienteNatural("");
+            setTelefonoNatural("");
+            setRuc("");
+            setRazonSocial("");
+            setRepresentanteLegal("");
+            setTelefonoJuridico("");
+        } catch (error) {
+            Alert.alert("Error", "No se pudo crear el cliente.");
+        }
+    };
+  
   return (
     <View className='p-2'>
         <Text className='mx-auto font-bold text-xl'>Seleccionar tipo de cliente</Text>
@@ -93,6 +130,12 @@ const Modal = () => {
             </View>
           )
         }
+        {/* Botón para registrar el cliente */}
+            {btnActivo && (
+                <TouchableOpacity className="bg-blue-500 p-4 rounded-lg mt-4" onPress={handleCrearCliente}>
+                    <Text className="text-white text-center font-bold">Registrar Cliente</Text>
+                </TouchableOpacity>
+            )}
     </View>
 )
 }
