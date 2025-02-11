@@ -29,7 +29,7 @@ export default function RootLayout() {
           name="modalCliente" 
           options={{ 
             presentation: 'modal',
-            headerTitle:"Crear Cliente Nuevo",
+            headerTitle:"Cliente Nuevo",
             headerStyle:{
               backgroundColor:backgroundColor,
             },
