@@ -3,12 +3,9 @@ const bcrypt = require('bcrypt');
 const UsuarioDAO = require('../dao/UsuarioDAO');
 
 const UsuarioService = {
-    async getUsers() {
-        return await UsuarioDAO.getAll();
-    },
 
-    async getUserById(idUsuario) {
-        const user = await UsuarioDAO.getById(idUsuario);
+    async getUserByCorreo(correo) {
+        const user = await UsuarioDAO.getByCorreo(correo);
         if (!user) throw new Error('Usuario no encontrado');
         return user;
     },
@@ -29,10 +26,6 @@ const UsuarioService = {
         if (!isPasswordValid) return null;
         return user;
     },
-
-    async deleteUser(idUsuario) {
-        await UsuarioDAO.delete(idUsuario);
-    }
 };
 
 module.exports = UsuarioService;
