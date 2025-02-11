@@ -9,7 +9,7 @@ const ClienteService = {
             const token = await AuthService.getToken();
             if (!token) throw new Error("No hay token disponible");
 
-            const endpoint = tipo === "Natural" ? "cliente/natural" : "cliente/juridico";
+            const endpoint = tipo === "natural" ? "cliente/natural" : "cliente/juridico";
 
             const response = await axios.post(`${API_URL}/${endpoint}`, datosCliente, {
                 headers: { Authorization: `Bearer ${token}` }

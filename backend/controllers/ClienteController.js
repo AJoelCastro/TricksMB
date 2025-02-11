@@ -11,6 +11,8 @@ const ClienteController = {
                 await ClienteService.createClienteNatural(nuevoCliente.idCliente, nombre, dni, telefono);
             } else if (tipoCliente === "juridico") {
                 await ClienteService.createClienteJuridico(nuevoCliente.idCliente, razonSocial, ruc, representanteLegal, telefono);
+            }else if (tipoCliente === null) {
+                return res.status(400).json({ error: "Debe proporcionar el tipo de cliente" });
             }
             return res.status(201).json({ message: "Cliente registrado con éxito", nuevoCliente });
         } catch (error) {
