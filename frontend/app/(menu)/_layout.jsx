@@ -57,7 +57,7 @@ export default function MenuLayout() {
             },
             headerTintColor: textColor,
             headerRight:() => (
-              <TouchableOpacity onPress={()=>router.push("/modal")} className='flex-row gap-2 mr-2 items-center'>
+              <TouchableOpacity onPress={()=>router.push("/modalCliente")} className='flex-row gap-2 mr-2 items-center'>
                 <Text style={{color:textColor}}>
                   Cliente Nuevo
                 </Text>
