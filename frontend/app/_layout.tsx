@@ -26,7 +26,7 @@ export default function RootLayout() {
           }} 
         />
         <Stack.Screen 
-          name="modal" 
+          name="modalCliente" 
           options={{ 
             presentation: 'modal',
             headerTitle:"Crear Cliente Nuevo",
