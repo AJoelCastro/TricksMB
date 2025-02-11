@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, TextInput } from 'react-native'
 import React, { useState } from 'react'
 import ClienteService from '../services/ClienteService';
+import { Alert } from 'react-native';
 import "../global.css"
 
 
@@ -129,6 +130,12 @@ const Modal = () => {
             </View>
           )
         }
+        {/* Botón para registrar el cliente */}
+            {btnActivo && (
+                <TouchableOpacity className="bg-blue-500 p-4 rounded-lg mt-4" onPress={handleCrearCliente}>
+                    <Text className="text-white text-center font-bold">Registrar Cliente</Text>
+                </TouchableOpacity>
+            )}
     </View>
 )
 }
