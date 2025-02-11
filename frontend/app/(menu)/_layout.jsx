@@ -29,7 +29,7 @@ export default function MenuLayout() {
             drawerIcon: () => (<Icon name="home" size={20} color="blue"/>),
             headerRight: () => (
               <TouchableOpacity onPress={handleLogout}>
-                <Text className='font-bold '>Cerrar sesion</Text>
+                <Text className='font-bold 'style={{ color:textColor}}>Cerrar sesion</Text>
               </TouchableOpacity>
             ),
             headerStyle: {
