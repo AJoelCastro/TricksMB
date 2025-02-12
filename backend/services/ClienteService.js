@@ -16,19 +16,24 @@ const ClienteService = {
         return await ClienteDAO.createClienteJuridico(idCliente, razonSocial, ruc, representanteLegal, telefono);
     },
 
-    async getClienteNaturalByDni(dni) {
-        if (!dni) throw new Error('DNI es requerido');
+        async getClienteNaturalByDni(dni) {
+        if (!dni) return null; // Si DNI no está definido, devuelve null
         const clienteNatural = await ClienteDAO.getClienteNaturalByDni(dni);
-        if (!clienteNatural) throw new Error('Cliente natural no encontrado');
-        return clienteNatural;
+        return clienteNatural || null; // Si no hay resultados, devuelve null en lugar de lanzar error
     },
 
     async getClienteJuridicoByRuc(ruc) {
-        if (!ruc) throw new Error('RUC es requerido');
+        if (!ruc) return null;
         const clienteJuridico = await ClienteDAO.getClienteJuridicoByRuc(ruc);
-        if (!clienteJuridico) throw new Error('Cliente jurídico no encontrado');
-        return clienteJuridico;
+        return clienteJuridico || null;
     },
+
+    async getClienteJuridicoByRazonSocial(razonSocial) {
+        if (!razonSocial) return null;
+        const clienteJuridico = await ClienteDAO.getClienteJuridicoByRazonSocial(razonSocial);
+        return clienteJuridico || null;
+    },
+
 
     async getAllClientes() {
         return await ClienteDAO.getAllClientes();
