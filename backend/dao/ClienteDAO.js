@@ -94,13 +94,15 @@ class ClienteDAO {
     static async getAllClientes() {
         try {
             const query = `
-                SELECT c.idCliente, c.Tipo_cliente, 
-                    cn.Nombre, cn.Dni, cn.Telefono AS TelefonoNatural, 
-                    cj.Razon_social, cj.Ruc, cj.Representante_legal, cj.Telefono AS TelefonoJuridico
+                SELECT 
+                    c.idCliente,
+                    c.Tipo_cliente,
+                    COALESCE(cn.Nombre, cj.Razon_social) AS nombre,
+                    cn.Dni,
+                    cj.Ruc
                 FROM Cliente c
-                LEFT JOIN Cliente_natural cn ON c.Cliente_idCliente = cn.idCliente
-                LEFT JOIN Cliente_juridico cj ON c.Cliente_idCliente = cj.idCliente`;
-
+                LEFT JOIN Cliente_natural cn ON c.idCliente = cn.Cliente_idCliente
+                LEFT JOIN Cliente_juridico cj ON c.idCliente = cj.Cliente_idCliente`;
             const [rows] = await db.execute(query);
             return rows;
         } catch (error) {

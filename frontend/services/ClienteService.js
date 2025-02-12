@@ -20,6 +20,18 @@ const ClienteService = {
             console.error("Error al crear cliente:", error.response?.data || error.message);
             throw error;
         }
+    },
+    obtenerClientes: async () => {
+        try {
+            const token = await AuthService.getToken();
+            const response = await axios.get(`${API_URL}/clientes`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error al obtener clientes:", error.response?.data || error.message);
+            throw error;
+        }
     }
 };
 

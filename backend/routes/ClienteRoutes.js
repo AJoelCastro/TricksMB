@@ -8,4 +8,5 @@ router.post('/natural', authMiddleware, ClienteController.registrarCliente);
 router.post('/juridico', authMiddleware, ClienteController.registrarCliente);
 router.get('/', authMiddleware, ClienteController.obtenerClientes);
 router.post('/buscar', authMiddleware, ClienteController.buscarCliente);
+router.get('/clientes', authMiddleware, ClienteController.obtenerClientes);
 module.exports = router;
