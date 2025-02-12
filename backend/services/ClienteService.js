@@ -33,8 +33,7 @@ const ClienteService = {
         const clienteJuridico = await ClienteDAO.getClienteJuridicoByRazonSocial(razonSocial);
         return clienteJuridico || null;
     },
-
-
+    
     async getAllClientes() {
         return await ClienteDAO.getAllClientes();
     },
