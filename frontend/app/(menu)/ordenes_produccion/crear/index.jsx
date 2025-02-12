@@ -1,9 +1,9 @@
-import {View, ScrollView, Text, TouchableOpacity, Platform, TextInput, FlatList} from 'react-native';
+import {View, ScrollView, Text, TouchableOpacity, TextInput, FlatList} from 'react-native';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { useRouter } from 'expo-router';
-
+import ClienteService from '@/services/ClienteService';
 import FormFieldOrden from '@/components/formFieldOrden';
 import ComboBox from '@/components/ComboBox';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -23,6 +23,7 @@ const data = [
 ];
 
 export default function crear() {
+        const [clientes, setClientes] = useState([]);
         const [cliente, setCliente] = useState("");
         const [modelo, setModelo] = useState("");
         const router = useRouter();
@@ -59,11 +60,25 @@ export default function crear() {
             // Filtrar las filas para eliminar la seleccionada
             setFilas(filas.filter(fila => fila.id !== id));
         };
-        
+        useEffect(() => {
+            const cargarClientes = async () => {
+                try {
+                    const data = await ClienteService.obtenerClientes();
+                    const opciones = data.map(cliente => ({
+                        label: cliente.nombre,
+                        value: cliente.idCliente
+                    }));
+                    setClientes(opciones);
+                } catch (error) {
+                    console.error("Error cargando clientes:", error);
+                }
+            };
+            cargarClientes();
+        }, []);
     return (
         <ScrollView className='mx-6 gap-2 '>
             <ComboBox 
-                data={[ {label:"Juan Buendia", value:"Juan Buendia"}, {label:"Alvaro gay",value:"Alvaro gay"}]}
+                data={clientes}
                 onChange={setCliente}
                 placeholder="Cliente" 
             />
