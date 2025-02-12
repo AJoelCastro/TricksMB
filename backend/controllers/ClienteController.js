@@ -5,15 +5,27 @@ const ClienteController = {
         try {
             const { tipoCliente, nombre, dni, razonSocial, ruc, representanteLegal, telefono } = req.body;
 
-            const nuevoCliente = await ClienteService.createCliente(tipoCliente);
+            // Validar que los datos no sean undefined o null antes de consultar
+            const clienteNatural = dni ? await ClienteService.getClienteNaturalByDni(dni) : null;
+            const clienteJuridicoRuc = ruc ? await ClienteService.getClienteJuridicoByRuc(ruc) : null;
+            const clienteJuridicoRazonSocial = razonSocial ? await ClienteService.getClienteJuridicoByRazonSocial(razonSocial) : null;
 
+            if (clienteNatural || clienteJuridicoRuc || clienteJuridicoRazonSocial) {
+                return res.status(400).json({ error: "El cliente ya existe" });
+            }
+
+            if (!tipoCliente) {
+                return res.status(400).json({ error: "Debe proporcionar el tipo de cliente" });
+            }
+            
+            const nuevoCliente = await ClienteService.createCliente(tipoCliente);
+            
             if (tipoCliente === "natural") {
                 await ClienteService.createClienteNatural(nuevoCliente.idCliente, nombre, dni, telefono);
             } else if (tipoCliente === "juridico") {
                 await ClienteService.createClienteJuridico(nuevoCliente.idCliente, razonSocial, ruc, representanteLegal, telefono);
-            }else if (tipoCliente === null) {
-                return res.status(400).json({ error: "Debe proporcionar el tipo de cliente" });
             }
+
             return res.status(201).json({ message: "Cliente registrado con éxito", nuevoCliente });
         } catch (error) {
             return res.status(500).json({ error: "Error al registrar el cliente" });

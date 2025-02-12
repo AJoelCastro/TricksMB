@@ -49,7 +49,7 @@ class ClienteDAO {
                 INNER JOIN Cliente c ON cn.Cliente_idCliente = c.idCliente
                 WHERE cn.Dni = ?`;
             const [rows] = await db.execute(query, [dni]);
-
+            console.log([rows]);
             return rows.length ? rows[0] : null;
         } catch (error) {
             console.error("Error al buscar cliente natural por DNI:", error);
@@ -66,10 +66,26 @@ class ClienteDAO {
                 INNER JOIN Cliente c ON cj.Cliente_idCliente = c.idCliente
                 WHERE cj.Ruc = ?`;
             const [rows] = await db.execute(query, [ruc]);
-
+            console.log([rows]);
             return rows.length ? rows[0] : null;
         } catch (error) {
             console.error("Error al buscar cliente jurídico por RUC:", error);
+            throw error;
+        }
+    }
+
+    static async getClienteJuridicoByRazonSocial(razonSocial){
+        try {
+            const query = `
+                SELECT c.idCliente, c.Tipo_cliente, cj.Razon_social, cj.Ruc, cj.Representante_legal, cj.Telefono
+                FROM Cliente_juridico cj
+                INNER JOIN Cliente c ON cj.Cliente_idCliente = c.idCliente
+                WHERE cj.Razon_social = ?`;
+            const [rows] = await db.execute(query, [razonSocial]);
+            console.log([rows]);
+            return rows.length ? rows[0] : null;
+        } catch (error) {
+            console.error("Error al buscar cliente jurídico por Razon Social:", error);
             throw error;
         }
     }
