@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const userRoutes = require('./routes/usuarioRoutes');
 const clienteRoutes = require('./routes/ClienteRoutes');
+const pedidoRoutes = require('./routes/PedidoRoutes');
 const errorHandler = require('./utils/errorHandler'); // Importamos errorHandler
 require('dotenv').config();
 
@@ -31,6 +32,7 @@ requiredEnv.forEach((key) => {
 // Rutas
 app.use('/usuario', userRoutes);
 app.use('/cliente', clienteRoutes);
+app.use('/pedido',pedidoRoutes);
 
 // Manejo de rutas no encontradas
 app.use((req, res, next) => {
