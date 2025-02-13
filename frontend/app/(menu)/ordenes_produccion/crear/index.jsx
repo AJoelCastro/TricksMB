@@ -65,8 +65,10 @@ export default function crear() {
                 try {
                     const data = await ClienteService.obtenerClientes();
                     const opciones = data.map(cliente => ({
+                        value: cliente.idCliente,
                         label: cliente.nombre,
-                        value: cliente.idCliente
+                        ...(cliente.Tipo_cliente === "natural" && { label1: cliente.Dni }),
+                        ...(cliente.Tipo_cliente === "juridico" && { label1: cliente.Ruc })
                     }));
                     setClientes(opciones);
                 } catch (error) {
