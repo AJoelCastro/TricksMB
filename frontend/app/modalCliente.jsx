@@ -14,51 +14,29 @@ const Modal = () => {
     const [telefonoNatural, setTelefonoNatural] = useState("");
     const [telefonoJuridico, setTelefonoJuridico] = useState("");
     const [razonSocial, setRazonSocial] = useState("");
-    const validarDni = () => {
-      try {
-          if (dni.length == 8) {
-            Alert.alert("Éxito", "DNI válido");
-          } else {
-            Alert.alert("Error", "El DNI debe tener 8 dígitos");
+    
+    const validarDatosCliente = (tipoCliente, dni, ruc, telefonoNatural, telefonoJuridico) => {
+      if (tipoCliente === "natural") {
+          if (!dni || dni.length !== 8) {
+              Alert.alert("Error", "El DNI debe tener 8 dígitos");
+              return false;
           }
-          
-      } catch (error) {
-          Alert.alert("Error", "No se pudo validar el DNI");
-      }
-    };
-    const validarRUC = () => {
-      try {
-          if (ruc.length == 11) {
-            Alert.alert("Éxito", "RUC válido");
-          } else {
-            Alert.alert("Error", "El RUC debe tener 11 dígitos");
+          if (!telefonoNatural || telefonoNatural.length !== 9) {
+              Alert.alert("Error", "El teléfono debe tener 9 dígitos");
+              return false;
           }
-      } catch (error) {
-          Alert.alert("Error", "No se pudo validar el RUC");
-      }
-    };
-    const validarTN = () => {
-      try {
-          if (telefonoNatural.length !== 9) {
-              Alert.alert("Error", "El telefono debe tener 9 dígitos");
-          } else {
-              Alert.alert("Éxito", "Telefono válido");
+      } else if (tipoCliente === "juridico") {
+          if (!ruc || ruc.length !== 11) {
+              Alert.alert("Error", "El RUC debe tener 11 dígitos");
+              return false;
           }
-      } catch (error) {
-          Alert.alert("Error", "No se pudo validar el Telefono");
-      }
-    };
-    const validarTJ = () => {
-      try {
-          if (telefonoJuridico.length !== 9) {
-              Alert.alert("Error", "El telefono debe tener 9 dígitos");
-          } else {
-              Alert.alert("Éxito", "Telefono válido");
+          if (!telefonoJuridico || telefonoJuridico.length !== 9) {
+              Alert.alert("Error", "El teléfono debe tener 9 dígitos");
+              return false;
           }
-      } catch (error) {
-          Alert.alert("Error", "No se pudo validar el telefono");
       }
-    };
+      return true; // Si pasa todas las validaciones
+  };
 
     const handleCrearCliente = async () => {
         try {
@@ -71,13 +49,17 @@ const Modal = () => {
                   datosCliente = { ...datosCliente, razonSocial, ruc, representanteLegal, telefono: telefonoJuridico }
             }
 
+            if (!validarDatosCliente(tipoCliente, dni, ruc, telefonoNatural, telefonoJuridico)) {
+                return; // Si hay error, no se ejecuta la petición
+            }
+
             // Verificar que todos los campos estén llenos
             if (!Object.values(datosCliente).every(valor => valor && valor.trim() !== "")) {
                 Alert.alert("Error", "Por favor, completa todos los campos.");
                 return;
             }
 
-            await ClienteService.crearCliente(datosCliente);
+            await ClienteService.crearCliente(datosCliente,tipoCliente);
             Alert.alert("Éxito", `Cliente ${tipoCliente} creado correctamente`);
             
             // Reiniciar los campos
