@@ -1,4 +1,5 @@
 const UsuarioService = require('../services/UsuarioService');
+const jwt = require('jsonwebtoken');
 
 const UsuarioController = {
     async register(req, res) {
@@ -9,7 +10,7 @@ const UsuarioController = {
 
         try {
             const result = await UsuarioService.createUser(correo, contrasenia);
-            res.status(201).json({ success: true, message: "Usuario registrado exitosamente", userId: result.id });
+            res.status(201).json({ success: true, message: "Usuario registrado exitosamente", userId: result.idUsuario });
         } catch (error) {
             console.error(error);
             res.status(500).json({ success: false, message: "Error al registrar usuario" });
@@ -24,15 +25,37 @@ const UsuarioController = {
 
         try {
             const user = await UsuarioService.findUser(correo, contrasenia);
-            console.log("Usuario encontrado:", user);
             if (user) {
-                res.json({ success: true, message: "Inicio de sesión exitoso", user });
+                // Generamos el token
+                const token = jwt.sign(
+                    { userId: user.idUsuario, correo: user.Correo },
+                    process.env.JWT_SECRET || 'secreto_super_seguro',
+                    { expiresIn: '16h' }
+                );
+                console.log(token)
+
+                res.json({ success: true, message: "Inicio de sesión exitoso", token });
             } else {
                 res.status(401).json({ success: false, message: "Credenciales incorrectas" });
             }
         } catch (error) {
             console.error(error);
             res.status(500).json({ success: false, message: "Error al iniciar sesión" });
+        }
+    },
+
+    async getByCorrreo(req, res) {
+        const { correo } = req.params;
+        if (!correo) {
+            return res.status(400).json({ message: "Correo es requerido" });
+        }
+
+        try {
+            const user = await UsuarioService.getUserByCorreo(correo);
+            res.json(user);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: "Error al obtener usuario" });
         }
     }
 };

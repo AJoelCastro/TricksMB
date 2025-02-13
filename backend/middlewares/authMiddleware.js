@@ -2,20 +2,32 @@ const jwt = require('jsonwebtoken');
 const errorHandler = require('../utils/errorHandler');
 
 const authMiddleware = (req, res, next) => {
-    // Obtener el token del header de la solicitud
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-
-    if (!token) {
-        return errorHandler(res, new Error('Acceso denegado. Token no proporcionado.'), 401);
-    }
-
     try {
-        // Verificar el token
+        // 1️⃣ Obtener el token del header (soporte flexible)
+        let token = req.header('Authorization');
+
+        if (!token) {
+            return errorHandler(res, new Error('⛔ Acceso denegado. No se proporcionó un token.'), 401);
+        }
+
+        // 2️⃣ Eliminar "Bearer " si está presente
+        token = token.replace(/^Bearer\s+/i, '');
+
+        // 3️⃣ Verificar el token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded; // Añadir el usuario decodificado a la solicitud
-        next(); // Continuar con el siguiente middleware o controlador
+
+        // 4️⃣ Añadir usuario decodificado al request
+        req.user = decoded;
+
+        next(); // Continuar con la siguiente función
     } catch (error) {
-        errorHandler(res, new Error('Token inválido o expirado.'), 401);
+        // Si el error es de expiración del token
+        if (error.name === 'TokenExpiredError') {
+            return errorHandler(res, new Error('⛔ Token expirado. Inicie sesión nuevamente.'), 401);
+        }
+
+        // Otros errores de token inválido
+        return errorHandler(res, new Error('⛔ Token inválido.'), 401);
     }
 };
 

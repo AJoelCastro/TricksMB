@@ -1,14 +1,14 @@
-import {View, ScrollView, Text, TouchableOpacity, Platform, TextInput, FlatList} from 'react-native';
+import {View, ScrollView, Text, TouchableOpacity, TextInput, FlatList} from 'react-native';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { useRouter } from 'expo-router';
-
+import ClienteService from '@/services/ClienteService';
 import FormFieldOrden from '@/components/formFieldOrden';
 import ComboBox from '@/components/ComboBox';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import "../../../global.css";
+import "../../../../global.css";
 
 const data = [
     { id: '1', name: 'Talla 31' },
@@ -23,9 +23,10 @@ const data = [
 ];
 
 export default function crear() {
+        const [clientes, setClientes] = useState([]);
         const [cliente, setCliente] = useState("");
         const [modelo, setModelo] = useState("");
-        const route = useRouter();
+        const router = useRouter();
         const getCurrentDate = () => {
             const date = new Date();
             const year = date.getFullYear();
@@ -59,11 +60,27 @@ export default function crear() {
             // Filtrar las filas para eliminar la seleccionada
             setFilas(filas.filter(fila => fila.id !== id));
         };
-        
+        useEffect(() => {
+            const cargarClientes = async () => {
+                try {
+                    const data = await ClienteService.obtenerClientes();
+                    const opciones = data.map(cliente => ({
+                        value: cliente.idCliente,
+                        label: cliente.nombre,
+                        ...(cliente.Tipo_cliente === "natural" && { label1: cliente.Dni }),
+                        ...(cliente.Tipo_cliente === "juridico" && { label1: cliente.Ruc })
+                    }));
+                    setClientes(opciones);
+                } catch (error) {
+                    console.error("Error cargando clientes:", error);
+                }
+            };
+            cargarClientes();
+        }, []);
     return (
         <ScrollView className='mx-6 gap-2 '>
             <ComboBox 
-                data={[ {label:"Juan Buendia", value:"Juan Buendia"}, {label:"Alvaro gay",value:"Alvaro gay"}]}
+                data={clientes}
                 onChange={setCliente}
                 placeholder="Cliente" 
             />

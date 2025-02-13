@@ -1,9 +1,8 @@
 import React from 'react';
 import { SafeAreaView, View, TouchableOpacity } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import CustomButtom from '@/components/customButtom';
-import Header from '@/components/Header';
-import Icon from 'react-native-vector-icons/FontAwesome';
+
 import ComboBox from '@/components/ComboBox';
 
 export default function Menu() {
@@ -13,7 +12,7 @@ export default function Menu() {
 
             {/* Contenido principal */}
             <View className='mx-6'>
-                <CustomButtom title={"Ordenes de Producción"} touch={()=>route.push("/ordenes_produccion/crear")} />
+                <CustomButtom title="Ordenes de Producción" touch={()=>route.push("/ordenes_produccion/crear")} />
             </View>
             <View className='mx-6'>
                 <ComboBox 
@@ -23,7 +22,7 @@ export default function Menu() {
                 />
             </View>
             <View className='mx-6'>
-                <CustomButtom title={"Inventario"} touch={()=>route.push("/inventario")} />
+                <CustomButtom title="Inventario" touch={()=>route.push("/inventario")} />
             </View>
         </SafeAreaView>
     );
