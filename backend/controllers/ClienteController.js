@@ -32,9 +32,9 @@ const ClienteController = {
         }
     },
     
-    async buscarCliente(req, res) {
+    async buscarClienteNatural(req, res) {
         try {
-            const { tipoCliente, identificador } = req.body; // `identificador` será el DNI o RUC
+            const { tipoCliente, identificador } = req.query; // `identificador` será el DNI o RUC
 
             if (!tipoCliente || !identificador) {
                 return res.status(400).json({ error: "Debe proporcionar tipo de cliente y DNI o RUC" });
@@ -43,7 +43,27 @@ const ClienteController = {
             let cliente;
             if (tipoCliente === "natural") {
                 cliente = await ClienteService.getClienteNaturalByDni(identificador);
-            } else if (tipoCliente === "juridico") {
+                console.log("cliente controller",cliente)
+            } else {
+                return res.status(400).json({ error: "Tipo de cliente inválido" });
+            }
+
+            return res.json(cliente);
+        } catch (error) {
+            console.error("Error al buscar cliente:", error);
+            return res.status(500).json({ error: error.message });
+        }
+    },
+    async buscarClienteJuridico(req, res) {
+        try {
+            const { tipoCliente, identificador } = req.body; // `identificador` será el DNI o RUC
+
+            if (!tipoCliente || !identificador) {
+                return res.status(400).json({ error: "Debe proporcionar tipo de cliente y DNI o RUC" });
+            }
+
+            let cliente;
+            if (tipoCliente === "juridico") {
                 cliente = await ClienteService.getClienteJuridicoByRuc(identificador);
             } else {
                 return res.status(400).json({ error: "Tipo de cliente inválido" });
