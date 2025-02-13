@@ -12,4 +12,14 @@ const db = mysql.createPool({
     queueLimit: 0             // Sin límite en la cola de espera
 });
 
-module.exports = db.promise(); // Usamos promesas para evitar callbacks anidados
+// Verificar la conexión inmediatamente
+db.promise().getConnection()
+    .then((connection) => {
+        console.log('✅ Conexión a la base de datos establecida.');
+        connection.release(); // Libera la conexión de vuelta al pool
+    })
+    .catch((error) => {
+        console.error('❌ Error al conectar a la base de datos:', error);
+    });
+
+module.exports = db.promise(); // Exportamos la versión con promesas
