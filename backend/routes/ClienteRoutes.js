@@ -7,6 +7,7 @@ router.post('/', authMiddleware, ClienteController.registrarCliente);
 router.post('/natural', authMiddleware, ClienteController.registrarCliente);
 router.post('/juridico', authMiddleware, ClienteController.registrarCliente);
 router.get('/', authMiddleware, ClienteController.obtenerClientes);
-router.post('/buscar', authMiddleware, ClienteController.buscarCliente);
+router.get('/buscar/natural', authMiddleware, ClienteController.buscarClienteNatural);
+router.get('/buscar/juridico', authMiddleware, ClienteController.buscarClienteJuridico);
 router.get('/clientes', authMiddleware, ClienteController.obtenerClientes);
 module.exports = router;

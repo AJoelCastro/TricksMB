@@ -1,4 +1,4 @@
-import {View, ScrollView, Text, TouchableOpacity, TextInput, FlatList} from 'react-native';
+import {View, ScrollView, Text, TouchableOpacity, TextInput, FlatList, Button} from 'react-native';
 
 import { useState, useEffect } from 'react';
 
@@ -23,10 +23,16 @@ const data = [
 ];
 
 export default function crear() {
-        const [clientes, setClientes] = useState([]);
+        const router = useRouter();
         const [cliente, setCliente] = useState("");
         const [modelo, setModelo] = useState("");
-        const router = useRouter();
+        const [selectSerieInicio, setSelectSerieInicio] = useState("");
+        const [selectSerieFin, setSelectSerieFin] = useState("");
+        const [trabajador, setTrabajador] = useState("");
+        const [tipoCliente, setTipoCliente] = useState("");
+        const [dni, setDni] = useState("");
+        const [ruc, setRuc] = useState("");
+
         const getCurrentDate = () => {
             const date = new Date();
             const year = date.getFullYear();
@@ -35,8 +41,7 @@ export default function crear() {
             return `${year}-${month}-${day}`; // Formato: YYYY-MM-DD
         };
         const [currentDate] = useState(getCurrentDate()); // Estado para almacenar la fecha formateada
-        const [selectSerieInicio, setSelectSerieInicio] = useState("");
-        const [selectSerieFin, setSelectSerieFin] = useState("");
+
         const handleSelectSerie = (type, item) => {
             if (type === 'inicio') {
                 setSelectSerieInicio(item.name);
@@ -60,30 +65,77 @@ export default function crear() {
             // Filtrar las filas para eliminar la seleccionada
             setFilas(filas.filter(fila => fila.id !== id));
         };
-        useEffect(() => {
-            const cargarClientes = async () => {
-                try {
-                    const data = await ClienteService.obtenerClientes();
-                    const opciones = data.map(cliente => ({
-                        value: cliente.idCliente,
-                        label: cliente.nombre,
-                        ...(cliente.Tipo_cliente === "natural" && { label1: cliente.Dni }),
-                        ...(cliente.Tipo_cliente === "juridico" && { label1: cliente.Ruc })
-                    }));
-                    setClientes(opciones);
-                } catch (error) {
-                    console.error("Error cargando clientes:", error);
+
+        const cargarClienteNatural = async () => {
+            try {
+                let identificador = dni;
+                const cliente = await ClienteService.buscarCliente(tipoCliente, identificador);
+                if (!cliente) {
+                    console.error("No se encontró el cliente");
+                    return;
                 }
-            };
-            cargarClientes();
-        }, []);
+                
+                setCliente(cliente);
+            } catch (error) {
+                console.error("Error cargando cliente:", error);
+            }
+        };
+        const cargarClienteJuridico = async () => {
+            try {
+                let identificador= ruc;
+                const cliente = await ClienteService.buscarCliente(tipoCliente, identificador);
+                if (!cliente) {
+                    console.error("No se encontró el cliente");
+                    return;
+                }
+                
+                setCliente(cliente);
+            } catch (error) {
+                console.error("Error cargando cliente:", error);
+            }
+        };
+            
     return (
         <ScrollView className='mx-6 gap-2 '>
-            <ComboBox 
-                data={clientes}
-                onChange={setCliente}
-                placeholder="Cliente" 
-            />
+            <Text className='text-lg font-bold'>
+                Buscar Cliente
+            </Text>
+            <Text className='font-bold mx-auto mt-2 mb-4'>
+                    Tipo de cliente:
+            </Text>
+            <View className='flex-row gap-6 items-center justify-center mb-4'>
+                    <TouchableOpacity className='bg-[#62d139] p-2' onPress={()=>setTipoCliente("natural")}>
+                        <Text>
+                            Cliente Natural
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity className='bg-[#62d139] p-2' onPress={()=>setTipoCliente("juridico")}>
+                        <Text>
+                            Cliente Juridico
+                        </Text>
+                    </TouchableOpacity>
+            </View>
+            { tipoCliente==="natural" &&(
+                <View className='gap-2 mb-2'>
+                    <Text className='font-bold'>DNI</Text>
+                    <TextInput className='h-10 rounded-lg border' value={dni} onChangeText={setDni} keyboardType='numeric' maxLength={8}/>
+                    <Button title='Buscar Cliente' onPress={(tipoCliente, dni)=>cargarClienteNatural(tipoCliente, dni)}></Button>
+                    <View className='flex-row gap-6'>
+                        <Text className='text-black text-lg font-bold'>Nombre: {cliente.Nombre}</Text>
+                        <Text className='text-black text-lg font-bold'>DNI: {cliente.Dni}</Text>
+                    </View>
+                    
+                </View>
+                )
+            }
+            { tipoCliente==="juridico" &&(
+                <View className='gap-2 mb-2'>
+                    <Text className='font-bold'>RUC</Text>
+                    <TextInput className='h-10 rounded-lg border' value={ruc} onChangeText={setRuc} keyboardType='numeric' maxLength={11}/>
+                    <Button title='Buscar Cliente' onPress={(tipoCliente, ruc)=>cargarClienteJuridico(tipoCliente, ruc)}></Button>
+                </View>
+                )
+            }
             <FormFieldOrden
                 title={"Codigo"}
                 value={""}
@@ -104,7 +156,7 @@ export default function crear() {
             </View>
             <ComboBox
                 data={[ {label:"Juan Buendia", value:"Juan Buendia"}, {label:"Alvaro gay",value:"Alvaro gay"}]}
-                onChange={setCliente}
+                onChange={setTrabajador}
                 placeholder="Asignar trabajador" 
             />
             <View className='flex-row justify-between mt-1'>
