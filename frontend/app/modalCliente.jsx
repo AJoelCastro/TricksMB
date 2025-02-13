@@ -107,7 +107,7 @@ const Modal = () => {
                   <Text className='mt-2 font-semibold'>
                     Documento de identidad (DNI)
                   </Text>
-                  <TextInput placeholder='DNI' value={dni} onChangeText={setDni} onBlur={validarDni} keyboardType='numeric' maxLength={8} className='border p-2 mt-2 rounded-lg'/>
+                  <TextInput placeholder='DNI' value={dni} onChangeText={setDni} keyboardType='numeric' maxLength={8} className='border p-2 mt-2 rounded-lg'/>
                   
                 </View>
                 <View>
@@ -120,7 +120,7 @@ const Modal = () => {
                   <Text className='mt-2 font-semibold'>
                     Numero de contacto
                   </Text>
-                  <TextInput placeholder='Numero de telefono' value={telefonoNatural} onChangeText={setTelefonoNatural} onBlur={validarTN} keyboardType='numeric' maxLength={9} className='border p-2 mt-2 rounded-lg'/>
+                  <TextInput placeholder='Numero de telefono' value={telefonoNatural} onChangeText={setTelefonoNatural} keyboardType='numeric' maxLength={9} className='border p-2 mt-2 rounded-lg'/>
                 </View>
               </View>
             </View>
@@ -137,7 +137,7 @@ const Modal = () => {
                   <Text className='mt-2 font-semibold'>
                     Ingrese RUC
                   </Text>
-                  <TextInput placeholder='Numero RUC' value={ruc} onChangeText={setRuc} onBlur={validarRUC} keyboardType='numeric' maxLength={11}  className='border p-2 mt-2 rounded-lg'/>
+                  <TextInput placeholder='Numero RUC' value={ruc} onChangeText={setRuc} keyboardType='numeric' maxLength={11}  className='border p-2 mt-2 rounded-lg'/>
                 </View>
                 <View>
                   <Text className='mt-2 font-semibold'>
@@ -155,7 +155,7 @@ const Modal = () => {
                   <Text className='mt-2 font-semibold'>
                     Numero de contacto
                   </Text>
-                  <TextInput placeholder='Numero de telefono' value={telefonoJuridico} onChangeText={setTelefonoJuridico} onBlur={validarTJ} keyboardType='numeric' maxLength={9} className='border p-2 mt-2 rounded-lg'/>
+                  <TextInput placeholder='Numero de telefono' value={telefonoJuridico} onChangeText={setTelefonoJuridico} keyboardType='numeric' maxLength={9} className='border p-2 mt-2 rounded-lg'/>
                 </View>
               </View>
             </View>
