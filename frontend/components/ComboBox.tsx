@@ -7,6 +7,7 @@ import "../global.css"
 type OptionItem = {
     value: string;
     label: string;
+    label1: string;
 };
 
 interface DropDownProps {
@@ -19,9 +20,10 @@ const ComboBox = ({data, onChange, placeholder, ...props}: DropDownProps) =>{
     const [expanded, setExpanded] = useState(false);
     const toggleExpanded = useCallback(() => setExpanded(!expanded), [expanded]);
     const [value, setValue] = useState("");
+    const [value1, setValue1] = useState("");
     const buttonRef = useRef<View>(null);
     const [top, setTop] = useState(0);
-    const onSelect = useCallback((item: OptionItem) => {onChange(item); setValue(item.label); setExpanded(false)}, []);
+    const onSelect = useCallback((item: OptionItem) => {onChange(item); setValue(item.label), setValue1(item.label1); setExpanded(false)}, []);
     return (
         <View
         ref={buttonRef}
@@ -41,7 +43,7 @@ const ComboBox = ({data, onChange, placeholder, ...props}: DropDownProps) =>{
             >
                 <View className="flex-1 items-center justify-center flex-row gap-4">
                     <Text className=" text-white ">{value || placeholder}</Text>
-                    
+                    <Text className=" text-white ">{value1 || placeholder}</Text>
                 </View>
                 <AntDesign color={"white"} name={expanded ? "caretup" : "caretdown"} />
                 
@@ -64,6 +66,7 @@ const ComboBox = ({data, onChange, placeholder, ...props}: DropDownProps) =>{
                                             onPress={() => onSelect(item)}
                                         >
                                             <Text className="text-white">{item.label}</Text>
+                                            <Text className="text-white">{item.label1}</Text>
                                         </TouchableOpacity>
                                     )}
                                     ItemSeparatorComponent={() => (
@@ -77,6 +80,5 @@ const ComboBox = ({data, onChange, placeholder, ...props}: DropDownProps) =>{
             ) : null}
         </View>
     );
-    console.log("ComboBox: ", data);
 }
 export default ComboBox
