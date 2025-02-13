@@ -1,7 +1,7 @@
 const db = require(.../config/db);
 
 class ProductoDAO{
-    static async creteProducto(idModelo){
+    static async createProducto(idModelo){
         try{
             const query = 'INSERT INTO Producto (Modelo_idModelo) VALUES (?)';
             const [result] = await db.execute(query, [idModelo]);
