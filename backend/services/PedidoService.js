@@ -6,3 +6,5 @@ const PedidoService = {
         return await PedidoDAO.createPedido(idCliente, FechaEntrega, SerieInicio, SerieFinal);
     }
 }
+
+module.exports = PedidoService;

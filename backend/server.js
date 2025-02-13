@@ -30,7 +30,7 @@ requiredEnv.forEach((key) => {
 
 // Rutas
 app.use('/usuario', userRoutes);
-app.use('/clientes', clienteRoutes);
+app.use('/cliente', clienteRoutes);
 
 // Manejo de rutas no encontradas
 app.use((req, res, next) => {

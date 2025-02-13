@@ -33,11 +33,19 @@ const ClienteService = {
         const clienteJuridico = await ClienteDAO.getClienteJuridicoByRazonSocial(razonSocial);
         return clienteJuridico || null;
     },
-
-
+    
     async getAllClientes() {
         return await ClienteDAO.getAllClientes();
     },
+
+    async getCliente(value){
+        if(value.length == 8){
+            return await ClienteDAO.getClienteNaturalByDni(value);
+        }else if(value.length == 11){
+            return await ClienteDAO.getClienteJuridicoByRuc(value);
+        }
+        return res.status(404).json({ error: "Cliente no encontrado" });
+    }
 };
 
 module.exports = ClienteService;
