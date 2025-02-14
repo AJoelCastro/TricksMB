@@ -56,7 +56,7 @@ const ClienteController = {
     },
     async buscarClienteJuridico(req, res) {
         try {
-            const { tipoCliente, identificador } = req.body; // `identificador` será el DNI o RUC
+            const { tipoCliente, identificador } = req.query; // `identificador` será el DNI o RUC
 
             if (!tipoCliente || !identificador) {
                 return res.status(400).json({ error: "Debe proporcionar tipo de cliente y DNI o RUC" });
@@ -65,6 +65,7 @@ const ClienteController = {
             let cliente;
             if (tipoCliente === "juridico") {
                 cliente = await ClienteService.getClienteJuridicoByRuc(identificador);
+                console.log("cliente controller",cliente)
             } else {
                 return res.status(400).json({ error: "Tipo de cliente inválido" });
             }

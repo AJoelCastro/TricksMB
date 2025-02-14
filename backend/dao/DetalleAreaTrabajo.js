@@ -2,7 +2,7 @@ const db = require('../config/db')
 
 class DetalleAreaTrabajoDAO{
 
-    static async crearDetalleAreaTrabajo(idAreaTrabajo, Detalle_pedido_idDetalle_pedido, cantidadAvance, comentario, fechaActualizacion){
+    static async crearDetalleAreaTrabajo(idAreaTrabajo, Detalle_pedido_idDetalle_pedido, cantidadAvance, comentario){
         try{
             if (!idAreaTrabajo || !Detalle_pedido_idDetalle_pedido){
                 throw new Error("idAreaTrabajo y Detalle_pedido_idDetalle_pedido son obligatorios");
@@ -13,16 +13,16 @@ class DetalleAreaTrabajoDAO{
 
             const query = `
                 INSERT INTO Detalle_area_trabajo (
-                    Area_Trabajo_idArea_trabajo, Detalle_pedido_idDetalle_pedido, Cantidad_avance, Comentario, Fecha_actualizacion
-                ) VALUES (?, ?, ?, ?, ?)
+                    Area_Trabajo_idArea_trabajo, Detalle_pedido_idDetalle_pedido, Cantidad_avance, Comentario
+                ) VALUES (?, ?, ?, ?)
             `;
             const [result] = await db.execute(query, [
-                idAreaTrabajo, Detalle_pedido_idDetalle_pedido, cantidadAvance, comentario, fechaActualizacion
+                idAreaTrabajo, Detalle_pedido_idDetalle_pedido, cantidadAvance, comentario
             ]);
 
             return {
                 idDetalleAreaTrabajo: result.insertId,
-                idAreaTrabajo, Detalle_pedido_idDetalle_pedido, cantidadAvance, comentario, fechaActualizacion
+                idAreaTrabajo, Detalle_pedido_idDetalle_pedido, cantidadAvance, comentario
             };
         }catch(error){
             console.error("Error al crear detalle de area de trabajo:", error);
