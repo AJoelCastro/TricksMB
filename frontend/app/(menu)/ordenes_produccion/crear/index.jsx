@@ -100,7 +100,7 @@ export default function crear() {
             <Text className='text-lg font-bold'>
                 Buscar Cliente
             </Text>
-            <Text className='font-bold mx-auto mt-2 mb-4'>
+            <Text className='font-bold mx-auto mt-2 mb-4 text-lg'>
                     Tipo de cliente:
             </Text>
             <View className='flex-row gap-6 items-center justify-center mb-4'>
