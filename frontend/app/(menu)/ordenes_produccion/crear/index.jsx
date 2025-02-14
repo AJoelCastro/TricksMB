@@ -133,6 +133,10 @@ export default function crear() {
                     <Text className='font-bold'>RUC</Text>
                     <TextInput className='h-10 rounded-lg border' value={ruc} onChangeText={setRuc} keyboardType='numeric' maxLength={11}/>
                     <Button title='Buscar Cliente' onPress={(tipoCliente, ruc)=>cargarClienteJuridico(tipoCliente, ruc)}></Button>
+                    <View className='flex-row gap-6'>
+                        <Text className='text-black text-lg font-bold'>Razon Social: {cliente.Razon_social}</Text>
+                        <Text className='text-black text-lg font-bold'>RUC: {cliente.Ruc}</Text>
+                    </View>
                 </View>
                 )
             }
