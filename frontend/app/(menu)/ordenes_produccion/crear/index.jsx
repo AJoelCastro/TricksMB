@@ -1,8 +1,8 @@
-import {View, ScrollView, Text, TouchableOpacity, TextInput, FlatList, Button} from 'react-native';
-
+import {View, ScrollView, Text, TouchableOpacity, TextInput, FlatList, Button, StyleSheet} from 'react-native';
 import { useState, useEffect } from 'react';
-
 import { useRouter } from 'expo-router';
+
+import ModalSelector from "react-native-modal-selector";
 import ClienteService from '@/services/ClienteService';
 import FormFieldOrden from '@/components/formFieldOrden';
 import ComboBox from '@/components/ComboBox';
@@ -32,6 +32,18 @@ export default function crear() {
         const [tipoCliente, setTipoCliente] = useState("");
         const [dni, setDni] = useState("");
         const [ruc, setRuc] = useState("");
+        const [nombreTaco, setNombreTaco] = useState("");
+        const [tallaTaco, setTallaTaco] = useState("");
+
+        const opciones = [
+            { key: "3", label: "Talla 3" },
+            { key: "4", label: "Talla 4" },
+            { key: "5", label: "Talla 5" },
+            { key: "7", label: "Talla 7" },
+            { key: "9", label: "Talla 9" },
+            { key: "12", label: "Talla 12" },
+            { key: "15", label: "Talla 15" },
+        ];
 
         const getCurrentDate = () => {
             const date = new Date();
@@ -97,11 +109,9 @@ export default function crear() {
             
     return (
         <ScrollView className='mx-6 gap-2 '>
-            <Text className='text-lg font-bold'>
-                Buscar Cliente
-            </Text>
-            <Text className='font-bold mx-auto mt-2 mb-4 text-lg'>
-                    Tipo de cliente:
+            
+            <Text className='font-bold mx-auto mt-2 mb-3 text-lg'>
+                Buscar Cliente por Tipo:
             </Text>
             <View className='flex-row gap-6 items-center justify-center mb-4'>
                     <TouchableOpacity className='bg-[#62d139] p-2' onPress={()=>setTipoCliente("natural")}>
@@ -118,7 +128,13 @@ export default function crear() {
             { tipoCliente==="natural" &&(
                 <View className='gap-2 mb-2'>
                     <Text className='font-bold'>DNI</Text>
-                    <TextInput className='h-10 rounded-lg border' value={dni} onChangeText={setDni} keyboardType='numeric' maxLength={8}/>
+                    <TextInput 
+                        className='h-10 rounded-lg border' 
+                        value={dni} 
+                        onChangeText={setDni} 
+                        keyboardType='numeric' 
+                        maxLength={8}
+                    />
                     <Button title='Buscar Cliente' onPress={(tipoCliente, dni)=>cargarClienteNatural(tipoCliente, dni)}></Button>
                     <View className='flex-row gap-6'>
                         <Text className='text-black text-lg font-bold'>Nombre: {cliente.Nombre}</Text>
@@ -130,9 +146,20 @@ export default function crear() {
             }
             { tipoCliente==="juridico" &&(
                 <View className='gap-2 mb-2'>
-                    <Text className='font-bold'>RUC</Text>
-                    <TextInput className='h-10 rounded-lg border' value={ruc} onChangeText={setRuc} keyboardType='numeric' maxLength={11}/>
-                    <Button title='Buscar Cliente' onPress={(tipoCliente, ruc)=>cargarClienteJuridico(tipoCliente, ruc)}></Button>
+                    <Text className='font-bold'>
+                        RUC
+                    </Text>
+                    <TextInput 
+                        className='h-10 rounded-lg border' 
+                        value={ruc} 
+                        onChangeText={setRuc} 
+                        keyboardType='numeric' 
+                        maxLength={11}
+                    />
+                    <Button 
+                        title='Buscar Cliente' 
+                        onPress={(tipoCliente, ruc)=>cargarClienteJuridico(tipoCliente, ruc)}
+                    />
                     <View className='flex-row gap-6'>
                         <Text className='text-black text-lg font-bold'>Razon Social: {cliente.Razon_social}</Text>
                         <Text className='text-black text-lg font-bold'>RUC: {cliente.Ruc}</Text>
@@ -147,6 +174,7 @@ export default function crear() {
             <FormFieldOrden
                 title={"Modelo"}
                 value={modelo}
+                placeholder="Nombre del modelo"
                 onChangeText={setModelo}
             />
             <View className='gap-2'>
@@ -215,6 +243,7 @@ export default function crear() {
                     <TextInput
                         className='border p-2 rounded flex-1'
                         placeholder='Talla'
+                        placeholderTextColor={"gray"}
                         value={fila.talla}
                         onChangeText={(text) => {
                             const nuevasFilas = [...filas];
@@ -226,6 +255,7 @@ export default function crear() {
                     <TextInput
                         className='border p-2 rounded flex-1'
                         placeholder='Pares'
+                        placeholderTextColor={"gray"}
                         keyboardType='numeric'
                         value={fila.pares}
                         onChangeText={(text) => {
@@ -238,6 +268,7 @@ export default function crear() {
                     <TextInput
                         className='border p-2 rounded flex-1'
                         placeholder='Color'
+                        placeholderTextColor={"gray"}
                         value={fila.color}
                         onChangeText={(text) => {
                             const nuevasFilas = [...filas];
@@ -256,12 +287,61 @@ export default function crear() {
             ))}
 
             <TouchableOpacity 
-                className='flex-row gap-2 justify-center items-center'
+                className='flex-row gap-2 justify-center items-center mt-2'
                 onPress={handleAgregarFila}
             >
                 <Text>Agregar</Text>
                 <Icon name="plus-circle" size={20} />
             </TouchableOpacity>
+            <Text className='font-bold mt-4 text-lg mx-auto'>
+                Detalle de la orden
+            </Text>
+            <View className='mt-2 gap-2'>
+                <Text className='font-bold'>
+                    Taco
+                </Text>
+                <TextInput
+                    placeholder='Nombre de taco'
+                    placeholderTextColor={"gray"}
+                    value={nombreTaco}
+                    onChangeText={setNombreTaco}
+                    className='rounded-lg border h-10'
+                />
+            </View>
+            <View className='mt-2 flex-row items-center gap-8 mb-32'>
+                <Text className='font-bold'>
+                    Altura de taco:
+                </Text>
+                <ModalSelector
+                    data={opciones}
+                    accessible={true}
+                    onChange={(talla)=>setTallaTaco(talla.key)}
+                    supportedOrientations={['landscape']}
+                    cancelText='Cancelar'
+                    cancelStyle={styles.cancelButton}
+                    cancelTextStyle={styles.cancelText}
+                >
+                    <TextInput
+                        editable={false}
+                        placeholder="Seleccione una talla"
+                        placeholderTextColor={"black"}
+                        value={tallaTaco} 
+                        className='bg-gray-300 rounded-lg px-4 py-2 font-bold w-full'
+                    />
+                </ModalSelector>
+            </View>
         </ScrollView>
     );
 }
+const styles = StyleSheet.create({
+    cancelButton: {
+        backgroundColor: "#ff4444",  // Rojo
+        padding: 10,
+        borderRadius: 5,
+    },
+    cancelText: {
+        color: "#fff",
+        fontSize: 15,
+        fontWeight: "bold",
+    },
+});

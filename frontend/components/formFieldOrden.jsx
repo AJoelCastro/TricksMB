@@ -3,7 +3,7 @@ import  { React,useState } from 'react'
 
 import "../global.css"
 
-const FormFieldOrden = ({title, value, onChangeText, otherStyles, ...props }) =>{
+const FormFieldOrden = ({title, value, onChangeText, otherStyles, placeholder, ...props }) =>{
 
     const [showComponent, setshowComponent] = useState(false)
 
@@ -14,10 +14,12 @@ const FormFieldOrden = ({title, value, onChangeText, otherStyles, ...props }) =>
             </Text>
             <View className='my-1'>
                 <TextInput
-                className='text-black border border-black rounded-lg h-10'
-                value={value}
-                onChangeText={onChangeText}
-                secureTextEntry={title==='Component' && !showComponent}
+                    className='text-black border border-black rounded-lg h-10'
+                    value={value}
+                    onChangeText={onChangeText}
+                    secureTextEntry={title==='Component' && !showComponent}
+                    placeholder={placeholder}
+                    placeholderTextColor={"gray"}
                 >
                 </TextInput>
             </View>
