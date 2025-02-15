@@ -1,8 +1,8 @@
-import {View, ScrollView, Text, TouchableOpacity, TextInput, FlatList, Button} from 'react-native';
-
+import {View, ScrollView, Text, TouchableOpacity, TextInput, FlatList, Button, StyleSheet} from 'react-native';
 import { useState, useEffect } from 'react';
-
 import { useRouter } from 'expo-router';
+
+import ModalSelector from "react-native-modal-selector";
 import ClienteService from '@/services/ClienteService';
 import FormFieldOrden from '@/components/formFieldOrden';
 import ComboBox from '@/components/ComboBox';
@@ -33,6 +33,17 @@ export default function crear() {
         const [dni, setDni] = useState("");
         const [ruc, setRuc] = useState("");
         const [nombreTaco, setNombreTaco] = useState("");
+        const [tallaTaco, setTallaTaco] = useState("");
+
+        const opciones = [
+            { key: "3", label: "Talla 3" },
+            { key: "4", label: "Talla 4" },
+            { key: "5", label: "Talla 5" },
+            { key: "7", label: "Talla 7" },
+            { key: "9", label: "Talla 9" },
+            { key: "12", label: "Talla 12" },
+            { key: "15", label: "Talla 15" },
+        ];
 
         const getCurrentDate = () => {
             const date = new Date();
@@ -297,6 +308,40 @@ export default function crear() {
                     className='rounded-lg border h-10'
                 />
             </View>
+            <View className='mt-2 flex-row items-center gap-8 mb-32'>
+                <Text className='font-bold'>
+                    Altura de taco:
+                </Text>
+                <ModalSelector
+                    data={opciones}
+                    accessible={true}
+                    onChange={(talla)=>setTallaTaco(talla.key)}
+                    supportedOrientations={['landscape']}
+                    cancelText='Cancelar'
+                    cancelStyle={styles.cancelButton}
+                    cancelTextStyle={styles.cancelText}
+                >
+                    <TextInput
+                        editable={false}
+                        placeholder="Seleccione una talla"
+                        placeholderTextColor={"black"}
+                        value={tallaTaco} 
+                        className='bg-gray-300 rounded-lg px-4 py-2 font-bold w-full'
+                    />
+                </ModalSelector>
+            </View>
         </ScrollView>
     );
 }
+const styles = StyleSheet.create({
+    cancelButton: {
+        backgroundColor: "#ff4444",  // Rojo
+        padding: 10,
+        borderRadius: 5,
+    },
+    cancelText: {
+        color: "#fff",
+        fontSize: 15,
+        fontWeight: "bold",
+    },
+});
