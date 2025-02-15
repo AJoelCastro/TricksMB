@@ -2,7 +2,7 @@ const db = require('../config/db');
 
 class DetallePedidoDAO {
     static async createDetallePedido(idPedido, idProducto,codigoPedido, color, talla, cantidad, nombreTaco, alturaTaco, material,
-        tipoMaterial, suela, accesorio, forro) {
+        tipoMaterial, suela, accesorios, forro) {
         try {
             if (!idPedido || !idProducto) {
                 throw new Error("idPedido e idProducto son obligatorios");
@@ -12,20 +12,19 @@ class DetallePedidoDAO {
             }
             const query = `
                 INSERT INTO Detalle_pedido (
-                    Pedido_idPedido, Producto_idProducto, Codigo_pedido,Color, Talla, Cantidad,
-                    Nombre_taco, Altura_taco, Material, Tipo_material, Suela, Accesorio, Forro
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            `;
+                    Pedido_idPedido, Producto_idProducto, Codigo_pedido, Color, Talla, Cantidad,
+                    Nombre_taco, Altura_taco, Material, Tipo_material, Suela, Accesorios, Forro
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
             const [result] = await db.execute(query, [
                 idPedido, idProducto, codigoPedido, color, talla, cantidad, nombreTaco, alturaTaco, material,
-                tipoMaterial, suela, accesorio, forro
+                tipoMaterial, suela, accesorios, forro
             ]);
 
             return {
                 idDetallePedido: result.insertId, // Retorna el ID del nuevo registro
                 idPedido, idProducto, codigoPedido, color, talla, cantidad, nombreTaco, alturaTaco, material,
-                tipoMaterial, suela, accesorio, forro
+                tipoMaterial, suela, accesorios, forro
             };
 
         } catch (error) {
