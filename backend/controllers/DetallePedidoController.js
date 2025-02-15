@@ -8,39 +8,37 @@ const ClienteService = require('../services/ClienteService');
 const PedidoController = {
     async createPedido(req, res) {
         try {
-            const {
+            let {
                 clienteTipo, fechaEntrega, serieInicio, serieFinal, nomTipoCalzado, nomModelo, 
                 color, talla, cantidad, nombreTaco, alturaTaco, material, tipoMaterial, 
                 suela, accesorio, forro
             } = req.body;
 
-            if (!clienteTipo || !fechaEntrega || !serieInicio || !serieFinal || !nomTipoCalzado || !nomModelo ||
-                !color || !talla || !cantidad || !nombreTaco || !alturaTaco || !material || !tipoMaterial ||
-                !suela || !accesorio || !forro) {
-                return res.status(400).json({ error: 'Todos los campos son requeridos' });
-            }
-            if (isNaN(talla) || isNaN(cantidad) || isNaN(alturaTaco)) {
-                return res.status(400).json({ error: "Talla, cantidad y altura de taco deben ser números válidos" });
-            }
+            const convertirNumero = (valor, nombreCampo) => {
+                const numero = Number(valor);
+                if (isNaN(numero)) throw { status: 400, message: `${nombreCampo} debe ser un número válido` };
+                return numero;
+            };
+
+            serieInicio = convertirNumero(serieInicio, "serieInicio");
+            serieFinal = convertirNumero(serieFinal, "serieFinal");
+            cantidad = convertirNumero(cantidad, "cantidad");
+            talla = convertirNumero(talla, "talla");
+            alturaTaco = convertirNumero(alturaTaco, "alturaTaco");
 
             const cliente = await ClienteService.getCliente(clienteTipo);
-
             const tipoCalzado = await TipoCalzadoService.getTipoCalzadoByNombre(nomTipoCalzado);
-
             const modelo = await ModeloService.getModeloByNombre(nomModelo);
-
             const producto = await ProductoService.createProducto(tipoCalzado.idTipoCalzado, modelo.idModelo);
 
             const pedido = await PedidoService.createPedido(cliente.idCliente, fechaEntrega, serieInicio, serieFinal);
-            if (!pedido) return res.status(500).json({ error: "Error al registrar pedido" });
 
             const fecha = new Date();
             const fechaStr = fecha.toISOString().slice(2, 10).replace(/-/g, ""); // "YYMMDD"
             const codigoPedido = `COD${fechaStr}${pedido.idPedido}`;
 
             const detallePedido = await DetallePedidoService.createDetallePedido(
-                pedido.idPedido, producto.idProducto, codigoPedido, 
-                color, talla, cantidad, nombreTaco, alturaTaco, material, 
+                pedido.idPedido, producto.idProducto,codigoPedido, color, talla, cantidad, nombreTaco, alturaTaco, material, 
                 tipoMaterial, suela, accesorio, forro
             );
 
@@ -48,7 +46,7 @@ const PedidoController = {
 
         } catch (error) {
             console.error("Error al crear pedido:", error);
-            return res.status(500).json({ error: "Error interno del servidor" });
+            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
         }
     }
 };

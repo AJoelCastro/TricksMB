@@ -4,12 +4,6 @@ class DetallePedidoDAO {
     static async createDetallePedido(idPedido, idProducto,codigoPedido, color, talla, cantidad, nombreTaco, alturaTaco, material,
         tipoMaterial, suela, accesorios, forro) {
         try {
-            if (!idPedido || !idProducto) {
-                throw new Error("idPedido e idProducto son obligatorios");
-            }
-            if (cantidad <= 0) {
-                throw new Error("Cantidad debe ser mayor a 0");
-            }
             const query = `
                 INSERT INTO Detalle_pedido (
                     Pedido_idPedido, Producto_idProducto, Codigo_pedido, Color, Talla, Cantidad,

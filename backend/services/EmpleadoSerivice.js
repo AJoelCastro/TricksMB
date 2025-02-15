@@ -3,11 +3,9 @@ const EmpleadoDAO = reuire('../dao/EmpleadoDAO');
 const EmpleadoService = {
     async getByDni(dni){
         try{
-            const empleado = await EmpleadoDA.getByDni(dni);
-            if(!empleado){
-                return res.status(404).json({ error: "Empleado no encontrado" });
-            }
-            return empleado;
+            if(!dni)    
+                throw {status: 400, message: "dni requerido para buscar empleado"};
+            return await EmpleadoDAO.getByDni(dni);
         } catch(error){
             throw error;
         }

@@ -11,12 +11,8 @@ const ModeloService = {
 
     async getModeloByNombre(nombre){
         try{
-            const modelo =  await ModeloDAO.getModeloByNombre(nombre);
-            if(!modelo){ 
-                return res.status(404).json({ error: "Modelo no encontrado" });
-            }else{
-                return modelo;
-            }
+            if(!nombre) throw{status: 400 , message: "nombre requerido"};
+            return await ModeloDAO.getModeloByNombre(nombre);
         }catch(error){
             throw error;
         }
