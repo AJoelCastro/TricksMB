@@ -1,4 +1,5 @@
-import {View, ScrollView, Text, TouchableOpacity, TextInput, FlatList, Button, StyleSheet} from 'react-native';
+import {View, ScrollView, Text, TouchableOpacity, Button, StyleSheet} from 'react-native';
+import {TextInput} from 'react-native-paper';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 
@@ -10,19 +11,35 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import "../../../../global.css";
 
-const data = [
-    { id: '1', name: 'Talla 31' },
-    { id: '2', name: 'Talla 32' },
-    { id: '3', name: 'Talla 33' },
-    { id: '4', name: 'Talla 34' },
-    { id: '5', name: 'Talla 35' },
-    { id: '6', name: 'Talla 36' },
-    { id: '7', name: 'Talla 37' },
-    { id: '8', name: 'Talla 38' },
-    // Más elementos...
-];
 
 export default function crear() {
+        const opcionesTaco = [
+            { key: "3", label: "Talla 3" },
+            { key: "4", label: "Talla 4" },
+            { key: "5", label: "Talla 5" },
+            { key: "7", label: "Talla 7" },
+            { key: "9", label: "Talla 9" },
+            { key: "12", label: "Talla 12" },
+            { key: "15", label: "Talla 15" },
+        ];
+        const opcionesSerieInicio = [
+            { key: "0", label: "Talla 0" },
+            { key: "1", label: "Talla 1" },
+            { key: "2", label: "Talla 2" },
+            { key: "3", label: "Talla 3" },
+            { key: "4", label: "Talla 4" },
+            { key: "5", label: "Talla 5" },
+            { key: "6", label: "Talla 6" },
+        ];
+        const opcionesSerieFin = [
+            { key: "1", label: "Talla 1" },
+            { key: "2", label: "Talla 2" },
+            { key: "3", label: "Talla 3" },
+            { key: "4", label: "Talla 4" },
+            { key: "5", label: "Talla 5" },
+            { key: "6", label: "Talla 6" },
+            { key: "7", label: "Talla 7" },
+        ];
         const router = useRouter();
         const [cliente, setCliente] = useState("");
         const [modelo, setModelo] = useState("");
@@ -35,16 +52,6 @@ export default function crear() {
         const [nombreTaco, setNombreTaco] = useState("");
         const [tallaTaco, setTallaTaco] = useState("");
 
-        const opciones = [
-            { key: "3", label: "Talla 3" },
-            { key: "4", label: "Talla 4" },
-            { key: "5", label: "Talla 5" },
-            { key: "7", label: "Talla 7" },
-            { key: "9", label: "Talla 9" },
-            { key: "12", label: "Talla 12" },
-            { key: "15", label: "Talla 15" },
-        ];
-
         const getCurrentDate = () => {
             const date = new Date();
             const year = date.getFullYear();
@@ -54,15 +61,7 @@ export default function crear() {
         };
         const [currentDate] = useState(getCurrentDate()); // Estado para almacenar la fecha formateada
 
-        const handleSelectSerie = (type, item) => {
-            if (type === 'inicio') {
-                setSelectSerieInicio(item.name);
-            } else if (type === 'fin') {
-                setSelectSerieFin(item.name);
-            }
-        };
         const [filas, setFilas] = useState([]);
-
         const handleAgregarFila = () => {
             // Agregar nueva fila con valores iniciales
             setFilas([...filas, { 
@@ -195,19 +194,23 @@ export default function crear() {
                 <View className='flex-row items-center gap-2'>
                     <Text className='font-bold'>Serie Inicio</Text>
                     <View className='w-22 h-8 bg-gray-100 border-l-2 items-center'>
-                        <FlatList
-                            data={data}
-                            renderItem={({ item }) => (
-                                <TouchableOpacity
-                                    className={`p-2 ${selectSerieInicio === item.name ? 'bg-blue-200' : ''} rounded`}
-                                    onPress={() => handleSelectSerie('inicio', item)}
-                                >
-                                    <Text className='text-lg'>{item.name}</Text>
-                                </TouchableOpacity>
-                            )}
-                            keyExtractor={(item) => item.id}
-                            showsVerticalScrollIndicator={false}
-                        />
+                        <ModalSelector
+                            data={opcionesSerieInicio}
+                            accessible={true}
+                            onChange={(talla)=>setSelectSerieInicio(talla.key)}
+                            supportedOrientations={['landscape']}
+                            cancelText='Cancelar'
+                            cancelStyle={styles.cancelButton}
+                            cancelTextStyle={styles.cancelText}
+                        >
+                            <TextInput
+                            editable={false}
+                            placeholder="Talla"
+                            placeholderTextColor={"black"}
+                            value={selectSerieInicio} 
+                            className='bg-gray-300 rounded-lg px-4 py-2 font-bold w-full'
+                            />
+                        </ModalSelector>
                         
                     </View>
                     
@@ -215,19 +218,24 @@ export default function crear() {
                 <View className='flex-row items-center gap-2'>
                     <Text className='font-bold'>Serie Fin</Text>
                     <View className='w-22 h-8 bg-gray-100 border-l-2 items-center'>
-                        <FlatList
-                            data={data}
-                            renderItem={({ item }) => (
-                                <TouchableOpacity
-                                    className={`p-2 ${selectSerieFin === item.name ? 'bg-blue-200' : ''} rounded`}
-                                    onPress={() => handleSelectSerie('fin', item)}
-                                >
-                                    <Text className='text-lg'>{item.name}</Text>
-                                </TouchableOpacity>
-                            )}
-                            keyExtractor={(item) => item.id}
-                            showsVerticalScrollIndicator={false}
-                        />
+                        <ModalSelector
+                            data={opcionesSerieFin}
+                            accessible={true}
+                            onChange={(talla)=>setSelectSerieFin(talla.key)}
+                            supportedOrientations={['landscape']}
+                            cancelText='Cancelar'
+                            cancelStyle={styles.cancelButton}
+                            cancelTextStyle={styles.cancelText}
+                        >
+                        <TextInput
+                        editable={false}
+                        placeholder="Talla"
+                        placeholderTextColor={"black"}
+                        value={selectSerieFin} 
+                        className='bg-gray-300 rounded-lg px-4 py-2 font-bold w-full'
+                    />
+                        </ModalSelector>
+                        
                     </View>
                 </View>
             </View>
@@ -297,23 +305,24 @@ export default function crear() {
                 Detalle de la orden
             </Text>
             <View className='mt-2 gap-2'>
-                <Text className='font-bold'>
-                    Taco
-                </Text>
+                
                 <TextInput
+                    label="Taco"
+                    mode="outlined"
                     placeholder='Nombre de taco'
                     placeholderTextColor={"gray"}
                     value={nombreTaco}
                     onChangeText={setNombreTaco}
-                    className='rounded-lg border h-10'
+                    className='rounded-lg h-10'
+                    
                 />
             </View>
-            <View className='mt-2 flex-row items-center gap-8 mb-32'>
+            <View className='mt-2 flex-row items-center gap-8'>
                 <Text className='font-bold'>
                     Altura de taco:
                 </Text>
                 <ModalSelector
-                    data={opciones}
+                    data={opcionesTaco}
                     accessible={true}
                     onChange={(talla)=>setTallaTaco(talla.key)}
                     supportedOrientations={['landscape']}
@@ -329,6 +338,9 @@ export default function crear() {
                         className='bg-gray-300 rounded-lg px-4 py-2 font-bold w-full'
                     />
                 </ModalSelector>
+            </View>
+            <View className='mb-32'>
+
             </View>
         </ScrollView>
     );
