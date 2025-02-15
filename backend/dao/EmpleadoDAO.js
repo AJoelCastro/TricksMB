@@ -8,7 +8,6 @@ class EmpleadoDAO{
             const [rows] =  await db.execute(query, [Dni]);
             return rows[0];
         } catch(error){
-            console.error('Error al buscar empleado pos Dni:', error);
             throw error;
         }
     }

@@ -51,3 +51,10 @@ const HOST = '0.0.0.0'; // Escuchar en todas las interfaces de red
 app.listen(PORT, HOST, () => {
     console.log(`🚀 Servidor corriendo en http://${HOST}:${PORT}`);
 });
+
+const ip = require('ip');
+console.log('Tu IP actual es:', ip.address());
+
+
+
+
