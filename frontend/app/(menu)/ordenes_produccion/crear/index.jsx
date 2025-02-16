@@ -24,15 +24,6 @@ export default function crear() {
             { key: "15", label: "Talla 15" },
         ];
         const opcionesSerieInicio = [
-            { key: "0", label: "Talla 0" },
-            { key: "1", label: "Talla 1" },
-            { key: "2", label: "Talla 2" },
-            { key: "3", label: "Talla 3" },
-            { key: "4", label: "Talla 4" },
-            { key: "5", label: "Talla 5" },
-            { key: "6", label: "Talla 6" },
-        ];
-        const opcionesSerieFin = [
             { key: "1", label: "Talla 1" },
             { key: "2", label: "Talla 2" },
             { key: "3", label: "Talla 3" },
@@ -40,6 +31,19 @@ export default function crear() {
             { key: "5", label: "Talla 5" },
             { key: "6", label: "Talla 6" },
             { key: "7", label: "Talla 7" },
+            { key: "8", label: "Talla 8" },
+            { key: "9", label: "Talla 9" },
+        ];
+        const opcionesSerieFin = [
+            { key: "2", label: "Talla 2" },
+            { key: "3", label: "Talla 3" },
+            { key: "4", label: "Talla 4" },
+            { key: "5", label: "Talla 5" },
+            { key: "6", label: "Talla 6" },
+            { key: "7", label: "Talla 7" },
+            { key: "8", label: "Talla 8" },
+            { key: "9", label: "Talla 9" },
+            { key: "0", label: "Talla 0" },
         ];
         const router = useRouter();
         const [cliente, setCliente] = useState("");
@@ -114,12 +118,12 @@ export default function crear() {
                 Buscar Cliente por Tipo:
             </Text>
             <View className='flex-row gap-6 items-center justify-center mb-4'>
-                    <TouchableOpacity className='bg-[#62d139] p-2' onPress={()=>setTipoCliente("natural")}>
+                    <TouchableOpacity className='bg-[#62d139] p-3 rounded-lg' onPress={()=>setTipoCliente("natural")}>
                         <Text>
                             Cliente Natural
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity className='bg-[#62d139] p-2' onPress={()=>setTipoCliente("juridico")}>
+                    <TouchableOpacity className='bg-[#62d139] p-3 rounded-lg' onPress={()=>setTipoCliente("juridico")}>
                         <Text>
                             Cliente Juridico
                         </Text>
@@ -127,15 +131,16 @@ export default function crear() {
             </View>
             { tipoCliente==="natural" &&(
                 <View className='gap-2 mb-2'>
-                    <Text className='font-bold'>DNI</Text>
                     <TextInput 
-                        className='h-10 rounded-lg border' 
+                        label="DNI"
+                        mode='outlined'
+                        className='h-10 rounded-lg' 
                         value={dni} 
                         onChangeText={setDni} 
                         keyboardType='numeric' 
                         maxLength={8}
+                        right={<TextInput.Icon icon="magnify" onPress={(tipoCliente, dni)=>cargarClienteNatural(tipoCliente, dni)}/>}
                     />
-                    <Button title='Buscar Cliente' onPress={(tipoCliente, dni)=>cargarClienteNatural(tipoCliente, dni)}></Button>
                     <View className='flex-row gap-6'>
                         <Text className='text-black text-lg font-bold'>Nombre: {cliente.Nombre}</Text>
                         <Text className='text-black text-lg font-bold'>DNI: {cliente.Dni}</Text>
@@ -146,19 +151,15 @@ export default function crear() {
             }
             { tipoCliente==="juridico" &&(
                 <View className='gap-2 mb-2'>
-                    <Text className='font-bold'>
-                        RUC
-                    </Text>
                     <TextInput 
-                        className='h-10 rounded-lg border' 
+                        label="RUC"
+                        mode='outlined'
+                        className='h-10 rounded-lg ' 
                         value={ruc} 
                         onChangeText={setRuc} 
                         keyboardType='numeric' 
                         maxLength={11}
-                    />
-                    <Button 
-                        title='Buscar Cliente' 
-                        onPress={(tipoCliente, ruc)=>cargarClienteJuridico(tipoCliente, ruc)}
+                        right={<TextInput.Icon icon="magnify" onPress={(tipoCliente, ruc)=>cargarClienteJuridico(tipoCliente, ruc)}/>}
                     />
                     <View className='flex-row gap-6'>
                         <Text className='text-black text-lg font-bold'>Razon Social: {cliente.Razon_social}</Text>
