@@ -1,4 +1,4 @@
-import {View, ScrollView, Text, TouchableOpacity, Button, StyleSheet} from 'react-native';
+import {View, ScrollView, Text, TouchableOpacity, Button, StyleSheet, Dimensions} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import "../../../../global.css";
 
+const { width } = Dimensions.get('window');
 
 export default function crear() {
         const opcionesTaco = [
@@ -166,21 +167,23 @@ export default function crear() {
                 </View>
                 )
             }
-            <FormFieldOrden
-                title={"Codigo"}
-                value={""}
-            />
-            <FormFieldOrden
-                title={"Modelo"}
-                value={modelo}
-                placeholder="Nombre del modelo"
-                onChangeText={setModelo}
-            />
             <View className='gap-2'>
-                <Text className='font-bold'>Fecha de creacion</Text>
                 <TextInput
-                    className='border h-10 rounded-lg'
-                    title={"Fecha de creacion"}
+                    label="Codigo"
+                    mode='outlined'
+                    value={""}
+                    editable={false}
+                />
+                <TextInput
+                    label="Modelo"
+                    mode="outlined"
+                    value={modelo}
+                    placeholder="Nombre del modelo"
+                    onChangeText={setModelo}
+                />
+                <TextInput
+                    mode='outlined'
+                    label="Fecha de creacion"
                     value={currentDate}
                     editable={false}
                 />
@@ -190,10 +193,10 @@ export default function crear() {
                 onChange={setTrabajador}
                 placeholder="Asignar trabajador" 
             />
-            <View className='flex-row justify-between mt-1'>
+            <View className='flex-row justify-between mt-4 mb-4'>
                 <View className='flex-row items-center gap-2'>
                     <Text className='font-bold'>Serie Inicio</Text>
-                    <View className='w-22 h-8 bg-gray-100 border-l-2 items-center'>
+                    <View className='w-22 h-8 bg-gray-100 border-l-2 items-center justify-center'>
                         <ModalSelector
                             data={opcionesSerieInicio}
                             accessible={true}
@@ -205,19 +208,20 @@ export default function crear() {
                         >
                             <TextInput
                             editable={false}
+                            style={{ height: 40 }} 
                             placeholder="Talla"
                             placeholderTextColor={"black"}
                             value={selectSerieInicio} 
-                            className='bg-gray-300 rounded-lg px-4 py-2 font-bold w-full'
+                            className='bg-gray-200 rounded-lg font-bold w-full'
                             />
                         </ModalSelector>
                         
                     </View>
                     
                 </View>
-                <View className='flex-row items-center gap-2'>
+                <View className='flex-row items-center gap-2 justify-center'>
                     <Text className='font-bold'>Serie Fin</Text>
-                    <View className='w-22 h-8 bg-gray-100 border-l-2 items-center'>
+                    <View className='w-22 h-8 bg-gray-100 border-l-2 items-center justify-center'>
                         <ModalSelector
                             data={opcionesSerieFin}
                             accessible={true}
@@ -227,31 +231,27 @@ export default function crear() {
                             cancelStyle={styles.cancelButton}
                             cancelTextStyle={styles.cancelText}
                         >
-                        <TextInput
-                        editable={false}
-                        placeholder="Talla"
-                        placeholderTextColor={"black"}
-                        value={selectSerieFin} 
-                        className='bg-gray-300 rounded-lg px-4 py-2 font-bold w-full'
-                    />
+                            <TextInput
+                                editable={false}
+                                style={{ height: 40 }} 
+                                placeholder="Talla"
+                                placeholderTextColor={"black"}
+                                value={selectSerieFin} 
+                                className='bg-gray-200 rounded-lg font-bold w-full'
+                            />
                         </ModalSelector>
                         
                     </View>
                 </View>
             </View>
-            <View className='flex-row justify-between mt-3'>
-                <Text className='font-bold'>Talla</Text>
-                <Text className='font-bold'>Pares</Text>
-                <Text className='font-bold'>Color</Text>
-                <Text className='font-bold w-6'>   </Text> {/* Espacio para el botón eliminar */}
-            </View>
-
             {filas.map((fila, index) => (
-                <View key={fila.id} className='flex-row justify-between items-center gap-2 mb-2'>
+                <View key={fila.id} className='flex-row justify-between items-center  mb-2'>
                     <TextInput
-                        className='border p-2 rounded flex-1'
+                        label="Talla"
+                        className='rounded flex-1'
                         placeholder='Talla'
-                        placeholderTextColor={"gray"}
+                        style={{ height:40, width: width * 0.25 }}
+                        mode='outlined'
                         value={fila.talla}
                         onChangeText={(text) => {
                             const nuevasFilas = [...filas];
@@ -261,9 +261,11 @@ export default function crear() {
                     />
                     
                     <TextInput
-                        className='border p-2 rounded flex-1'
+                        label="Pares"
+                        className='rounded flex-1'
                         placeholder='Pares'
-                        placeholderTextColor={"gray"}
+                        style={{ height:40, width: width * 0.25 }}
+                        mode='outlined'
                         keyboardType='numeric'
                         value={fila.pares}
                         onChangeText={(text) => {
@@ -274,9 +276,11 @@ export default function crear() {
                     />
                     
                     <TextInput
-                        className='border p-2 rounded flex-1'
+                        label="Color"
+                        className='rounded flex-1'
                         placeholder='Color'
-                        placeholderTextColor={"gray"}
+                        style={{ height:40, width: width * 0.25 }}
+                        mode='outlined'
                         value={fila.color}
                         onChangeText={(text) => {
                             const nuevasFilas = [...filas];
@@ -287,7 +291,6 @@ export default function crear() {
                     
                     <TouchableOpacity 
                         onPress={() => handleEliminarFila(fila.id)}
-                        className='p-2'
                     >
                         <Icon name="trash" size={20} color="red" />
                     </TouchableOpacity>
@@ -298,7 +301,7 @@ export default function crear() {
                 className='flex-row gap-2 justify-center items-center mt-2'
                 onPress={handleAgregarFila}
             >
-                <Text>Agregar</Text>
+                <Text className='text-lg'>Agregar</Text>
                 <Icon name="plus-circle" size={20} />
             </TouchableOpacity>
             <Text className='font-bold mt-4 text-lg mx-auto'>
@@ -334,8 +337,9 @@ export default function crear() {
                         editable={false}
                         placeholder="Seleccione una talla"
                         placeholderTextColor={"black"}
+                        style={{ height:40 }}
                         value={tallaTaco} 
-                        className='bg-gray-300 rounded-lg px-4 py-2 font-bold w-full'
+                        className='bg-gray-200 rounded-lg font-bold'
                     />
                 </ModalSelector>
             </View>

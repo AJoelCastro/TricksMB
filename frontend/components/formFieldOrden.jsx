@@ -1,7 +1,8 @@
-import { View, Text, TextInput } from 'react-native'
-import  { React,useState } from 'react'
+import { View, Text } from 'react-native';
+import { TextInput } from 'react-native-paper';
+import  { React,useState } from 'react';
 
-import "../global.css"
+import "../global.css";
 
 const FormFieldOrden = ({title, value, onChangeText, otherStyles, placeholder, ...props }) =>{
 
