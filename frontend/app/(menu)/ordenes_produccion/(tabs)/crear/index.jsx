@@ -5,11 +5,10 @@ import { useRouter } from 'expo-router';
 
 import ModalSelector from "react-native-modal-selector";
 import ClienteService from '@/services/ClienteService';
-import FormFieldOrden from '@/components/formFieldOrden';
 import ComboBox from '@/components/ComboBox';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import "../../../../global.css";
+import "../../../../../global.css";
 
 const { width } = Dimensions.get('window');
 

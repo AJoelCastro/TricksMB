@@ -27,21 +27,21 @@ export default function OrdenesLayout() {
 
       }}>
       <Tabs.Screen
-        name="crear/index"
+        name="(tabs)/crear/index"
         options={{
           title: 'Crear',
           tabBarIcon: () => <Icon name="plus" size={22} color={textColor}/>,
         }}
       />
       <Tabs.Screen
-        name="editar/index"
+        name="(tabs)/editar/index"
         options={{
           title: 'Editar',
           tabBarIcon: () => <Icon name="edit" size={22} color={textColor}/>,
         }}
       />
       <Tabs.Screen
-        name="cancelar/index"
+        name="(tabs)/cancelar/index"
         options={{
           title: 'Cancelar',
           tabBarIcon: () => <Icon name="times-circle" size={22} color={textColor}/>,
