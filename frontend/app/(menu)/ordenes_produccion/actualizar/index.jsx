@@ -1,5 +1,5 @@
-import {SafeAreaView, View, Image, Text, TouchableOpacity, TextInput} from 'react-native';
-
+import { View, Text} from 'react-native';
+import { TextInput } from 'react-native-paper';
 import React, { useEffect, useState } from 'react';
 
 import CustomButtom from '@/components/customButtom';
@@ -12,21 +12,19 @@ export default function index() {
     const router = useRouter();
     const[codigo, setCodigo]= useState("");
     return (
-        <View>
+        <View className='p-2'>
             <View>
                 <Text className='text-black text-4xl font-bold text-center mt-8'>Actualización de orden</Text>
             </View>
-            <Text className="text-black text-2xl font-bold mt-4">Código:</Text>
-            <View className="flex-row justify-center items-center mt-2 mb-4 gap-2">
-                <TextInput
-                    className='text-black border w-[85%] rounded-lg'
-                    placeholder='Ingrese el codigo de orden'
-                    secureTextEntry
-                    onChange={setCodigo}
-                />
-            </View>
+            <TextInput
+                label={"Codigo"}
+                mode='outlined'
+                placeholder='Ingrese el codigo de orden'
+                onChange={setCodigo}
+                right={<TextInput.Icon icon={"magnify"}/>}
+            />
             <View className="items-center mx-6">
-                <CustomButtom title={"Corte"} touch={()=>router.replace("/(menu)/ordenes_produccion/actualizar/(etapas)/corte")}></CustomButtom>
+                <CustomButtom title={"Corte"} touch={()=>router.push("/(menu)/ordenes_produccion/actualizar/(etapas)/corte")}></CustomButtom>
                 <CustomButtom title={"Perfilado"}></CustomButtom>
                 <CustomButtom title={"Armado"}></CustomButtom>
                 <CustomButtom title={"Alistado"}></CustomButtom>
