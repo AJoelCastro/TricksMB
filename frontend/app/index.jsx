@@ -26,7 +26,7 @@ const Home = () => {
         setLoading(true);
         try {
             await AuthService.login(correo, contrasenia);
-            router.replace("/menu"); // Redirigir después de actualizar el estado
+            router.replace("/(menu)"); // Redirigir después de actualizar el estado
         } catch (error) {
             Alert.alert("Error", "Credenciales incorrectas");
         }
@@ -38,7 +38,7 @@ const Home = () => {
             console.log("Token en Home.js:", token);
 
             if (token) {
-                router.replace("/menu"); 
+                router.replace("/(menu)"); 
             } else {
                 setLoading(false);
             }

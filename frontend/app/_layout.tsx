@@ -42,18 +42,9 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen 
-          name="menu" 
+          name="(menu)" 
           options={{ 
-            headerTitle:"Inicio",
-            headerStyle:{
-              backgroundColor:backgroundColor,
-            },
-            headerTintColor:textColor,
-            headerRight: () => (
-              <TouchableOpacity onPress={handleLogout}>
-                <Text className='font-bold 'style={{ color:textColor}}>Cerrar sesion</Text>
-              </TouchableOpacity>
-            ),
+            headerShown:false
           }} 
         />
         <Stack.Screen 

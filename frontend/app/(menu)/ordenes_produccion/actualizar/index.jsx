@@ -26,7 +26,7 @@ export default function index() {
                 />
             </View>
             <View className="items-center mx-6">
-                <CustomButtom title={"Corte"} touch={()=>router.replace("/menu/ordenes_produccion/actualizar/(etapas)/corte")}></CustomButtom>
+                <CustomButtom title={"Corte"} touch={()=>router.replace("/(menu)/ordenes_produccion/actualizar/(etapas)/corte")}></CustomButtom>
                 <CustomButtom title={"Perfilado"}></CustomButtom>
                 <CustomButtom title={"Armado"}></CustomButtom>
                 <CustomButtom title={"Alistado"}></CustomButtom>
