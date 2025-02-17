@@ -13,7 +13,6 @@ export default function OrdenesLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect
@@ -48,10 +47,16 @@ export default function OrdenesLayout() {
         }}
       />
       <Tabs.Screen
-        name="actualizar"
+        name="actualizar/index"
         options={{
           title: 'Actualizar',
           tabBarIcon: () => <Icon name="refresh" size={22} color={textColor}/>,
+        }}
+      />
+      <Tabs.Screen
+        name="actualizar/(etapas)"
+        options={{
+          href: null,  // Evita que expo-router lo tome como una tab
         }}
       />
       

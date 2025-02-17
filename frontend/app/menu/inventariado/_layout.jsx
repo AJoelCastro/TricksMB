@@ -31,7 +31,7 @@ export default function MenuLayout() {
         }}
       >
         <Drawer.Screen
-          name="menu"
+          name="index"
           options={{
             title: 'Inicio',
             drawerIcon: () => (<Icon name="home" size={20} color="blue"/>),
@@ -46,47 +46,6 @@ export default function MenuLayout() {
             headerTintColor: textColor,
           }}
           
-        />
-        <Drawer.Screen
-          name="ordenes_produccion"
-          options={{
-            title: 'Ordenes de Producción',
-            drawerIcon: () => (<Icon name="list-alt" size={20} color="blue"/>),
-            headerStyle: {
-              backgroundColor: backgroundColor, // Cambia el color de fondo del header
-            },
-            headerTintColor: textColor,
-            headerRight:() => (
-              <TouchableOpacity onPress={()=>router.push("/modalCliente")} className='flex-row gap-2 mr-2 items-center'>
-                <Text style={{color:textColor}}>
-                  Cliente Nuevo
-                </Text>
-                <Icon name="user" size={20} color={textColor}/>
-              </TouchableOpacity>
-            )
-          }}
-        />
-        <Drawer.Screen
-          name="almacen/index"
-          options={{
-            title: 'Almacen',
-            drawerIcon: () => (<Icon name="archive" size={20} color="blue"/>),
-            headerStyle: {
-              backgroundColor: backgroundColor, // Cambia el color de fondo del header
-            },
-            headerTintColor: textColor,
-          }}
-        />
-        <Drawer.Screen
-          name="inventariado/index"
-          options={{
-            title: 'Inventario',
-            drawerIcon: () => (<Icon name="cubes" size={20} color="blue"/>),
-            headerStyle: {
-              backgroundColor: backgroundColor, // Cambia el color de fondo del header
-            },
-            headerTintColor: textColor,
-          }}
         />
       </Drawer>
     </GestureHandlerRootView>

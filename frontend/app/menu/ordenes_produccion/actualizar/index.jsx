@@ -24,15 +24,9 @@ export default function index() {
                     secureTextEntry
                     onChange={setCodigo}
                 />
-                <TouchableOpacity className=" p-2 rounded-lg border border-black " title=''>
-                    <Image 
-                        source={{uri: 'https://w7.pngwing.com/pngs/697/690/png-transparent-black-magnifying-glass-illustration-magnifying-glass-computer-icons-simple-magnifying-glass-glass-magnifier-brand.png'}} 
-                        style={{width: 16, height: 16}} 
-                    />
-                </TouchableOpacity>
             </View>
             <View className="items-center mx-6">
-                <CustomButtom title={"Corte"} touch={()=>router.push("/ordenes_produccion/actualizar/corte")}></CustomButtom>
+                <CustomButtom title={"Corte"} touch={()=>router.replace("/menu/ordenes_produccion/actualizar/(etapas)/corte")}></CustomButtom>
                 <CustomButtom title={"Perfilado"}></CustomButtom>
                 <CustomButtom title={"Armado"}></CustomButtom>
                 <CustomButtom title={"Alistado"}></CustomButtom>
