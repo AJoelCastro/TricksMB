@@ -1,15 +1,14 @@
-import {View, ScrollView, Text, TouchableOpacity, Button, StyleSheet, Dimensions} from 'react-native';
+import {View, ScrollView, Text, TouchableOpacity, Button, StyleSheet, Dimensions, Alert} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 
 import ModalSelector from "react-native-modal-selector";
 import ClienteService from '@/services/ClienteService';
-import FormFieldOrden from '@/components/formFieldOrden';
 import ComboBox from '@/components/ComboBox';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import "../../../../global.css";
+import "../../../../../global.css";
 
 const { width } = Dimensions.get('window');
 
@@ -56,7 +55,7 @@ export default function crear() {
         const [ruc, setRuc] = useState("");
         const [nombreTaco, setNombreTaco] = useState("");
         const [tallaTaco, setTallaTaco] = useState("");
-
+        const [documento, setDocumento] = useState("");
         const getCurrentDate = () => {
             const date = new Date();
             const year = date.getFullYear();
@@ -80,6 +79,24 @@ export default function crear() {
         const handleEliminarFila = (id) => {
             // Filtrar las filas para eliminar la seleccionada
             setFilas(filas.filter(fila => fila.id !== id));
+        };
+
+        const verificarDocumento=()=>{
+            try {
+                if(documento.length===8){
+                    setDni(documento);
+                    setTipoCliente("natural");
+                    cargarClienteNatural(tipoCliente, dni);
+                }else if(documento.length===11){
+                    setRuc(documento);
+                    setTipoCliente("juridico");
+                    cargarClienteNatural(tipoCliente, ruc);
+                }else{
+                    Alert.alert("Ingrese un documento valido")
+                }
+            } catch (error) {
+                Error.error(error);
+            }
         };
 
         const cargarClienteNatural = async () => {
@@ -114,33 +131,22 @@ export default function crear() {
     return (
         <ScrollView className='mx-6 gap-2 '>
             
-            <Text className='font-bold mx-auto mt-2 mb-3 text-lg'>
-                Buscar Cliente por Tipo:
+            <Text className='font-bold mt-2 mb-3 text-lg'>
+                Buscar Cliente por Tipo
             </Text>
-            <View className='flex-row gap-6 items-center justify-center mb-4'>
-                    <TouchableOpacity className='bg-[#62d139] p-3 rounded-lg' onPress={()=>setTipoCliente("natural")}>
-                        <Text>
-                            Cliente Natural
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity className='bg-[#62d139] p-3 rounded-lg' onPress={()=>setTipoCliente("juridico")}>
-                        <Text>
-                            Cliente Juridico
-                        </Text>
-                    </TouchableOpacity>
-            </View>
+            <TextInput 
+                label="DNI O RUC"
+                placeholder='Ingrese un numero de DNI o RUC'
+                mode='outlined'
+                className='h-10 rounded-lg' 
+                value={documento} 
+                onChangeText={setDocumento} 
+                keyboardType='numeric' 
+                maxLength={11}
+                right={<TextInput.Icon icon="magnify" onPress={()=>verificarDocumento()}/>}
+            />
             { tipoCliente==="natural" &&(
                 <View className='gap-2 mb-2'>
-                    <TextInput 
-                        label="DNI"
-                        mode='outlined'
-                        className='h-10 rounded-lg' 
-                        value={dni} 
-                        onChangeText={setDni} 
-                        keyboardType='numeric' 
-                        maxLength={8}
-                        right={<TextInput.Icon icon="magnify" onPress={(tipoCliente, dni)=>cargarClienteNatural(tipoCliente, dni)}/>}
-                    />
                     <View className='flex-row gap-6'>
                         <Text className='text-black text-lg font-bold'>Nombre: {cliente.Nombre}</Text>
                         <Text className='text-black text-lg font-bold'>DNI: {cliente.Dni}</Text>
@@ -151,16 +157,6 @@ export default function crear() {
             }
             { tipoCliente==="juridico" &&(
                 <View className='gap-2 mb-2'>
-                    <TextInput 
-                        label="RUC"
-                        mode='outlined'
-                        className='h-10 rounded-lg ' 
-                        value={ruc} 
-                        onChangeText={setRuc} 
-                        keyboardType='numeric' 
-                        maxLength={11}
-                        right={<TextInput.Icon icon="magnify" onPress={(tipoCliente, ruc)=>cargarClienteJuridico(tipoCliente, ruc)}/>}
-                    />
                     <View className='flex-row gap-6'>
                         <Text className='text-black text-lg font-bold'>Razon Social: {cliente.Razon_social}</Text>
                         <Text className='text-black text-lg font-bold'>RUC: {cliente.Ruc}</Text>

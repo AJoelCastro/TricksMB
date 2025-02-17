@@ -1,94 +1,56 @@
-import React from 'react';
+import { Stack, useRouter } from 'expo-router';
 import { Text, TouchableOpacity } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Drawer } from 'expo-router/drawer';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter } from 'expo-router';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Colors } from '@/constants/Colors';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// Prevent the splash screen from auto-hiding before asset loading is complete.
+import "../../global.css";
 export default function MenuLayout() {
-  
   const backgroundColor = useThemeColor({ light: Colors.light.background, dark: Colors.dark.background }, 'background');
   const textColor = useThemeColor({ light: Colors.light.text, dark: Colors.dark.text }, 'text');
   const router = useRouter();
-
   const handleLogout = async () => {
     await AsyncStorage.removeItem('token');
     router.replace('/'); // Redirigir al login
   };
   return (
-    <GestureHandlerRootView >
-      <Drawer  
-        screenOptions={{
-          drawerStyle:{
-            backgroundColor: backgroundColor,
-            
-          },
-          drawerInactiveTintColor: textColor,
-          drawerActiveTintColor: textColor,
-        }}
-      >
-        <Drawer.Screen
-          name="menu"
-          options={{
-            title: 'Inicio',
-            drawerIcon: () => (<Icon name="home" size={20} color="blue"/>),
+    
+      <Stack>  
+        <Stack.Screen 
+          name="index" 
+          options={{ 
+            headerTitle:"Menu",
+            headerStyle:{
+              backgroundColor:backgroundColor,
+            },
+            headerTintColor:textColor,
             headerRight: () => (
-              <TouchableOpacity onPress={handleLogout}>
-                <Text className='font-bold 'style={{ color:textColor}}>Cerrar sesion</Text>
-              </TouchableOpacity>
-            ),
-            headerStyle: {
-              backgroundColor: backgroundColor, // Cambia el color de fondo del header
-            },
-            headerTintColor: textColor,
-          }}
-          
+                <TouchableOpacity onPress={handleLogout}>
+                  <Text className='font-bold 'style={{ color:textColor}}>Cerrar sesion</Text>
+                </TouchableOpacity>
+              ),
+          }} 
         />
-        <Drawer.Screen
-          name="ordenes_produccion"
-          options={{
-            title: 'Ordenes de Producción',
-            drawerIcon: () => (<Icon name="list-alt" size={20} color="blue"/>),
-            headerStyle: {
-              backgroundColor: backgroundColor, // Cambia el color de fondo del header
-            },
-            headerTintColor: textColor,
-            headerRight:() => (
-              <TouchableOpacity onPress={()=>router.push("/modalCliente")} className='flex-row gap-2 mr-2 items-center'>
-                <Text style={{color:textColor}}>
-                  Cliente Nuevo
-                </Text>
-                <Icon name="user" size={20} color={textColor}/>
-              </TouchableOpacity>
-            )
-          }}
+        <Stack.Screen
+            name='ordenes_produccion'
+            options={{
+                headerShown: false
+            }}
         />
-        <Drawer.Screen
-          name="almacen/index"
-          options={{
-            title: 'Almacen',
-            drawerIcon: () => (<Icon name="archive" size={20} color="blue"/>),
-            headerStyle: {
-              backgroundColor: backgroundColor, // Cambia el color de fondo del header
-            },
-            headerTintColor: textColor,
-          }}
+        <Stack.Screen
+            name='inventariado/index'
+            options={{
+                headerShown: false
+            }}
         />
-        <Drawer.Screen
-          name="inventariado/index"
-          options={{
-            title: 'Inventario',
-            drawerIcon: () => (<Icon name="cubes" size={20} color="blue"/>),
-            headerStyle: {
-              backgroundColor: backgroundColor, // Cambia el color de fondo del header
-            },
-            headerTintColor: textColor,
-          }}
+        <Stack.Screen
+            name='almacen/index'
+            options={{
+                headerShown: false
+            }}
         />
-      </Drawer>
-    </GestureHandlerRootView>
-  );
+      </Stack>
+    
+    
+  );
 }

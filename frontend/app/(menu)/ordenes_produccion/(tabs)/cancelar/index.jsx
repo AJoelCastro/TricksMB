@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Alert } from 'react-native';
 
-import "../../../../global.css";
+import "../../../../../global.css";
 
 export default function cancelar() {
     const [codigo, setCodigo] = useState("");

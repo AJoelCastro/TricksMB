@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useFocusEffect } from '@react-navigation/native';
 import { TextInput } from 'react-native-paper';
+import "../../../../../global.css";
 
 const corte = () => {
   const getFechaActualizacion= () => {
