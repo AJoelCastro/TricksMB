@@ -86,11 +86,9 @@ export default function crear() {
                 if(documento.length===8){
                     setDni(documento);
                     setTipoCliente("natural");
-                    cargarClienteNatural(tipoCliente, dni);
                 }else if(documento.length===11){
                     setRuc(documento);
                     setTipoCliente("juridico");
-                    cargarClienteNatural(tipoCliente, ruc);
                 }else{
                     Alert.alert("Ingrese un documento valido")
                 }
@@ -127,7 +125,14 @@ export default function crear() {
                 console.error("Error cargando cliente:", error);
             }
         };
-            
+        useEffect(() => {
+            if (tipoCliente === "natural" && dni) {
+                cargarClienteNatural();
+            } else if (tipoCliente === "juridico" && ruc) {
+                cargarClienteJuridico();
+            }
+        }, [tipoCliente, dni, ruc]);
+
     return (
         <ScrollView className='mx-6 gap-2 '>
             

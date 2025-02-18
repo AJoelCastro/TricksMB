@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, Text, View, Alert } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Input from '@/components/input';
 import CustomButtom from '../components/customButtom'
 import AuthService from '@/services/AuthService'; // Importar servicio de autenticación
 
 import "../global.css"
+import { TextInput } from 'react-native-paper';
 
 const Home = () => {
     const router = useRouter();
     const [correo, setCorreo] = useState(""); // Estado para el email
     const [contrasenia, setContrasenia] = useState(""); // Estado para la contraseña
     const [loading, setLoading] = useState(true); // Estado para indicar si está cargando
+    const [showPassword, setShowPassword] = useState(false);
 
     const isFormValid = correo.trim() !== "" && contrasenia.trim() !== ""; // Validación de campos llenos
 
@@ -26,7 +27,7 @@ const Home = () => {
         setLoading(true);
         try {
             await AuthService.login(correo, contrasenia);
-            router.replace("/(menu)"); // Redirigir después de actualizar el estado
+            router.replace("/menu"); // Redirigir después de actualizar el estado
         } catch (error) {
             Alert.alert("Error", "Credenciales incorrectas");
         }
@@ -38,7 +39,7 @@ const Home = () => {
             console.log("Token en Home.js:", token);
 
             if (token) {
-                router.replace("/(menu)"); 
+                router.replace("/menu"); 
             } else {
                 setLoading(false);
             }
@@ -59,13 +60,24 @@ const Home = () => {
 
             {/* Inputs */}
             <View>
-                <View>
-                    <Input placeholder="Correo electrónico" value={correo} onChangeText={setCorreo} />
+                <View className='p-4 gap-2'>
+                    <TextInput
+                        label={"Correo"}
+                        placeholder='Ingrese su correo'
+                        mode='outlined'
+                        value={correo}
+                        onChangeText={setCorreo}
+                    />
+                    <TextInput
+                        label={"Contraseña"}
+                        placeholder='Ingrese su contraseña'
+                        mode='outlined'
+                        secureTextEntry={!showPassword}
+                        value={contrasenia}
+                        onChangeText={setContrasenia}
+                        right={<TextInput.Icon icon={showPassword ? "eye-off" : "eye"} onPress={() => setShowPassword(!showPassword)}/>}
+                    />
                 </View>
-                <View>
-                    <Input placeholder="Contraseña" value={contrasenia} onChangeText={setContrasenia} secure={true} />
-                </View>
-                
                 <View className='flex-row items-center gap-4 mt-6 ml-16'>
                     <Icon name="check" size={16} color="black" />
                     <Text>Recordar Contraseña</Text>

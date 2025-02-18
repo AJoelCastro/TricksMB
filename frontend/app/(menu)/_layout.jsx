@@ -6,18 +6,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 import "../../global.css";
 export default function MenuLayout() {
+
   const backgroundColor = useThemeColor({ light: Colors.light.background, dark: Colors.dark.background }, 'background');
   const textColor = useThemeColor({ light: Colors.light.text, dark: Colors.dark.text }, 'text');
   const router = useRouter();
+
   const handleLogout = async () => {
     await AsyncStorage.removeItem('token');
     router.replace('/'); // Redirigir al login
   };
+
   return (
     
       <Stack>  
         <Stack.Screen 
-          name="index" 
+          name="menu" 
           options={{ 
             headerTitle:"Menu",
             headerStyle:{
