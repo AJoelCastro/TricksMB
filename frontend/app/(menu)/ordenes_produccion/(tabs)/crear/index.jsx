@@ -1,6 +1,6 @@
-import {View, ScrollView, Text, TouchableOpacity, Button, StyleSheet, Dimensions, Alert} from 'react-native';
-import {TextInput} from 'react-native-paper';
-import { useState, useEffect } from 'react';
+import {View, ScrollView, Text, TouchableOpacity, StyleSheet, Dimensions, Alert, Modal, FlatList} from 'react-native';
+import { Card, TextInput } from 'react-native-paper';
+import React,{ useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 
 import ModalSelector from "react-native-modal-selector";
@@ -13,125 +13,137 @@ import "../../../../../global.css";
 const { width } = Dimensions.get('window');
 
 export default function crear() {
-        const opcionesTaco = [
-            { key: "3", label: "Talla 3" },
-            { key: "4", label: "Talla 4" },
-            { key: "5", label: "Talla 5" },
-            { key: "7", label: "Talla 7" },
-            { key: "9", label: "Talla 9" },
-            { key: "12", label: "Talla 12" },
-            { key: "15", label: "Talla 15" },
-        ];
-        const opcionesSerieInicio = [
-            { key: "1", label: "Talla 1" },
-            { key: "2", label: "Talla 2" },
-            { key: "3", label: "Talla 3" },
-            { key: "4", label: "Talla 4" },
-            { key: "5", label: "Talla 5" },
-            { key: "6", label: "Talla 6" },
-            { key: "7", label: "Talla 7" },
-            { key: "8", label: "Talla 8" },
-            { key: "9", label: "Talla 9" },
-        ];
-        const opcionesSerieFin = [
-            { key: "2", label: "Talla 2" },
-            { key: "3", label: "Talla 3" },
-            { key: "4", label: "Talla 4" },
-            { key: "5", label: "Talla 5" },
-            { key: "6", label: "Talla 6" },
-            { key: "7", label: "Talla 7" },
-            { key: "8", label: "Talla 8" },
-            { key: "9", label: "Talla 9" },
-            { key: "0", label: "Talla 0" },
-        ];
-        const router = useRouter();
-        const [cliente, setCliente] = useState("");
-        const [modelo, setModelo] = useState("");
-        const [selectSerieInicio, setSelectSerieInicio] = useState("");
-        const [selectSerieFin, setSelectSerieFin] = useState("");
-        const [trabajador, setTrabajador] = useState("");
-        const [tipoCliente, setTipoCliente] = useState("");
-        const [dni, setDni] = useState("");
-        const [ruc, setRuc] = useState("");
-        const [nombreTaco, setNombreTaco] = useState("");
-        const [tallaTaco, setTallaTaco] = useState("");
-        const [documento, setDocumento] = useState("");
-        const getCurrentDate = () => {
-            const date = new Date();
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses van de 0 a 11
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`; // Formato: YYYY-MM-DD
-        };
-        const [currentDate] = useState(getCurrentDate()); // Estado para almacenar la fecha formateada
+    
+    const modelos = [
+        { id: "1", nombre: "Modelo A", imagen: "https://d3fvqmu2193zmz.cloudfront.net/items_2/uid_commerces.1/uid_items_2.FDM0F4F95X84/500x500/66E97FA5CC14B-Zapatilla-Urbana-Mujer-574.webp" },
+        { id: "2", nombre: "Modelo B", imagen: "https://d3fvqmu2193zmz.cloudfront.net/items_2/uid_commerces.1/uid_items_2.FDM0F4F95X84/500x500/66E97FA5CC14B-Zapatilla-Urbana-Mujer-574.webp" },
+        { id: "3", nombre: "Modelo C", imagen: "https://d3fvqmu2193zmz.cloudfront.net/items_2/uid_commerces.1/uid_items_2.FDM0F4F95X84/500x500/66E97FA5CC14B-Zapatilla-Urbana-Mujer-574.webp" },
+        { id: "4", nombre: "Modelo D", imagen: "https://d3fvqmu2193zmz.cloudfront.net/items_2/uid_commerces.1/uid_items_2.FDM0F4F95X84/500x500/66E97FA5CC14B-Zapatilla-Urbana-Mujer-574.webp" }
+    ];
 
-        const [filas, setFilas] = useState([]);
-        const handleAgregarFila = () => {
-            // Agregar nueva fila con valores iniciales
-            setFilas([...filas, { 
-                id: Date.now().toString(), 
-                talla: '', 
-                pares: '', 
-                color: '' 
-            }]);
-        };
+    const opcionesTaco = [
+        { key: "3", label: "Talla 3" },
+        { key: "4", label: "Talla 4" },
+        { key: "5", label: "Talla 5" },
+        { key: "7", label: "Talla 7" },
+        { key: "9", label: "Talla 9" },
+        { key: "12", label: "Talla 12" },
+        { key: "15", label: "Talla 15" },
+    ];
+    const opcionesSerieInicio = [
+        { key: "1", label: "Talla 1" },
+        { key: "2", label: "Talla 2" },
+        { key: "3", label: "Talla 3" },
+        { key: "4", label: "Talla 4" },
+        { key: "5", label: "Talla 5" },
+        { key: "6", label: "Talla 6" },
+        { key: "7", label: "Talla 7" },
+        { key: "8", label: "Talla 8" },
+        { key: "9", label: "Talla 9" },
+    ];
+    const opcionesSerieFin = [
+        { key: "2", label: "Talla 2" },
+        { key: "3", label: "Talla 3" },
+        { key: "4", label: "Talla 4" },
+        { key: "5", label: "Talla 5" },
+        { key: "6", label: "Talla 6" },
+        { key: "7", label: "Talla 7" },
+        { key: "8", label: "Talla 8" },
+        { key: "9", label: "Talla 9" },
+        { key: "0", label: "Talla 0" },
+    ];
+    const router = useRouter();
+    const [cliente, setCliente] = useState("");
+    const [modelo, setModelo] = useState("");
+    const [selectSerieInicio, setSelectSerieInicio] = useState("");
+    const [selectSerieFin, setSelectSerieFin] = useState("");
+    const [trabajador, setTrabajador] = useState("");
+    const [tipoCliente, setTipoCliente] = useState("");
+    const [dni, setDni] = useState("");
+    const [ruc, setRuc] = useState("");
+    const [nombreTaco, setNombreTaco] = useState("");
+    const [tallaTaco, setTallaTaco] = useState("");
+    const [documento, setDocumento] = useState("");
+    const [modalVisible, setModalVisible] = useState(false);
+    const [material, setMaterial] = useState("");
 
-        const handleEliminarFila = (id) => {
-            // Filtrar las filas para eliminar la seleccionada
-            setFilas(filas.filter(fila => fila.id !== id));
-        };
 
-        const verificarDocumento=()=>{
-            try {
-                if(documento.length===8){
-                    setDni(documento);
-                    setTipoCliente("natural");
-                }else if(documento.length===11){
-                    setRuc(documento);
-                    setTipoCliente("juridico");
-                }else{
-                    Alert.alert("Ingrese un documento valido")
-                }
-            } catch (error) {
-                Error.error(error);
-            }
-        };
+    const getCurrentDate = () => {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses van de 0 a 11
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`; // Formato: YYYY-MM-DD
+    };
+    const [currentDate] = useState(getCurrentDate()); // Estado para almacenar la fecha formateada
 
-        const cargarClienteNatural = async () => {
-            try {
-                let identificador = dni;
-                const cliente = await ClienteService.buscarCliente(tipoCliente, identificador);
-                if (!cliente) {
-                    console.error("No se encontró el cliente");
-                    return;
-                }
-                
-                setCliente(cliente);
-            } catch (error) {
-                console.error("Error cargando cliente:", error);
+    const [filas, setFilas] = useState([]);
+    const handleAgregarFila = () => {
+        // Agregar nueva fila con valores iniciales
+        setFilas([...filas, { 
+            id: Date.now().toString(), 
+            talla: '', 
+            pares: '', 
+            color: '' 
+        }]);
+    };
+
+    const handleEliminarFila = (id) => {
+        // Filtrar las filas para eliminar la seleccionada
+        setFilas(filas.filter(fila => fila.id !== id));
+    };
+
+    const verificarDocumento=()=>{
+        try {
+            if(documento.length===8){
+                setDni(documento);
+                setTipoCliente("natural");
+            }else if(documento.length===11){
+                setRuc(documento);
+                setTipoCliente("juridico");
+            }else{
+                Alert.alert("Ingrese un documento valido")
             }
-        };
-        const cargarClienteJuridico = async () => {
-            try {
-                let identificador= ruc;
-                const cliente = await ClienteService.buscarCliente(tipoCliente, identificador);
-                if (!cliente) {
-                    console.error("No se encontró el cliente");
-                    return;
-                }
-                
-                setCliente(cliente);
-            } catch (error) {
-                console.error("Error cargando cliente:", error);
+        } catch (error) {
+            Error.error(error);
+        }
+    };
+
+    const cargarClienteNatural = async () => {
+        try {
+            let identificador = dni;
+            const cliente = await ClienteService.buscarCliente(tipoCliente, identificador);
+            if (!cliente) {
+                console.error("No se encontró el cliente");
+                return;
             }
-        };
-        useEffect(() => {
-            if (tipoCliente === "natural" && dni) {
-                cargarClienteNatural();
-            } else if (tipoCliente === "juridico" && ruc) {
-                cargarClienteJuridico();
+            
+            setCliente(cliente);
+        } catch (error) {
+            console.error("Error cargando cliente:", error);
+        }
+    };
+    const cargarClienteJuridico = async () => {
+        try {
+            let identificador= ruc;
+            const cliente = await ClienteService.buscarCliente(tipoCliente, identificador);
+            if (!cliente) {
+                console.error("No se encontró el cliente");
+                return;
             }
-        }, [tipoCliente, dni, ruc]);
+            
+            setCliente(cliente);
+        } catch (error) {
+            console.error("Error cargando cliente:", error);
+        }
+    };
+    useEffect(() => {
+        if (tipoCliente === "natural" && dni) {
+            cargarClienteNatural();
+        } else if (tipoCliente === "juridico" && ruc) {
+            cargarClienteJuridico();
+        }
+    }, [tipoCliente, dni, ruc]);
 
     return (
         <ScrollView className='mx-6 gap-2 '>
@@ -180,9 +192,29 @@ export default function crear() {
                     label="Modelo"
                     mode="outlined"
                     value={modelo}
-                    placeholder="Nombre del modelo"
-                    onChangeText={setModelo}
+                    editable={false}
+                    onPressIn={() => setModalVisible(true)}
                 />
+                <Modal visible={modalVisible} transparent animationType="slide">
+                    <View className='flex-1 py-14 px-2'>
+                        <FlatList
+                            data={modelos}
+                            keyExtractor={(item) => item.id}
+                            renderItem={({ item }) => (
+                                <Card style={{ marginBottom: 10 }}>
+                                    <Card.Cover source={{ uri: item.imagen }} />
+                                    <Card.Content>
+                                        <TouchableOpacity onPress={()=>{setModelo(item.nombre); setModalVisible(false);}}>
+                                            <Text variant="titleMedium">{item.nombre}</Text>
+                                        </TouchableOpacity>
+                                    </Card.Content>
+                                </Card>
+                            )}
+                        >
+
+                        </FlatList>
+                    </View>
+                </Modal>
                 <TextInput
                     mode='outlined'
                     label="Fecha de creacion"
@@ -345,6 +377,14 @@ export default function crear() {
                     />
                 </ModalSelector>
             </View>
+            <TextInput
+                label={"Material"}
+                mode='outlined'
+                editable={false}
+                value={material}
+                onPressIn={()=>{}}
+            />
+            
             <View className='mb-32'>
 
             </View>
