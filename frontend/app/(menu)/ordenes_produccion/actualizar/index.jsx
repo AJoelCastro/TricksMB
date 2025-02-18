@@ -2,8 +2,7 @@ import { View, Text} from 'react-native';
 import { TextInput } from 'react-native-paper';
 import React, { useEffect, useState } from 'react';
 
-import CustomButtom from '@/components/customButtom';
-import Input from '@/components/input';
+
 import { useRouter } from 'expo-router';
 
 import "../../../../global.css";
@@ -23,12 +22,6 @@ export default function index() {
                 onChange={setCodigo}
                 right={<TextInput.Icon icon={"magnify"}/>}
             />
-            <View className="items-center mx-6">
-                <CustomButtom title={"Corte"} touch={()=>router.push("/(menu)/ordenes_produccion/actualizar/(etapas)/corte")}></CustomButtom>
-                <CustomButtom title={"Perfilado"}></CustomButtom>
-                <CustomButtom title={"Armado"}></CustomButtom>
-                <CustomButtom title={"Alistado"}></CustomButtom>
-            </View>
         </View>
     );
 }
