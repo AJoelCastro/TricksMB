@@ -9,7 +9,7 @@ const PedidoController = {
     async createPedido(req, res) {
         try {
             let {
-                clienteTipo, fechaEntrega, serieInicio, serieFinal, nomTipoCalzado, nomModelo, 
+                clienteTipo, fechaEntrega, serieInicio, serieFinal, nomModelo, 
                 color, talla, cantidad, nombreTaco, alturaTaco, material, tipoMaterial, 
                 suela, accesorio, forro
             } = req.body;
@@ -27,9 +27,8 @@ const PedidoController = {
             alturaTaco = convertirNumero(alturaTaco, "alturaTaco");
 
             const cliente = await ClienteService.getCliente(clienteTipo);
-            const tipoCalzado = await TipoCalzadoService.getTipoCalzadoByNombre(nomTipoCalzado);
             const modelo = await ModeloService.getModeloByNombre(nomModelo);
-            const producto = await ProductoService.createProducto(tipoCalzado.idTipoCalzado, modelo.idModelo);
+            const producto = await ProductoService.createProducto(modelo.idModelo);
 
             const pedido = await PedidoService.createPedido(cliente.idCliente, fechaEntrega, serieInicio, serieFinal);
 

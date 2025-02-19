@@ -12,7 +12,7 @@ class TipoCalzadoDAO{
         }
     }
 
-    static async getTipoCalzadoByNombred(nombre){
+    static async getTipoCalzadoByNombre(nombre){
         try{
             const query = 'SELECT * FROM Tipo_calzado WHERE Nombre = ?';
             const [rows] = await db.execute(query, [nombre]);

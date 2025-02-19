@@ -12,7 +12,7 @@ const TipoCalzadoService = {
 
     async getTipoCalzadoByNombre(nombre){
         try{
-            const calzado =  await TipoCalzadoDAO.getTipoCalzadoById(nombre);
+            const calzado =  await TipoCalzadoDAO.getTipoCalzadoByNombre(nombre);
             if(!calzado){
                 return res.status(404).json({ error: "Tipo de calzado no encontrado" });
             }else{
