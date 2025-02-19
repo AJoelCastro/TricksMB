@@ -14,13 +14,6 @@ import "../../../../../global.css";
 const { width } = Dimensions.get('window');
 
 export default function crear() {
-
-    const modelos = [
-        { id: "1", nombre: "Modelo A", imagen: "https://d3fvqmu2193zmz.cloudfront.net/items_2/uid_commerces.1/uid_items_2.FDM0F4F95X84/500x500/66E97FA5CC14B-Zapatilla-Urbana-Mujer-574.webp" },
-        { id: "2", nombre: "Modelo B", imagen: "https://d3fvqmu2193zmz.cloudfront.net/items_2/uid_commerces.1/uid_items_2.FDM0F4F95X84/500x500/66E97FA5CC14B-Zapatilla-Urbana-Mujer-574.webp" },
-        { id: "3", nombre: "Modelo C", imagen: "https://d3fvqmu2193zmz.cloudfront.net/items_2/uid_commerces.1/uid_items_2.FDM0F4F95X84/500x500/66E97FA5CC14B-Zapatilla-Urbana-Mujer-574.webp" },
-        { id: "4", nombre: "Modelo D", imagen: "https://d3fvqmu2193zmz.cloudfront.net/items_2/uid_commerces.1/uid_items_2.FDM0F4F95X84/500x500/66E97FA5CC14B-Zapatilla-Urbana-Mujer-574.webp" }
-    ];
     
     const opcionesTaco = [
         { key: "3", label: "Talla 3" },
@@ -168,7 +161,6 @@ export default function crear() {
         const cargarModelos = async () => {
             try {
                 const modelos = await ModeloService.getAllModelo();
-                console.log(modelos);
                 if (!modelos) {
                     console.error("No se encontraron los modelos");
                     return;
@@ -182,6 +174,8 @@ export default function crear() {
         cargarModelos();
     }, [])
     
+    console.log(trabajador);
+
     useEffect(() => {
         if (tipoCliente === "natural" && dni) {
             cargarClienteNatural();
@@ -272,7 +266,7 @@ export default function crear() {
                     />
                 </View>
                 <ComboBox
-                    data={[ {label:"Juan Buendia", value:"Juan Buendia"}, {label:"Alvaro gay",value:"Alvaro gay"}]}
+                    data={[ {label:"Juan Buendia", value:"76961627"}, {label:"Alvaro gay",value:"76961628"}]}
                     onChange={setTrabajador}
                     placeholder="Asignar trabajador" 
                 />
