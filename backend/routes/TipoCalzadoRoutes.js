@@ -1,7 +1,8 @@
-const expres = express();
+const express = require('express');
 const tipoCalzadoController = require('../controllers/TipoCalzadoController')
 const authMiddleware = require('../middlewares/authMiddleware');
+const router = express.Router();
+router.get('/todos',authMiddleware,tipoCalzadoController.getAllTipoCalzado);
+router.get('/nombre',authMiddleware,tipoCalzadoController.getTipoCalzadoByNombre);
 
-expres.get('/todos',authMiddleware,tipoCalzadoController.getAllTipoCalzado);
-expres.get('/nombre',authMiddleware,tipoCalzadoController.getTipoCalzadoByNombre);
-module.exports = expres;
+module.exports = router;
