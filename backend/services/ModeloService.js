@@ -21,7 +21,7 @@ const ModeloService = {
     async getAllModeloById(id){
         try{
             if(!id) throw{status: 400 , message: "id requerido"};
-            return await ModeloDAO.getModeloById(id);
+            return await ModeloDAO.getAllModeloById(id);
         }catch(error){
             throw error;
         }

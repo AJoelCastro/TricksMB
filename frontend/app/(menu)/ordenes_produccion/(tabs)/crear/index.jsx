@@ -10,6 +10,7 @@ import ComboBox from '@/components/ComboBox';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import "../../../../../global.css";
+import TipoCalzadoService from '@/services/TipoCalzadoService';
 
 const { width } = Dimensions.get('window');
 
@@ -86,6 +87,8 @@ export default function crear() {
     const [suela, setSuela] = useState("");
     const [forro, setForro] = useState("");
     const [dataModelos, setDataModelos] = useState([]);
+    const [dataTipoCalzado, setDataTipoCalzado] = useState([]);
+    const [tipoCalzado, setTipoCalzado] = useState("");
 
     const getCurrentDate = () => {
         const date = new Date();
@@ -157,24 +160,36 @@ export default function crear() {
         }
     };
 
+    const cargarModelosPorId = async () => {
+        try {
+            let id = tipoCalzado.idTipo;
+            const modelos = await ModeloService.getAllModeloById(id);
+            if (!modelos) {
+                console.error("No se encontraron los modelos por ID");
+                return;
+            }
+            setDataModelos(modelos);
+        } catch (error) {
+            console.error("Error cargando modelos por ID:", error);
+        }
+    };
+        
     useEffect(() => {
-        const cargarModelos = async () => {
+        const cargarTipoCalzado = async () => {
             try {
-                const modelos = await ModeloService.getAllModelo();
-                if (!modelos) {
-                    console.error("No se encontraron los modelos");
+                const tipos = await TipoCalzadoService.getAllTipoCalzado();
+                if (!tipos) {
+                    console.error("No se encontraron los tipos de calzado");
                     return;
                 }
                 
-                setDataModelos(modelos);
+                setDataTipoCalzado(tipos);
             } catch (error) {
-                console.error("Error cargando modelos:", error);
+                console.error("Error cargando tipos de calzado:", error);
             }
-        };
-        cargarModelos();
+        }
+        cargarTipoCalzado();
     }, [])
-    
-    console.log(trabajador);
 
     useEffect(() => {
         if (tipoCliente === "natural" && dni) {
@@ -231,7 +246,27 @@ export default function crear() {
                         value={""}
                         editable={false}
                     />
-                    <TouchableOpacity onPress={() => {console.log("Estado del modal:", modalModeloVisible);setModalModeloVisible(true)}}>
+                    <ModalSelector
+                        data={dataTipoCalzado}
+                        keyExtractor={item => item.idTipo}
+                        labelExtractor={item => item.Nombre}
+                        accessible={true}
+                        onChange={(item)=>setTipoCalzado(item)}
+                        supportedOrientations={['landscape']}
+                        cancelText='Cancelar'
+                        cancelStyle={styles.cancelButton}
+                        cancelTextStyle={styles.cancelText}
+                    >
+                        <TextInput
+                            editable={false}
+                            mode='outlined'
+                            label={"Tipo de calzado"}
+                            placeholder="Tipo de calzado"
+                            placeholderTextColor={"black"}
+                            value={tipoCalzado.Nombre} 
+                        />
+                    </ModalSelector>
+                    <TouchableOpacity onPress={() => {setModalModeloVisible(true); cargarModelosPorId()}}>
                         <TextInput
                             label="Modelo"
                             mode="outlined"
