@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, FlatList, Modal, TouchableWithoutFeedback, Platform,} from "react-native";
+import {View, Text, TouchableOpacity, FlatList, Modal, TouchableWithoutFeedback, Platform, Pressable,} from "react-native";
 import React, { useCallback, useRef, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -47,7 +47,7 @@ const ComboBox = ({data, onChange, placeholder, ...props}: DropDownProps) =>{
             </TouchableOpacity>
             {expanded ? (
                 <Modal visible={expanded} transparent={true} animationType="fade">
-                    <TouchableWithoutFeedback onPress={() => setExpanded(false)}>
+                    <Pressable onPress={() => setExpanded(false)}>
                         <View className="flex-1 justify-center items-center p-5 ">
                             <View 
                                 className="absolute bg-slate-700 w-full p-2 rounded-lg max-h-60 " 
@@ -71,7 +71,7 @@ const ComboBox = ({data, onChange, placeholder, ...props}: DropDownProps) =>{
                                 />
                             </View>
                         </View>
-                    </TouchableWithoutFeedback>
+                    </Pressable>
                 </Modal>
             ) : null}
         </View>

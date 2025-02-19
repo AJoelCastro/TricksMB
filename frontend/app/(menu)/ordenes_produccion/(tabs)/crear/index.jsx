@@ -1,4 +1,4 @@
-import {View, ScrollView, Text, TouchableOpacity, StyleSheet, Dimensions, Alert, Modal, FlatList, Platform , KeyboardAvoidingView } from 'react-native';
+import {View, ScrollView, Text, TouchableOpacity, StyleSheet, Dimensions, Alert, Modal, FlatList, Platform , KeyboardAvoidingView, Pressable } from 'react-native';
 import { Card, TextInput } from 'react-native-paper';
 import React,{ useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
@@ -231,32 +231,33 @@ export default function crear() {
                         value={""}
                         editable={false}
                     />
-                    <TextInput
-                        label="Modelo"
-                        mode="outlined"
-                        value={modelo}
-                        editable={false}
-                        onPressIn={() => setModalModeloVisible(true)}
-                    />
+                    <TouchableOpacity onPress={() => {console.log("Estado del modal:", modalModeloVisible);setModalModeloVisible(true)}}>
+                        <TextInput
+                            label="Modelo"
+                            mode="outlined"
+                            value={modelo}
+                            editable={false}
+                        />
+                    </TouchableOpacity>
                     <Modal visible={modalModeloVisible} transparent animationType="slide">
-                        <View className='flex-1 py-14 px-2'>
-                            <FlatList
-                                data={dataModelos}
-                                keyExtractor={(item) => item.idModelo}
-                                renderItem={({ item }) => (
-                                    <Card style={{ marginBottom: 10 }}>
-                                        <Card.Cover source={{ uri: item.Imagen }} />
-                                        <Card.Content>
-                                            <TouchableOpacity onPress={()=>{setModelo(item.Nombre); setModalModeloVisible(false);}}>
-                                                <Text variant="titleMedium">{item.Nombre}</Text>
-                                            </TouchableOpacity>
-                                        </Card.Content>
-                                    </Card>
-                                )}
-                            >
-
-                            </FlatList>
-                        </View>
+                        {/* <Pressable onPress={()=>setModalModeloVisible(false)}> */}
+                            <View className='flex-1 py-14 px-2'>
+                                <FlatList
+                                    data={dataModelos}
+                                    keyExtractor={(item) => item.idModelo}
+                                    renderItem={({ item }) => (
+                                        <Card style={{ marginBottom: 10 }}>
+                                            <Card.Cover source={{ uri: item.Imagen }} />
+                                            <Card.Content>
+                                                <TouchableOpacity onPress={()=>{setModelo(item.Nombre); setModalModeloVisible(false)}}>
+                                                    <Text variant="titleMedium">{item.Nombre}</Text>
+                                                </TouchableOpacity>
+                                            </Card.Content>
+                                        </Card>
+                                    )}
+                                />
+                            </View>
+                        {/* </Pressable> */}
                     </Modal>
                     <TextInput
                         mode='outlined'
