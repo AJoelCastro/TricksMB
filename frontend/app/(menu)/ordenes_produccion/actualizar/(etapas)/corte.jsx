@@ -6,6 +6,7 @@ import { TextInput } from 'react-native-paper';
 import "../../../../../global.css";
 
 const corte = () => {
+  
   const getFechaActualizacion= () => {
             const date = new Date();
             const year = date.getFullYear();
@@ -14,7 +15,9 @@ const corte = () => {
             return `${year}-${month}-${day}`; // Formato: YYYY-MM-DD
         };
   const [fechaActualizacion] = useState(getFechaActualizacion());
-  
+  const asignarOperario = "Operario 1";
+  const area = "Corte";
+
   const lockOrientation = async () => {
     await ScreenOrientation.lockAsync(
         ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
@@ -50,6 +53,20 @@ const corte = () => {
         <TextInput label={"Fecha creación"} mode='outlined' style={{width: '50%'}} editable={false}>
         </TextInput>
         <TextInput label={"Fecha de actualizacion"} mode='outlined' style={{width:'48%'}} editable={false} value={fechaActualizacion}>
+        </TextInput>
+      </View>
+      <View className='flex-row items-center gap-2'>
+        <TextInput label={"Asignar operario"} mode='outlined' style={{width:'50%'}} value={asignarOperario}>
+        </TextInput>
+        <TextInput label ={"Proceso/área"} mode='outlined' style={{width:'48%'}} value={area}>
+        </TextInput>
+      </View>
+      <View className='flex-row items-center gap-2'>
+        <Text className='m-4'>Serie</Text>
+        <TextInput label={"inicio"} mode='outlined' style={{width:'20%'}}>
+        </TextInput>
+        <Text>a</Text>
+        <TextInput label={"fin"} mode='outlined' style={{width:'20%'}}>
         </TextInput>
       </View>
     </View>
