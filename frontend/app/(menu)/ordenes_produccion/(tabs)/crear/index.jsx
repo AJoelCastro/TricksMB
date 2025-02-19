@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 
 import ModalSelector from "react-native-modal-selector";
 import ClienteService from '@/services/ClienteService';
+import ModeloService from '@/services/ModeloService';
 import ComboBox from '@/components/ComboBox';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -13,14 +14,14 @@ import "../../../../../global.css";
 const { width } = Dimensions.get('window');
 
 export default function crear() {
-    
+
     const modelos = [
         { id: "1", nombre: "Modelo A", imagen: "https://d3fvqmu2193zmz.cloudfront.net/items_2/uid_commerces.1/uid_items_2.FDM0F4F95X84/500x500/66E97FA5CC14B-Zapatilla-Urbana-Mujer-574.webp" },
         { id: "2", nombre: "Modelo B", imagen: "https://d3fvqmu2193zmz.cloudfront.net/items_2/uid_commerces.1/uid_items_2.FDM0F4F95X84/500x500/66E97FA5CC14B-Zapatilla-Urbana-Mujer-574.webp" },
         { id: "3", nombre: "Modelo C", imagen: "https://d3fvqmu2193zmz.cloudfront.net/items_2/uid_commerces.1/uid_items_2.FDM0F4F95X84/500x500/66E97FA5CC14B-Zapatilla-Urbana-Mujer-574.webp" },
         { id: "4", nombre: "Modelo D", imagen: "https://d3fvqmu2193zmz.cloudfront.net/items_2/uid_commerces.1/uid_items_2.FDM0F4F95X84/500x500/66E97FA5CC14B-Zapatilla-Urbana-Mujer-574.webp" }
     ];
-
+    
     const opcionesTaco = [
         { key: "3", label: "Talla 3" },
         { key: "4", label: "Talla 4" },
@@ -91,6 +92,7 @@ export default function crear() {
     const [accesorios, setAccesorios] = useState("");
     const [suela, setSuela] = useState("");
     const [forro, setForro] = useState("");
+    const [dataModelos, setDataModelos] = useState([]);
 
     const getCurrentDate = () => {
         const date = new Date();
@@ -161,6 +163,25 @@ export default function crear() {
             console.error("Error cargando cliente:", error);
         }
     };
+
+    useEffect(() => {
+        const cargarModelos = async () => {
+            try {
+                const modelos = await ModeloService.getAllModelo();
+                console.log(modelos);
+                if (!modelos) {
+                    console.error("No se encontraron los modelos");
+                    return;
+                }
+                
+                setDataModelos(modelos);
+            } catch (error) {
+                console.error("Error cargando cliente:", error);
+            }
+        };
+        cargarModelos();
+    }, [])
+    
     useEffect(() => {
         if (tipoCliente === "natural" && dni) {
             cargarClienteNatural();
