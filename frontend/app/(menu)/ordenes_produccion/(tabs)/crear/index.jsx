@@ -1,4 +1,4 @@
-import {View, ScrollView, Text, TouchableOpacity, StyleSheet, Dimensions, Alert, Modal, FlatList, Platform , KeyboardAvoidingView, Pressable } from 'react-native';
+import {View, ScrollView, Text, TouchableOpacity, StyleSheet, Dimensions, Alert, Modal, FlatList, Platform , KeyboardAvoidingView } from 'react-native';
 import { Card, TextInput } from 'react-native-paper';
 import React,{ useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
@@ -275,14 +275,29 @@ export default function crear() {
                         />
                     </TouchableOpacity>
                     <Modal visible={modalModeloVisible} transparent animationType="slide">
+                            
                         {/* <Pressable onPress={()=>setModalModeloVisible(false)}> */}
-                            <View className='flex-1 py-14 px-2'>
+                            <View className='flex-1 my-6 pb-6 px-2'>
+                                <View className='flex-row justify-end p-3'>
+                                    <TouchableOpacity 
+                                        onPress={()=>setModalModeloVisible(false)}
+                                        className="bg-black/50 rounded-full p-2"
+                                    >
+                                        <Icon
+                                            name="close"
+                                            size={22}
+                                            color={"white"}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
                                 <FlatList
                                     data={dataModelos}
                                     keyExtractor={(item) => item.idModelo}
                                     renderItem={({ item }) => (
-                                        <Card style={{ marginBottom: 10 }}>
-                                            <Card.Cover source={{ uri: item.Imagen }} />
+                                        <Card style={{ marginBottom: 10, borderRadius: 10, overflow: 'hidden', elevation: 5 }}>
+                                            <Card.Cover
+                                                style={{ height: 350, resizeMode: 'cover' }}
+                                                source={{ uri: item.Imagen }} />
                                             <Card.Content>
                                                 <TouchableOpacity onPress={()=>{setModelo(item.Nombre); setModalModeloVisible(false)}}>
                                                     <Text variant="titleMedium">{item.Nombre}</Text>
