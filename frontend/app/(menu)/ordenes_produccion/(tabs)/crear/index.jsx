@@ -174,6 +174,8 @@ export default function crear() {
         cargarModelos();
     }, [])
     
+    console.log(trabajador);
+
     useEffect(() => {
         if (tipoCliente === "natural" && dni) {
             cargarClienteNatural();
@@ -264,7 +266,7 @@ export default function crear() {
                     />
                 </View>
                 <ComboBox
-                    data={[ {label:"Juan Buendia", value:"Juan Buendia"}, {label:"Alvaro gay",value:"Alvaro gay"}]}
+                    data={[ {label:"Juan Buendia", value:"76961627"}, {label:"Alvaro gay",value:"76961628"}]}
                     onChange={setTrabajador}
                     placeholder="Asignar trabajador" 
                 />
