@@ -20,6 +20,16 @@ class ModeloDAO{
             throw error;
         }
     }
+
+    static async getAllModeloById(id){
+        try{
+            const query = 'SELECT * FROM Modelo WHERE IdModelo = ?';
+            const [rows] = await db.execute(query, [id]);
+            return rows;
+        }catch(error){
+            throw error;
+        }
+    }
 }
 
 module.exports = ModeloDAO;
