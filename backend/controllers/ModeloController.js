@@ -15,7 +15,7 @@ const ModeloController = {
     async getAllModeloById(req, res) {
         try {
             const { id } = req.params;
-            const modelo = await ModeloService.getModeloById(id);
+            const modelo = await ModeloService.getAllModeloById(id);
             return res.status(200).json(modelo);
         } catch (error) {
             console.error("Error al obtener modelo por id:", error);

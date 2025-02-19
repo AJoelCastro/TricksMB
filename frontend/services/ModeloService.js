@@ -17,6 +17,20 @@ const ModeloService = {
             throw error;
         }
     },
+    getAllModeloById: async (id) => {
+        console.log(id);
+        try {
+            const token = await AuthService.getToken();
+            const response = await axios.get(`${API_URL}/modelo/id`, {
+                headers: { Authorization: `Bearer ${token}` },
+                params:{id}
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error al obtener los modelos por id:", error.response?.data || error.message);
+            throw error;
+        }
+    },
 };
 
 export default ModeloService;
