@@ -13,3 +13,5 @@ const ModeloController = {
         }
     }
 };
+
+module.exports = ModeloController;
