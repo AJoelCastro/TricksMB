@@ -28,7 +28,6 @@ const PedidoController = {
 
             const cliente = await ClienteService.getCliente(clienteTipo);
             const modelo = await ModeloService.getModeloByNombre(nomModelo);
-            const producto = await ProductoService.createProducto(modelo.idModelo);
 
             const pedido = await PedidoService.createPedido(cliente.idCliente, fechaEntrega, serieInicio, serieFinal);
 
@@ -37,7 +36,7 @@ const PedidoController = {
             const codigoPedido = `COD${fechaStr}${pedido.idPedido}`;
 
             const detallePedido = await DetallePedidoService.createDetallePedido(
-                pedido.idPedido, producto.idProducto,codigoPedido, color, talla, cantidad, nombreTaco, alturaTaco, material, 
+                pedido.idPedido, modelo.idModelo, codigoPedido, color, talla, cantidad, nombreTaco, alturaTaco, material, 
                 tipoMaterial, suela, accesorio, forro
             );
 
