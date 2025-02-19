@@ -176,7 +176,7 @@ export default function crear() {
                 
                 setDataModelos(modelos);
             } catch (error) {
-                console.error("Error cargando cliente:", error);
+                console.error("Error cargando modelos:", error);
             }
         };
         cargarModelos();
@@ -247,14 +247,14 @@ export default function crear() {
                     <Modal visible={modalModeloVisible} transparent animationType="slide">
                         <View className='flex-1 py-14 px-2'>
                             <FlatList
-                                data={modelos}
-                                keyExtractor={(item) => item.id}
+                                data={dataModelos}
+                                keyExtractor={(item) => item.idModelo}
                                 renderItem={({ item }) => (
                                     <Card style={{ marginBottom: 10 }}>
-                                        <Card.Cover source={{ uri: item.imagen }} />
+                                        <Card.Cover source={{ uri: item.Imagen }} />
                                         <Card.Content>
-                                            <TouchableOpacity onPress={()=>{setModelo(item.nombre); setModalModeloVisible(false);}}>
-                                                <Text variant="titleMedium">{item.nombre}</Text>
+                                            <TouchableOpacity onPress={()=>{setModelo(item.Nombre); setModalModeloVisible(false);}}>
+                                                <Text variant="titleMedium">{item.Nombre}</Text>
                                             </TouchableOpacity>
                                         </Card.Content>
                                     </Card>
