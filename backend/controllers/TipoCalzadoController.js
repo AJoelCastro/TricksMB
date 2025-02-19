@@ -1,4 +1,3 @@
-const { get } = require('../routes/usuarioRoutes');
 const TipoCalzado = require('../service/TipoCalzadoService');
 
 const TipoCalzadoController = {
