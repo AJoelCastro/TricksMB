@@ -9,17 +9,17 @@ import "../../../../global.css";
 
 export default function index() {
     const router = useRouter();
-    const[codigo, setCodigo]= useState("");
+    const[codigoCorte, setCodigoCorte]= useState("");
     return (
         <View className='p-2'>
             <View>
                 <Text className='text-black text-4xl font-bold text-center mt-8'>Actualización de orden</Text>
             </View>
             <TextInput
-                label={"Codigo"}
+                label={"Corte"}
                 mode='outlined'
                 placeholder='Ingrese el codigo de orden'
-                onChange={setCodigo}
+                onChange={setCodigoCorte}
                 right={<TextInput.Icon icon={"magnify"}/>}
             />
         </View>
