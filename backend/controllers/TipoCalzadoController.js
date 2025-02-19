@@ -1,5 +1,4 @@
-const { get } = require('../routes/usuarioRoutes');
-const TipoCalzado = require('../service/TipoCalzadoService');
+const TipoCalzado = require('../services/TipoCalzadoService');
 
 const TipoCalzadoController = {
 
@@ -24,6 +23,6 @@ const TipoCalzadoController = {
         }
     }
 
-}
+};
 
 module.exports = TipoCalzadoController;

@@ -1,4 +1,3 @@
-const { getAllModelo } = require('../dao/ModeloDAO');
 const ModeloService = require('../services/ModeloService');
 
 const ModeloController = {
