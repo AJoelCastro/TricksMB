@@ -4,6 +4,8 @@ const userRoutes = require('./routes/usuarioRoutes');
 const clienteRoutes = require('./routes/ClienteRoutes');
 const pedidoRoutes = require('./routes/PedidoRoutes');
 const modeloRoutes = require('./routes/ModeloRoutes');
+const tipoCalzadoRoutes = require('./routes/TipoCalzadoRoutes');
+
 const errorHandler = require('./utils/errorHandler'); // Importamos errorHandler
 require('dotenv').config();
 
@@ -12,7 +14,7 @@ const app = express();
 
 // Configuración de CORS
 const corsOptions = {
-    origin: "*", // Permitir solicitudes desde cualquier origen (útil para desarrollo)
+    origin: '*', // Permitir solicitudes desde cualquier origen (útil para desarrollo)
     methods: ["GET", "POST", "PUT", "DELETE"], // Métodos permitidos
     credentials: true, // Permitir credenciales (cookies, tokens)
 };
@@ -35,6 +37,7 @@ app.use('/usuario', userRoutes);
 app.use('/cliente', clienteRoutes);
 app.use('/pedido',pedidoRoutes);
 app.use('/modelo', modeloRoutes);
+app.use('/tipoCalzado', tipoCalzadoRoutes);
 
 // Manejo de rutas no encontradas
 app.use((req, res, next) => {

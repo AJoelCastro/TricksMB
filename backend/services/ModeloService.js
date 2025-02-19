@@ -16,6 +16,15 @@ const ModeloService = {
         }catch(error){
             throw error;
         }
+    },
+
+    async getAllModeloById(id){
+        try{
+            if(!id) throw{status: 400 , message: "id requerido"};
+            return await ModeloDAO.getModeloById(id);
+        }catch(error){
+            throw error;
+        }
     }
 }
 
