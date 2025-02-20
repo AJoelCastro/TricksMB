@@ -1,14 +1,14 @@
 import {View, ScrollView, Text, TouchableOpacity, StyleSheet, Dimensions, Alert, Modal, FlatList, Platform , KeyboardAvoidingView } from 'react-native';
-import { Card, TextInput } from 'react-native-paper';
+import { Button, Card, TextInput } from 'react-native-paper';
 import React,{ useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 
 import ModalSelector from "react-native-modal-selector";
 import ClienteService from '@/services/ClienteService';
 import ModeloService from '@/services/ModeloService';
-import ComboBox from '@/components/ComboBox';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePicker from "@react-native-community/datetimepicker";
+import PedidoService from "../../../../../services/PedidoService";
 
 
 import "../../../../../global.css";
@@ -104,13 +104,13 @@ export default function crear() {
     const handleAgregarFila = () => {
         // Agregar nueva fila con valores iniciales
         setFilas([...filas, { 
-            id: Date.now().toString(), 
+            id: filas.length + 1,
             talla: '', 
             pares: '', 
             color: '' 
         }]);
     };
-
+    console.log(filas);
     const handleEliminarFila = (id) => {
         // Filtrar las filas para eliminar la seleccionada
         setFilas(filas.filter(fila => fila.id !== id));
@@ -200,6 +200,21 @@ export default function crear() {
         }
     }, [tipoCliente, dni, ruc]);
 
+    const crearOrden = async() =>{
+        let fechaEntregaFormateada = fechaEntrega.toISOString().split("T")[0];
+        datosPedido={
+            clienteTipo:tipoCliente, fechaEntregaFormateada, selectSerieInicio, selectSerieFin, modelo, 
+        }
+        try {
+            const pedido = await PedidoService.crearPeido(datosPedido);
+            if (!pedido) {
+                return;
+            }
+            
+        } catch (error) {
+            console.error("(index(crear))Error al crear pedido:", error);
+        }
+    } 
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -392,6 +407,7 @@ export default function crear() {
                         <TextInput
                             label="Talla"
                             className='rounded flex-1'
+                            keyboardType='numeric'
                             placeholder='Talla'
                             style={{ height:40, width: width * 0.25 }}
                             mode='outlined'
@@ -486,7 +502,7 @@ export default function crear() {
                         />
                     </ModalSelector>
                 </View>
-                <View className='gap-2 mt-2'>
+                <View className='gap-2 mt-2 mb-4'>
                     <ModalSelector
                         data={opcionesMaterial}
                         accessible={true}
@@ -539,7 +555,9 @@ export default function crear() {
                         placeholder='Forro'
                     />
                 </View>
-                
+                <Button mode='contained-tonal'icon="note" buttonColor='#6969' textColor='#000' onPress={()=>(crearOrden())}>
+                    Crear Pedido
+                </Button>
                 <View className='mb-32'>
 
                 </View>
