@@ -1,7 +1,7 @@
 const AreaTrabajoService = require('../services/AreaTrabajoService');
 const DetalleAreaTrabajoService = require('../services/DetalleAreaTrabajoService');
 const DetallePedidoService = require('../services/DetallePedidoService');
-
+const CaracteristicasService = require('../services/CaracteristicasService');
 const DetalleAreaTrabajoController = {
     async createDetalleAreaTrabajo(req, res) {
         try{
@@ -17,8 +17,9 @@ const DetalleAreaTrabajoController = {
 
             const areaTrabajo = await AreaTrabajoService.getAreaTrabajobyNombre(nombreAreaTrabajo);
             const detallePedido = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
+            const caracteristicas = await CaracteristicasService.getCaracteristicasByIdDetallePedido(detallePedido.idDetallePedido);
             const detalleAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(
-                areaTrabajo.idAreaTrabajo, detallePedido.idDetallePedido, cantidadAvance, comentario
+                areaTrabajo.idAreaTrabajo, caracteristicas.idCaracteristicas, cantidadAvance, comentario
             );
 
             return res.status(201).json({message: "Detalle de area de trabajo registrado con éxito", detalleAreaTrabajo});
