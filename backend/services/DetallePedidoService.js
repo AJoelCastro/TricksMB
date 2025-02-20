@@ -1,10 +1,10 @@
 const DetallePedidoDAO = require('../dao/DetallePedidoDAO');
 
 const DetallePedidoService = {
-    async createDetallePedido(idPedido, idProducto, codigoPedido, color, talla, cantidad, nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorio, forro) {
+    async createDetallePedido(idPedido, idModelo, codigoPedido, color, talla, cantidad, nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorio, forro) {
         try {
-            if (!idPedido || !idProducto) {
-                throw { status: 400, message: "idPedido e idProducto son obligatorios" };
+            if (!idPedido || !idDModelo) {
+                throw { status: 400, message: "idPedido e idModelo son obligatorios" };
             }
 
             talla = Number(talla);
@@ -20,7 +20,7 @@ const DetallePedidoService = {
             }
 
             const detallePedido = await DetallePedidoDAO.createDetallePedido(
-                idPedido, idProducto,codigoPedido, color, talla, cantidad, nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorio, forro
+                idPedido, idModelo,codigoPedido, color, talla, cantidad, nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorio, forro
             );
 
             if (!detallePedido) {
