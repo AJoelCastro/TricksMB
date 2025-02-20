@@ -5,7 +5,7 @@ const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 const PedidoService = {
     
-    crearPeido : async (datosPedido) =>{
+    crearPedido : async (datosPedido) =>{
         try{
             const token = await AuthService.getToken();
             if(!token) throw new Error("No hay token disponible");
@@ -16,7 +16,7 @@ const PedidoService = {
 
             return response.data;
         } catch(error){
-            console.error("Error al crear pedido: ", error.response?.data || error.message);
+            console.error("(pedidoService)Error al crear pedido: ", error.response?.data || error.message);
             throw error;
         }
     }

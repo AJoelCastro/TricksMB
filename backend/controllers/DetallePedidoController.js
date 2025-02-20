@@ -6,6 +6,7 @@ const ClienteService = require('../services/ClienteService');
 const PedidoController = {
     async createPedido(req, res) {
         try {
+            console.log(req.body)
             let {
                 clienteTipo, fechaEntrega, serieInicio, serieFinal, nomModelo, nombreTaco, alturaTaco, material, tipoMaterial, 
                 suela, accesorio, forro

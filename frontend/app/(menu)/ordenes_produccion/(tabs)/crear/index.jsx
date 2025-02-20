@@ -200,17 +200,22 @@ export default function crear() {
         }
     }, [tipoCliente, dni, ruc]);
 
-    const crearOrden = async() =>{
-        let fechaEntregaFormateada = fechaEntrega.toISOString().split("T")[0];
-        datosPedido={
-            clienteTipo:tipoCliente, fechaEntregaFormateada, selectSerieInicio, selectSerieFin, modelo, 
-        }
+    const crearPedido = async() =>{
         try {
-            const pedido = await PedidoService.crearPeido(datosPedido);
-            if (!pedido) {
+            let fechaEntregaFormateada = fechaEntrega.toISOString().split("T")[0];
+            datosPedido={
+                clienteTipo:tipoCliente, fechaEntrega:fechaEntregaFormateada, serieInicio:selectSerieInicio, serieFinal:selectSerieFin, nomModelo:modelo, nombreTaco:nombreTaco, alturaTaco:tallaTaco, material, tipoMaterial, suela, accesorios, forro
+            }
+            console.log(datosPedido)
+            if (!Object.values(datosPedido).every(valor => valor && valor.trim() !== "")) {
+                            Alert.alert("Error", "Por favor, completa todos los campos.");
+                            return;
+            }
+            const idPedido = await PedidoService.crearPedido(datosPedido);
+            if (!idPedido) {
                 return;
             }
-            
+            console.log(idPedido);
         } catch (error) {
             console.error("(index(crear))Error al crear pedido:", error);
         }
@@ -555,7 +560,7 @@ export default function crear() {
                         placeholder='Forro'
                     />
                 </View>
-                <Button mode='contained-tonal'icon="note" buttonColor='#6969' textColor='#000' onPress={()=>(crearOrden())}>
+                <Button mode='contained-tonal'icon="note" buttonColor='#6969' textColor='#000' onPress={()=>crearPedido()}>
                     Crear Pedido
                 </Button>
                 <View className='mb-32'>
