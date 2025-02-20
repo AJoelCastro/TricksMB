@@ -7,7 +7,6 @@ const PedidoService = {
     
     crearPedido : async (datosPedido) =>{
         const token = await AuthService.getToken();
-        console.log("Datos")
         if(!token) throw new Error("No hay token disponible");
         try{
             const response = await axios.post(`${API_URL}/pedido/crear`,datosPedido,{
