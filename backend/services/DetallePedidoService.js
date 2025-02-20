@@ -34,7 +34,7 @@ const DetallePedidoService = {
         }
     },
 
-    async getDetallePedidoBycodigoPedido(codigoPedido) {
+    async getDetallePedidoByCodigoPedido(codigoPedido) {
         try {
             if (!codigoPedido) {
                 throw { status: 400, message: "El código de pedido es requerido" };
