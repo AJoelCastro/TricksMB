@@ -1,23 +1,23 @@
 const db = require('../config/db');
 
 class DetallePedidoDAO {
-    static async createDetallePedido(idPedido, idModelo,codigoPedido, color, talla, cantidad, nombreTaco, alturaTaco, material,
+    static async createDetallePedido(idPedido, idModelo,codigoPedido, nombreTaco, alturaTaco, material,
         tipoMaterial, suela, accesorios, forro) {
         try {
             const query = `
                 INSERT INTO Detalle_pedido (
-                    Pedido_idPedido, Modelo_idModelo, Codigo_pedido, Color, Talla, Cantidad,
+                    Pedido_idPedido, Modelo_idModelo, Codigo_pedido,
                     Nombre_taco, Altura_taco, Material, Tipo_material, Suela, Accesorios, Forro
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
             const [result] = await db.execute(query, [
-                idPedido, idModelo, codigoPedido, color, talla, cantidad, nombreTaco, alturaTaco, material,
+                idPedido, idModelo, codigoPedido, nombreTaco, alturaTaco, material,
                 tipoMaterial, suela, accesorios, forro
             ]);
 
             return {
                 idDetallePedido: result.insertId, // Retorna el ID del nuevo registro
-                idPedido, idModelo, codigoPedido, color, talla, cantidad, nombreTaco, alturaTaco, material,
+                idPedido, idModelo, codigoPedido, nombreTaco, alturaTaco, material,
                 tipoMaterial, suela, accesorios, forro
             };
 

@@ -1,16 +1,13 @@
 const PedidoService = require('../services/PedidoService');
 const DetallePedidoService = require('../services/DetallePedidoService');
 const ModeloService = require('../services/ModeloService');
-const ProductoService = require('../services/ProductoService');
-const TipoCalzadoService = require('../services/TipoCalzadoService');
 const ClienteService = require('../services/ClienteService');
 
 const PedidoController = {
     async createPedido(req, res) {
         try {
             let {
-                clienteTipo, fechaEntrega, serieInicio, serieFinal, nomModelo, 
-                color, talla, cantidad, nombreTaco, alturaTaco, material, tipoMaterial, 
+                clienteTipo, fechaEntrega, serieInicio, serieFinal, nomModelo, nombreTaco, alturaTaco, material, tipoMaterial, 
                 suela, accesorio, forro
             } = req.body;
 
@@ -22,8 +19,6 @@ const PedidoController = {
 
             serieInicio = convertirNumero(serieInicio, "serieInicio");
             serieFinal = convertirNumero(serieFinal, "serieFinal");
-            cantidad = convertirNumero(cantidad, "cantidad");
-            talla = convertirNumero(talla, "talla");
             alturaTaco = convertirNumero(alturaTaco, "alturaTaco");
 
             const cliente = await ClienteService.getCliente(clienteTipo);
@@ -36,7 +31,7 @@ const PedidoController = {
             const codigoPedido = `COD${fechaStr}${pedido.idPedido}`;
 
             const detallePedido = await DetallePedidoService.createDetallePedido(
-                pedido.idPedido, modelo.idModelo, codigoPedido, color, talla, cantidad, nombreTaco, alturaTaco, material, 
+                pedido.idPedido, modelo.idModelo, codigoPedido, nombreTaco, alturaTaco, material, 
                 tipoMaterial, suela, accesorio, forro
             );
 
