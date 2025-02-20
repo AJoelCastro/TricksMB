@@ -8,6 +8,8 @@ import ClienteService from '@/services/ClienteService';
 import ModeloService from '@/services/ModeloService';
 import ComboBox from '@/components/ComboBox';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import DateTimePicker from "@react-native-community/datetimepicker";
+
 
 import "../../../../../global.css";
 import TipoCalzadoService from '@/services/TipoCalzadoService';
@@ -89,13 +91,13 @@ export default function crear() {
     const [dataModelos, setDataModelos] = useState([]);
     const [dataTipoCalzado, setDataTipoCalzado] = useState([]);
     const [tipoCalzado, setTipoCalzado] = useState("");
+    const [fechaEntrega, setFechaEntrega] = useState(new Date());
+    const [openDatePicker, setOpenDatePicker] = useState(false);
 
     const getCurrentDate = () => {
         const date = new Date();
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses van de 0 a 11
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`; // Formato: YYYY-MM-DD
+
+        return `${date.toLocaleDateString("es-ES")}`; // Formato: YYYY-MM-DD
     };
     const [currentDate] = useState(getCurrentDate()); // Estado para almacenar la fecha formateada
 
@@ -240,12 +242,7 @@ export default function crear() {
                     )
                 }
                 <View className='gap-2'>
-                    <TextInput
-                        label="Codigo"
-                        mode='outlined'
-                        value={""}
-                        editable={false}
-                    />
+                    
                     <ModalSelector
                         data={dataTipoCalzado}
                         keyExtractor={item => item.idTipo}
@@ -294,7 +291,7 @@ export default function crear() {
                                     data={dataModelos}
                                     keyExtractor={(item) => item.idModelo}
                                     renderItem={({ item }) => (
-                                        <Card style={{ marginBottom: 10, borderRadius: 10, overflow: 'hidden', elevation: 5 }}>
+                                        <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
                                             <Card.Cover
                                                 style={{ height: 350, resizeMode: 'cover' }}
                                                 source={{ uri: item.Imagen }} />
@@ -314,17 +311,41 @@ export default function crear() {
                         label="Fecha de creacion"
                         value={currentDate}
                         editable={false}
+                        right={<TextInput.Icon icon="calendar" />}
                     />
+                    <TextInput
+                        label="Fecha de entrega"
+                        mode='outlined'
+                        value={fechaEntrega.toLocaleDateString("es-ES")}
+                        editable={false}
+                        right={<TextInput.Icon icon="calendar" onPress={() => setOpenDatePicker(!openDatePicker)}/>}
+                    />
+                    {openDatePicker && (
+                        <View className='bg-[#151718]'>
+                            <DateTimePicker
+                                value={fechaEntrega}
+                                mode="date"
+                                display={Platform.OS === "ios" ? "spinner" : "default"}
+                                onChange={(event, selectedDate) => {
+                                    setOpenDatePicker(false);
+                                    if (selectedDate) setFechaEntrega(selectedDate);
+                                    console.log(selectedDate);
+                                    console.log(currentDate)
+                                }}
+                            />
+                        </View>
+                        )
+                    }
                 </View>
                 <ComboBox
                     data={[ {label:"Juan Buendia", value:"76961627"}, {label:"Alvaro gay",value:"76961628"}]}
                     onChange={setTrabajador}
                     placeholder="Asignar trabajador" 
                 />
-                <View className='flex-row justify-between mt-4 mb-4'>
+                <View className='flex-row  mt-4 mb-4'>
                     <View className='flex-row items-center gap-2'>
                         <Text className='font-bold'>Serie Inicio</Text>
-                        <View className='w-22 h-8 bg-gray-100 border-l-2 items-center justify-center'>
+                        <View className='h-8 bg-gray-100 border-l-2 items-center justify-center w-[30%]'>
                             <ModalSelector
                                 data={opcionesSerieInicio}
                                 accessible={true}
@@ -349,7 +370,7 @@ export default function crear() {
                     </View>
                     <View className='flex-row items-center gap-2 justify-center'>
                         <Text className='font-bold'>Serie Fin</Text>
-                        <View className='w-22 h-8 bg-gray-100 border-l-2 items-center justify-center'>
+                        <View className='h-8 bg-gray-100 border-l-2 items-center justify-center w-[30%]'>
                             <ModalSelector
                                 data={opcionesSerieFin}
                                 accessible={true}
