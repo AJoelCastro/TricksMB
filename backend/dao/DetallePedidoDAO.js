@@ -31,7 +31,7 @@ class DetallePedidoDAO {
         try {
             const query = 'SELECT * FROM Detalle_pedido WHERE Codigo_pedido = ?';
             const [rows] = await db.execute(query, [codigoPedido]);
-            return rows;
+            return rows[0];
         } catch (error) {
             console.error("Error al obtener detalle de pedido por código de pedido:", error);
             throw error;

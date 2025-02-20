@@ -1,7 +1,8 @@
 const DetallePedidoDAO = require('../dao/DetallePedidoDAO');
 
 const DetallePedidoService = {
-    async createDetallePedido(idPedido, idModelo, codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorio, forro) {
+    async createDetallePedido(idPedido, idModelo, codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela,
+        accesorio, forro) {
         try {
             if (!idPedido || !idDModelo) {
                 throw { status: 400, message: "idPedido e idModelo son obligatorios" };

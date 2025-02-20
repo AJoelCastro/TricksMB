@@ -1,10 +1,10 @@
 const DetalleAreaTrabajoDAO = require("../dao/DetalleAreaTrabajo");
 
 const DetalleAreaTrabajoService = {
-    async createDetalleAreaTrabajo(idAreaTrabajo, Detalle_pedido_idDetalle_pedido, cantidadAvance, comentario) {
+    async createDetalleAreaTrabajo(idAreaTrabajo, idCaracteristicas, cantidadAvance, comentario) {
         try {
-            if (!idAreaTrabajo || !Detalle_pedido_idDetalle_pedido) {
-                throw { status: 400, message: "idAreaTrabajo y Detalle_pedido_idDetalle_pedido son requeridos" };
+            if (!idAreaTrabajo || !idCaracteristicas) {
+                throw { status: 400, message: "idAreaTrabajo y idCaracteristicas son requeridos" };
             }
 
             if (!Number.isInteger(cantidadAvance) || cantidadAvance <= 0) {
@@ -13,7 +13,7 @@ const DetalleAreaTrabajoService = {
 
             const detalle = await DetalleAreaTrabajoDAO.crearDetalleAreaTrabajo({
                 idAreaTrabajo,
-                Detalle_pedido_idDetalle_pedido,
+                idCaracteristicas,
                 cantidadAvance,
                 comentario
             });
