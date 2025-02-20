@@ -11,7 +11,7 @@ class ModeloDAO{
         }
     }
 
-    static async getModeloByNombre(){
+    static async getModeloByNombre(nombre){
         try{
             const query = 'SELECT * FROM Modelo WHERE Nombre = ?';
             const [rows] = await db.execute(query, [nombre]);

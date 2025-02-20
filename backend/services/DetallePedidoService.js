@@ -2,12 +2,12 @@ const DetallePedidoDAO = require('../dao/DetallePedidoDAO');
 
 const DetallePedidoService = {
     async createDetallePedido(idPedido, idModelo, codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela,
-        accesorio, forro) {
+        accesorios, forro) {
         try {
-            if (!idPedido || !idDModelo) {
+            if (!idPedido || !idModelo) {
                 throw { status: 400, message: "idPedido e idModelo son obligatorios" };
             }
-
+            
             alturaTaco = Number(alturaTaco);
 
             if (alturaTaco <= 0) {
@@ -19,9 +19,8 @@ const DetallePedidoService = {
             }
 
             const detallePedido = await DetallePedidoDAO.createDetallePedido(
-                idPedido, idModelo,codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorio, forro
+                idPedido, idModelo,codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorios, forro
             );
-
             if (!detallePedido) {
                 throw { status: 500, message: "No se pudo registrar el detalle del pedido" };
             }

@@ -43,7 +43,7 @@ const ClienteController = {
             let cliente;
             if (tipoCliente === "natural") {
                 cliente = await ClienteService.getClienteNaturalByDni(identificador);
-                console.log("cliente controller",cliente)
+                
             } else {
                 return res.status(400).json({ error: "Tipo de cliente inválido" });
             }

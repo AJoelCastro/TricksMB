@@ -204,9 +204,8 @@ export default function crear() {
         try {
             let fechaEntregaFormateada = fechaEntrega.toISOString().split("T")[0];
             datosPedido={
-                clienteTipo:tipoCliente, fechaEntrega:fechaEntregaFormateada, serieInicio:selectSerieInicio, serieFinal:selectSerieFin, nomModelo:modelo, nombreTaco:nombreTaco, alturaTaco:tallaTaco, material, tipoMaterial, suela, accesorios, forro
+                clienteTipo:dni, fechaEntrega:fechaEntregaFormateada, serieInicio:selectSerieInicio, serieFinal:selectSerieFin, nomModelo:modelo, nombreTaco:nombreTaco, alturaTaco:tallaTaco, material, tipoMaterial, suela, accesorios, forro
             }
-            console.log(datosPedido)
             if (!Object.values(datosPedido).every(valor => valor && valor.trim() !== "")) {
                             Alert.alert("Error", "Por favor, completa todos los campos.");
                             return;

@@ -39,12 +39,13 @@ const ClienteService = {
     },
 
     async getCliente(value){
-        if(value.length == 8){
-            return await ClienteDAO.getClienteNaturalByDni(value);
+        if(value.length === 8){
+            const cliente =await ClienteDAO.getClienteNaturalByDni(value);
+            return cliente;
         }else if(value.length == 11){
             return await ClienteDAO.getClienteJuridicoByRuc(value);
         }
-        return res.status(404).json({ error: "Cliente no encontrado" });
+        throw{status:500, message:`Anyaaaaaaaa`};
     }
 };
 

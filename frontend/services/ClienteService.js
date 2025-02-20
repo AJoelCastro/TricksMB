@@ -14,7 +14,6 @@ const ClienteService = {
             const response = await axios.post(`${API_URL}/${endpoint}`, datosCliente, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-
             return response.data;
         } catch (error) {
             console.error("Error al crear cliente:", error.response?.data || error.message);

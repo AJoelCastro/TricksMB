@@ -6,37 +6,33 @@ const ClienteService = require('../services/ClienteService');
 const PedidoController = {
     async createPedido(req, res) {
         try {
-            console.log(req.body)
             let {
                 clienteTipo, fechaEntrega, serieInicio, serieFinal, nomModelo, nombreTaco, alturaTaco, material, tipoMaterial, 
-                suela, accesorio, forro
+                suela, accesorios, forro
             } = req.body;
 
             const convertirNumero = (valor, nombreCampo) => {
                 const numero = Number(valor);
-                if (isNaN(numero)) throw { status: 400, message: `${nombreCampo} debe ser un número válido` };
+                if (isNaN(numero)) return res.status(400).json({ message: `${nombreCampo} debe ser un número válido`});
                 return numero;
             };
 
             serieInicio = convertirNumero(serieInicio, "serieInicio");
             serieFinal = convertirNumero(serieFinal, "serieFinal");
             alturaTaco = convertirNumero(alturaTaco, "alturaTaco");
-
-            const cliente = await ClienteService.getCliente(clienteTipo);
-            const modelo = await ModeloService.getModeloByNombre(nomModelo);
-
-            const pedido = await PedidoService.createPedido(cliente.idCliente, fechaEntrega, serieInicio, serieFinal);
-
+            const {idCliente} = await ClienteService.getCliente(clienteTipo);
+            const {idModelo} = await ModeloService.getModeloByNombre(nomModelo);
+            const {idPedido} = await PedidoService.createPedido(idCliente, fechaEntrega, serieInicio, serieFinal);
             const fecha = new Date();
-            const fechaStr = fecha.toISOString().slice(2, 10).replace(/-/g, ""); // "YYMMDD"
-            const codigoPedido = `COD${fechaStr}${pedido.idPedido}`;
-
+            const fechaStr = fecha.toISOString().split("T")[0];// "YYMMDD"
+            const codigoPedido = `COD${fechaStr}${idPedido}`;
+            
             const detallePedido = await DetallePedidoService.createDetallePedido(
-                pedido.idPedido, modelo.idModelo, codigoPedido, nombreTaco, alturaTaco, material, 
-                tipoMaterial, suela, accesorio, forro
+                idPedido, idModelo, codigoPedido, nombreTaco, alturaTaco, material, 
+                tipoMaterial, suela, accesorios, forro
             );
-
-            return res.status(201).json({ message: "Pedido registrado con éxito", detallePedido });
+            console.log(detallePedido.codigoPedido)
+            return res.status(201).json(detallePedido.codigoPedido);
 
         } catch (error) {
             console.error("Error al crear pedido:", error);

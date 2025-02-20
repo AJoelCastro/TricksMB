@@ -8,7 +8,7 @@ class DetallePedidoDAO {
                 INSERT INTO Detalle_pedido (
                     Pedido_idPedido, Modelo_idModelo, Codigo_pedido,
                     Nombre_taco, Altura_taco, Material, Tipo_material, Suela, Accesorios, Forro
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
             const [result] = await db.execute(query, [
                 idPedido, idModelo, codigoPedido, nombreTaco, alturaTaco, material,

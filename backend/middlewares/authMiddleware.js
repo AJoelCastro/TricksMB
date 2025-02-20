@@ -27,7 +27,7 @@ const authMiddleware = (req, res, next) => {
         }
 
         // Otros errores de token inválido
-        return errorHandler(res, new Error('⛔ Token inválido.'), 401);
+        return errorHandler(res, new Error('(authMidlware)⛔ Token inválido.'), 401);
     }
 };
 
