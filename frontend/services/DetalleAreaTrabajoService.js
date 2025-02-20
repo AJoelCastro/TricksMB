@@ -10,7 +10,7 @@ const DetalleAreaTrabajoService= {
             const token = await AuthService.getToken();
             if(!token) throw new Error("No hay token disponible");
             
-            const response = await axios.post(`${API_URL}/actaulizarPorArea/crear`,datos,{
+            const response = await axios.post(`${API_URL}/actualizarPorArea/crear`,datos,{
                 headers: {Authorization: `Bearer${token}`}
             });
 
