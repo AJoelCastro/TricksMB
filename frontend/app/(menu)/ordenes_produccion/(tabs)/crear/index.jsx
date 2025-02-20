@@ -49,33 +49,32 @@ export default function crear() {
     ];
 
     const opcionesSerieInicio = [
-        { key: "1", label: "Talla 1" },
-        { key: "2", label: "Talla 2" },
-        { key: "3", label: "Talla 3" },
-        { key: "4", label: "Talla 4" },
-        { key: "5", label: "Talla 5" },
-        { key: "6", label: "Talla 6" },
-        { key: "7", label: "Talla 7" },
-        { key: "8", label: "Talla 8" },
-        { key: "9", label: "Talla 9" },
+        { key: "31", label: "Talla 31" },
+        { key: "32", label: "Talla 32" },
+        { key: "33", label: "Talla 33" },
+        { key: "34", label: "Talla 34" },
+        { key: "35", label: "Talla 35" },
+        { key: "36", label: "Talla 36" },
+        { key: "37", label: "Talla 37" },
+        { key: "38", label: "Talla 38" },
+        { key: "39", label: "Talla 39" },
     ];
     const opcionesSerieFin = [
-        { key: "2", label: "Talla 2" },
-        { key: "3", label: "Talla 3" },
-        { key: "4", label: "Talla 4" },
-        { key: "5", label: "Talla 5" },
-        { key: "6", label: "Talla 6" },
-        { key: "7", label: "Talla 7" },
-        { key: "8", label: "Talla 8" },
-        { key: "9", label: "Talla 9" },
-        { key: "0", label: "Talla 0" },
+        { key: "32", label: "Talla 32" },
+        { key: "33", label: "Talla 33" },
+        { key: "34", label: "Talla 34" },
+        { key: "35", label: "Talla 35" },
+        { key: "36", label: "Talla 36" },
+        { key: "37", label: "Talla 37" },
+        { key: "38", label: "Talla 38" },
+        { key: "39", label: "Talla 39" },
+        { key: "40", label: "Talla 40" },
     ];
     const router = useRouter();
     const [cliente, setCliente] = useState("");
     const [modelo, setModelo] = useState("");
     const [selectSerieInicio, setSelectSerieInicio] = useState("");
     const [selectSerieFin, setSelectSerieFin] = useState("");
-    const [trabajador, setTrabajador] = useState("");
     const [tipoCliente, setTipoCliente] = useState("");
     const [dni, setDni] = useState("");
     const [ruc, setRuc] = useState("");
@@ -96,9 +95,9 @@ export default function crear() {
 
     const getCurrentDate = () => {
         const date = new Date();
-
-        return `${date.toLocaleDateString("es-ES")}`; // Formato: YYYY-MM-DD
+        return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
     };
+    
     const [currentDate] = useState(getCurrentDate()); // Estado para almacenar la fecha formateada
 
     const [filas, setFilas] = useState([]);
@@ -316,7 +315,7 @@ export default function crear() {
                     <TextInput
                         label="Fecha de entrega"
                         mode='outlined'
-                        value={fechaEntrega.toLocaleDateString("es-ES")}
+                        value={fechaEntrega.toISOString().split("T")[0]}
                         editable={false}
                         right={<TextInput.Icon icon="calendar" onPress={() => setOpenDatePicker(!openDatePicker)}/>}
                     />
@@ -337,13 +336,8 @@ export default function crear() {
                         )
                     }
                 </View>
-                <ComboBox
-                    data={[ {label:"Juan Buendia", value:"76961627"}, {label:"Alvaro gay",value:"76961628"}]}
-                    onChange={setTrabajador}
-                    placeholder="Asignar trabajador" 
-                />
-                <View className='flex-row  mt-4 mb-4'>
-                    <View className='flex-row items-center gap-2'>
+                <View className='flex mt-4 mb-4 gap-5'>
+                    <View className='flex-row items-center gap-4'>
                         <Text className='font-bold'>Serie Inicio</Text>
                         <View className='h-8 bg-gray-100 border-l-2 items-center justify-center w-[30%]'>
                             <ModalSelector
@@ -368,8 +362,8 @@ export default function crear() {
                         </View>
                         
                     </View>
-                    <View className='flex-row items-center gap-2 justify-center'>
-                        <Text className='font-bold'>Serie Fin</Text>
+                    <View className='flex-row items-center gap-4'>
+                        <Text className='font-bold'>Serie Fin     </Text>
                         <View className='h-8 bg-gray-100 border-l-2 items-center justify-center w-[30%]'>
                             <ModalSelector
                                 data={opcionesSerieFin}
