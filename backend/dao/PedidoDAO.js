@@ -13,3 +13,5 @@ class PedidoDAO {
         }
     }
 }
+
+module.exports = PedidoDAO;

@@ -1,26 +1,24 @@
 const DetallePedidoDAO = require('../dao/DetallePedidoDAO');
 
 const DetallePedidoService = {
-    async createDetallePedido(idPedido, idProducto, codigoPedido, color, talla, cantidad, nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorio, forro) {
+    async createDetallePedido(idPedido, idModelo, codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorio, forro) {
         try {
-            if (!idPedido || !idProducto) {
-                throw { status: 400, message: "idPedido e idProducto son obligatorios" };
+            if (!idPedido || !idDModelo) {
+                throw { status: 400, message: "idPedido e idModelo son obligatorios" };
             }
 
-            talla = Number(talla);
-            cantidad = Number(cantidad);
             alturaTaco = Number(alturaTaco);
 
-            if (cantidad <= 0 || talla <= 0 || alturaTaco <= 0) {
+            if (alturaTaco <= 0) {
                 throw { status: 400, message: "Cantidad, talla o altura deben ser mayores a 0" };
             }
 
-            if (!Number.isInteger(talla) || !Number.isInteger(cantidad) || !Number.isInteger(alturaTaco)) {
-                throw { status: 400, message: "Talla, cantidad y altura de taco deben ser números enteros válidos" };
+            if ( !Number.isInteger(alturaTaco)) {
+                throw { status: 400, message: "altura de taco deben ser números enteros válidos" };
             }
 
             const detallePedido = await DetallePedidoDAO.createDetallePedido(
-                idPedido, idProducto,codigoPedido, color, talla, cantidad, nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorio, forro
+                idPedido, idModelo,codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorio, forro
             );
 
             if (!detallePedido) {
