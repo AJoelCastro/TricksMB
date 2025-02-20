@@ -46,7 +46,6 @@ class ClienteDAO {
                 INNER JOIN Cliente c ON cn.Cliente_idCliente = c.idCliente
                 WHERE cn.Dni = ?`;
             const [rows] = await db.execute(query, [dni]);
-            console.log([rows]);
             return rows.length ? rows[0] : null;
         } catch (error) {
             console.error("Error al buscar cliente natural por DNI:", error);

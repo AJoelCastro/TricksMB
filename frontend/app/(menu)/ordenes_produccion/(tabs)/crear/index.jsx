@@ -110,7 +110,6 @@ export default function crear() {
             color: '' 
         }]);
     };
-    console.log(filas);
     const handleEliminarFila = (id) => {
         // Filtrar las filas para eliminar la seleccionada
         setFilas(filas.filter(fila => fila.id !== id));
@@ -203,10 +202,9 @@ export default function crear() {
     const crearPedido = async() =>{
         try {
             let fechaEntregaFormateada = fechaEntrega.toISOString().split("T")[0];
-            datosPedido={
-                clienteTipo:tipoCliente, fechaEntrega:fechaEntregaFormateada, serieInicio:selectSerieInicio, serieFinal:selectSerieFin, nomModelo:modelo, nombreTaco:nombreTaco, alturaTaco:tallaTaco, material, tipoMaterial, suela, accesorios, forro
+            const datosPedido={
+                clienteTipo:dni, fechaEntrega:fechaEntregaFormateada, serieInicio:selectSerieInicio, serieFinal:selectSerieFin, nomModelo:modelo, nombreTaco:nombreTaco, alturaTaco:tallaTaco, material, tipoMaterial, suela, accesorios, forro
             }
-            console.log(datosPedido)
             if (!Object.values(datosPedido).every(valor => valor && valor.trim() !== "")) {
                             Alert.alert("Error", "Por favor, completa todos los campos.");
                             return;
