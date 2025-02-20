@@ -38,7 +38,12 @@ const DetallePedidoService = {
             if (!codigoPedido) {
                 throw { status: 400, message: "El código de pedido es requerido" };
             }
-            return await DetallePedidoDAO.getDetallePedidoBycodigoPedido(codigoPedido);
+            const obj =  await DetallePedidoDAO.getDetallePedidoBycodigoPedido(codigoPedido);
+
+            if (!obj) {
+                throw { status: 404, message: "Detalle de pedido no encontrado" };
+            }
+            return obj;
         } catch (error) {
             if (error.status) throw error; // Si ya tiene status, lo relanzamos
             throw { status: 500, message: "Error en DetallePedidoService", detalle: error.message }
