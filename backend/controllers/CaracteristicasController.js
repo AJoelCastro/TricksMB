@@ -4,18 +4,25 @@ const CaracteristicasService = require('../services/CaracteristicasService');
 const CaracteristicasController = {
     async createCaracteristica(req, res) {
         try {
-            const {idDetallePedido, talla, cantidad, color } = req.body;
+            let { idDetallePedido, talla, cantidad, color } = req.body;
 
+            // Función para convertir un valor a número y validarlo
             const convertirNumero = (valor, nombreCampo) => {
                 const numero = Number(valor);
                 if (isNaN(numero)) return res.status(400).json({ error: `El campo ${nombreCampo} debe ser un número` });
                 return numero;
             };
 
+            // Convertir y validar `talla` y `cantidad`
             talla = convertirNumero(talla, "talla");
             cantidad = convertirNumero(cantidad, "cantidad");
-
-            const caracteristica = await CaracteristicasService.createCaracteristicas(idDetallePedido, talla, cantidad, color);
+            // Llamar al servicio con los valores convertidos
+            const caracteristica = await CaracteristicasService.createCaracteristicas(
+                idDetallePedido,
+                talla,
+                cantidad,
+                color
+            );
             return res.status(201).json({ message: "Caracteristica creada con éxito", caracteristica });
         } catch (error) {
             console.error("Error al crear caracteristica:", error);
