@@ -263,6 +263,7 @@ export default function crear() {
                     return;
                 }
             }
+            console.log(codigoOrden)
             Alert.alert("Orden creada correctamente: ", codigoOrden);
             resetearCampos();
         } catch (error) {
