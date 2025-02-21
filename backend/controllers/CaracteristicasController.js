@@ -8,7 +8,7 @@ const CaracteristicasController = {
 
             const convertirNumero = (valor, nombreCampo) => {
                 const numero = Number(valor);
-                if (isNaN(numero)) throw { status: 400, message: `${nombreCampo} debe ser un número válido` };
+                if (isNaN(numero)) return res.status(400).json({ error: `El campo ${nombreCampo} debe ser un número` });
                 return numero;
             };
 
