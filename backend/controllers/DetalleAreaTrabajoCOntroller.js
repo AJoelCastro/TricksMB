@@ -9,18 +9,17 @@ const DetalleAreaTrabajoController = {
 
             const convertirNumero = (valor, nombreCampo) => {
                 const numero = Number(valor);
-                if (isNaN(numero)) throw { status: 400, message: `${nombreCampo} debe ser un número válido` };
+                if (isNaN(numero)) return res.status(400).json({error: `El campo ${nombreCampo} debe ser un número`});
                 return numero;
             }
 
             cantidadAvance = convertirNumero(cantidadAvance, "cantidadAvance");
 
             const areaTrabajo = await AreaTrabajoService.getAreaTrabajobyNombre(nombreAreaTrabajo);
-            const detallePedido = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
-            const caracteristicas = await CaracteristicasService.getCaracteristicasByIdDetallePedido(detallePedido.idDetallePedido);
+            const {idDetallePedido} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
+            const caracteristicas = await CaracteristicasService.getCaracteristicasByIdDetallePedido(idDetallePedido);
             const detalleAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(
-                areaTrabajo.idAreaTrabajo, caracteristicas.idCaracteristicas, cantidadAvance, comentario
-            );
+                areaTrabajo.idAreaTrabajo, caracteristicas.idCaracteristicas, cantidadAvance, comentario);
 
             return res.status(201).json({message: "Detalle de area de trabajo registrado con éxito", detalleAreaTrabajo});
 
