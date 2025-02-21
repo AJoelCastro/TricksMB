@@ -13,6 +13,7 @@ import PedidoService from "../../../../../services/PedidoService";
 
 import "../../../../../global.css";
 import TipoCalzadoService from '@/services/TipoCalzadoService';
+import CaracteristicasService from '@/services/CaracteristicasService';
 
 const { width } = Dimensions.get('window');
 
@@ -92,7 +93,7 @@ export default function crear() {
     const [tipoCalzado, setTipoCalzado] = useState("");
     const [fechaEntrega, setFechaEntrega] = useState(new Date());
     const [openDatePicker, setOpenDatePicker] = useState(false);
-
+    const [codigoOrden, setCodigoOrden] = useState("");
     const getCurrentDate = () => {
         const date = new Date();
         return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
@@ -209,15 +210,77 @@ export default function crear() {
                             Alert.alert("Error", "Por favor, completa todos los campos.");
                             return;
             }
-            const idPedido = await PedidoService.crearPedido(datosPedido);
-            if (!idPedido) {
+            const pedido = await PedidoService.crearPedido(datosPedido);
+            if (!pedido) {
                 return;
             }
-            console.log(idPedido);
+            setCodigoOrden(pedido.codigoPedido)
+            return pedido.idDetallePedido;
         } catch (error) {
             console.error("(index(crear))Error al crear pedido:", error);
         }
-    } 
+    }
+    const resetearCampos = () => {
+        setCliente("");
+        setModelo("");
+        setSelectSerieInicio("");
+        setSelectSerieFin("");
+        setTipoCliente("");
+        setDni("");
+        setRuc("");
+        setNombreTaco("");
+        setTallaTaco("");
+        setDocumento("");
+        setMaterial("");
+        setTipoMaterial("");
+        setAccesorios("");
+        setSuela("");
+        setForro("");
+        setTipoCalzado("");
+        setFechaEntrega(new Date());
+        setCodigoOrden("");
+        setFilas([]);
+    };
+    const crearCaracteristicas= async(idDetallePedido)=>{
+        try {
+            for (const fila of filas) { // ✅ Usar for...of en lugar de map
+                const datosCaracteristicas = {
+                    idDetallePedido,
+                    talla: fila.talla,
+                    cantidad: fila.pares,
+                    color: fila.color
+                };
+    
+                // ✅ Verifica si algún valor es vacío
+                if (!Object.values(datosCaracteristicas).every(valor => valor && valor.toString().trim() !== "")) {
+                    Alert.alert("Error", "Por favor, completa todos los campos.");
+                    return;
+                }
+    
+                // ✅ Llamada a la API con `await`
+                const caracteristicas = await CaracteristicasService.crearCaracteristicas(datosCaracteristicas);
+                if (!caracteristicas) {
+                    console.error("Error al crear característica para:", datosCaracteristicas);
+                    return;
+                }
+            }
+            Alert.alert("Orden creada correctamente: ", codigoOrden);
+            resetearCampos();
+        } catch (error) {
+            console.error("(index(crear))Error al crear caracteristicas:", error);
+        }
+    }
+    const handleCrearPedido = async () => {
+        try {
+            const idPedido = await crearPedido();
+            if (idPedido) {
+                await crearCaracteristicas(idPedido);
+            }
+        } catch (error) {
+            console.error("Error al crear el pedido:", error);
+            Alert.alert("Error", "Hubo un problema al crear el pedido.");
+        }
+    };
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -558,7 +621,7 @@ export default function crear() {
                         placeholder='Forro'
                     />
                 </View>
-                <Button mode='contained-tonal'icon="note" buttonColor='#6969' textColor='#000' onPress={()=>crearPedido()}>
+                <Button mode='contained-tonal'icon="note" buttonColor='#6969' textColor='#000' onPress={handleCrearPedido}>
                     Crear Pedido
                 </Button>
                 <View className='mb-32'>

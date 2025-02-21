@@ -31,8 +31,7 @@ const PedidoController = {
                 idPedido, idModelo, codigoPedido, nombreTaco, alturaTaco, material, 
                 tipoMaterial, suela, accesorios, forro
             );
-            console.log(detallePedido.codigoPedido)
-            return res.status(201).json(detallePedido.codigoPedido);
+            return res.status(201).json(detallePedido);
 
         } catch (error) {
             console.error("Error al crear pedido:", error);
