@@ -238,7 +238,6 @@ export default function crear() {
         setForro("");
         setTipoCalzado("");
         setFechaEntrega(new Date());
-        setCodigoOrden("");
         setFilas([]);
     };
     const crearCaracteristicas= async(idDetallePedido)=>{
