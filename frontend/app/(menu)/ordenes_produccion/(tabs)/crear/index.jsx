@@ -265,7 +265,7 @@ export default function crear() {
             }
             console.log(codigoOrden)
             Alert.alert("Orden creada correctamente: ", codigoOrden);
-            resetearCampos(); 
+            resetearCampos();
         } catch (error) {
             console.error("(index(crear))Error al crear caracteristicas:", error);
         }
