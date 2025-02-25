@@ -629,7 +629,7 @@ export default function editar() {
                     />
                 </View>
                 <Button mode='contained-tonal'icon="note" buttonColor='#6969' textColor='#000' onPress={handleCrearPedido}>
-                    Crear Pedido
+                    Editar Pedido
                 </Button>
                 <View className='mb-32'>
 
