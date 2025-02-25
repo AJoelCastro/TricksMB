@@ -44,7 +44,25 @@ const DetallePedidoService = {
             }
             return obj;
         } catch (error) {
-            if (error.status) throw error; // Si ya tiene status, lo relanzamos
+            if (error.status) throw error;
+            throw { status: 500, message: "Error en DetallePedidoService", detalle: error.message }
+        }
+    },
+
+    async updateDetallePedido(codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela,
+        accesorios, forro) {
+        try {
+            if (!codigoPedido) {
+                throw { status: 400, message: "El código de pedido es requerido" };
+            }
+            const obj = await DetallePedidoDAO.updateDetallePedido(codigoPedido, nombreTaco, alturaTaco, material, 
+                tipoMaterial, suela, accesorios, forro);
+            if (!obj) {
+                throw { status: 500, message: "No se pudo actualizar el detalle del pedido" };
+            }
+            return obj;
+        } catch (error) {
+            if (error.status) throw error;
             throw { status: 500, message: "Error en DetallePedidoService", detalle: error.message }
         }
     }

@@ -22,6 +22,32 @@ class CaracteristicasDAO {
             throw error;
         }
     }
+
+    static async updateCaracteristicas(codigoPeido,idCaracteristicas, talla, cantidad, color){
+        try{
+            const queryGetCaracteristicas = 'SELECT idDetalle_pedido FROM Detalle_pedido WHERE Codigo_pedido = ?';
+            const [rows] = await db.execute(queryGetCaracteristicas, [codigoPeido]);
+            
+            if (rows.length === 0) {
+                throw new Error("No se encontró la el detalle pedido.");
+            }
+
+            const idDetallePedido = rows[0].idDetallePedido;
+
+            const query = `UPDATE Caracteristicas SET Talla = ?, Cantidad = ?, Color = ?
+            WHERE Detalle_pedido_idDetalle_pedido = ? AND idCaracteristicas = ?`;
+            
+            const [result] = await db.execute(query, [talla, cantidad, color, idDetallePedido,idCaracteristicas]);
+            
+            if (result.affectedRows === 0) {
+                throw new Error("No se encontró la caracteristica con el id proporcionado.");
+            }
+
+            return { message: "Características actualizadas correctamente." };
+        }catch(error){
+            throw error;
+        }
+    }
 }
 
 module.exports = CaracteristicasDAO;
