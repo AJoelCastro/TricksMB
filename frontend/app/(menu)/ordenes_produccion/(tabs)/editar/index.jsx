@@ -299,21 +299,23 @@ export default function editar() {
                     mode='outlined'
                 >
                 </TextInput>
-                <TextInput 
-                    label="DNI O RUC"
-                    placeholder='Ingrese un numero de DNI o RUC'
-                    mode='outlined'
-                    className='h-10 rounded-lg' 
-                    value={documento} 
-                    onChangeText={setDocumento} 
-                    keyboardType='numeric' 
-                    maxLength={11}
-                />
                 { tipoCliente==="natural" &&(
                     <View className='gap-2 mb-2'>
                         <View className='flex-col'>
-                            <Text className='text-black text-lg font-bold'>Nombre: {cliente.Nombre}</Text>
-                            <Text className='text-black text-lg font-bold'>DNI: {cliente.Dni}</Text>
+                            <TextInput 
+                                value={cliente.Nombre}
+                                mode='outlined'
+                                label={"Nombre"}
+                                editable={false}
+                            >
+                            </TextInput>
+                            <TextInput 
+                                value={cliente.Dni}
+                                mode='outlined'
+                                label={"DNI"}
+                                editable={false}
+                            >
+                            </TextInput>
                         </View>
                         
                     </View>
@@ -322,8 +324,20 @@ export default function editar() {
                 { tipoCliente==="juridico" &&(
                     <View className='gap-2 mb-2'>
                         <View className='flex-col'>
-                            <Text className='text-black text-lg font-bold'>Razon Social: {cliente.Razon_social}</Text>
-                            <Text className='text-black text-lg font-bold'>RUC: {cliente.Ruc}</Text>
+                            <TextInput 
+                                value={cliente.Razon_social}
+                                mode='outlined'
+                                label={"Razon Social"}
+                                editable={false}
+                            >
+                            </TextInput>
+                            <TextInput 
+                                value={cliente.Ruc}
+                                mode='outlined'
+                                label={"RUC"}
+                                editable={false}
+                            >
+                            </TextInput>
                         </View>
                     </View>
                     )

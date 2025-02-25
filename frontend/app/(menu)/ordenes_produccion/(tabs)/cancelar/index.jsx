@@ -1,8 +1,8 @@
-import {View, Text, TextInput, TouchableOpacity} from 'react-native';
-import { Link } from 'expo-router';
 import { useState } from 'react';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { TextInput } from 'react-native-paper';
+
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Alert } from 'react-native';
 
 import "../../../../../global.css";
 
@@ -30,21 +30,21 @@ export default function cancelar() {
     return (
         <View className='p-2 gap-4'>
             <Text className='text-lg font-bold'>Codigo</Text>
-            <View className='flex-row gap-4 items-center'>
-                <TextInput
-                    className='border rounded-lg w-[85%]'
-                    placeholder=''
-                    value={codigo}
-                    onChangeText={setCodigo}
-                >
-                </TextInput>
-                <Icon name="search" size={20} color="black"/>
-            </View>
+            <TextInput
+              mode='outlined'
+              placeholder='Ingrese el codigo de orden'
+              value={codigo}
+              onChangeText={setCodigo}
+              right={
+                <TextInput.Icon icon={"magnify"}/>
+              }
+            >
+            </TextInput>
             <TouchableOpacity
-                className='bg-red-500 w-[30%] mx-auto'
+                className='bg-red-500 w-[50%] mx-auto'
                 onPress={mostrarAlerta}
             >
-                <Text className='text-lg font-bold text-white text-center'>Cancelar</Text>
+                <Text className='text-lg font-bold text-white text-center'>Cancelar Orden</Text>
             </TouchableOpacity>
         </View>
     );
