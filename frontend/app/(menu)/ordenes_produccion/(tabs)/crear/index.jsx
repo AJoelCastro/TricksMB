@@ -286,7 +286,7 @@ export default function crear() {
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={{ flex: 1 }}
         >
-            <ScrollView className='mx-6 gap-2 '>
+            <ScrollView className='mx-4 gap-2 '>
                 
                 <Text className='font-bold mt-2 mb-3 text-lg'>
                     Buscar Cliente por Tipo
@@ -304,7 +304,7 @@ export default function crear() {
                 />
                 { tipoCliente==="natural" &&(
                     <View className='gap-2 mb-2'>
-                        <View className='flex-row gap-6'>
+                        <View className='flex-col'>
                             <Text className='text-black text-lg font-bold'>Nombre: {cliente.Nombre}</Text>
                             <Text className='text-black text-lg font-bold'>DNI: {cliente.Dni}</Text>
                         </View>
