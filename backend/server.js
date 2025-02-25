@@ -7,6 +7,7 @@ const modeloRoutes = require('./routes/ModeloRoutes');
 const tipoCalzadoRoutes = require('./routes/TipoCalzadoRoutes');
 const AreaTrabajoRoutes = require('./routes/DetalleAreaTrabajoRoutes');
 const caracteristicasRoutes = require('./routes/CaracteristicasRoutes');
+const detallePedidoRoutes = require('./routes/DetallePedidoRoutes');
 const errorHandler = require('./utils/errorHandler'); // Importamos errorHandler
 require('dotenv').config();
 
@@ -36,11 +37,12 @@ requiredEnv.forEach((key) => {
 // Rutas
 app.use('/usuario', userRoutes);
 app.use('/cliente', clienteRoutes);
-app.use('/pedido',pedidoRoutes);
+app.use('/detallePedido',detallePedidoRoutes);
+app.use('pedido',pedidoRoutes);
 app.use('/caracteristicas',caracteristicasRoutes);
 app.use('/modelo', modeloRoutes);
 app.use('/tipoCalzado', tipoCalzadoRoutes);
-app.use('/actualizarPorArea', AreaTrabajoRoutes);
+app.use('/detalleAreaTrabajo', AreaTrabajoRoutes);
 
 // Manejo de rutas no encontradas
 app.use((req, res, next) => {

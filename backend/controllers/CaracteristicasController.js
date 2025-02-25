@@ -1,4 +1,4 @@
-const { get } = require('../routes/PedidoRoutes');
+const { get } = require('../routes/DetallePedidoRoutes');
 const CaracteristicasService = require('../services/CaracteristicasService');
 
 const CaracteristicasController = {
@@ -38,8 +38,24 @@ const CaracteristicasController = {
             console.error("Error al obtener caracteristicas:", error);
             return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
         }
-    }
+    },
 
+    async updateCaracteristicas(req, res) {
+        try {
+            const { codigoPedido, idCaracteristicas, talla, cantidad, color } = req.body;
+            const caracteristica = await CaracteristicasService.updateCaracteristicas(
+                codigoPedido,
+                idCaracteristicas,
+                talla,
+                cantidad,
+                color
+            );
+            return res.status(200).json(caracteristica);
+        } catch (error) {
+            console.error("Error al actualizar caracteristicas:", error);
+            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+        }
+    }
 }
 
 module.exports = CaracteristicasController;

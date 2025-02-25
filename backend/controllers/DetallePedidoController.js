@@ -37,6 +37,32 @@ const PedidoController = {
             console.error("Error al crear pedido:", error);
             return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
         }
+    },
+
+    async getDetallePedidoByCodigoPedido(req, res) {
+        try {
+            const {codigoPedido} = req.params;
+            const detallePedido = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
+            return res.status(200).json(detallePedido);
+        } catch (error) {
+            console.error("Error al obtener detalle pedido por código:", error);
+            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+        }
+    },
+
+    async updateDetallePedido(req, res) {
+        try {
+            const {codigoPedido} = req.params;
+            const {nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorios, forro} = req.body;
+            const detallePedido = await DetallePedidoService.updateDetallePedido(
+                codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorios
+            );
+            return res.status(200).json(detallePedido);
+        }
+        catch (error) {
+            console.error("Error al actualizar detalle pedido:", error);
+            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+        }
     }
 };
 
