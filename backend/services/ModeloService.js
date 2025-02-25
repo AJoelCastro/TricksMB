@@ -25,7 +25,17 @@ const ModeloService = {
         }catch(error){
             throw error;
         }
+    },
+
+    async getModeloByCodigoPedido(codigoPedido){
+        try{
+            if(!codigoPedido) throw {status: 400, message: "Código de pedido requerido"};
+            return await ModeloDAO.getModeloByCodigoPedido(codigoPedido);
+        }catch(error){
+            throw error;
+        }
     }
+
 }
 
 module.exports = ModeloService;

@@ -9,7 +9,7 @@ const PedidoService = {
         const token = await AuthService.getToken();
         if(!token) throw new Error("No hay token disponible");
         try{
-            const response = await axios.post(`${API_URL}/pedido/crear`,datosPedido,{
+            const response = await axios.post(`${API_URL}/detallePedido/crear`,datosPedido,{
                 headers: {Authorization: `Bearer ${token}`}
             });
             return response.data;

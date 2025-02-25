@@ -8,7 +8,7 @@ import ClienteService from '@/services/ClienteService';
 import ModeloService from '@/services/ModeloService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePicker from "@react-native-community/datetimepicker";
-import PedidoService from "../../../../../services/PedidoService";
+import PedidoService from "../../../../../services/DetallePedidoService";
 
 import TipoCalzadoService from '@/services/TipoCalzadoService';
 import CaracteristicasService from '@/services/CaracteristicasService';

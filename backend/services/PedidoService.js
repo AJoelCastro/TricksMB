@@ -14,11 +14,11 @@ const PedidoService = {
         }
     },
 
-    async getPedidoByCodigo(codigoPedido){
+    async getPedidoByCodigoPedido(codigoPedido){
         try{
             if(!codigoPedido)
                 throw {status: 401, message: "Código de pedido requerido"};
-            const pedido = await PedidoDAO.getPedidoByCodigo(codigoPedido);
+            const pedido = await PedidoDAO.getPedidoByCodigoPedido(codigoPedido);
             if(!pedido)
                 throw {status: 404, message: "Pedido no encontrado"};
             return pedido;

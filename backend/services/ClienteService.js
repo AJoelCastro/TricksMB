@@ -46,6 +46,15 @@ const ClienteService = {
             return await ClienteDAO.getClienteJuridicoByRuc(value);
         }
         throw{status:500, message:`Anyaaaaaaaa`};
+    },
+
+    async getClienteByCodigoPedido(codigoPedido){
+        try{
+            if(!codigoPedido) throw {status: 400, message: "Código de pedido requerido"};
+            return await ClienteDAO.getClienteByCodigoPedido(codigoPedido);
+        }catch(error){
+            throw error;
+        }
     }
 };
 

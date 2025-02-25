@@ -106,6 +106,51 @@ class ClienteDAO {
             throw error;
         }
     }
+
+    static async getClienteByCodigoPedido(codigoPedido) {
+        try {
+            // Obtener el ID del cliente directamente desde Detalle_pedido y Pedido en una sola consulta
+            const query = `
+                SELECT p.Cliente_idCliente 
+                FROM Detalle_pedido dp
+                JOIN Pedido p ON dp.Pedido_idPedido = p.idPedido
+                WHERE dp.Codigo_pedido = ?`;
+
+            const [rows] = await db.execute(query, [codigoPedido]);
+
+            if (rows.length === 0 || !rows[0].Cliente_idCliente) {
+                throw new Error("No se encontró un cliente asociado al pedido.");
+            }
+
+            const idCliente = rows[0].Cliente_idCliente;
+
+            // Obtener los datos del cliente (natural o jurídico)
+            const queryGetCliente = `
+                SELECT 
+                    c.idCliente,
+                    c.Tipo_cliente,
+                    COALESCE(cn.Nombre, cj.Razon_social) AS nombre,
+                    cn.Dni,
+                    cj.Ruc
+                FROM Cliente c
+                LEFT JOIN Cliente_natural cn ON c.idCliente = cn.Cliente_idCliente
+                LEFT JOIN Cliente_juridico cj ON c.idCliente = cj.Cliente_idCliente
+                WHERE c.idCliente = ?`;
+
+            const [cliente] = await db.execute(queryGetCliente, [idCliente]);
+
+            if (cliente.length === 0) {
+                throw new Error("No se encontró información del cliente.");
+            }
+
+            return cliente[0];
+
+        } catch (error) {
+            console.error("Error al obtener cliente por código de pedido:", error);
+            throw error;
+        }
+    }
+
 }
 
 module.exports = ClienteDAO

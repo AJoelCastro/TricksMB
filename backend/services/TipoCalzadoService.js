@@ -21,7 +21,21 @@ const TipoCalzadoService = {
         }catch(error){
             throw error;
         }
+    },
+
+    async getTipoCalzadoByCodigoPedido(codigoPedido){
+        try{
+            const calzado = await TipoCalzadoDAO.getTipoCalzadoByNombre(codigoPedido);
+            if(!calzado){
+                return res.status(404).json({ error: "Tipo de calzado no encontrado" });
+            }else{
+                return calzado;
+            }
+        }catch(error){
+            throw error;
+        }
     }
+
 }
 
 module.exports = TipoCalzadoService;

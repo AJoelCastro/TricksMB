@@ -1,3 +1,4 @@
+const { getClienteByCodigoPedido } = require('../dao/ClienteDAO');
 const ClienteService = require('../services/ClienteService');
 
 const ClienteController = {
@@ -84,7 +85,19 @@ const ClienteController = {
         } catch (error) {
             return res.status(500).json({ error: "Error al obtener clientes" });
         }
+    },
+
+    async getClienteByCodigoPedido(req, res) {
+        try {
+            const codigoPedido = req.query.codigoPedido;
+            const cliente = await ClienteService.getClienteByCodigoPedido(codigoPedido);
+            return res.status(200).json(cliente);
+        } catch (error) {
+            console.error("Error al obtener cliente por código de pedido:", error);
+            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+        }
     }
+    
 }
 
 module.exports = ClienteController;

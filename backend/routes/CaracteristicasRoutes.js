@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.post('/crear', authMiddleware, CaracteristicasController.createCaracteristica);
 router.get('/todos', authMiddleware, CaracteristicasController.getCaracteristicas);
+router.put('/actualizar', authMiddleware, CaracteristicasController.updateCaracteristicas);
 
 module.exports = router;

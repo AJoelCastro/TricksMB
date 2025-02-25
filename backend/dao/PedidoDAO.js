@@ -13,14 +13,24 @@ class PedidoDAO {
         }
     }
 
-    static async getPedidoByCodigo(codigoPedido){
+    static async getPedidoByCodigoPedido(codigoPedido){
         try {
-            const query = 'SELECT * FROM Detalle_pedido WHERE Codigo_pedido = ?';
+            const queryGetidPedido = 'SELECT Pedido_idPedio FROM Detalle_pedido WHERE Codigo_pedido = ?';
             const [rows] = await db.execute(query, [codigoPedido]);
-
+            
             if (rows.length === 0) {
-                throw new Error("No se encontró un detalle de pedido con el código proporcionado.");
+                throw new Error("No se encontró el pedido con el código proporcionado.");
             }
+            const idPedido = rows[0].Pedido_idPedido;
+
+            const query = 'SELECT * FROM Pedido WHERE idPedido = ?';
+            const [result] = await db.execute(query, [idPedido]);
+
+            if (result.length === 0) {
+                throw new Error("No se encontró un pedido con el código proporcionado.");
+            }
+
+            return result[0];
         } catch (error) {
             console.error("Error al obtener detalle de pedido por código de pedido:", error);
             throw error;
@@ -45,7 +55,7 @@ class PedidoDAO {
             await db.execute(queryUpdatePedido, [fechaEntrega, serieInicio, serieFinal, idPedido]);
 
             return { mensaje: "Pedido actualizado correctamente", codigoPedido, fechaEntrega, serieInicio, serieFinal };
-            
+
         }catch (error) {
             console.error("Error al actualizar pedido:", error);
             throw error;
