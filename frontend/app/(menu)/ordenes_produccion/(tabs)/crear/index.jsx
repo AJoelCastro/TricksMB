@@ -8,7 +8,7 @@ import ClienteService from '@/services/ClienteService';
 import ModeloService from '@/services/ModeloService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePicker from "@react-native-community/datetimepicker";
-import PedidoService from "../../../../../services/DetallePedidoService";
+import DetallePedidoService from "../../../../../services/DetallePedidoService";
 
 
 import "../../../../../global.css";
@@ -210,7 +210,7 @@ export default function crear() {
                             Alert.alert("Error", "Por favor, completa todos los campos.");
                             return;
             }
-            const pedido = await PedidoService.crearPedido(datosPedido);
+            const pedido = await DetallePedidoService.crearPedido(datosPedido);
             if (!pedido) {
                 return;
             }

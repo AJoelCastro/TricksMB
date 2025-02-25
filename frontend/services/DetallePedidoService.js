@@ -3,7 +3,7 @@ import AuthService from './AuthService'
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
-const PedidoService = {
+const DetallePedidoService = {
     
     crearPedido : async (datosPedido) =>{
         const token = await AuthService.getToken();
@@ -20,4 +20,4 @@ const PedidoService = {
         }
     }
 }
-export default PedidoService;
+export default DetallePedidoService;

@@ -20,6 +20,15 @@ class ModeloDAO{
             throw error;
         }
     }
+    static async getAllModeloById(id){
+        try{
+            const query = 'SELECT * FROM Modelo WHERE Tipo_idTipo = ?';
+            const [rows] = await db.execute(query, [id]);
+            return rows;
+        }catch(error){
+            throw error;
+        }
+    }
 
     static async getModeloByCodigoPedido(codigoPedido){
         try{
