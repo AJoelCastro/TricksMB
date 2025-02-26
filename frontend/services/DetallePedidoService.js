@@ -18,6 +18,20 @@ const DetallePedidoService = {
             console.error("(pedidoService)Error al crear pedido: ", error.response?.data || error.message);
             throw error;
         }
+    },
+    obtenerDetallePedido: async (codigoPedido) => {
+        console.log(codigoPedido);
+        const token = await AuthService.getToken();
+        if (!token) throw new Error("No hay token disponible");
+        try {
+            const response = await axios.get(`${API_URL}/detallePedido/obtener/${codigoPedido}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("(pedidoService) Error al obtener detalle del pedido: ", error.response?.data || error.message);
+            throw error;
+        }
     }
 }
 export default DetallePedidoService;
