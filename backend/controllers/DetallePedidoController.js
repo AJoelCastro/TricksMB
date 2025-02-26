@@ -43,6 +43,7 @@ const PedidoController = {
         try {
             const {codigoPedido} = req.params;
             const detallePedido = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
+            console.log(detallePedido);
             return res.status(200).json(detallePedido);
         } catch (error) {
             console.error("Error al obtener detalle pedido por código:", error);

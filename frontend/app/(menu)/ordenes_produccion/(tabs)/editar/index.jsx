@@ -8,7 +8,7 @@ import ClienteService from '@/services/ClienteService';
 import ModeloService from '@/services/ModeloService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePicker from "@react-native-community/datetimepicker";
-import PedidoService from "../../../../../services/DetallePedidoService";
+import DetallePedidoService from "../../../../../services/DetallePedidoService";
 
 import TipoCalzadoService from '@/services/TipoCalzadoService';
 import CaracteristicasService from '@/services/CaracteristicasService';
@@ -91,7 +91,8 @@ export default function editar() {
     const [tipoCalzado, setTipoCalzado] = useState("");
     const [fechaEntrega, setFechaEntrega] = useState(new Date());
     const [openDatePicker, setOpenDatePicker] = useState(false);
-    const [codigoOrden, setCodigoOrden] = useState("");
+    const [codigoPedido, setCodigoPedido] = useState("");
+    const [detallePedido, setDetallePedido] = useState([]);
     const getCurrentDate = () => {
         const date = new Date();
         return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
@@ -112,22 +113,6 @@ export default function editar() {
     const handleEliminarFila = (id) => {
         // Filtrar las filas para eliminar la seleccionada
         setFilas(filas.filter(fila => fila.id !== id));
-    };
-
-    const verificarDocumento=()=>{
-        try {
-            if(documento.length===8){
-                setDni(documento);
-                setTipoCliente("natural");
-            }else if(documento.length===11){
-                setRuc(documento);
-                setTipoCliente("juridico");
-            }else{
-                Alert.alert("Ingrese un documento valido")
-            }
-        } catch (error) {
-            Error.error(error);
-        }
     };
 
     const cargarClienteNatural = async () => {
@@ -198,26 +183,6 @@ export default function editar() {
         }
     }, [tipoCliente, dni, ruc]);
 
-    const crearPedido = async() =>{
-        try {
-            let fechaEntregaFormateada = fechaEntrega.toISOString().split("T")[0];
-            const datosPedido={
-                clienteTipo:dni, fechaEntrega:fechaEntregaFormateada, serieInicio:selectSerieInicio, serieFinal:selectSerieFin, nomModelo:modelo, nombreTaco:nombreTaco, alturaTaco:tallaTaco, material, tipoMaterial, suela, accesorios, forro
-            }
-            if (!Object.values(datosPedido).every(valor => valor && valor.trim() !== "")) {
-                            Alert.alert("Error", "Por favor, completa todos los campos.");
-                            return;
-            }
-            const pedido = await PedidoService.crearPedido(datosPedido);
-            if (!pedido) {
-                return;
-            }
-            setCodigoOrden(pedido.codigoPedido)
-            return pedido.idDetallePedido;
-        } catch (error) {
-            console.error("(index(crear))Error al crear pedido:", error);
-        }
-    }
     const resetearCampos = () => {
         setCliente("");
         setModelo("");
@@ -238,51 +203,16 @@ export default function editar() {
         setFechaEntrega(new Date());
         setFilas([]);
     };
-    const crearCaracteristicas= async(idDetallePedido)=>{
+    const cargarDetallePedido = async () => {
         try {
-            for (const fila of filas) { // ✅ Usar for...of en lugar de map
-                const datosCaracteristicas = {
-                    idDetallePedido,
-                    talla: fila.talla,
-                    cantidad: fila.pares,
-                    color: fila.color
-                };
-    
-                // ✅ Verifica si algún valor es vacío
-                if (!Object.values(datosCaracteristicas).every(valor => valor && valor.toString().trim() !== "")) {
-                    Alert.alert("Error", "Por favor, completa todos los campos.");
-                    return;
-                }
-    
-                // ✅ Llamada a la API con `await`
-                const caracteristicas = await CaracteristicasService.crearCaracteristicas(datosCaracteristicas);
-                if (!caracteristicas) {
-                    console.error("Error al crear característica para:", datosCaracteristicas);
-                    return;
-                }
-            }
-            console.log(codigoOrden)
-            Alert.alert("Orden creada correctamente: ", codigoOrden);
-            resetearCampos();
+            const data = await DetallePedidoService.obtenerDetallePedido(codigoPedido);
+            console.log(data)
+            setAccesorios(data.Accesorios);
+            setTallaTaco(data.Altura_taco);
         } catch (error) {
-            console.error("(index(crear))Error al crear caracteristicas:", error);
-        }
-    }
-    const handleCrearPedido = async () => {
-        try {
-            const idPedido = await crearPedido();
-            if (idPedido) {
-                await crearCaracteristicas(idPedido);
-            }
-        } catch (error) {
-            console.error("Error al crear el pedido:", error);
-            Alert.alert("Error", "Hubo un problema al crear el pedido.");
+            console.error("Error al obtener el pedido:", error);
         }
     };
-
-    const obtenerOrden = async () => {
-
-    }
 
     return (
         <KeyboardAvoidingView
@@ -292,8 +222,10 @@ export default function editar() {
             <ScrollView className='mx-4 gap-2'>
                 <TextInput
                     label={"Codigo de Orden"}
+                    value={codigoPedido}
+                    onChangeText={setCodigoPedido}
                     right={
-                        <TextInput.Icon size={22} icon={"magnify"} onPress={obtenerOrden}/>
+                        <TextInput.Icon size={22} icon={"magnify"} onPress={cargarDetallePedido}/>
                     }
                     placeholder='Ingrese el codigo de orden'
                     mode='outlined'
@@ -581,11 +513,9 @@ export default function editar() {
                     >
                         <TextInput
                             editable={false}
-                            placeholder="Seleccione una talla"
-                            placeholderTextColor={"black"}
                             style={{ height:40 }}
-                            value={tallaTaco} 
-                            className='bg-gray-200 rounded-lg font-bold'
+                            value={tallaTaco ? `Talla ${tallaTaco}` : 'Seleccione una talla'} 
+                            className='bg-gray-200 rounded-lg font-bold '
                         />
                     </ModalSelector>
                 </View>
@@ -642,7 +572,7 @@ export default function editar() {
                         placeholder='Forro'
                     />
                 </View>
-                <Button mode='contained-tonal'icon="note" buttonColor='#6969' textColor='#000' onPress={handleCrearPedido}>
+                <Button mode='contained-tonal'icon="note" buttonColor='#6969' textColor='#000' onPress={()=>(null)}>
                     Editar Pedido
                 </Button>
                 <View className='mb-32'>
