@@ -29,12 +29,12 @@ export default function editar() {
 
     const opcionesMaterial = [
         { key: "1", label: "sintetico" },
-        { key: "2", label: "sintetico" },
-        { key: "3", label: "sintetico" },
-        { key: "4", label: "sintetico" },
-        { key: "5", label: "sintetico" },
-        { key: "6", label: "sintetico" },
-        { key: "7", label: "sintetico" },
+        { key: "2", label: "sintetico1" },
+        { key: "3", label: "sintetico2" },
+        { key: "4", label: "sintetico3" },
+        { key: "5", label: "sintetico4" },
+        { key: "6", label: "sintetico5" },
+        { key: "7", label: "sintetico6" },
     ];
 
     const opcionesTipoMaterial = [
@@ -98,7 +98,7 @@ export default function editar() {
         return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
     };
     
-    const [currentDate] = useState(getCurrentDate()); // Estado para almacenar la fecha formateada
+    const [currentDate, setCurrentDate] = useState(getCurrentDate()); // Estado para almacenar la fecha formateada
 
     const [filas, setFilas] = useState([]);
     const handleAgregarFila = () => {
@@ -209,8 +209,18 @@ export default function editar() {
             console.log(data)
             setAccesorios(data.Accesorios);
             setTallaTaco(data.Altura_taco);
+            let fecha = new Date(data.Fecha_creacion);
+            setCurrentDate(fecha.toISOString().split("T")[0]);
+            setForro(data.Forro);
+            setMaterial(data.Material);
+            setNombreTaco(data.Nombre_taco);
+            setSuela(data.Suela);
+            setTipoMaterial(data.Tipo_material);
+
         } catch (error) {
             console.error("Error al obtener el pedido:", error);
+            set
+            Alert.alert("Error", "Hubo un problema al obtener el pedido.");
         }
     };
 
@@ -221,13 +231,13 @@ export default function editar() {
         >
             <ScrollView className='mx-4 gap-2'>
                 <TextInput
-                    label={"Codigo de Orden"}
+                    label={"Codigo de Pedido"}
                     value={codigoPedido}
                     onChangeText={setCodigoPedido}
                     right={
                         <TextInput.Icon size={22} icon={"magnify"} onPress={cargarDetallePedido}/>
                     }
-                    placeholder='Ingrese el codigo de orden'
+                    placeholder='Ingrese el codigo de pedido'
                     mode='outlined'
                 >
                 </TextInput>
