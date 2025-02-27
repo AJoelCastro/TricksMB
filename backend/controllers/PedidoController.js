@@ -5,7 +5,7 @@ const PedidoController = {
 
     async getPedidoByCodigoPedido(req, res) {
         try {
-            const codigoPedido = req.query.codigoPedido;
+            const {codigoPedido} = req.params;
             const pedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
             return res.status(200).json(pedido);
         } catch (error) {

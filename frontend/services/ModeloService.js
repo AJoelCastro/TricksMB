@@ -31,6 +31,18 @@ const ModeloService = {
             throw error;
         }
     },
+    getModeloByCodigoPedido: async (codigoPedido) => {
+        try {
+            const token = await AuthService.getToken();
+            const response = await axios.get(`${API_URL}/modelo/obtener/${codigoPedido}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error al obtener el modelo por código de pedido:", error.response?.data || error.message);
+            throw error;
+        }
+    }
 };
 
 export default ModeloService;

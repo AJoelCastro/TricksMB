@@ -1,9 +1,9 @@
-const PedidoController = require('../controllers/DetallePedidoController');
+const PedidoController = require('../controllers/PedidoController');
 const express = require('express');
 const authMiddleware = require('../middlewares/authMiddleware');
 const router = express.Router();
 
-router.get('/obtener', authMiddleware, PedidoController.getDetallePedidoByCodigoPedido);
-router.put('/actualizar/:codigoPedido', authMiddleware, PedidoController.updateDetallePedido);
+router.get('/obtener/:codigoPedido', authMiddleware, PedidoController.getPedidoByCodigoPedido);
+router.put('/actualizar/:codigoPedido', authMiddleware, PedidoController.updatePedido);
 
 module.exports = router;

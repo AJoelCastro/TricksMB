@@ -25,7 +25,7 @@ const TipoCalzadoController = {
 
     async getTipoCalzadoByCodigoPedido(req,res){
         try{
-            const codigoPedido = req.query.codigoPedido;
+            const {codigoPedido} = req.params;
             const tipoCalzado = await TipoCalzadoService.getTipoCalzadoByCodigoPedido(codigoPedido);
             return res.status(200).json(tipoCalzado);
         }catch(error){

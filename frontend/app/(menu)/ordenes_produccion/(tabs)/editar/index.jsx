@@ -12,6 +12,7 @@ import DetallePedidoService from "../../../../../services/DetallePedidoService";
 
 import TipoCalzadoService from '@/services/TipoCalzadoService';
 import CaracteristicasService from '@/services/CaracteristicasService';
+import PedidoService from '@/services/PedidoService';
 
 const { width } = Dimensions.get('window');
 
@@ -206,7 +207,6 @@ export default function editar() {
     const cargarDetallePedido = async () => {
         try {
             const data = await DetallePedidoService.obtenerDetallePedido(codigoPedido);
-            console.log(data)
             setAccesorios(data.Accesorios);
             setTallaTaco(data.Altura_taco);
             let fecha = new Date(data.Fecha_creacion);
@@ -216,7 +216,14 @@ export default function editar() {
             setNombreTaco(data.Nombre_taco);
             setSuela(data.Suela);
             setTipoMaterial(data.Tipo_material);
-
+            const dataTipoCalzado = await TipoCalzadoService.getTipoCalzadoByCodigoPedido(codigoPedido);
+            setTipoCalzado(dataTipoCalzado.Nombre);
+            const dataModelo = await ModeloService.getModeloByCodigoPedido(codigoPedido);
+            setModelo(dataModelo.Nombre);
+            const dataPedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
+            setSelectSerieInicio(dataPedido.Serie_inicio);
+            setSelectSerieFin(dataPedido.Serie_final);
+            setFechaEntrega(new Date(dataPedido.Fecha_entrega));
         } catch (error) {
             console.error("Error al obtener el pedido:", error);
             set
@@ -291,7 +298,7 @@ export default function editar() {
                         keyExtractor={item => item.idTipo}
                         labelExtractor={item => item.Nombre}
                         accessible={true}
-                        onChange={(item)=>setTipoCalzado(item)}
+                        onChange={(item)=>setTipoCalzado(item.Nombre)}
                         supportedOrientations={['landscape']}
                         cancelText='Cancelar'
                         cancelStyle={styles.cancelButton}
@@ -303,7 +310,7 @@ export default function editar() {
                             label={"Tipo de calzado"}
                             placeholder="Tipo de calzado"
                             placeholderTextColor={"black"}
-                            value={tipoCalzado.Nombre} 
+                            value={tipoCalzado} 
                         />
                     </ModalSelector>
                     <TouchableOpacity onPress={() => {setModalModeloVisible(true); cargarModelosPorId()}}>
@@ -372,8 +379,6 @@ export default function editar() {
                                 onChange={(event, selectedDate) => {
                                     setOpenDatePicker(false);
                                     if (selectedDate) setFechaEntrega(selectedDate);
-                                    console.log(selectedDate);
-                                    console.log(currentDate)
                                 }}
                             />
                         </View>
@@ -398,7 +403,7 @@ export default function editar() {
                                 style={{ height: 40 }} 
                                 placeholder="Talla"
                                 placeholderTextColor={"black"}
-                                value={selectSerieInicio} 
+                                value={selectSerieInicio? `${selectSerieInicio}`: selectSerieInicio} 
                                 className='bg-gray-200 rounded-lg font-bold w-full'
                                 />
                             </ModalSelector>
@@ -423,7 +428,7 @@ export default function editar() {
                                     style={{ height: 40 }} 
                                     placeholder="Talla"
                                     placeholderTextColor={"black"}
-                                    value={selectSerieFin} 
+                                    value={selectSerieFin? `${selectSerieFin}`: selectSerieFin} 
                                     className='bg-gray-200 rounded-lg font-bold w-full'
                                 />
                             </ModalSelector>
