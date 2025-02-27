@@ -93,7 +93,6 @@ export default function editar() {
     const [fechaEntrega, setFechaEntrega] = useState(new Date());
     const [openDatePicker, setOpenDatePicker] = useState(false);
     const [codigoPedido, setCodigoPedido] = useState("");
-    const [idDetallePedido, setIdDetallePedido] = useState("");
     const getCurrentDate = () => {
         const date = new Date();
         return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
@@ -204,6 +203,14 @@ export default function editar() {
         setFechaEntrega(new Date());
         setFilas([]);
     };
+    const transformarDatos = (data) => {
+        return data.map((item, index) => ({
+            id: index + 1, // Generar un ID único
+            talla: item.Talla.toString(), // Convertir a string
+            pares: item.Cantidad.toString(), // Convertir a string
+            color: item.Color,
+        }));
+    };
     const cargarDetallePedido = async () => {
         try {
             const data = await DetallePedidoService.obtenerDetallePedido(codigoPedido);
@@ -228,8 +235,10 @@ export default function editar() {
             const dataCliente = await ClienteService.getClienteByCodigoPedido(codigoPedido);
             setTipoCliente(dataCliente.Tipo_cliente);
             setCliente(dataCliente);
-            setIdDetallePedido(data.idDetalle_pedido);
+            let idDetallePedido=data.idDetalle_pedido;
             const dataCaracteristicas = await CaracteristicasService.getAllCaracteristicasById(idDetallePedido);
+            const filasTransformadas = transformarDatos(dataCaracteristicas);
+            setFilas(filasTransformadas);
         } catch (error) {
             console.error("Error al obtener el pedido:", error);
             set
@@ -443,7 +452,7 @@ export default function editar() {
                     </View>
                 </View>
                 {filas.map((fila, index) => (
-                    <View key={fila.id} className='flex-row justify-between items-center  mb-2'>
+                    <View key={fila.id} className='flex-row justify-between items-center  mb-2 w-full'>
                         <TextInput
                             label="Talla"
                             className='rounded flex-1'
