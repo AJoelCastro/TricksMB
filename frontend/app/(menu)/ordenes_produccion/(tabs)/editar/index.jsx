@@ -224,6 +224,9 @@ export default function editar() {
             setSelectSerieInicio(dataPedido.Serie_inicio);
             setSelectSerieFin(dataPedido.Serie_final);
             setFechaEntrega(new Date(dataPedido.Fecha_entrega));
+            const dataCliente = await ClienteService.getClienteByCodigoPedido(codigoPedido);
+            setTipoCliente(dataCliente.Tipo_cliente);
+            setCliente(dataCliente);
         } catch (error) {
             console.error("Error al obtener el pedido:", error);
             set
@@ -252,7 +255,7 @@ export default function editar() {
                     <View className='gap-2 mb-2'>
                         <View className='flex-col'>
                             <TextInput 
-                                value={cliente.Nombre}
+                                value={cliente.nombre}
                                 mode='outlined'
                                 label={"Nombre"}
                                 editable={false}
@@ -274,7 +277,7 @@ export default function editar() {
                     <View className='gap-2 mb-2'>
                         <View className='flex-col'>
                             <TextInput 
-                                value={cliente.Razon_social}
+                                value={cliente.nombre}
                                 mode='outlined'
                                 label={"Razon Social"}
                                 editable={false}

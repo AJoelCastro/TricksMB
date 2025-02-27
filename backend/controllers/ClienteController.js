@@ -89,7 +89,7 @@ const ClienteController = {
 
     async getClienteByCodigoPedido(req, res) {
         try {
-            const codigoPedido = req.query.codigoPedido;
+            const {codigoPedido} = req.params;
             const cliente = await ClienteService.getClienteByCodigoPedido(codigoPedido);
             return res.status(200).json(cliente);
         } catch (error) {

@@ -10,5 +10,5 @@ router.get('/', authMiddleware, ClienteController.obtenerClientes);
 router.get('/buscar/natural', authMiddleware, ClienteController.buscarClienteNatural);
 router.get('/buscar/juridico', authMiddleware, ClienteController.buscarClienteJuridico);
 router.get('/clientes', authMiddleware, ClienteController.obtenerClientes);
-router.get('/cliente/:codigoPeido', authMiddleware, ClienteController.getClienteByCodigoPedido);
+router.get('/cliente/:codigoPedido', authMiddleware, ClienteController.getClienteByCodigoPedido);
 module.exports = router;
