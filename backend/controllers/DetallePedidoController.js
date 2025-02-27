@@ -55,7 +55,7 @@ const DetallePedidoController = {
             const {codigoPedido} = req.params;
             const {nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorios, forro} = req.body;
             const detallePedido = await DetallePedidoService.updateDetallePedido(
-                codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorios
+                codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorios, forro
             );
             return res.status(200).json(detallePedido);
         }
