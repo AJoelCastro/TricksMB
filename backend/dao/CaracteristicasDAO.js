@@ -15,8 +15,9 @@ class CaracteristicasDAO {
 
     static async getCaracteristicasByIdDetallePedido(idDetallePedido){
         try{
-            const query = 'SELECT * FROM Caracteristicas WHERE DetallePedido_idDetallePedido = ?';
+            const query = 'SELECT * FROM Caracteristicas WHERE Detalle_pedido_idDetalle_pedido = ?';
             const [result] = await db.execute(query, [idDetallePedido]);
+            console.log(result);
             return result;
         }catch(error){
             throw error;
