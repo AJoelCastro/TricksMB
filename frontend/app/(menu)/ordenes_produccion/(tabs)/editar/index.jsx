@@ -245,6 +245,22 @@ export default function editar() {
             Alert.alert("Error", "Hubo un problema al obtener el pedido.");
         }
     };
+    const updatePedido = async () =>{
+        try {
+            let datosPedido = {
+                nombreTaco, alturaTaco: tallaTaco, material, tipoMaterial, suela, accesorios, forro
+            }
+            const actualizar = await DetallePedidoService.updateDetallePedido(codigoPedido, datosPedido);
+            if (actualizar) {
+                Alert.alert("Pedido actualizado", "El pedido se ha actualizado correctamente.");
+                resetearCampos();
+            }else{
+                Alert.alert("Error", "Hubo un problema al actualizar el pedido.");
+            }
+        }catch (error) {
+            console.error("Error al actualizar pedido:", error);
+        }
+    }
 
     return (
         <KeyboardAvoidingView
@@ -602,7 +618,7 @@ export default function editar() {
                         placeholder='Forro'
                     />
                 </View>
-                <Button mode='contained-tonal'icon="note" buttonColor='#6969' textColor='#000' onPress={()=>(null)}>
+                <Button mode='contained-tonal'icon="note" buttonColor='#6969' textColor='#000' onPress={updatePedido}>
                     Editar Pedido
                 </Button>
                 <View className='mb-32'>
