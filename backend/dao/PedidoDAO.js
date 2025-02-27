@@ -15,8 +15,8 @@ class PedidoDAO {
 
     static async getPedidoByCodigoPedido(codigoPedido){
         try {
-            const queryGetidPedido = 'SELECT Pedido_idPedio FROM Detalle_pedido WHERE Codigo_pedido = ?';
-            const [rows] = await db.execute(query, [codigoPedido]);
+            const queryGetidPedido = 'SELECT Pedido_idPedido FROM Detalle_pedido WHERE Codigo_pedido = ?';
+            const [rows] = await db.execute(queryGetidPedido, [codigoPedido]);
             
             if (rows.length === 0) {
                 throw new Error("No se encontró el pedido con el código proporcionado.");

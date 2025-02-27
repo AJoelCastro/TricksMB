@@ -38,7 +38,7 @@ requiredEnv.forEach((key) => {
 app.use('/usuario', userRoutes);
 app.use('/cliente', clienteRoutes);
 app.use('/detallePedido',detallePedidoRoutes);
-app.use('pedido',pedidoRoutes);
+app.use('/pedido',pedidoRoutes);
 app.use('/caracteristicas',caracteristicasRoutes);
 app.use('/modelo', modeloRoutes);
 app.use('/tipoCalzado', tipoCalzadoRoutes);
