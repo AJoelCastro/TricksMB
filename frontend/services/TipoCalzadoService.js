@@ -16,6 +16,19 @@ const TipoCalzadoService = {
             throw error;
         }
     },
+    getTipoCalzadoByCodigoPedido: async (codigoPedido) => {
+        const token = await AuthService.getToken();
+        if (!token) throw new Error("No hay token disponible");
+        try {
+            const response = await axios.get(`${API_URL}/tipoCalzado/obtener/${codigoPedido}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("(TipoCalzadoService) Error al obtener Tipo de calzado: ", error.response?.data || error.message);
+            throw error;
+        }
+    }
 };
 
 export default TipoCalzadoService;

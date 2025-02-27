@@ -23,7 +23,7 @@ class TipoCalzadoDAO{
         }
     }
 
-    async getTipoCalzadoByCodigoPedido(codigoPedido) {
+    static async getTipoCalzadoByCodigoPedido(codigoPedido) {
         try {
             const query = `
                 SELECT t.Nombre 

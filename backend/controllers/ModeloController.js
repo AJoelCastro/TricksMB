@@ -25,7 +25,7 @@ const ModeloController = {
 
     async getModeloByCodigoPedido(req, res) {
         try {
-            const codigoPedido = req.query.codigoPedido;
+            const {codigoPedido} = req.params;
             const modelo = await ModeloService.getModeloByCodigoPedido(codigoPedido);
             return res.status(200).json(modelo);
         } catch (error) {

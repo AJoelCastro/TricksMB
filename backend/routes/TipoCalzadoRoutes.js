@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.get('/todos',authMiddleware,tipoCalzadoController.getAllTipoCalzado);
 router.get('/nombre',authMiddleware,tipoCalzadoController.getTipoCalzadoByNombre);
+router.get('/obtener/:codigoPedido',authMiddleware,tipoCalzadoController.getTipoCalzadoByCodigoPedido);
 
 module.exports = router;

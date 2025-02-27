@@ -20,7 +20,6 @@ const DetallePedidoService = {
         }
     },
     obtenerDetallePedido: async (codigoPedido) => {
-        console.log(codigoPedido);
         const token = await AuthService.getToken();
         if (!token) throw new Error("No hay token disponible");
         try {
