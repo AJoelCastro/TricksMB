@@ -32,7 +32,8 @@ const CaracteristicasController = {
 
     async getCaracteristicas(req, res) {
         try {
-            const caracteristicas = await CaracteristicasService.getCaracteristicasByIdDetallePedido();
+            const {idDetallePedido} = req.params;
+            const caracteristicas = await CaracteristicasService.getCaracteristicasByIdDetallePedido(idDetallePedido);
             return res.status(200).json(caracteristicas);
         } catch (error) {
             console.error("Error al obtener caracteristicas:", error);

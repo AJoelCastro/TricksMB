@@ -93,7 +93,7 @@ export default function editar() {
     const [fechaEntrega, setFechaEntrega] = useState(new Date());
     const [openDatePicker, setOpenDatePicker] = useState(false);
     const [codigoPedido, setCodigoPedido] = useState("");
-    const [detallePedido, setDetallePedido] = useState([]);
+    const [idDetallePedido, setIdDetallePedido] = useState("");
     const getCurrentDate = () => {
         const date = new Date();
         return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
@@ -207,6 +207,7 @@ export default function editar() {
     const cargarDetallePedido = async () => {
         try {
             const data = await DetallePedidoService.obtenerDetallePedido(codigoPedido);
+            console.log(data);
             setAccesorios(data.Accesorios);
             setTallaTaco(data.Altura_taco);
             let fecha = new Date(data.Fecha_creacion);
@@ -227,6 +228,8 @@ export default function editar() {
             const dataCliente = await ClienteService.getClienteByCodigoPedido(codigoPedido);
             setTipoCliente(dataCliente.Tipo_cliente);
             setCliente(dataCliente);
+            setIdDetallePedido(data.idDetalle_pedido);
+            const dataCaracteristicas = await CaracteristicasService.getAllCaracteristicasById(idDetallePedido);
         } catch (error) {
             console.error("Error al obtener el pedido:", error);
             set

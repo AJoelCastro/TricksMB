@@ -4,7 +4,7 @@ const authMiddleware = require('../middlewares/authMiddleware');
 const router = express.Router();
 
 router.post('/crear', authMiddleware, CaracteristicasController.createCaracteristica);
-router.get('/todos', authMiddleware, CaracteristicasController.getCaracteristicas);
+router.get('/todos/:idDetallePedido', authMiddleware, CaracteristicasController.getCaracteristicas);
 router.put('/actualizar', authMiddleware, CaracteristicasController.updateCaracteristicas);
 
 module.exports = router;
