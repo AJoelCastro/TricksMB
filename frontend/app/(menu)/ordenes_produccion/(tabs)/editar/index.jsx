@@ -70,7 +70,6 @@ export default function editar() {
         { key: "39", label: "Talla 39" },
         { key: "40", label: "Talla 40" },
     ];
-    const router = useRouter();
     const [cliente, setCliente] = useState("");
     const [modelo, setModelo] = useState("");
     const [selectSerieInicio, setSelectSerieInicio] = useState("");
@@ -80,7 +79,6 @@ export default function editar() {
     const [ruc, setRuc] = useState("");
     const [nombreTaco, setNombreTaco] = useState("");
     const [tallaTaco, setTallaTaco] = useState("");
-    const [documento, setDocumento] = useState("");
     const [modalModeloVisible, setModalModeloVisible] = useState(false);
     const [material, setMaterial] = useState("");
     const [tipoMaterial, setTipoMaterial] = useState("");
@@ -93,6 +91,7 @@ export default function editar() {
     const [fechaEntrega, setFechaEntrega] = useState(new Date());
     const [openDatePicker, setOpenDatePicker] = useState(false);
     const [codigoPedido, setCodigoPedido] = useState("");
+    const [idDetallePedido, setIdDetallePedido] = useState();
     const getCurrentDate = () => {
         const date = new Date();
         return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
@@ -102,10 +101,11 @@ export default function editar() {
 
     const [filas, setFilas] = useState([]);
     const [filasEliminadas, setFilasEliminadas] = useState([]);
+    const [filasCreadas, setFilasCreadas] = useState([]);
     const handleAgregarFila = () => {
         // Agregar nueva fila con valores iniciales
-        setFilas([...filas, { 
-            id: filas.length + 1,
+        setFilasCreadas([...filasCreadas, { 
+            id: filasCreadas.length + 1,
             talla: '', 
             pares: '', 
             color: '' 
@@ -196,7 +196,6 @@ export default function editar() {
         setRuc("");
         setNombreTaco("");
         setTallaTaco("");
-        setDocumento("");
         setMaterial("");
         setTipoMaterial("");
         setAccesorios("");
@@ -205,6 +204,8 @@ export default function editar() {
         setTipoCalzado("");
         setFechaEntrega(new Date());
         setFilas([]);
+        setFilasCreadas([]);
+        setFilasEliminadas([]);
     };
     const transformarDatos = (data) => {
         return data.map((item) => ({
@@ -217,7 +218,7 @@ export default function editar() {
     const cargarDetallePedido = async () => {
         try {
             const data = await DetallePedidoService.obtenerDetallePedido(codigoPedido);
-            console.log(data);
+            setIdDetallePedido(data.idDetalle_pedido);
             setAccesorios(data.Accesorios);
             setTallaTaco(data.Altura_taco);
             let fecha = new Date(data.Fecha_creacion);
@@ -242,7 +243,6 @@ export default function editar() {
             const dataCaracteristicas = await CaracteristicasService.getAllCaracteristicasById(idDetallePedido);
             const filasTransformadas = transformarDatos(dataCaracteristicas);
             setFilas(filasTransformadas);
-            console.log(filas)
         } catch (error) {
             console.error("Error al obtener el pedido:", error);
             set
@@ -263,7 +263,6 @@ export default function editar() {
                     color: fila.color
                 }
                 const editarCaracteristicas = await CaracteristicasService.editCaracteristicas(datosCaracteristicas);
-                console.log(editarCaracteristicas)
                 if (!editarCaracteristicas) {
                     console.error("Característica vacias o nulas:", datosCaracteristicas);
                     estado = false;
@@ -271,13 +270,33 @@ export default function editar() {
                 }
             }
             for (const fila of filasEliminadas) {
-                let datosCaracteristicas = {
-                    idCaracteristicas: fila.id,
-                }
-                const editarCaracteristicas = await CaracteristicasService.deleteCaracteristicas(datosCaracteristicas);
-                console.log(editarCaracteristicas)
+                
+                const idCaracteristicas = Number(fila.id)
+                const editarCaracteristicas = await CaracteristicasService.deleteCaracteristicas(idCaracteristicas);
                 if (!editarCaracteristicas) {
-                    console.error("Característica vacias o nulas:", datosCaracteristicas);
+                    console.error("Característica vacias o nulas:", idCaracteristicas);
+                    estado = false;
+                    return;
+                }
+            }
+            for (const fila of filasCreadas) { 
+                const datosCaracteristicas = {
+                    idDetallePedido,
+                    talla: fila.talla,
+                    cantidad: fila.pares,
+                    color: fila.color
+                };
+    
+                // ✅ Verifica si algún valor es vacío
+                if (!Object.values(datosCaracteristicas).every(valor => valor && valor.toString().trim() !== "")) {
+                    Alert.alert("Error", "Por favor, completa todos los campos.");
+                    return;
+                }
+    
+                // ✅ Llamada a la API con `await`
+                const caracteristicas = await CaracteristicasService.crearCaracteristicas(datosCaracteristicas);
+                if (!caracteristicas) {
+                    console.error("Error al crear característica para:", datosCaracteristicas);
                     estado = false;
                     return;
                 }
@@ -547,6 +566,59 @@ export default function editar() {
                                 const nuevasFilas = [...filas];
                                 nuevasFilas[index].color = text;
                                 setFilas(nuevasFilas);
+                            }}
+                        />
+                        
+                        <TouchableOpacity 
+                            onPress={() => handleEliminarFila(fila.id)}
+                        >
+                            <Icon name="trash" size={20} color="red" />
+                        </TouchableOpacity>
+                    </View>
+                ))}
+                {filasCreadas.map((fila, index) => (
+                    <View key={fila.id} className='flex-row justify-between items-center  mb-2 w-full'>
+                        <TextInput
+                            label="Talla"
+                            className='rounded flex-1'
+                            keyboardType='numeric'
+                            placeholder='Talla'
+                            style={{ height:40, width: width * 0.25 }}
+                            mode='outlined'
+                            value={fila.talla}
+                            onChangeText={(text) => {
+                                const nuevasFilas = [...filasCreadas];
+                                nuevasFilas[index].talla = text;
+                                setFilasCreadas(nuevasFilas);
+                            }}
+                        />
+                        
+                        <TextInput
+                            label="Pares"
+                            className='rounded flex-1'
+                            placeholder='Pares'
+                            style={{ height:40, width: width * 0.25 }}
+                            mode='outlined'
+                            keyboardType='numeric'
+                            value={fila.pares}
+                            onChangeText={(text) => {
+                                const nuevasFilas = [...filasCreadas];
+                                nuevasFilas[index].pares = text;
+                                setFilasCreadas(nuevasFilas);
+                            }}
+                        />
+                        
+                        <TextInput
+                            label="Color"
+                            className='rounded flex-1'
+                            placeholder='Color'
+                            style={{ height:40, width: width * 0.25 }}
+                            mode='outlined'
+                            value={fila.color}
+                            onChangeText={(text) => {
+                                const nuevasFilas = [...filasCreadas];
+                                nuevasFilas[index].color = text;
+                                setFilasCreadas(nuevasFilas);
                             }}
                         />
                         
