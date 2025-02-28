@@ -6,5 +6,6 @@ const router = express.Router();
 router.post('/crear', authMiddleware, CaracteristicasController.createCaracteristica);
 router.get('/todos/:idDetallePedido', authMiddleware, CaracteristicasController.getCaracteristicas);
 router.put('/editar', authMiddleware, CaracteristicasController.editCaracteristicas);
+router.delete('/eliminar', authMiddleware, CaracteristicasController.deleteCaracteristicas);
 
 module.exports = router;

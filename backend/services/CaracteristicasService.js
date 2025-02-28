@@ -38,6 +38,15 @@ const CaracteristicasService = {
         }catch(error){
             throw error;
         }
+    },
+
+    async deleteCaracteristicas(idCaracteristicas){
+        try{
+            if(!idCaracteristicas) throw {status: 400, message: "Parametros incorrectos"};
+            return await CaracteristicasDAO.deleteCaractericticas(idCaracteristicas);
+        }catch(error){
+            throw error;
+        }
     }
 }
 
