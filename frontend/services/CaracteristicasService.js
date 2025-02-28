@@ -51,7 +51,7 @@ const CaracteristicasService = {
         const token = await AuthService.getToken();
         if (!token) throw new Error("No hay token disponible");
         try {
-            const response = await axios.delete(`${API_URL}/caracteristicas/eliminar`, datosCaracteristicas,{
+            const response = await axios.delete(`${API_URL}/caracteristicas/delete`, datosCaracteristicas,{
                 headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;
