@@ -1,6 +1,5 @@
 import axios from 'axios';
 import AuthService from './AuthService'
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -47,12 +46,12 @@ const CaracteristicasService = {
             throw error;
         }
     },
-    deleteCaracteristicas : async (datosCaracteristicas) => {
+    deleteCaracteristicas : async (idCaracteristicas) => {
         const token = await AuthService.getToken();
         if (!token) throw new Error("No hay token disponible");
         try {
-            const response = await axios.delete(`${API_URL}/caracteristicas/eliminar`, datosCaracteristicas,{
-                headers: { Authorization: `Bearer ${token}` }
+            const response = await axios.delete(`${API_URL}/caracteristicas/eliminar/${idCaracteristicas}`,{
+                headers: { Authorization: `Bearer ${token}` },
             });
             return response.data;
         } catch (error) {
