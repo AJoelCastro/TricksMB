@@ -41,11 +41,10 @@ const CaracteristicasController = {
         }
     },
 
-    async updateCaracteristicas(req, res) {
+    async editCaracteristicas(req, res) {
         try {
-            const { codigoPedido, idCaracteristicas, talla, cantidad, color } = req.body;
-            const caracteristica = await CaracteristicasService.updateCaracteristicas(
-                codigoPedido,
+            const { idCaracteristicas, talla, cantidad, color } = req.body;
+            const caracteristica = await CaracteristicasService.editCaracteristicas(
                 idCaracteristicas,
                 talla,
                 cantidad,
