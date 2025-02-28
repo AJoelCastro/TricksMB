@@ -273,9 +273,6 @@ export default function editar() {
             for (const fila of filasEliminadas) {
                 let datosCaracteristicas = {
                     idCaracteristicas: fila.id,
-                    talla: Number(fila.talla),
-                    cantidad: Number(fila.pares),
-                    color: fila.color
                 }
                 const editarCaracteristicas = await CaracteristicasService.deleteCaracteristicas(datosCaracteristicas);
                 console.log(editarCaracteristicas)
