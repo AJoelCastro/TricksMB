@@ -28,10 +28,35 @@ const CaracteristicasService = {
             const response = await axios.get(`${API_URL}/caracteristicas/todos/${idDetallePedido}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            console.log(response.data);
             return response.data;
         } catch (error) {
             console.error("(CaracteristicasService) Error al obtener caracteristicas: ", error.response?.data || error.message);
+            throw error;
+        }
+    },
+    editCaracteristicas : async (datosCaracteristicas) => {
+        const token = await AuthService.getToken();
+        if (!token) throw new Error("No hay token disponible");
+        try {
+            const response = await axios.put(`${API_URL}/caracteristicas/editar`, datosCaracteristicas, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("(CaracteristicasService) Error al editar caracteristicas: ", error.response?.data || error.message);
+            throw error;
+        }
+    },
+    deleteCaracteristicas : async (datosCaracteristicas) => {
+        const token = await AuthService.getToken();
+        if (!token) throw new Error("No hay token disponible");
+        try {
+            const response = await axios.delete(`${API_URL}/caracteristicas/eliminar`, datosCaracteristicas,{
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("(CaracteristicasService) Error al eliminar caracteristicas: ", error.response?.data || error.message);
             throw error;
         }
     }

@@ -101,6 +101,7 @@ export default function editar() {
     const [currentDate, setCurrentDate] = useState(getCurrentDate()); // Estado para almacenar la fecha formateada
 
     const [filas, setFilas] = useState([]);
+    const [filasEliminadas, setFilasEliminadas] = useState([]);
     const handleAgregarFila = () => {
         // Agregar nueva fila con valores iniciales
         setFilas([...filas, { 
@@ -113,6 +114,8 @@ export default function editar() {
     const handleEliminarFila = (id) => {
         // Filtrar las filas para eliminar la seleccionada
         setFilas(filas.filter(fila => fila.id !== id));
+        const filaEliminada = filas.filter(fila => fila.id === id);
+        setFilasEliminadas([...filasEliminadas, ...filaEliminada]);
     };
 
     const cargarClienteNatural = async () => {
@@ -204,8 +207,8 @@ export default function editar() {
         setFilas([]);
     };
     const transformarDatos = (data) => {
-        return data.map((item, index) => ({
-            id: index + 1, // Generar un ID único
+        return data.map((item) => ({
+            id: item.idCaracteristicas, // Generar un ID único
             talla: item.Talla.toString(), // Convertir a string
             pares: item.Cantidad.toString(), // Convertir a string
             color: item.Color,
@@ -239,6 +242,7 @@ export default function editar() {
             const dataCaracteristicas = await CaracteristicasService.getAllCaracteristicasById(idDetallePedido);
             const filasTransformadas = transformarDatos(dataCaracteristicas);
             setFilas(filasTransformadas);
+            console.log(filas)
         } catch (error) {
             console.error("Error al obtener el pedido:", error);
             set
@@ -247,10 +251,46 @@ export default function editar() {
     };
     const updatePedido = async () =>{
         try {
+            let estado = true;
             let datosPedido = {
                 nombreTaco, alturaTaco: tallaTaco, material, tipoMaterial, suela, accesorios, forro
             }
+            for (const fila of filas) {
+                let datosCaracteristicas = {
+                    idCaracteristicas: fila.id,
+                    talla: Number(fila.talla),
+                    cantidad: Number(fila.pares),
+                    color: fila.color
+                }
+                const editarCaracteristicas = await CaracteristicasService.editCaracteristicas(datosCaracteristicas);
+                console.log(editarCaracteristicas)
+                if (!editarCaracteristicas) {
+                    console.error("Característica vacias o nulas:", datosCaracteristicas);
+                    estado = false;
+                    return;
+                }
+            }
+            for (const fila of filasEliminadas) {
+                let datosCaracteristicas = {
+                    idCaracteristicas: fila.id,
+                    talla: Number(fila.talla),
+                    cantidad: Number(fila.pares),
+                    color: fila.color
+                }
+                const editarCaracteristicas = await CaracteristicasService.deleteCaracteristicas(datosCaracteristicas);
+                console.log(editarCaracteristicas)
+                if (!editarCaracteristicas) {
+                    console.error("Característica vacias o nulas:", datosCaracteristicas);
+                    estado = false;
+                    return;
+                }
+            }
+            if (estado === false) {
+                console.log("Error al editar pedido");
+                return ;
+            }
             const actualizar = await DetallePedidoService.updateDetallePedido(codigoPedido, datosPedido);
+            
             if (actualizar) {
                 Alert.alert("Pedido actualizado", "El pedido se ha actualizado correctamente.");
                 resetearCampos();
