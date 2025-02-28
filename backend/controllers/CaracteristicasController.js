@@ -55,6 +55,17 @@ const CaracteristicasController = {
             console.error("Error al actualizar caracteristicas:", error);
             return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
         }
+    },
+
+    async deleteCaracteristicas(req, res) {
+        try {
+            const { idCaracteristicas } = req.params;
+            const result = await CaracteristicasService.deleteCaracteristicas(idCaracteristicas);
+            return res.status(200).json(result);
+        } catch (error) {
+            console.error("Error al eliminar caracteristicas:", error);
+            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+        }
     }
 }
 

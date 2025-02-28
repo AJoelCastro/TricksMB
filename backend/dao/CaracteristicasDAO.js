@@ -40,6 +40,19 @@ class CaracteristicasDAO {
             throw error;
         }
     }
+
+    static async deleteCaractericticas(idCaracteristicas){
+        try{
+            const query = 'DELETE FROM Caracteristicas WHERE idCaracteristicas = ?';
+            const [result] = await db.execute(query, [idCaracteristicas]);
+            if (result.affectedRows === 0) {
+                throw new Error("No se encontró la caracteristica con el id proporcionado.");
+            }
+            return { message: "Caracteristica eliminada correctamente." };
+        }catch(error){
+            throw error;
+        }
+    }
 }
 
 module.exports = CaracteristicasDAO;
