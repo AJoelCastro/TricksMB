@@ -17,7 +17,7 @@ const Actualizar = () => {
 
     const handleOptionPress = (option) => {
         if (codigoOrden) {
-            route.push(`/ordenes_produccion/actualizar/${option.title}`);
+            route.push(`/ordenes_produccion/actualizar/${option.title}?codigoOrden=${codigoOrden}`);
         } else {
             alert('Por favor, ingresa un código.');
         }
