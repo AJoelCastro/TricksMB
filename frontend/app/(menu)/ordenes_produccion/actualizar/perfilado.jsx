@@ -2,8 +2,10 @@ import { View, Text } from 'react-native'
 import React from 'react';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useFocusEffect } from '@react-navigation/native';
-
+import { useLocalSearchParams } from 'expo-router';
 const perfilado = () => {
+  const {codigoOrden} = useLocalSearchParams();
+  console.log("aaaaa", codigoOrden);
   const lockOrientation = async () => {
     await ScreenOrientation.lockAsync(
         ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
