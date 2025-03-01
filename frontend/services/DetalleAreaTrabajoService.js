@@ -5,7 +5,7 @@ const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 const DetalleAreaTrabajoService= {
     
-    crearPeido : async (datos) =>{
+    crearPedido : async (datos) =>{
         try{
             const token = await AuthService.getToken();
             if(!token) throw new Error("No hay token disponible");
