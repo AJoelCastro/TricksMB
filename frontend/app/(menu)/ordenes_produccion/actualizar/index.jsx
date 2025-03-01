@@ -1,27 +1,56 @@
-import { View, Text} from 'react-native';
-import { TextInput } from 'react-native-paper';
-import React, { useEffect, useState } from 'react';
-
-
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+import {TextInput} from 'react-native-paper';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import "../../../../global.css";
+const options = [
+    { id: 1, title: 'corte', icon: 'content-cut', color: 'bg-red-500' },
+    { id: 2, title: 'perfilado', icon: 'brush', color: 'bg-sky-700' },
+    { id: 3, title: 'armado', icon: 'build', color: 'bg-amber-500' },
+    { id: 4, title: 'alistado', icon: 'check-circle', color: 'bg-green-600' },
+];
 
-export default function index() {
-    const router = useRouter();
-    const[codigoCorte, setCodigoCorte]= useState("");
+const Actualizar = () => {
+    const route = useRouter();
+    const [codigoOrden, setCodigoOrden] = useState('');
+
+    const handleOptionPress = (option) => {
+        if (codigoOrden) {
+            route.push(`/ordenes_produccion/actualizar/${option.title}`);
+        } else {
+            alert('Por favor, ingresa un código.');
+        }
+    };
+
     return (
-        <View className='p-2'>
-            <View>
-                <Text className='text-black text-4xl font-bold text-center mt-8'>Actualización de orden</Text>
-            </View>
+        <View className="flex-1 p-4 bg-gray-100">
             <TextInput
-                label={"Corte"}
-                mode='outlined'
-                placeholder='Ingrese el codigo de orden'
-                onChange={setCodigoCorte}
-                right={<TextInput.Icon icon={"magnify"}/>}
+                label={"Codigo de orden"}
+                mode="outlined"
+                placeholder="Ingresa el código"
+                value={codigoOrden}
+                onChangeText={setCodigoOrden}
             />
+            <View className=' mt-4' >
+                {options.map((option) => (
+                    <TouchableOpacity
+                        key={option.id}
+                        onPress={() => handleOptionPress(option)}
+                        activeOpacity={0.8}
+                    >
+                        <View
+                            className={`w-full h-32  justify-center items-center rounded-2xl mb-4 ${option.color}`}
+                            
+                        >
+                            <Icon name={option.icon} size={40} color="#FFF" />
+                            <Text className="mt-2 text-white text-lg font-bold">{option.title}</Text>
+                        </View>
+                    </TouchableOpacity>
+                ))}
+            </View>
         </View>
-    );
-}
+    );
+};
+
+export default Actualizar;

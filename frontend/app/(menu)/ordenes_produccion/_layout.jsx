@@ -68,21 +68,11 @@ export default function OrdenesLayout() {
         }}
       />
       <Tabs.Screen
-        name="actualizar/index"
+        name="actualizar"
         options={{
           title: 'Actualizar',
           tabBarIcon: () => <Icon name="refresh" size={22} color={textColor}/>,
-          headerStyle: {
-            backgroundColor: backgroundColor, // Cambia el color de fondo del header
-          },
-          headerTintColor: textColor,
-        }}
-      />
-      <Tabs.Screen
-        name="actualizar/(etapas)"
-        options={{
-          headerShown:false,
-          href: null,  // Evita que expo-router lo tome como una tab
+          headerShown: false
         }}
       />
       
