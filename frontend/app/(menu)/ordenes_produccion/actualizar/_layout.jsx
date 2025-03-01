@@ -4,18 +4,27 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { Colors } from '@/constants/Colors';
 
 export default function EtapasLayout() {
+  
   const backgroundColor = useThemeColor({ light: Colors.light.background, dark: Colors.dark.background }, 'background');
   const textColor = useThemeColor({ light: Colors.light.text, dark: Colors.dark.text }, 'text');
 
   return (
     <Stack>
       <Stack.Screen 
+        name="index" 
+        options={{ 
+          title: 'Actualizar ',
+          headerStyle: { backgroundColor },
+          headerTintColor: textColor,
+        }} 
+      />
+      <Stack.Screen 
         name="corte" 
         options={{ 
           title: 'Corte',
           headerStyle: { backgroundColor },
           headerTintColor: textColor,
-        }} 
+        }}
       />
       <Stack.Screen 
         name="perfilado" 
@@ -23,7 +32,7 @@ export default function EtapasLayout() {
           title: 'Perfilado',
           headerStyle: { backgroundColor },
           headerTintColor: textColor,
-        }} 
+        }}
       />
       <Stack.Screen 
         name="armado" 
@@ -31,7 +40,7 @@ export default function EtapasLayout() {
           title: 'Armado',
           headerStyle: { backgroundColor },
           headerTintColor: textColor,
-        }} 
+        }}
       />
       <Stack.Screen 
         name="alistado" 
@@ -39,9 +48,8 @@ export default function EtapasLayout() {
           title: 'Alistado',
           headerStyle: { backgroundColor },
           headerTintColor: textColor,
-        }} 
+        }}
       />
-      
     </Stack>
   );
 }
