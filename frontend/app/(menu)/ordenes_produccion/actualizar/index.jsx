@@ -15,11 +15,16 @@ const Actualizar = () => {
     const route = useRouter();
     const [codigoOrden, setCodigoOrden] = useState('');
 
-    const handleOptionPress = (option) => {
-        if (codigoOrden) {
-            route.push(`/ordenes_produccion/actualizar/${option.title}?codigoOrden=${codigoOrden}`);
-        } else {
-            alert('Por favor, ingresa un código.');
+    const handleOptionPress = async (option) => {
+        try {
+
+            if (codigoOrden) {
+                route.push(`/ordenes_produccion/actualizar/${option.title}?codigoOrden=${codigoOrden}`);
+            } else {
+                alert("Error", "Por favor, ingresa el código de la orden.");
+            }
+        } catch (error) {
+            error("Error al procesar la solicitud",error);
         }
     };
 

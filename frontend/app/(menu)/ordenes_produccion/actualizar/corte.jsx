@@ -1,11 +1,12 @@
-import { View, Text } from 'react-native'
 import React, { useEffect, useState } from 'react';
-import * as ScreenOrientation from 'expo-screen-orientation';
-import { useFocusEffect } from '@react-navigation/native';
+import { View, Text, SafeAreaView } from 'react-native'
 import { TextInput } from 'react-native-paper';
-
-const corte = () => {
-  
+import { useFocusEffect } from '@react-navigation/native';
+import * as ScreenOrientation from 'expo-screen-orientation';
+import { useLocalSearchParams } from 'expo-router';
+const Corte = () => {
+  const {codigoOrden} = useLocalSearchParams();
+  console.log(codigoOrden);
   const getFechaActualizacion= () => {
             const date = new Date();
             const year = date.getFullYear();
@@ -14,9 +15,6 @@ const corte = () => {
             return `${year}-${month}-${day}`; // Formato: YYYY-MM-DD
         };
   const [fechaActualizacion] = useState(getFechaActualizacion());
-  const asignarOperario = "Operario 1";
-  const area = "Corte";
-
   const lockOrientation = async () => {
     await ScreenOrientation.lockAsync(
         ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
@@ -41,7 +39,7 @@ const corte = () => {
   );
 
   return (
-    <View className='p-2'>
+    <SafeAreaView className='p-2'>
       <View className='flex-row items-center gap-2'>
         <TextInput label={"Codigo"} mode='outlined' style={{width: '50%'}}>
         </TextInput>
@@ -55,9 +53,9 @@ const corte = () => {
         </TextInput>
       </View>
       <View className='flex-row items-center gap-2'>
-        <TextInput label={"Asignar operario"} mode='outlined' style={{width:'50%'}} value={asignarOperario}>
+        <TextInput label={"Asignar operario"} mode='outlined' style={{width:'50%'}} value={""}>
         </TextInput>
-        <TextInput label ={"Proceso/área"} mode='outlined' style={{width:'48%'}} value={area}>
+        <TextInput label ={"Proceso/área"} mode='outlined' style={{width:'48%'}} value={""}>
         </TextInput>
       </View>
       <View className='flex-row items-center gap-2'>
@@ -68,8 +66,8 @@ const corte = () => {
         <TextInput label={"fin"} mode='outlined' style={{width:'20%'}}>
         </TextInput>
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
 
-export default corte
+export default Corte;
