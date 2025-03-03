@@ -5,7 +5,7 @@ class EmpleadoDAO{
         try{
             const query = 'INSERT INTO Empleado (idAreaTrabajo, Nombre, Telefono, Dni) VALUES (?, ?, ?, ?)';
             const [rows] = await db.execute(query, [idAreaTrabajo, Nombre, Telefono, Dni]);
-            return rows;
+            return {id: rows.insertId, idAreaTrabajo, Nombre, Telefono, Dni};
         } catch(error){
             throw error;
         }
