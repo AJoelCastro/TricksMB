@@ -23,4 +23,4 @@ const AreaTrabajoController = {
 
 };
 
-module.export = AreaTrabajoController;
+module.exports = AreaTrabajoController;
