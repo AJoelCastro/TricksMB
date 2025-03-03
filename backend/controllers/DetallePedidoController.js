@@ -63,6 +63,18 @@ const DetallePedidoController = {
             console.error("Error al actualizar detalle pedido:", error);
             return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
         }
+    },
+    async updateEstado(req, res) {
+        try {
+            const {codigoPedido} = req.params;
+            const {estado} = req.body;
+            const detallePedido = await DetallePedidoService.updateEstado(codigoPedido, estado);
+            return res.status(200).json(detallePedido);
+        }
+        catch (error) {
+            console.error("Error al actualizar el estado del pedido:", error);
+            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+        }
     }
 };
 
