@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import {TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import DetallePedidoService from '@/services/DetallePedidoService';
 
 const options = [
     { id: 1, title: 'corte', icon: 'content-cut', color: 'bg-red-500' },
@@ -17,14 +18,14 @@ const Actualizar = () => {
 
     const handleOptionPress = async (option) => {
         try {
-
-            if (codigoOrden) {
+            const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
+            console.log(data);
+            if (data) {
                 route.push(`/ordenes_produccion/actualizar/${option.title}?codigoOrden=${codigoOrden}`);
-            } else {
-                alert("Error", "Por favor, ingresa el código de la orden.");
             }
         } catch (error) {
-            error("Error al procesar la solicitud",error);
+            console.log(error);
+            alert(`Error al obtener el pedido, verifique que el código "${codigoOrden}" sea correcto.`);
         }
     };
 
