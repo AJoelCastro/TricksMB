@@ -24,7 +24,8 @@ const Actualizar = () => {
     };
     const iniciarProceso = async () => {
         try {
-            const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
+            let estado = "Proceso"
+            const data = await DetallePedidoService.updateEstado(codigoOrden, estado);
             console.log(data);
             if (!data) {
                 console.error('Error al obtener el pedido, verifique que el código sea correcto.');

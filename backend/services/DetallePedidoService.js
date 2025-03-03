@@ -64,6 +64,21 @@ const DetallePedidoService = {
             if (error.status) throw error;
             throw { status: 500, message: "Error en DetallePedidoService", detalle: error.message }
         }
+    },
+    async updateEstado(codigoPedido, estado) {
+        try {
+            if (!codigoPedido) {
+                throw { status: 400, message: "El código de pedido es requerido" };
+            }
+            const obj = await DetallePedidoDAO.updateEstado(codigoPedido, estado);
+            if (!obj) {
+                throw { status: 500, message: "No se pudo actualizar el estado del pedido" };
+            }
+            return obj;
+        } catch (error) {
+            if (error.status) throw error;
+            throw { status: 500, message: "Error en DetallePedidoService", detalle: error.message }
+        }
     }
 };
 
