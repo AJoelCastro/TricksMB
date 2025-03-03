@@ -2,7 +2,7 @@ const DetalleAreaTrabajoDAO = require("../dao/DetalleAreaTrabajo");
 const CaracteristicasService = require("./CaracteristicasService");
 
 const DetalleAreaTrabajoService = {
-    async createDetalleAreaTrabajo(idAreaTrabajo, idDetallePedido, cantidadAvance, comentario, estado) {
+    async createDetalleAreaTrabajo(idDetallePedido) {
         try {
             if (!idAreaTrabajo || !idDetallePedido) {
                 throw { status: 400, message: "idAreaTrabajo y idDetallePedido son requeridos" };
@@ -20,9 +20,9 @@ const DetalleAreaTrabajoService = {
                 const detalle = await DetalleAreaTrabajoDAO.crearDetalleAreaTrabajo(
                     idAreaTrabajo,
                     caracteristica.idCaracteristicas,
-                    cantidadAvance,
-                    comentario,
-                    estado
+                    0,
+                    "",
+                    0
                 );
 
                 if (!detalle) {

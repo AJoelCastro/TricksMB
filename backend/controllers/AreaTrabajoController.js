@@ -7,7 +7,8 @@ const AreaTrabajoController = {
             const areaTrabajo = await AreaTrabajoService.createAreaTrabajo(nombre);
             res.status(201).send(areaTrabajo);
         } catch(error){
-            res.status(error.status).send(error.message);
+            console.error(error);
+            res.status(500).send({message: "Error al crear area de trabajo"});  
         }
     },
 
@@ -17,7 +18,8 @@ const AreaTrabajoController = {
             const areaTrabajo = await AreaTrabajoService.getAreaTrabajoByNombre(nombre);
             res.status(200).send(areaTrabajo);
         } catch(error){
-            res.status(error.status).send(error.message);
+            console.error(error);
+            res.status(500).send({message: "Error al buscar area de trabajo por nombre"});
         }
     }
 

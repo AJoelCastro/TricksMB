@@ -1,4 +1,5 @@
 const DetallePedidoDAO = require('../dao/DetallePedidoDAO');
+const DetalleAreaTrabajoService = require('./DetalleAreaTrabajoService');
 
 const DetallePedidoService = {
     async createDetallePedido(idPedido, idModelo, codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela,
@@ -58,6 +59,28 @@ const DetallePedidoService = {
                 tipoMaterial, suela, accesorios, forro);
             if (!obj) {
                 throw { status: 500, message: "No se pudo actualizar el detalle del pedido" };
+            }
+            return obj;
+        } catch (error) {
+            if (error.status) throw error;
+            throw { status: 500, message: "Error en DetallePedidoService", detalle: error.message }
+        }
+    },
+
+    async updateEstadoDetallePedido(codigoPedido, estado) {
+        try {
+            if (!codigoPedido) {
+                throw { status: 400, message: "El código de pedido es requerido" };
+            }
+            const obj = await DetallePedidoDAO.updateEstadoDetallePedido(codigoPedido, estado);
+            if(obj && estado ==="Proceso"){
+                const {idDetallePedido} = this.getDetallePedidoByCodigoPedido(codigoPedido);
+                const detalleAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(idDetallePedido);
+                return detalleAreaTrabajo;
+            }
+            
+            if (!obj) {
+                throw { status: 500, message: "No se pudo actualizar el estado del detalle del pedido" };
             }
             return obj;
         } catch (error) {
