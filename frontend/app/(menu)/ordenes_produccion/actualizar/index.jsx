@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import {TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon1 from 'react-native-vector-icons/FontAwesome';
 import DetallePedidoService from '@/services/DetallePedidoService';
 
 const options = [
@@ -28,6 +29,9 @@ const Actualizar = () => {
             alert(`Error al obtener el pedido, verifique que el código "${codigoOrden}" sea correcto.`);
         }
     };
+    const iniciarProceso = async () => {
+        
+    }
 
     return (
         <View className="flex-1 p-4 bg-gray-100">
@@ -38,15 +42,22 @@ const Actualizar = () => {
                 value={codigoOrden}
                 onChangeText={setCodigoOrden}
             />
-            <View className=' mt-4' >
+            <TouchableOpacity
+                className="h-[15%]  justify-center items-center rounded-2xl bg-blue-500 mt-4"
+            >
+                <Icon1 name="play-circle" size={40} color="#FFF" />
+                <Text className="mt-2 text-white text-lg font-bold">Iniciar proceso</Text>
+            </TouchableOpacity>
+            <View className='grid grid-cols-2 mt-4' >
                 {options.map((option) => (
                     <TouchableOpacity
                         key={option.id}
                         onPress={() => handleOptionPress(option)}
                         activeOpacity={0.8}
+                        className='grid col-span-1 m-2'
                     >
                         <View
-                            className={`w-full h-32  justify-center items-center rounded-2xl mb-4 ${option.color}`}
+                            className={`w-full h-full  justify-center items-center rounded-2xl ${option.color}`}
                             
                         >
                             <Icon name={option.icon} size={40} color="#FFF" />
