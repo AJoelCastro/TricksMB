@@ -5,10 +5,10 @@ const clienteRoutes = require('./routes/ClienteRoutes');
 const pedidoRoutes = require('./routes/PedidoRoutes');
 const modeloRoutes = require('./routes/ModeloRoutes');
 const tipoCalzadoRoutes = require('./routes/TipoCalzadoRoutes');
-const AreaTrabajoRoutes = require('./routes/DetalleAreaTrabajoRoutes');
+const DetalleAreaTrabajoRoutes = require('./routes/DetalleAreaTrabajoRoutes');
 const caracteristicasRoutes = require('./routes/CaracteristicasRoutes');
 const detallePedidoRoutes = require('./routes/DetallePedidoRoutes');
-const AreaTrabajoRoutes = require('./routes/DetalleAreaTrabajoRoutes');
+const AreaTrabajoRoutes = require('./routes/AreaTrabajoRoutes');
 const Empleado = require('./routes/EmpleadoRoutes');
 
 const errorHandler = require('./utils/errorHandler'); // Importamos errorHandler
@@ -45,9 +45,9 @@ app.use('/pedido',pedidoRoutes);
 app.use('/caracteristicas',caracteristicasRoutes);
 app.use('/modelo', modeloRoutes);
 app.use('/tipoCalzado', tipoCalzadoRoutes);
-app.use('/detalleAreaTrabajo', AreaTrabajoRoutes);
+app.use("/detalleAreaTrabajo", DetalleAreaTrabajoRoutes);
 app.use('/empleado', Empleado);
-app.use('/AreaTrabajo', AreaTrabajoRoutes);
+app.use('/areaTrabajo', AreaTrabajoRoutes);
 // Manejo de rutas no encontradas
 app.use((req, res, next) => {
     res.status(404).json({ error: 'Ruta no encontrada' });

@@ -4,3 +4,5 @@ const authMiddleware = require('../middlewares/authMiddleware');
 const router = express.Router();
 
 router.post("/crear", authMiddleware, AreaTrabajoController.createAreaTrabajo);
+
+module.exports = router;
