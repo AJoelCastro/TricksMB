@@ -5,3 +5,5 @@ const authMiddleware = require('../middlewares/authMiddleware');
 const router = express.Router();
 
 router.post("/crear", authMiddleware, EmpleadoController.createEmpleado);
+
+module.exports = router;
