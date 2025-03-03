@@ -5,7 +5,7 @@ const EmpleadoController = {
         try{
             const {idAreaTrabajo, nombre, telefono, dni} = req.body;
             const empleado = await EmpleadoService.createEmpleado(idAreaTrabajo, nombre, telefono, dni);
-            res.status(201).send(empleado);
+            res.status(201).json({ success: true, message: "Empleado registrado exitosamente", userId: empleado.idEmpleado });
         } catch(error){
             res.status(error.status).send(error.message);
         }
