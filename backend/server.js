@@ -8,7 +8,7 @@ const tipoCalzadoRoutes = require('./routes/TipoCalzadoRoutes');
 const AreaTrabajoRoutes = require('./routes/DetalleAreaTrabajoRoutes');
 const caracteristicasRoutes = require('./routes/CaracteristicasRoutes');
 const detallePedidoRoutes = require('./routes/DetallePedidoRoutes');
-const AreaTrabajoRoutes = require('./routes/DetalleAreaTrabajoRoutes');
+const AreaTrabajoRoutes = require('./routes/AreaTrabajoRoutes');
 const Empleado = require('./routes/EmpleadoRoutes');
 
 const errorHandler = require('./utils/errorHandler'); // Importamos errorHandler
