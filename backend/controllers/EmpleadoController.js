@@ -5,9 +5,13 @@ const EmpleadoController = {
         try{
             const {idAreaTrabajo, nombre, telefono, dni} = req.body;
             const empleado = await EmpleadoService.createEmpleado(idAreaTrabajo, nombre, telefono, dni);
-            res.status(201).json({ success: true, message: "Empleado registrado exitosamente", userId: empleado.idEmpleado });
+            if(!empleado){
+                return res.status(400).json({ success: false, message: "Error al crear empleado" });
+            }
+            res.status(201).json({ success: true, message: "Empleado registrado exitosamente", empleado });
         } catch(error){
-            res.status(error.status).send(error.message);
+            console.error(error);
+            res.status(500).json({ success: false, message: "Error al registrar empleado" });
         }
     },
 
