@@ -64,20 +64,23 @@ class DetallePedidoDAO {
             console.error("Error al actualizar detalle de pedido:", error);
             throw error;
         }
-    }  
-
-    static async updateEstadoDetallePedido(codigoPedido, estado) {
+    }
+    static async  updateEstado(codigoPedido, estado) {
         try {
-            const query = 'UPDATE Detalle_pedido SET Estado = ? WHERE Codigo_pedido = ?';
+            const query = `
+                UPDATE Detalle_pedido SET
+                    Estado = ?
+                WHERE Codigo_pedido = ?`;
+            
             const [result] = await db.execute(query, [estado, codigoPedido]);
-
+            
             if (result.affectedRows === 0) {
-                throw new Error("No se encontró un detalle de pedido con el código proporcionado.");
+                throw new Error("No se encontró el pedido con el código proporcionado.");
             }
 
-            return { mensaje: "Estado de detalle de pedido actualizado correctamente", codigoPedido, estado };
+            return { mensaje: "Estado del pedido actualizado correctamente", codigoPedido, estado };
         } catch (error) {
-            console.error("Error al actualizar estado de detalle de pedido:", error);
+            console.error("Error al actualizar estado del pedido:", error);
             throw error;
         }
     }

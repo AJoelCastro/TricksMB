@@ -45,6 +45,20 @@ const DetallePedidoService = {
             console.error("(pedidoService)Error al actualizar pedido: ", error.response?.data || error.message);
             throw error;
         }
+    },
+    updateEstado: async (codigoPedido, estado) => {
+        const token = await AuthService.getToken();
+        if(!token) throw new Error("No hay token disponible");
+        try{
+            const response = await axios.put(`${API_URL}/detallePedido/actualizarEstado/${codigoPedido}`,{ estado },{
+                headers: {Authorization: `Bearer ${token}`}
+            });
+            return response.data;
+
+        } catch(error){
+            console.error("(pedidoService)Error al actualizar pedido: ", error.response?.data || error.message);
+            throw error;
+        }
     }
 }
 export default DetallePedidoService;

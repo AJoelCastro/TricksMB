@@ -66,21 +66,15 @@ const DetallePedidoService = {
             throw { status: 500, message: "Error en DetallePedidoService", detalle: error.message }
         }
     },
-
-    async updateEstadoDetallePedido(codigoPedido, estado) {
+    async updateEstado(codigoPedido, estado) {
         try {
             if (!codigoPedido) {
                 throw { status: 400, message: "El código de pedido es requerido" };
             }
-            const obj = await DetallePedidoDAO.updateEstadoDetallePedido(codigoPedido, estado);
-            if(obj && estado ==="Proceso"){
-                const {idDetallePedido} = this.getDetallePedidoByCodigoPedido(codigoPedido);
-                const detalleAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(idDetallePedido);
-                return detalleAreaTrabajo;
-            }
-            
+
+            const obj = await DetallePedidoDAO.updateEstado(codigoPedido, estado);
             if (!obj) {
-                throw { status: 500, message: "No se pudo actualizar el estado del detalle del pedido" };
+                throw { status: 500, message: "No se pudo actualizar el estado del pedido" };
             }
             return obj;
         } catch (error) {
