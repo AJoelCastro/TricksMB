@@ -10,11 +10,11 @@ const UsuarioService = {
         return user;
     },
 
-    async createUser(correo, contrasenia) {
-        if (!correo || !contrasenia) throw new Error('Nombre de usuario y contraseña son requeridos');
+    async createUser(idEmpleado, correo, contrasenia) {
+        if (!correo || !contrasenia || ideEmpleado) throw new Error('Nombre de usuario y contraseña son requeridos');
 
         const hashedContrasenia = await bcrypt.hash(contrasenia, 10);
-        return await UsuarioDAO.createUser(correo, hashedContrasenia);
+        return await UsuarioDAO.createUser(idEmpleado, correo, hashedContrasenia);
     },
 
     async findUser(correo, contrasenia) {

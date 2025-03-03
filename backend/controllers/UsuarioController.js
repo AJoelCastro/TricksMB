@@ -3,13 +3,13 @@ const jwt = require('jsonwebtoken');
 
 const UsuarioController = {
     async register(req, res) {
-        const { correo, contrasenia } = req.body;
-        if (!correo || !contrasenia) {
+        const { idEmpleado, correo, contrasenia } = req.body;
+        if (!idEmpleado || !correo || !contrasenia) {
             return res.status(400).json({ message: "Todos los campos son obligatorios" });
         }
 
         try {
-            const result = await UsuarioService.createUser(correo, contrasenia);
+            const result = await UsuarioService.createUser(idEmpleado, correo, contrasenia);
             res.status(201).json({ success: true, message: "Usuario registrado exitosamente", userId: result.idUsuario });
         } catch (error) {
             console.error(error);

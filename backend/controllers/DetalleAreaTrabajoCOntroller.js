@@ -5,23 +5,14 @@ const CaracteristicasService = require('../services/CaracteristicasService');
 const DetalleAreaTrabajoController = {
     async createDetalleAreaTrabajo(req, res) {
         try{
-            let{nombreAreaTrabajo, codigoPedido, cantidadAvance, comentario,} = req.body;
-
-            const convertirNumero = (valor, nombreCampo) => {
-                const numero = Number(valor);
-                if (isNaN(numero)) return res.status(400).json({error: `El campo ${nombreCampo} debe ser un número`});
-                return numero;
-            }
-
-            cantidadAvance = convertirNumero(cantidadAvance, "cantidadAvance");
+            let{nombreAreaTrabajo, codigoPedido} = req.body;
 
             const areaTrabajo = await AreaTrabajoService.getAreaTrabajobyNombre(nombreAreaTrabajo);
             const {idDetallePedido} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
-            const caracteristicas = await CaracteristicasService.getCaracteristicasByIdDetallePedido(idDetallePedido);
-            const detalleAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(
-                areaTrabajo.idAreaTrabajo, caracteristicas.idCaracteristicas, cantidadAvance, comentario);
+            
+            const detallesCreados = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(areaTrabajo.idAreaTrabajo, idDetallePedido, 0, "", "0");
 
-            return res.status(201).json({message: "Detalle de area de trabajo registrado con éxito", detalleAreaTrabajo});
+            return res.status(201).json({message: "Detalles de area de trabajo registrados con éxito", detallesCreados});
 
         }catch(error){
             console.error("Error al crear detalle de area de trabajo:", error);
