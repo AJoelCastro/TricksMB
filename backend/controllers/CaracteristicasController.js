@@ -1,4 +1,3 @@
-const { get } = require('../routes/DetallePedidoRoutes');
 const CaracteristicasService = require('../services/CaracteristicasService');
 
 const CaracteristicasController = {

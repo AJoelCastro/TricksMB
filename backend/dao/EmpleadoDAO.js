@@ -1,7 +1,7 @@
 const db = require('../config/db');
 
 class EmpleadoDAO{
-    static async crateEmpleado(idAreaTrabajo, Nombre, Telefono, Dni){
+    static async createEmpleado(idAreaTrabajo, Nombre, Telefono, Dni){
         try{
             const query = 'INSERT INTO Empleado (idAreaTrabajo, Nombre, Telefono, Dni) VALUES (?, ?, ?, ?)';
             const [rows] = await db.execute(query, [idAreaTrabajo, Nombre, Telefono, Dni]);

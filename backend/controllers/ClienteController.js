@@ -1,4 +1,3 @@
-const { getClienteByCodigoPedido } = require('../dao/ClienteDAO');
 const ClienteService = require('../services/ClienteService');
 
 const ClienteController = {

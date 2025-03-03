@@ -12,7 +12,7 @@ class AreaTrabajoDAO{
         }
     }
     
-    static async getbyNombre(nombre){
+    static async getByNombre(nombre){
         try{
             const query =  'SELECT * FROM Area_trabajo WHERE Nombre = ?';
             const rows = await db.execute(query, [nombre]);
