@@ -62,32 +62,38 @@ const Actualizar = () => {
                 onChangeText={setCodigoOrden}
                 right={<TextInput.Icon icon="magnify" onPress={verificarProceso}/>}
             />
-            <TouchableOpacity
-                onPress={iniciarProceso}
-                activeOpacity={0.8}
-                className={`h-[15%]  justify-center items-center rounded-2xl ${estado === "Editable" ? "bg-blue-500" : "bg-gray-700"} mt-4`}
-                disabled={estado === "Editable" ? false : true}
-            >
-                <Icon1 name="play-circle" size={40} color="#FFF" />
-                <Text className="mt-2 text-white text-lg font-bold">Iniciar proceso</Text>
-            </TouchableOpacity>
-            <View className=' mt-4 gap-4 ' >
-                {options.map((option) => (
+            { estado === "Editable" &&
                     <TouchableOpacity
-                        key={option.id}
-                        onPress={() => handleOptionPress(option)}
+                        onPress={iniciarProceso}
                         activeOpacity={0.8}
-                        disabled={estado === "Editable" ? true : false}
+                        className={`h-[15%]  justify-center items-center rounded-2xl ${estado === "Editable" ? "bg-blue-500" : "bg-gray-700"} mt-4`}
+                        disabled={estado === "Editable" ? false : true}
                     >
-                        <View
-                            className={`justify-center items-center rounded-2xl p-2 ${option.color}`}
-                        >
-                            <Icon name={option.icon} size={40} color="#FFF" />
-                            <Text className="mt-2 text-white text-lg font-bold">{option.title}</Text>
-                        </View>
+                        <Icon1 name="play-circle" size={40} color="#FFF" />
+                        <Text className="mt-2 text-white text-lg font-bold">Iniciar proceso</Text>
                     </TouchableOpacity>
-                ))}
-            </View>
+            }
+            { estado === "Proceso" &&
+                (
+                    <View className=' mt-4 gap-4 ' >
+                        {options.map((option) => (
+                            <TouchableOpacity
+                                key={option.id}
+                                onPress={() => handleOptionPress(option)}
+                                activeOpacity={0.8}
+                                disabled={estado === "Editable" ? true : false}
+                            >
+                                <View
+                                    className={`justify-center items-center rounded-2xl p-2 ${option.color}`}
+                                >
+                                    <Icon name={option.icon} size={40} color="#FFF" />
+                                    <Text className="mt-2 text-white text-lg font-bold">{option.title}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                )
+            }
         </View>
     );
 };
