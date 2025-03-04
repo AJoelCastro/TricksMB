@@ -35,7 +35,6 @@ class DetallePedidoDAO {
             if (rows.length === 0) {
                 throw new Error("No se encontró un detalle de pedido con el código proporcionado.");
             }
-
             return rows[0];
         } catch (error) {
             console.error("Error al obtener detalle de pedido por código de pedido:", error);
