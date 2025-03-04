@@ -17,7 +17,7 @@ const DetalleAreaTrabajoService = {
             const detallesCreados = await Promise.all(
                 caracteristicas.map(caracteristica =>
                     DetalleAreaTrabajoDAO.crearDetalleAreaTrabajo(
-                        idAreaTrabajo,
+                        1,
                         caracteristica.idCaracteristicas,
                         0,
                         "",
