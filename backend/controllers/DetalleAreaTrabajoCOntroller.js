@@ -1,4 +1,4 @@
-const { getDetalleAreaTrabajo, updateDetalleAreaTrabajo } = require('../dao/DetalleAreaTrabajo');
+const { getDetalleAreaTrabajo, updateDetalleAreaTrabajo } = require('../dao/DetalleAreaTrabajoDAO');
 const AreaTrabajoService = require('../services/AreaTrabajoService');
 const DetalleAreaTrabajoService = require('../services/DetalleAreaTrabajoService');
 const DetallePedidoService = require('../services/DetallePedidoService');
