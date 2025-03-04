@@ -16,8 +16,33 @@ class DetalleAreaTrabajoDAO{
         }
     }
 
-    static async updateDetalleAreaTrbajo(idCaracteristicas, cantidadAvance, comentario,estado){
+    static async getDetalleAreaTrabajo(idCaracteristicas){
+        try{
+            const query = `
+                SELECT * FROM Detalle_area_trabajo WHERE Caracteristica_idCaracteristicas = ?
+            `;
+            const [rows] = await db.execute(query, [idCaracteristicas]);
+            return rows;
+        }catch(error){
+            throw error;
+        }
+    }
 
+    static async updateDetalleAreaTrabajo(idCaracteristicas, cantidadAvance, comentario,estado){
+        try{
+            const query = `
+                UPDATE Detalle_area_trabajo SET
+                    Cantidad_avance = ?, Comentario = ?, Estado = ?
+                WHERE Caracteristicas_idCaracteristicas = ?
+            `;
+            const [result] = await db.execute(query, [cantidadAvance, comentario, estado, idCaracteristicas]);
+            if(result.affectedRows === 0){
+                throw new Error("No se encontró el detalle de área de trabajo con el id de caracteristicas proporcionado");
+            }
+        }
+        catch(error){
+            throw error;
+        }
     }
 }
 module.exports = DetalleAreaTrabajoDAO;
