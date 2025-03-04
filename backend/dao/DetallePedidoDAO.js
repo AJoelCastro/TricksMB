@@ -68,9 +68,7 @@ class DetallePedidoDAO {
     static async  updateEstado(codigoPedido, estado) {
         try {
             const query = `
-                UPDATE Detalle_pedido SET
-                    Estado = ?
-                WHERE Codigo_pedido = ?`;
+                UPDATE Detalle_pedido SET Estado = ? WHERE Codigo_pedido = ?`;
             
             const [result] = await db.execute(query, [estado, codigoPedido]);
             
