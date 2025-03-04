@@ -1,6 +1,6 @@
-const DetalleAreaTrabajoDAO = require("../dao/DetalleAreaTrabajo");
-const CaracteristicasService = require("./CaracteristicasService");
-const DetallePedidoService = require("./DetallePedidoService");
+const DetalleAreaTrabajoDAO = require('../dao/DetalleAreaTrabajoDAO');
+const CaracteristicasService = require('./CaracteristicasService');
+const DetallePedidoService = require('./DetallePedidoService');
 const DetalleAreaTrabajoService = {
 
     async createDetalleAreaTrabajo(idDetallePedido) {
