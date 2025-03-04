@@ -5,7 +5,7 @@ class DetalleAreaTrabajoDAO{
     static async crearDetalleAreaTrabajo(idAreaTrabajo,idCaracteristicas, cantidadAvance, comentario, estado){
         try{
             const query = `
-                INSERT INTO Detalle_area_trabajo (
+                INSERT INTO Detalle_areaTrabajo (
                     Area_Trabajo_idArea_trabajo, Caracteristicas_idCaracteristicas, Cantidad_avance, Comentario, Estado
                 ) VALUES (?, ?, ?, ?, ?)
             `;
