@@ -1,7 +1,4 @@
-const { getDetalleAreaTrabajo, updateDetalleAreaTrabajo } = require('../dao/DetalleAreaTrabajoDAO');
-const AreaTrabajoService = require('../services/AreaTrabajoService');
 const DetalleAreaTrabajoService = require('../services/DetalleAreaTrabajoService');
-const DetallePedidoService = require('../services/DetallePedidoService');
 const DetalleAreaTrabajoController = {
     async getDetalleAreaTrabajo(req, res) {
         try {
@@ -18,6 +15,7 @@ const DetalleAreaTrabajoController = {
         try {
             const {idCaracteristicas} = req.params;
             const { cantidadAvance, comentario, estado} = req.body;
+            
             const detalleAreaTrabajo = await DetalleAreaTrabajoService.updateDetalleAreaTrabajo(idCaracteristicas, cantidadAvance, comentario, estado);
             return res.status(200).json(detalleAreaTrabajo);
         } catch (error) {
