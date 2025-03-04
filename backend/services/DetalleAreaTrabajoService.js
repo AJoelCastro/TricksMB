@@ -39,8 +39,8 @@ const DetalleAreaTrabajoService = {
             }
             const DetallePedidoService = require('./DetallePedidoService');
 
-            const {idDetallePedido} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
-            const caracteristicas = await CaracteristicasService.getCaracteristicasByIdDetallePedido(idDetallePedido);
+            const {idDetalle_pedido} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
+            const caracteristicas = await CaracteristicasService.getCaracteristicasByIdDetallePedido(idDetalle_pedido);
             const detallesAreaTrabajo = await Promise.all(
                 caracteristicas.map((caracteristica) =>
                 DetalleAreaTrabajoDAO.getDetalleAreaTrabajo(caracteristica.idCaracteristicas)

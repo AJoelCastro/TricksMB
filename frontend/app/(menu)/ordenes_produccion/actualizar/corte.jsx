@@ -15,6 +15,7 @@ import DetallePedidoService from "../../../../../frontend/services/DetallePedido
 import TipoCalzadoService from '@/services/TipoCalzadoService';
 import CaracteristicasService from '@/services/CaracteristicasService';
 import PedidoService from '@/services/PedidoService';
+import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 
 const { width } = Dimensions.get('window');
 const Corte = () => {
@@ -297,6 +298,18 @@ const Corte = () => {
             console.error("Error al actualizar pedido:", error);
         }
     }
+    useEffect(() => {
+        const obtenerDetalleAreaTrab = async () => {
+            try {
+                let codigoPedido = codigoOrden
+                const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
+                console.log(data);}
+            catch (error) {
+                console.error("Error al obtener los detalles del area de trabajo:", error);
+            }
+        };
+        obtenerDetalleAreaTrab();
+    }, []);
 
 return (
     <KeyboardAvoidingView
