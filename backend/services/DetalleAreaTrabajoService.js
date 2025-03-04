@@ -1,6 +1,6 @@
 const DetalleAreaTrabajoDAO = require('../dao/DetalleAreaTrabajoDAO');
 const CaracteristicasService = require('./CaracteristicasService');
-const DetallePedidoService = require('./DetallePedidoService');
+
 const DetalleAreaTrabajoService = {
 
     async createDetalleAreaTrabajo(idDetallePedido) {
@@ -37,6 +37,8 @@ const DetalleAreaTrabajoService = {
             if (!codigoPedido) {
                 throw { status: 400, message: "Codigo de pedido es requerido" };
             }
+            const DetallePedidoService = require('./DetallePedidoService');
+
             const {idDetallePedido} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
             const caracteristicas = await CaracteristicasService.getCaracteristicasByIdDetallePedido(idDetallePedido);
             const detallesAreaTrabajo = await Promise.all(
