@@ -59,7 +59,6 @@ const ClienteService = {
             const response = await axios.get(`${API_URL}/cliente/cliente/${codigoPedido}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            console.log(response.data);
             return response.data;
         } catch (error) {
             console.error("Error al obtener el cliente por código de pedido:", error.response?.data || error.message);
