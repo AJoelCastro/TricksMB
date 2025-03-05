@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import {TextInput} from 'react-native-paper';
@@ -8,6 +8,8 @@ import DetallePedidoService from '@/services/DetallePedidoService';
 import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 
 const Actualizar = () => {
+
+    const isFirstRender = useRef(true);
     const route = useRouter();
     const [codigoOrden, setCodigoOrden] = useState('');
     const [estado, setEstado] = useState("");
@@ -33,7 +35,7 @@ const Actualizar = () => {
                 console.error('Error al obtener el pedido, verifique que el código sea correcto.');
             }
         } catch (error) {
-            alert(`Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto.`);
+            alert("Error al iniciar el proceso", error);
         }
     }
     const verificarProceso = async () => {
@@ -48,33 +50,41 @@ const Actualizar = () => {
             alert(`Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto.`);
         }
     }
-    const verificarAreaTrabajo = async () => {
-        try {
-            let codigoPedido = codigoOrden;
-            const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
-            console.log(data);
-            console.log("m",data[0].Area_trabajo_idArea_trabajo);
-            switch (data[0].Area_trabajo_idArea_trabajo) {
-                case 1:
-                    setAreaTrabajo("corte");
-                    break;
-                case 2:
-                    setAreaTrabajo("perfilado");
-                    break;
-                case 3:
-                    setAreaTrabajo("armado");
-                    break;
-                case 4:
-                    setAreaTrabajo("alistado");
-                    break;
+    useEffect(() => {
+        const verificarAreaTrabajo = async () => {
+            if (isFirstRender.current) {
+                isFirstRender.current = false; // Marcar que la primera renderización ya pasó
+                return;
             }
-            if (!data) {
-                console.error('Error al obtener el pedido, verifique que el código sea correcto.');
+            try {
+                let codigoPedido = codigoOrden;
+                const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
+                console.log(data);
+                console.log("m",data[0].Area_trabajo_idArea_trabajo);
+                switch (data[0].Area_trabajo_idArea_trabajo) {
+                    case 1:
+                        setAreaTrabajo("corte");
+                        break;
+                    case 2:
+                        setAreaTrabajo("perfilado");
+                        break;
+                    case 3:
+                        setAreaTrabajo("armado");
+                        break;
+                    case 4:
+                        setAreaTrabajo("alistado");
+                        break;
+                }
+                if (!data) {
+                    console.error('Error al obtener el pedido, verifique que el código sea correcto.');
+                }
+            } catch (error) {
+                alert(`Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto`, error);
             }
-        } catch (error) {
-            alert(`Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto`, error);
         }
-    }
+        verificarAreaTrabajo();
+    },[estado])
+    
     const options = [
         { id: 1, title: 'corte', icon: 'content-cut', color: estado==='Editable' ? 'bg-gray-700' : 'bg-red-500' },
         { id: 2, title: 'perfilado', icon: 'brush', color: estado==='Editable' ? 'bg-gray-700' : 'bg-sky-700' },
@@ -90,10 +100,7 @@ const Actualizar = () => {
                 placeholder="Ingresa el código"
                 value={codigoOrden}
                 onChangeText={setCodigoOrden}
-                right={<TextInput.Icon icon="magnify" onPress={() => { 
-                    verificarProceso(); 
-                    verificarAreaTrabajo(); 
-                    }}/>}
+                right={<TextInput.Icon icon="magnify" onPress={verificarProceso}/>}
             />
             { estado === "Editable" &&
                     <TouchableOpacity

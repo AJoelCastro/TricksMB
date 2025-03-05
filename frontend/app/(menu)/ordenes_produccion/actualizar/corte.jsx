@@ -20,7 +20,6 @@ import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 const { width } = Dimensions.get('window');
 const Corte = () => {
     const {codigoOrden} = useLocalSearchParams();
-    console.log("aaa",codigoOrden);
     const getFechaActualizacion= () => {
                 const date = new Date();
                 const year = date.getFullYear();
@@ -123,8 +122,8 @@ const Corte = () => {
     const [tipoCalzado, setTipoCalzado] = useState("");
     const [fechaEntrega, setFechaEntrega] = useState(new Date());
     const [openDatePicker, setOpenDatePicker] = useState(false);
-    const [codigoPedido, setCodigoPedido] = useState("");
     const [idDetallePedido, setIdDetallePedido] = useState();
+    const [dataDetalleAreaTrabajo, setDataDetalleAreaTrabajo] = useState([]);
     const getCurrentDate = () => {
         const date = new Date();
         return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
@@ -292,6 +291,7 @@ const Corte = () => {
                 console.log("Error al editar pedido");
                 return ;
             }
+            let codigoPedido = codigoOrden;
             const actualizar = await DetallePedidoService.updateDetallePedido(codigoPedido, datosPedido);
             
             if (actualizar) {
@@ -310,6 +310,7 @@ const Corte = () => {
                 let codigoPedido = codigoOrden
                 const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
                 console.log(data);
+                setDataDetalleAreaTrabajo(data);
             }
             catch (error) {
                 console.error("Error al obtener los detalles del area de trabajo:", error);
@@ -514,70 +515,94 @@ return (
                         </View>
                     </View>
                 </View>
-                {filas.map((fila, index) => (
-                    <View key={fila.id} className='flex-row justify-between items-center  mb-2 w-full'>
-                        <TextInput
-                            label="Talla"
-                            className='rounded flex-1'
-                            keyboardType='numeric'
-                            placeholder='Talla'
-                            style={{ height:40, width: width * 0.10 }}
-                            mode='outlined'
-                            value={fila.talla}
-                            onChangeText={(text) => {
-                                const nuevasFilas = [...filas];
-                                nuevasFilas[index].talla = text;
-                                setFilas(nuevasFilas);
-                            }}
-                        />
-                        
-                        <TextInput
-                            label="Pares"
-                            className='rounded flex-1'
-                            placeholder='Pares'
-                            style={{ height:40, width: width * 0.10 }}
-                            mode='outlined'
-                            keyboardType='numeric'
-                            value={fila.pares}
-                            onChangeText={(text) => {
-                                const nuevasFilas = [...filas];
-                                nuevasFilas[index].pares = text;
-                                setFilas(nuevasFilas);
-                            }}
-                        />
-                        
-                        <TextInput
-                            label="Color"
-                            className='rounded flex-1'
-                            placeholder='Color'
-                            style={{ height:40, width: width * 0.20 }}
-                            mode='outlined'
-                            value={fila.color}
-                            onChangeText={(text) => {
-                                const nuevasFilas = [...filas];
-                                nuevasFilas[index].color = text;
-                                setFilas(nuevasFilas);
-                            }}
-                        />
-                        <View className=''>
-                            <Icon name="chevron-right" size={20} color="#6c2" />
+                <View className='flex-row gap-2'>
+                    <View className='flex-1'>
+                    {filas.map((fila, index) => (
+                        <View key={fila.id} className='flex-row justify-between items-center  mb-2 w-full'>
+                            <TextInput
+                                label="Talla"
+                                className='rounded flex-1'
+                                keyboardType='numeric'
+                                placeholder='Talla'
+                                style={{ height:40, width: width * 0.10 }}
+                                mode='outlined'
+                                value={fila.talla}
+                                onChangeText={(text) => {
+                                    const nuevasFilas = [...filas];
+                                    nuevasFilas[index].talla = text;
+                                    setFilas(nuevasFilas);
+                                }}
+                            />
+                            
+                            <TextInput
+                                label="Pares"
+                                className='rounded flex-1'
+                                placeholder='Pares'
+                                style={{ height:40, width: width * 0.10 }}
+                                mode='outlined'
+                                keyboardType='numeric'
+                                value={fila.pares}
+                                onChangeText={(text) => {
+                                    const nuevasFilas = [...filas];
+                                    nuevasFilas[index].pares = text;
+                                    setFilas(nuevasFilas);
+                                }}
+                            />
+                            
+                            <TextInput
+                                label="Color"
+                                className='rounded flex-1'
+                                placeholder='Color'
+                                style={{ height:40, width: width * 0.20 }}
+                                mode='outlined'
+                                value={fila.color}
+                                onChangeText={(text) => {
+                                    const nuevasFilas = [...filas];
+                                    nuevasFilas[index].color = text;
+                                    setFilas(nuevasFilas);
+                                }}
+                            />
                         </View>
-                        <TextInput
-                            label={"Avance"}
-                            placeholder='Color'
-                            style={{ height:40, width: width * 0.10 }}
-                            mode='outlined'
-                            value={fila.color}
-                        />
-                        <TextInput
-                            label={"Comentario"}
-                            placeholder='Color'
-                            style={{ height:40, width: width * 0.30 }}
-                            mode='outlined'
-                            value={fila.color}
-                        />
+                    ))}
                     </View>
-                ))}
+                    <View className='flex-1'>
+                    {dataDetalleAreaTrabajo.map((fila, index) => (
+                        <View key={fila.idDetalle_areaTrabajo} className='flex-row justify-between items-center  mb-2 w-full'>
+                            <TextInput
+                                label={"Avance"}
+                                placeholder='Color'
+                                style={{ height:40, width: width * 0.10 }}
+                                mode='outlined'
+                                value={fila.Cantidad_avance}
+                                keyboardType='numeric'
+                                onChangeText={(text) => {
+                                    const nuevasFilas = [...dataDetalleAreaTrabajo];
+                                    if (Number(text) <= Number(filas[index].pares)) {
+                                        nuevasFilas[index].Cantidad_avance = text;
+                                    } else {
+                                        alert("El avance no puede ser mayor a la cantidad de pares");
+                                        nuevasFilas[index].Cantidad_avance = "";
+                                    }
+                                    setDataDetalleAreaTrabajo(nuevasFilas);
+                                }}
+                            />
+                            <TextInput
+                                label={"Comentario"}
+                                placeholder='Color'
+                                style={{ height:40, width: width * 0.30 }}
+                                mode='outlined'
+                                value={fila.Comentario}
+                                onChangeText={(text) => {
+                                    const nuevasFilas = [...dataDetalleAreaTrabajo];
+                                    nuevasFilas[index].Comentario = text;
+                                    setDataDetalleAreaTrabajo(nuevasFilas);
+                                }}
+                            />
+                        </View>
+                    ))}
+                    {console.log(dataDetalleAreaTrabajo)}
+                    </View>
+                </View>
                 <Text className='font-bold mt-4 text-lg mx-auto'>
                     Detalle de la orden
                 </Text>
