@@ -303,6 +303,7 @@ const Corte = () => {
             try {
                 let codigoPedido = codigoOrden
                 const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
+            }
             catch (error) {
                 console.error("Error al obtener los detalles del area de trabajo:", error);
             }
