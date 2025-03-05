@@ -218,6 +218,7 @@ const Corte = () => {
         setTipoCalzado("");
         setFechaEntrega(new Date());
         setFilas([]);
+        setDataDetalleAreaTrabajo([]);
     };
     const transformarDatos = (data) => {
         return data.map((item) => ({
@@ -225,6 +226,13 @@ const Corte = () => {
             talla: item.Talla.toString(), // Convertir a string
             pares: item.Cantidad.toString(), // Convertir a string
             color: item.Color,
+        }));
+    };
+    const transformarDatosDetalleAreaTrabajo = (data) => {
+        return data.map((item) => ({
+            id: item.idDetalle_areaTrabajo, // Generar un ID único
+            avance: item.Cantidad_avance.toString(), // Convertir a string
+            comentario: item.Comentario,
         }));
     };
     useEffect(() => {
@@ -309,8 +317,8 @@ const Corte = () => {
             try {
                 let codigoPedido = codigoOrden
                 const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
-                console.log(data);
-                setDataDetalleAreaTrabajo(data);
+                const filasTransformadas = transformarDatosDetalleAreaTrabajo(data);
+                setDataDetalleAreaTrabajo(filasTransformadas);
             }
             catch (error) {
                 console.error("Error al obtener los detalles del area de trabajo:", error);
@@ -567,21 +575,21 @@ return (
                     </View>
                     <View className='flex-1'>
                     {dataDetalleAreaTrabajo.map((fila, index) => (
-                        <View key={fila.idDetalle_areaTrabajo} className='flex-row justify-between items-center  mb-2 w-full'>
+                        <View key={fila.id} className='flex-row justify-between items-center  mb-2 w-full'>
                             <TextInput
                                 label={"Avance"}
                                 placeholder='Color'
                                 style={{ height:40, width: width * 0.10 }}
                                 mode='outlined'
-                                value={fila.Cantidad_avance}
+                                value={fila.avance}
                                 keyboardType='numeric'
                                 onChangeText={(text) => {
                                     const nuevasFilas = [...dataDetalleAreaTrabajo];
                                     if (Number(text) <= Number(filas[index].pares)) {
-                                        nuevasFilas[index].Cantidad_avance = text;
+                                        nuevasFilas[index].avance = text;
                                     } else {
                                         alert("El avance no puede ser mayor a la cantidad de pares");
-                                        nuevasFilas[index].Cantidad_avance = "";
+                                        nuevasFilas[index].avance = "0";
                                     }
                                     setDataDetalleAreaTrabajo(nuevasFilas);
                                 }}
@@ -591,10 +599,10 @@ return (
                                 placeholder='Color'
                                 style={{ height:40, width: width * 0.30 }}
                                 mode='outlined'
-                                value={fila.Comentario}
+                                value={fila.comentario}
                                 onChangeText={(text) => {
                                     const nuevasFilas = [...dataDetalleAreaTrabajo];
-                                    nuevasFilas[index].Comentario = text;
+                                    nuevasFilas[index].comentario = text;
                                     setDataDetalleAreaTrabajo(nuevasFilas);
                                 }}
                             />
