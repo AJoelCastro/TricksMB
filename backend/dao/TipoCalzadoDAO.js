@@ -1,6 +1,17 @@
 const db = require('../config/db');
 
 class TipoCalzadoDAO{
+
+    static async createTipoModelo(nombre){
+        try{
+            const query = `INSERT INTO Tipo (Nombre) VALUES (?)`;
+            const [rows] = await db.execute(query, [nombre]);
+            return {idTipo: rows.insertId, nombre};
+        } catch(error){
+            console.error("Errror al crear el tipo de calzado", error);
+            throw error;
+        }
+    }
     static async getAllTipoCalzado(){
         try{
             const query = 'SELECT * FROM Tipo';

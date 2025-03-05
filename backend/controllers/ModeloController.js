@@ -2,6 +2,17 @@ const ModeloService = require('../services/ModeloService');
 
 const ModeloController = {
 
+    async createModelo(req, res) {
+        try {
+            const { idTipo, nombre, imagen } = req.body;
+            const modelo = await ModeloService.createModelo(idTipo, nombre, imagen);
+            return res.status(201).json(modelo);
+        } catch (error) {
+            console.error("Error al crear modelo:", error);
+            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+        }
+    },
+
     async getAllModelo(req, res) {
         try {
             const modelos = await ModeloService.getAllModelo();
