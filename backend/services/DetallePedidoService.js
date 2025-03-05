@@ -86,6 +86,15 @@ const DetallePedidoService = {
             if (error.status) throw error;
             throw { status: 500, message: "Error en DetallePedidoService", detalle: error.message };
         }
+    },
+
+    async getAllDetallePedido(){
+        try{
+            return await DetallePedidoDAO.getAllDetallePedido();
+        } catch(error){
+            if(error.status) throw error;
+            throw {status: 500, message: "Error en DetallePedidoService", detalle: error.message};
+        }
     }
 };
 
