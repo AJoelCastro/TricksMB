@@ -20,7 +20,7 @@ import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 const { width } = Dimensions.get('window');
 const Corte = () => {
     const {codigoOrden} = useLocalSearchParams();
-    console.log(codigoOrden);
+    console.log("aaa",codigoOrden);
     const getFechaActualizacion= () => {
                 const date = new Date();
                 const year = date.getFullYear();
@@ -228,40 +228,46 @@ const Corte = () => {
             color: item.Color,
         }));
     };
-    const cargarDetallePedido = async () => {
-        try {
-            const data = await DetallePedidoService.obtenerDetallePedido(codigoPedido);
-            setIdDetallePedido(data.idDetalle_pedido);
-            setAccesorios(data.Accesorios);
-            setTallaTaco(data.Altura_taco);
-            let fecha = new Date(data.Fecha_creacion);
-            setCurrentDate(fecha.toISOString().split("T")[0]);
-            setForro(data.Forro);
-            setMaterial(data.Material);
-            setNombreTaco(data.Nombre_taco);
-            setSuela(data.Suela);
-            setTipoMaterial(data.Tipo_material);
-            const dataTipoCalzado = await TipoCalzadoService.getTipoCalzadoByCodigoPedido(codigoPedido);
-            setTipoCalzado(dataTipoCalzado.Nombre);
-            const dataModelo = await ModeloService.getModeloByCodigoPedido(codigoPedido);
-            setModelo(dataModelo.Nombre);
-            const dataPedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
-            setSelectSerieInicio(dataPedido.Serie_inicio);
-            setSelectSerieFin(dataPedido.Serie_final);
-            setFechaEntrega(new Date(dataPedido.Fecha_entrega));
-            const dataCliente = await ClienteService.getClienteByCodigoPedido(codigoPedido);
-            setTipoCliente(dataCliente.Tipo_cliente);
-            setCliente(dataCliente);
-            let idDetallePedido=data.idDetalle_pedido;
-            const dataCaracteristicas = await CaracteristicasService.getAllCaracteristicasById(idDetallePedido);
-            const filasTransformadas = transformarDatos(dataCaracteristicas);
-            setFilas(filasTransformadas);
-        } catch (error) {
-            console.error("Error al obtener el pedido:", error);
-            set
-            Alert.alert("Error", "Hubo un problema al obtener el pedido.");
-        }
-    };
+    useEffect(() => {
+        const cargarDetallePedido = async () => {
+            try {
+                let codigoPedido = codigoOrden
+                const data = await DetallePedidoService.obtenerDetallePedido(codigoPedido);
+                setIdDetallePedido(data.idDetalle_pedido);
+                setAccesorios(data.Accesorios);
+                setTallaTaco(data.Altura_taco);
+                let fecha = new Date(data.Fecha_creacion);
+                setCurrentDate(fecha.toISOString().split("T")[0]);
+                setForro(data.Forro);
+                setMaterial(data.Material);
+                setNombreTaco(data.Nombre_taco);
+                setSuela(data.Suela);
+                setTipoMaterial(data.Tipo_material);
+                const dataTipoCalzado = await TipoCalzadoService.getTipoCalzadoByCodigoPedido(codigoPedido);
+                setTipoCalzado(dataTipoCalzado.Nombre);
+                const dataModelo = await ModeloService.getModeloByCodigoPedido(codigoPedido);
+                setModelo(dataModelo.Nombre);
+                const dataPedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
+                setSelectSerieInicio(dataPedido.Serie_inicio);
+                setSelectSerieFin(dataPedido.Serie_final);
+                setFechaEntrega(new Date(dataPedido.Fecha_entrega));
+                const dataCliente = await ClienteService.getClienteByCodigoPedido(codigoPedido);
+                setTipoCliente(dataCliente.Tipo_cliente);
+                setCliente(dataCliente);
+                let idDetallePedido=data.idDetalle_pedido;
+                const dataCaracteristicas = await CaracteristicasService.getAllCaracteristicasById(idDetallePedido);
+                const filasTransformadas = transformarDatos(dataCaracteristicas);
+                setFilas(filasTransformadas);
+            } catch (error) {
+                console.error("Error al obtener el pedido:", error);
+                set
+                Alert.alert("Error", "Hubo un problema al obtener el pedido.");
+            }
+        };
+        cargarDetallePedido();
+    }, [])
+    
+    
     const updatePedido = async () =>{
         try {
             let estado = true;
@@ -319,17 +325,7 @@ return (
     >
         <ScrollView className='mx-4 gap-2'>
             <SafeAreaView>
-                <TextInput
-                    label={"Codigo de Pedido"}
-                    value={codigoPedido}
-                    onChangeText={setCodigoPedido}
-                    right={
-                        <TextInput.Icon size={22} icon={"magnify"} onPress={cargarDetallePedido}/>
-                    }
-                    placeholder='Ingrese el codigo de pedido'
-                    mode='outlined'
-                >
-                </TextInput>
+                
                 { tipoCliente==="natural" &&(
                     <View className='gap-2 mb-2'>
                         <View className='flex-col'>

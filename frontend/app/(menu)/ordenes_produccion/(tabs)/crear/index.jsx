@@ -190,7 +190,7 @@ export default function crear() {
             }
         }
         cargarTipoCalzado();
-    }, [])
+    },[]);
 
     useEffect(() => {
         if (tipoCliente === "natural" && dni) {
