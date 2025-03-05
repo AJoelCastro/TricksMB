@@ -45,7 +45,7 @@ app.use('/pedido',pedidoRoutes);
 app.use('/caracteristicas',caracteristicasRoutes);
 app.use('/modelo', modeloRoutes);
 app.use('/tipoCalzado', tipoCalzadoRoutes);
-app.use("/detalleAreaTrabajo", DetalleAreaTrabajoRoutes);
+app.use('/detalleAreaTrabajo', DetalleAreaTrabajoRoutes);
 app.use('/empleado', Empleado);
 app.use('/areaTrabajo', AreaTrabajoRoutes);
 // Manejo de rutas no encontradas
