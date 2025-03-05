@@ -1,6 +1,7 @@
 const db = require('../config/db');
 
 class AreaTrabajoDAO{
+    
     static async createAreaTrabajo(Nombre){
         try{
             const query = 'INSERT INTO Area_trabajo (Nombre) VALUES (?)';

@@ -2,6 +2,18 @@ const TipoCalzadoService = require('../services/TipoCalzadoService');
 
 const TipoCalzadoController = {
 
+
+    async createTipoModelo(req, res) {
+        try {
+            const { nombre } = req.body;
+            const tipoCalzado = await TipoCalzadoService.createTipoModelo(nombre);
+            return res.status(201).json(tipoCalzado);
+        } catch (error) {
+            console.error("Error al crear tipo de calzado:", error);
+            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+        }
+    },
+
     async getAllTipoCalzado(req, res) {
         try {
             const tipoCalzado = await TipoCalzadoService.getAllTipoCalzado();
