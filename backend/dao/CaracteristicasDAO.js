@@ -52,6 +52,17 @@ class CaracteristicasDAO {
             throw error;
         }
     }
+
+    static async getCaracteristicaByIdCaracteristicas(idCaracteristicas){
+        try{
+            const query = 'SELECT Cantidad FROM Caracteristicas WHERE idCaracteristicas = ?';
+            const [result] = await db.execute(query, [idCaracteristicas]);
+            console.log(result);
+            return result;
+        }catch(error){
+            throw error;
+        }
+    }
 }
 
 module.exports = CaracteristicasDAO;

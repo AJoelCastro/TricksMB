@@ -47,7 +47,16 @@ const CaracteristicasService = {
         }catch(error){
             throw error;
         }
-    }
+    },
+
+    async getCaracteristicaByIdCaracteristicas(idCaracteristicas){
+        try{
+            if(!idCaracteristicas) throw {status: 400, message: "Parametros incorrectos"};
+            return await CaracteristicasDAO.getCaracteristicaByIdCaracteristicas(idCaracteristicas);
+        }catch(error){
+            throw error;
+        }
+    },
 }
 
 module.exports = CaracteristicasService;

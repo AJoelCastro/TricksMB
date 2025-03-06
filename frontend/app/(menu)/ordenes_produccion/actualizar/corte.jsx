@@ -221,6 +221,7 @@ const Corte = () => {
         setFechaEntrega(new Date());
         setFilas([]);
         setDataDetalleAreaTrabajo([]);
+        setImagen([]);
     };
     const transformarDatos = (data) => {
         return data.map((item) => ({
@@ -232,7 +233,7 @@ const Corte = () => {
     };
     const transformarDatosDetalleAreaTrabajo = (data) => {
         return data.map((item) => ({
-            id: item.idDetalle_areaTrabajo, // Generar un ID único
+            id: item.Caracteristicas_idCaracteristicas, // Generar un ID único
             avance: item.Cantidad_avance.toString(), // Convertir a string
             comentario: item.Comentario,
         }));
@@ -280,22 +281,31 @@ const Corte = () => {
     
     const updatePedido = async () =>{
         try {
-            
+            let info=true;
+
             for (const fila of dataDetalleAreaTrabajo) {
+                let state = null;
                 let idCaracteristicas = Number(fila.id);
+                const data = await CaracteristicasService.getCaracteristicaByIdCaracteristicas(idCaracteristicas);
+                if(Number(fila.avance) === Number(data[0].Cantidad)){
+                    state = 1;
+                }
+                else {
+                    state = 0;
+                }
                 let datos = {
-                    avance: Number(fila.avance),
-                    comentario: fila.comentario
+                    cantidadAvance: Number(fila.avance),
+                    comentario: fila.comentario,
+                    estado : state
                 }
                 const editarDAT= await DetalleAreaTrabajoService.updatePedido(idCaracteristicas, datos);
                 if (!editarDAT) {
                     console.error("Característica vacias o nulas:", datos);
-                    estado = false;
+                    info = false;
                     return;
                 }
             }
-            if (estado === false) {
-                console.log("Error al editar pedido");
+            if (info === false) {
                 Alert.alert("Error", "Hubo un problema al actualizar el pedido.");
                 return ;
             }
@@ -312,6 +322,7 @@ const Corte = () => {
             try {
                 let codigoPedido = codigoOrden
                 const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
+                console.log("data",data);
                 const filasTransformadas = transformarDatosDetalleAreaTrabajo(data);
                 setDataDetalleAreaTrabajo(filasTransformadas);
             }
@@ -556,7 +567,6 @@ return (
                             />
                         </View>
                     ))}
-                    {console.log(dataDetalleAreaTrabajo)}
                     </View>
                 </View>
                 <Text className='font-bold mt-4 text-lg mx-auto'>

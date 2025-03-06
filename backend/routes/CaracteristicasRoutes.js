@@ -7,5 +7,6 @@ router.post('/crear', authMiddleware, CaracteristicasController.createCaracteris
 router.get('/todos/:idDetallePedido', authMiddleware, CaracteristicasController.getCaracteristicas);
 router.put('/editar', authMiddleware, CaracteristicasController.editCaracteristicas);
 router.delete('/eliminar/:idCaracteristicas', authMiddleware, CaracteristicasController.deleteCaracteristicas);
+router.get('/buscar/:idCaracteristicas', authMiddleware, CaracteristicasController.getCaracteristica);
 
 module.exports = router;
