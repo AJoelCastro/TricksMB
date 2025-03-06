@@ -277,36 +277,28 @@ const Corte = () => {
     
     const updatePedido = async () =>{
         try {
-            let estado = true;
-            let datosPedido = {
-                nombreTaco, alturaTaco: tallaTaco, material, tipoMaterial, suela, accesorios, forro
-            }
-            for (const fila of filas) {
-                let datosCaracteristicas = {
-                    idCaracteristicas: fila.id,
-                    talla: Number(fila.talla),
-                    cantidad: Number(fila.pares),
-                    color: fila.color
+            
+            for (const fila of dataDetalleAreaTrabajo) {
+                let idCaracteristicas = Number(fila.id);
+                let datos = {
+                    avance: Number(fila.avance),
+                    comentario: fila.comentario
                 }
-                const editarCaracteristicas = await CaracteristicasService.editCaracteristicas(datosCaracteristicas);
-                if (!editarCaracteristicas) {
-                    console.error("Característica vacias o nulas:", datosCaracteristicas);
+                const editarDAT= await DetalleAreaTrabajoService.updatePedido(idCaracteristicas, datos);
+                if (!editarDAT) {
+                    console.error("Característica vacias o nulas:", datos);
                     estado = false;
                     return;
                 }
             }
             if (estado === false) {
                 console.log("Error al editar pedido");
+                Alert.alert("Error", "Hubo un problema al actualizar el pedido.");
                 return ;
             }
-            let codigoPedido = codigoOrden;
-            const actualizar = await DetallePedidoService.updateDetallePedido(codigoPedido, datosPedido);
-            
-            if (actualizar) {
+            else {
                 Alert.alert("Pedido actualizado", "El pedido se ha actualizado correctamente.");
                 resetearCampos();
-            }else{
-                Alert.alert("Error", "Hubo un problema al actualizar el pedido.");
             }
         }catch (error) {
             console.error("Error al actualizar pedido:", error);
