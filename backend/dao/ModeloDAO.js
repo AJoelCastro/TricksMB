@@ -2,11 +2,11 @@ const db = require('../config/db');
 
 class ModeloDAO{
 
-    static async createModelo(idTipo, nombre, imagen){
+    static async createModelo(idTipo, nombre){
         try{
-            const query = `INSERT INTO Modelo (Tipo_idTipo, Nombre, Imagen) VALUES (?, ?, ?)`;
-            const [rows] = await db.execute(query,[idTipo, nombre, imagen])
-            return {idModelo: rows.insertId, idTipo, nombre, imagen};
+            const query = `INSERT INTO Modelo (Tipo_idTipo, Nombre) VALUES (?, ?)`;
+            const [rows] = await db.execute(query,[idTipo, nombre])
+            return {idModelo: rows.insertId, idTipo, nombre};
         }catch(error){
                 console.error("Error al crear el modelo",error);
                 throw error;
