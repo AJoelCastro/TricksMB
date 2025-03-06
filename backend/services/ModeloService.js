@@ -2,12 +2,11 @@ const ModeloDAO = require('../dao/ModeloDAO');
 
 const ModeloService = {
 
-    async createModelo(idTipo, nombre, imagen){
+    async createModelo(idTipo, nombre){
         try{
             if (!idTipo) throw { status: 400, message: "idTipo requerido" };
             if(!nombre) throw {status: 400, message: "nombre requerido"};
-            if(!imagen) throw {status: 400, message: "imagen requerido"};
-            return await ModeloDAO.createModelo(idTipo, nombre, imagen);
+            return await ModeloDAO.createModelo(idTipo, nombre);
         }catch(error){
             if(error.status) throw error;
             throw {status: 500, message: "Error en ModeloService", detalle: error.message};

@@ -4,8 +4,8 @@ const ModeloController = {
 
     async createModelo(req, res) {
         try {
-            const { idTipo, nombre, imagen } = req.body;
-            const modelo = await ModeloService.createModelo(idTipo, nombre, imagen);
+            const { idTipo, nombre } = req.body;
+            const modelo = await ModeloService.createModelo(idTipo, nombre);
             return res.status(201).json(modelo);
         } catch (error) {
             console.error("Error al crear modelo:", error);
