@@ -81,6 +81,17 @@ class DetallePedidoDAO {
             throw error;
         }
     }
+
+    static async getAllDetallePedido(){
+        try{
+            const query = `SELECT * FROM Detalle_pedido`
+            const [rows] = await db.execute(query);
+            return rows;
+        } catch(error){
+            console.error("Error al obtener todos los pedidos",error);
+            throw error;
+        }
+    }
 }
 
 module.exports = DetallePedidoDAO;

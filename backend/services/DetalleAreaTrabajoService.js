@@ -46,7 +46,7 @@ const DetalleAreaTrabajoService = {
                 DetalleAreaTrabajoDAO.getDetalleAreaTrabajo(caracteristica.idCaracteristicas)
                 )
             );
-
+            console.log("Detalles area trabajo",detallesAreaTrabajo);
             return detallesAreaTrabajo.flat();
         } catch (error) {
             if (error.status) throw error;
