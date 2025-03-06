@@ -15,7 +15,7 @@ const DetalleAreaTrabajoController = {
         try {
             const {idCaracteristicas} = req.params;
             const { cantidadAvance, comentario, estado} = req.body;
-            
+            console.log("datos", idCaracteristicas, cantidadAvance, comentario, estado)
             const detalleAreaTrabajo = await DetalleAreaTrabajoService.updateDetalleAreaTrabajo(idCaracteristicas, cantidadAvance, comentario, estado);
             return res.status(200).json(detalleAreaTrabajo);
         } catch (error) {

@@ -58,6 +58,19 @@ const CaracteristicasService = {
             console.error("(CaracteristicasService) Error al eliminar caracteristicas: ", error.response?.data || error.message);
             throw error;
         }
-    }
+    },
+    getCaracteristicaByIdCaracteristicas : async (idCaracteristicas) => {
+        const token = await AuthService.getToken();
+        if (!token) throw new Error("No hay token disponible");
+        try {
+            const response = await axios.get(`${API_URL}/caracteristicas/buscar/${idCaracteristicas}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("(CaracteristicasService) Error al obtener caracteristicas: ", error.response?.data || error.message);
+            throw error;
+        }
+    },
 }
 export default CaracteristicasService;

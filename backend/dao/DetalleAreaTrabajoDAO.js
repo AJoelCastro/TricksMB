@@ -31,7 +31,7 @@ class DetalleAreaTrabajoDAO{
     static async updateDetalleAreaTrabajo(idCaracteristicas, cantidadAvance, comentario,estado){
         try{
             const query = `
-                UPDATE Detalle_area_trabajo SET
+                UPDATE detalle_areatrabajo SET
                     Cantidad_avance = ?, Comentario = ?, Estado = ?
                 WHERE Caracteristicas_idCaracteristicas = ?
             `;

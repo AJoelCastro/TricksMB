@@ -20,12 +20,13 @@ const DetalleAreaTrabajoService= {
         }
     },
     updatePedido : async (idCaracteristicas,datos) =>{
+        console.log("datos",datos, idCaracteristicas)
         try{
             const token = await AuthService.getToken();
             if(!token) throw new Error("No hay token disponible");
             
             const response = await axios.put(`${API_URL}/detalleAreaTrabajo/actualizar/${idCaracteristicas}`,datos,{
-                headers: {Authorization: `Bearer${token}`}
+                headers: {Authorization: `Bearer ${token}`}
             });
 
             return response.data;
