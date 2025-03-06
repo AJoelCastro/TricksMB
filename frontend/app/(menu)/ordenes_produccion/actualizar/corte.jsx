@@ -18,6 +18,7 @@ import PedidoService from '@/services/PedidoService';
 import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 
 const { width } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 const Corte = () => {
     const {codigoOrden} = useLocalSearchParams();
     const getFechaActualizacion= () => {
@@ -124,6 +125,7 @@ const Corte = () => {
     const [openDatePicker, setOpenDatePicker] = useState(false);
     const [idDetallePedido, setIdDetallePedido] = useState();
     const [dataDetalleAreaTrabajo, setDataDetalleAreaTrabajo] = useState([]);
+    const [imagen, setImagen] = useState([]);
     const getCurrentDate = () => {
         const date = new Date();
         return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
@@ -253,6 +255,7 @@ const Corte = () => {
                 const dataTipoCalzado = await TipoCalzadoService.getTipoCalzadoByCodigoPedido(codigoPedido);
                 setTipoCalzado(dataTipoCalzado.Nombre);
                 const dataModelo = await ModeloService.getModeloByCodigoPedido(codigoPedido);
+                setImagen(dataModelo);
                 setModelo(dataModelo.Nombre);
                 const dataPedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
                 setSelectSerieInicio(dataPedido.Serie_inicio);
@@ -371,70 +374,37 @@ return (
                     )
                 }
                 <View className='gap-2'>
-                    
-                    <ModalSelector
-                        data={dataTipoCalzado}
-                        keyExtractor={item => item.idTipo}
-                        labelExtractor={item => item.Nombre}
-                        accessible={true}
-                        onChange={(item)=>setTipoCalzado(item.Nombre)}
-                        supportedOrientations={['landscape']}
-                        cancelText='Cancelar'
-                        cancelStyle={styles.cancelButton}
-                        cancelTextStyle={styles.cancelText}
-                    >
-                        <TextInput
-                            editable={false}
-                            mode='outlined'
-                            label={"Tipo de calzado"}
-                            placeholder="Tipo de calzado"
-                            placeholderTextColor={"black"}
-                            value={tipoCalzado} 
-                        />
-                    </ModalSelector>
-                    <TouchableOpacity onPress={() => {setModalModeloVisible(true); cargarModelosPorId()}}>
-                        <TextInput
-                            label="Modelo"
-                            mode="outlined"
-                            value={modelo}
-                            editable={false}
-                        />
-                    </TouchableOpacity>
-                    <Modal visible={modalModeloVisible} transparent animationType="slide">
-                            
-                        {/* <Pressable onPress={()=>setModalModeloVisible(false)}> */}
-                            <View className='flex-1 my-6 pb-6 px-2'>
-                                <View className='flex-row justify-end p-3'>
-                                    <TouchableOpacity 
-                                        onPress={()=>setModalModeloVisible(false)}
-                                        className="bg-black/50 rounded-full p-2"
-                                    >
-                                        <Icon
-                                            name="close"
-                                            size={22}
-                                            color={"white"}
-                                        />
-                                    </TouchableOpacity>
-                                </View>
-                                <FlatList
-                                    data={dataModelos}
-                                    keyExtractor={(item) => item.idModelo}
-                                    renderItem={({ item }) => (
-                                        <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
-                                            <Card.Cover
-                                                style={{ height: 350, resizeMode: 'cover' }}
-                                                source={{ uri: item.Imagen }} />
-                                            <Card.Content>
-                                                <TouchableOpacity onPress={()=>{setModelo(item.Nombre); setModalModeloVisible(false)}}>
-                                                    <Text variant="titleMedium">{item.Nombre}</Text>
-                                                </TouchableOpacity>
-                                            </Card.Content>
-                                        </Card>
-                                    )}
+                    <View className='flex-row justify-between'>
+                        {/* IMAGEN */}
+                        <View className='w-[30%]'>
+                            <Card style={{ borderRadius: 10 }}>
+                                <Card.Cover
+                                    style={{ height: height*0.6, resizeMode: 'contain' }}
+                                    source={{ uri: imagen.Imagen }} />
+                                <Card.Content>
+                                    <Text variant="titleMedium">{imagen.Nombre}</Text>
+                                </Card.Content>
+                            </Card>
+                        </View>
+                        <View className='w-[48%] '>
+                            <View className=' '>
+                                <TextInput
+                                    editable={false}
+                                    mode='outlined'
+                                    label={"Tipo de calzado"}
+                                    value={tipoCalzado} 
                                 />
                             </View>
-                        {/* </Pressable> */}
-                    </Modal>
+                            <View className=' '>
+                                <TextInput
+                                    label="Modelo"
+                                    mode="outlined"
+                                    value={modelo}
+                                    editable={false}
+                                />
+                            </View>
+                        </View>
+                    </View>
                     <TextInput
                         mode='outlined'
                         label="Fecha de creacion"
@@ -447,22 +417,8 @@ return (
                         mode='outlined'
                         value={fechaEntrega.toISOString().split("T")[0]}
                         editable={false}
-                        right={<TextInput.Icon icon="calendar" onPress={() => setOpenDatePicker(!openDatePicker)}/>}
+                        right={<TextInput.Icon icon="calendar" />}
                     />
-                    {openDatePicker && (
-                        <View className='bg-[#151718]'>
-                            <DateTimePicker
-                                value={fechaEntrega}
-                                mode="date"
-                                display={Platform.OS === "ios" ? "spinner" : "default"}
-                                onChange={(event, selectedDate) => {
-                                    setOpenDatePicker(false);
-                                    if (selectedDate) setFechaEntrega(selectedDate);
-                                }}
-                            />
-                        </View>
-                        )
-                    }
                 </View>
                 <View className='flex mt-4 mb-4 gap-5'>
                     <View className='flex-row items-center gap-4'>
