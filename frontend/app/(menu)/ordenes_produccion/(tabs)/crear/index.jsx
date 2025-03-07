@@ -165,15 +165,30 @@ export default function crear() {
         try {
             let id = tipoCalzado.idTipo;
             const modelos = await ModeloService.getAllModeloById(id);
+            const obteniendoImagenes = await Promise.all(
+                modelos.map(async (modelo) => {
+                    let idModelo = modelo.idModelo;
+                    const imagen = await ModeloService.getImagenById(idModelo);
+                    if (!imagen) {
+                        console.error("No se encontraron las imagenes");
+                        return {...modelo, imagenes:[]};
+                    }
+                    return {...modelo, imagenes: imagen.map(img => img.Url)};
+                    
+                })
+            )
+            console.log("img",obteniendoImagenes);
             if (!modelos) {
                 console.error("No se encontraron los modelos por ID");
                 return;
             }
-            setDataModelos(modelos);
+            setDataModelos(obteniendoImagenes);
+        
         } catch (error) {
             console.error("Error cargando modelos por ID:", error);
         }
     };
+
         
     useEffect(() => {
         const cargarTipoCalzado = async () => {
@@ -263,7 +278,6 @@ export default function crear() {
                     return;
                 }
             }
-            console.log(codigoOrden)
             Alert.alert("Orden creada correctamente: ", codigoOrden);
             resetearCampos();
         } catch (error) {
@@ -280,7 +294,9 @@ export default function crear() {
             console.error("Error al crear el pedido:", error);
             Alert.alert("Error", "Hubo un problema al crear el pedido.");
         }
-    };
+    }; 
+
+
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -343,7 +359,7 @@ export default function crear() {
                             value={tipoCalzado.Nombre} 
                         />
                     </ModalSelector>
-                    <TouchableOpacity onPress={() => {setModalModeloVisible(true); cargarModelosPorId()}}>
+                    <TouchableOpacity onPress={() => {setModalModeloVisible(true); cargarModelosPorId();}}>
                         <TextInput
                             label="Modelo"
                             mode="outlined"
@@ -374,7 +390,7 @@ export default function crear() {
                                         <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
                                             <Card.Cover
                                                 style={{ height: 350, resizeMode: 'cover' }}
-                                                source={{ uri: item.Imagen }} />
+                                                source={{ uri: item.imagenes[0] }} />
                                             <Card.Content>
                                                 <TouchableOpacity onPress={()=>{setModelo(item.Nombre); setModalModeloVisible(false)}}>
                                                     <Text variant="titleMedium">{item.Nombre}</Text>
@@ -409,8 +425,7 @@ export default function crear() {
                                 onChange={(event, selectedDate) => {
                                     setOpenDatePicker(false);
                                     if (selectedDate) setFechaEntrega(selectedDate);
-                                    console.log(selectedDate);
-                                    console.log(currentDate)
+                                    
                                 }}
                             />
                         </View>

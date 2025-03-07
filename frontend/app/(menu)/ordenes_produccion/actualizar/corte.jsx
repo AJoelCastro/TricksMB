@@ -104,7 +104,7 @@ const Corte = () => {
         { key: "40", label: "Talla 40" },
     ];
     const [cliente, setCliente] = useState("");
-    const [modelo, setModelo] = useState("");
+    const [modelo, setModelo] = useState([]);
     const [selectSerieInicio, setSelectSerieInicio] = useState("");
     const [selectSerieFin, setSelectSerieFin] = useState("");
     const [tipoCliente, setTipoCliente] = useState("");
@@ -125,7 +125,6 @@ const Corte = () => {
     const [openDatePicker, setOpenDatePicker] = useState(false);
     const [idDetallePedido, setIdDetallePedido] = useState();
     const [dataDetalleAreaTrabajo, setDataDetalleAreaTrabajo] = useState([]);
-    const [imagen, setImagen] = useState([]);
     const getCurrentDate = () => {
         const date = new Date();
         return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
@@ -167,6 +166,7 @@ const Corte = () => {
         try {
             let id = tipoCalzado.idTipo;
             const modelos = await ModeloService.getAllModeloById(id);
+            
             if (!modelos) {
                 console.error("No se encontraron los modelos por ID");
                 return;
@@ -204,7 +204,7 @@ const Corte = () => {
 
     const resetearCampos = () => {
         setCliente("");
-        setModelo("");
+        setModelo([]);
         setSelectSerieInicio("");
         setSelectSerieFin("");
         setTipoCliente("");
@@ -221,7 +221,6 @@ const Corte = () => {
         setFechaEntrega(new Date());
         setFilas([]);
         setDataDetalleAreaTrabajo([]);
-        setImagen([]);
     };
     const transformarDatos = (data) => {
         return data.map((item) => ({
@@ -256,8 +255,20 @@ const Corte = () => {
                 const dataTipoCalzado = await TipoCalzadoService.getTipoCalzadoByCodigoPedido(codigoPedido);
                 setTipoCalzado(dataTipoCalzado.Nombre);
                 const dataModelo = await ModeloService.getModeloByCodigoPedido(codigoPedido);
-                setImagen(dataModelo);
-                setModelo(dataModelo.Nombre);
+                if (dataModelo) {
+                        let idModelo = dataModelo.idModelo;
+                        const imagen = await ModeloService.getImagenById(idModelo);
+                        if (!imagen) {
+                            console.error("No se encontraron las imagenes");
+                            return {...dataModelo, imagenes:[]};
+                        }
+                        const dataImagenes = {
+                            ...dataModelo,
+                            imagenes: imagen.map(img => img.Url)
+                        }
+                        console.log("dataModelo",dataImagenes);
+                        setModelo(dataImagenes);
+                }
                 const dataPedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
                 setSelectSerieInicio(dataPedido.Serie_inicio);
                 setSelectSerieFin(dataPedido.Serie_final);
@@ -322,7 +333,6 @@ const Corte = () => {
             try {
                 let codigoPedido = codigoOrden
                 const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
-                console.log("data",data);
                 const filasTransformadas = transformarDatosDetalleAreaTrabajo(data);
                 setDataDetalleAreaTrabajo(filasTransformadas);
             }
@@ -332,7 +342,7 @@ const Corte = () => {
         };
         obtenerDetalleAreaTrab();
     }, []);
-
+console.log("modelo",modelo);
 return (
     <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -391,10 +401,10 @@ return (
                             <Card style={{ borderRadius: 10 }}>
                                 <Card.Cover
                                     style={{ height: height*0.6, resizeMode: 'contain' }}
-                                    source={{ uri: imagen.Imagen }} />
+                                    source={{ uri: modelo?.imagenes?.[0] }} />
                                 <Card.Content>
-                                    <Text variant="titleMedium">{imagen.Nombre}</Text>
-                                </Card.Content>
+                                    <Text variant="titleMedium">{modelo.Nombre}</Text>
+                                </Card.Content> 
                             </Card>
                         </View>
                         <View className='w-[48%] '>
@@ -410,7 +420,7 @@ return (
                                 <TextInput
                                     label="Modelo"
                                     mode="outlined"
-                                    value={modelo}
+                                    value={modelo.Nombre}
                                     editable={false}
                                 />
                             </View>
@@ -435,24 +445,15 @@ return (
                     <View className='flex-row items-center gap-4'>
                         <Text className='font-bold'>Serie Inicio</Text>
                         <View className='h-8 bg-gray-100 border-l-2 items-center justify-center w-[30%]'>
-                            <ModalSelector
-                                data={opcionesSerieInicio}
-                                accessible={true}
-                                onChange={(talla)=>setSelectSerieInicio(talla.key)}
-                                supportedOrientations={['landscape']}
-                                cancelText='Cancelar'
-                                cancelStyle={styles.cancelButton}
-                                cancelTextStyle={styles.cancelText}
-                            >
-                                <TextInput
-                                editable={false}
-                                style={{ height: 40 }} 
-                                placeholder="Talla"
-                                placeholderTextColor={"black"}
-                                value={selectSerieInicio? `${selectSerieInicio}`: selectSerieInicio} 
-                                className='bg-gray-200 rounded-lg font-bold w-full'
-                                />
-                            </ModalSelector>
+
+                            <TextInput
+                            editable={false}
+                            style={{ height: 40 }} 
+                            placeholder="Talla"
+                            placeholderTextColor={"black"}
+                            value={selectSerieInicio? `${selectSerieInicio}`: selectSerieInicio} 
+                            className='bg-gray-200 rounded-lg font-bold w-full'
+                            />
                             
                         </View>
                         
@@ -460,24 +461,14 @@ return (
                     <View className='flex-row items-center gap-4'>
                         <Text className='font-bold'>Serie Fin     </Text>
                         <View className='h-8 bg-gray-100 border-l-2 items-center justify-center w-[30%]'>
-                            <ModalSelector
-                                data={opcionesSerieFin}
-                                accessible={true}
-                                onChange={(talla)=>setSelectSerieFin(talla.key)}
-                                supportedOrientations={['landscape']}
-                                cancelText='Cancelar'
-                                cancelStyle={styles.cancelButton}
-                                cancelTextStyle={styles.cancelText}
-                            >
-                                <TextInput
-                                    editable={false}
-                                    style={{ height: 40 }} 
-                                    placeholder="Talla"
-                                    placeholderTextColor={"black"}
-                                    value={selectSerieFin? `${selectSerieFin}`: selectSerieFin} 
-                                    className='bg-gray-200 rounded-lg font-bold w-full'
-                                />
-                            </ModalSelector>
+                            <TextInput
+                                editable={false}
+                                style={{ height: 40 }} 
+                                placeholder="Talla"
+                                placeholderTextColor={"black"}
+                                value={selectSerieFin? `${selectSerieFin}`: selectSerieFin} 
+                                className='bg-gray-200 rounded-lg font-bold w-full'
+                            />
                             
                         </View>
                     </View>
@@ -499,6 +490,7 @@ return (
                                     nuevasFilas[index].talla = text;
                                     setFilas(nuevasFilas);
                                 }}
+                                editable={false}
                             />
                             
                             <TextInput
@@ -514,6 +506,7 @@ return (
                                     nuevasFilas[index].pares = text;
                                     setFilas(nuevasFilas);
                                 }}
+                                editable={false}
                             />
                             
                             <TextInput
@@ -528,6 +521,7 @@ return (
                                     nuevasFilas[index].color = text;
                                     setFilas(nuevasFilas);
                                 }}
+                                editable={false}
                             />
                         </View>
                     ))}
@@ -555,7 +549,7 @@ return (
                             />
                             <TextInput
                                 label={"Comentario"}
-                                placeholder='Color'
+                                placeholder='Comentario'
                                 style={{ height:40, width: width * 0.30 }}
                                 mode='outlined'
                                 value={fila.comentario}
@@ -582,6 +576,7 @@ return (
                         value={nombreTaco}
                         onChangeText={setNombreTaco}
                         className='rounded-lg h-10'
+                        editable={false}
                         
                     />
                 </View>
@@ -589,58 +584,35 @@ return (
                     <Text className='font-bold'>
                         Altura de taco:
                     </Text>
-                    <ModalSelector
-                        data={opcionesTaco}
-                        accessible={true}
-                        onChange={(talla)=>setTallaTaco(talla.key)}
-                        supportedOrientations={['landscape']}
-                        cancelText='Cancelar'
-                        cancelStyle={styles.cancelButton}
-                        cancelTextStyle={styles.cancelText}
-                    >
-                        <TextInput
-                            editable={false}
-                            style={{ height:40 }}
-                            value={tallaTaco ? `Talla ${tallaTaco}` : 'Seleccione una talla'} 
-                            className='bg-gray-200 rounded-lg font-bold '
-                        />
-                    </ModalSelector>
+                    <TextInput
+                        editable={false}
+                        style={{ height:40 }}
+                        value={tallaTaco ? `Talla ${tallaTaco}` : 'Seleccione una talla'} 
+                        className='bg-gray-200 rounded-lg font-bold '
+                    />
                 </View>
                 <View className='gap-2 mt-2 mb-4'>
-                    <ModalSelector
-                        data={opcionesMaterial}
-                        accessible={true}
-                        onChange={(material)=>{setMaterial(material.label)}}
-                        supportedOrientations={['landscape']}
-                        cancelText='Cancelar'
-                    >
-                        <TextInput
-                            label={"Material"}
-                            mode='outlined'
-                            editable={false}
-                            value={material}
-                        />
-                    </ModalSelector>
-                    <ModalSelector
-                        data={opcionesTipoMaterial}
-                        accessible={true}
-                        onChange={(tipoMaterial)=>{setTipoMaterial(tipoMaterial.label)}}
-                        supportedOrientations={['landscape']}
-                        cancelText='Cancelar'
-                    >
-                        <TextInput
-                            label={"Tipo de Material"}
-                            mode='outlined'
-                            editable={false}
-                            value={tipoMaterial}
-                        />
-                    </ModalSelector>
+                    <TextInput
+                        label={"Material"}
+                        mode='outlined'
+                        editable={false}
+                        value={material}
+                    />
+                    
+                    <TextInput
+                        label={"Tipo de Material"}
+                        mode='outlined'
+                        editable={false}
+                        value={tipoMaterial}
+                    />
+                    
                     <TextInput
                         label={"Suela"}
                         mode='outlined'
                         value={suela}
                         placeholder='Suela'
                         onChangeText={setSuela}
+                        editable={false}
                     />
                     <TextInput
                         label={"Accesorios"}
@@ -650,6 +622,7 @@ return (
                         value={accesorios}
                         placeholder='Digite los accesorios'
                         onChangeText={setAccesorios}
+                        editable={false}
                     />
                     <TextInput
                         label={"Forro"}
@@ -657,6 +630,7 @@ return (
                         value={forro}
                         onChangeText={setForro}
                         placeholder='Forro'
+                        editable={false}
                     />
                 </View>
                 <Button mode='contained-tonal'icon="note" buttonColor='#6969' textColor='#000' onPress={updatePedido}>
