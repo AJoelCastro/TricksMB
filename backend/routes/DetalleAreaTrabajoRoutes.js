@@ -5,5 +5,6 @@ const AreaTrabajoController = require('../controllers/DetalleAreaTrabajoControll
 
 router.get('/todos/:codigoPedido', authMiddleware, AreaTrabajoController.getDetalleAreaTrabajo);
 router.put('/actualizar/:idCaracteristicas', authMiddleware, AreaTrabajoController.updateDetalleAreaTrabajo);
+router.put('/actualizarAreaTrabjo/:codigoPedido',authMiddleware, AreaTrabajoController.updateidAreaTrabajo);
 
 module.exports = router;
