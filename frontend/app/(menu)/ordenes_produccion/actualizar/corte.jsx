@@ -233,8 +233,9 @@ const Corte = () => {
     const transformarDatosDetalleAreaTrabajo = (data) => {
         return data.map((item) => ({
             id: item.Caracteristicas_idCaracteristicas, // Generar un ID único
-            avance: item.Cantidad_avance.toString(), // Convertir a string
+            avance: "", 
             comentario: item.Comentario,
+            terminado: item.terminado.toString(),
         }));
     };
     useEffect(() => {
@@ -266,7 +267,6 @@ const Corte = () => {
                             ...dataModelo,
                             imagenes: imagen.map(img => img.Url)
                         }
-                        console.log("dataModelo",dataImagenes);
                         setModelo(dataImagenes);
                 }
                 const dataPedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
@@ -333,7 +333,11 @@ const Corte = () => {
             try {
                 let codigoPedido = codigoOrden
                 const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
-                const filasTransformadas = transformarDatosDetalleAreaTrabajo(data);
+                const dataExtra = data.map((item) => ({
+                    ...item,
+                    terminado: item.Cantidad_avance // Agrega la propiedad "terminado"
+                }));
+                const filasTransformadas = transformarDatosDetalleAreaTrabajo(dataExtra);
                 setDataDetalleAreaTrabajo(filasTransformadas);
             }
             catch (error) {
@@ -342,7 +346,6 @@ const Corte = () => {
         };
         obtenerDetalleAreaTrab();
     }, []);
-console.log("modelo",modelo);
 return (
     <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -473,94 +476,106 @@ return (
                         </View>
                     </View>
                 </View>
-                <View className='flex-row gap-2'>
-                    <View className='flex-1'>
-                    {filas.map((fila, index) => (
-                        <View key={fila.id} className='flex-row justify-between items-center  mb-2 w-full'>
-                            <TextInput
-                                label="Talla"
-                                className='rounded flex-1'
-                                keyboardType='numeric'
-                                placeholder='Talla'
-                                style={{ height:40, width: width * 0.10 }}
-                                mode='outlined'
-                                value={fila.talla}
-                                onChangeText={(text) => {
-                                    const nuevasFilas = [...filas];
-                                    nuevasFilas[index].talla = text;
-                                    setFilas(nuevasFilas);
-                                }}
-                                editable={false}
-                            />
-                            
-                            <TextInput
-                                label="Pares"
-                                className='rounded flex-1'
-                                placeholder='Pares'
-                                style={{ height:40, width: width * 0.10 }}
-                                mode='outlined'
-                                keyboardType='numeric'
-                                value={fila.pares}
-                                onChangeText={(text) => {
-                                    const nuevasFilas = [...filas];
-                                    nuevasFilas[index].pares = text;
-                                    setFilas(nuevasFilas);
-                                }}
-                                editable={false}
-                            />
-                            
-                            <TextInput
-                                label="Color"
-                                className='rounded flex-1'
-                                placeholder='Color'
-                                style={{ height:40, width: width * 0.20 }}
-                                mode='outlined'
-                                value={fila.color}
-                                onChangeText={(text) => {
-                                    const nuevasFilas = [...filas];
-                                    nuevasFilas[index].color = text;
-                                    setFilas(nuevasFilas);
-                                }}
-                                editable={false}
-                            />
-                        </View>
-                    ))}
+                <View className='flex-row w-[92%]'>
+                    <View className='flex-1 w'>
+                        {filas.map((fila, index) => (
+                            <View key={fila.id} className='flex-row gap-2 mb-2 '>
+                                <TextInput
+                                    label="Talla"
+                                    className='rounded flex-1'
+                                    keyboardType='numeric'
+                                    placeholder='Talla'
+                                    style={{ height:40, width: width * 0.10 }}
+                                    mode='outlined'
+                                    value={fila.talla}
+                                    onChangeText={(text) => {
+                                        const nuevasFilas = [...filas];
+                                        nuevasFilas[index].talla = text;
+                                        setFilas(nuevasFilas);
+                                    }}
+                                    editable={false}
+                                />
+                                
+                                <TextInput
+                                    label="Pares"
+                                    className='rounded flex-1'
+                                    placeholder='Pares'
+                                    style={{ height:40, width: width * 0.10 }}
+                                    mode='outlined'
+                                    keyboardType='numeric'
+                                    value={fila.pares}
+                                    onChangeText={(text) => {
+                                        const nuevasFilas = [...filas];
+                                        nuevasFilas[index].pares = text;
+                                        setFilas(nuevasFilas);
+                                    }}
+                                    editable={false}
+                                />
+                                
+                                <TextInput
+                                    label="Color"
+                                    className='rounded flex-1'
+                                    placeholder='Color'
+                                    style={{ height:40, width: width * 0.18 }}
+                                    mode='outlined'
+                                    value={fila.color}
+                                    onChangeText={(text) => {
+                                        const nuevasFilas = [...filas];
+                                        nuevasFilas[index].color = text;
+                                        setFilas(nuevasFilas);
+                                    }}
+                                    editable={false}
+                                />
+                            </View>
+                        ))}
                     </View>
                     <View className='flex-1'>
-                    {dataDetalleAreaTrabajo.map((fila, index) => (
-                        <View key={fila.id} className='flex-row justify-between items-center  mb-2 w-full'>
-                            <TextInput
-                                label={"Avance"}
-                                placeholder='Color'
-                                style={{ height:40, width: width * 0.10 }}
-                                mode='outlined'
-                                value={fila.avance}
-                                keyboardType='numeric'
-                                onChangeText={(text) => {
-                                    const nuevasFilas = [...dataDetalleAreaTrabajo];
-                                    if (Number(text) <= Number(filas[index].pares)) {
-                                        nuevasFilas[index].avance = text;
-                                    } else {
-                                        alert("El avance no puede ser mayor a la cantidad de pares");
-                                        nuevasFilas[index].avance = "0";
-                                    }
-                                    setDataDetalleAreaTrabajo(nuevasFilas);
-                                }}
-                            />
-                            <TextInput
-                                label={"Comentario"}
-                                placeholder='Comentario'
-                                style={{ height:40, width: width * 0.30 }}
-                                mode='outlined'
-                                value={fila.comentario}
-                                onChangeText={(text) => {
-                                    const nuevasFilas = [...dataDetalleAreaTrabajo];
-                                    nuevasFilas[index].comentario = text;
-                                    setDataDetalleAreaTrabajo(nuevasFilas);
-                                }}
-                            />
-                        </View>
-                    ))}
+                        {dataDetalleAreaTrabajo.map((fila, index) => (
+                            
+                            <View key={fila.id} className='flex-row justify-between gap-2 mb-2 w-full'>
+                                <TextInput
+                                    label={"Terminado"}
+                                    placeholder='Color'
+                                    style={{ height:40, width: width * 0.10 }}
+                                    mode='outlined'
+                                    value={fila.terminado}
+                                    editable={false}
+                                />
+                                <TextInput
+                                    label={"Avance"}
+                                    placeholder='Avance'
+                                    style={{ height:40, width: width * 0.10 }}
+                                    mode='outlined'
+                                    value={fila.avance}
+                                    keyboardType='numeric'
+                                    onChangeText={(text) => {
+                                        const nuevasFilas = [...dataDetalleAreaTrabajo];
+                                        
+                                        if((Number(text) +Number(nuevasFilas[index].terminado)) > filas[index].pares){
+                                            alert("El  total no puede ser mayor a la cantidad de pares");
+                                            nuevasFilas[index].avance = "";
+                                        }
+                                        else{
+                                            nuevasFilas[index].avance = text;
+                                        }
+                                        
+                                        setDataDetalleAreaTrabajo(nuevasFilas);
+                                    }}
+                                />
+                                <TextInput
+                                    label={"Comentario"}
+                                    placeholder='Comentario'
+                                    style={{ height:40, width: width * 0.30 }}
+                                    mode='outlined'
+                                    value={fila.comentario}
+                                    onChangeText={(text) => {
+                                        const nuevasFilas = [...dataDetalleAreaTrabajo];
+                                        nuevasFilas[index].comentario = text;
+                                        setDataDetalleAreaTrabajo(nuevasFilas);
+                                    }}
+                                />
+                            </View>
+                        ))}
                     </View>
                 </View>
                 <Text className='font-bold mt-4 text-lg mx-auto'>
