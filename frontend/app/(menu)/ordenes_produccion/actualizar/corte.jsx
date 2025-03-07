@@ -298,14 +298,14 @@ const Corte = () => {
                 let state = null;
                 let idCaracteristicas = Number(fila.id);
                 const data = await CaracteristicasService.getCaracteristicaByIdCaracteristicas(idCaracteristicas);
-                if(Number(fila.avance) === Number(data[0].Cantidad)){
+                if((Number(fila.avance)+Number(fila.terminado)) === Number(data[0].Cantidad)){
                     state = 1;
                 }
                 else {
                     state = 0;
                 }
                 let datos = {
-                    cantidadAvance: Number(fila.avance),
+                    cantidadAvance: (Number(fila.avance)+Number(fila.terminado)),
                     comentario: fila.comentario,
                     estado : state
                 }
@@ -314,7 +314,7 @@ const Corte = () => {
                     console.error("Característica vacias o nulas:", datos);
                     info = false;
                     return;
-                }
+                } 
             }
             if (info === false) {
                 Alert.alert("Error", "Hubo un problema al actualizar el pedido.");
