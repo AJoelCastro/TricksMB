@@ -75,32 +75,46 @@ const DetalleAreaTrabajoService = {
         }
     },
 
-    async updateidAreaTrabajo(codigoPedido, nomArea){
+    async updateidAreaTrabajo(codigoPedido){
         try{
-            if (!codigoPedido) {
-                throw { status: 400, message: "Codigo de pedido es requerido" };
-            }
-            if (!nomArea) {
-                throw { status: 400, message: "Nombre de area es requerido" };
-            }
-            const DetallePedidoService = require('./DetallePedidoService');
-            const AreaTrabajoService = require('./AreaTrabajoService');
+            if (!codigoPedido) throw { status: 400, message: "Codigo de pedido es requerido" };
 
-            const {idDetalle_pedido} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
-            const caracteristicas = await CaracteristicasService.getCaracteristicasByIdDetallePedido(idDetalle_pedido);
-            const {idArea} = await AreaTrabajoService.getAreaTrabajoByNombre(nomArea);
+            const DetalleAreaTrabajo = await this.getDetalleAreaTrabajo(codigoPedido);
 
-            const detallesAreaTrabajo = await Promise.all(
-                caracteristicas.map((caracteristica) =>
-                DetalleAreaTrabajoDAO.updateidAreaTrabajo(idArea, caracteristica.idCaracteristicas)
-                )
-            );
-            return {message: "II: Se actualizo correctamente el area de trabajo", detallesAreaTrabajo};
+            if (!DetalleAreaTrabajo || DetalleAreaTrabajo.length === 0) 
+                throw { status: 404, message: "No se encontraron detalles del área de trabajo" };
+
+            const todosCompletos =  DetalleAreaTrabajo.every(detalle => detalle.estado === 1);
+
+            if(todosCompletos){
+                let nuevoIdAreaTrabajo;
+                const areaTrabajoActual = DetalleAreaTrabajo[0].idAreaTrabajo;
+
+                switch(areaTrabajoActual){
+                    case 1 : nuevoIdAreaTrabajo = 2; break;
+                    case 2 : nuevoIdAreaTrabajo = 3; break;
+                    case 3 : nuevoIdAreaTrabajo = 4; break;
+                    case 4 : 
+                        const DetallePedidoService = require("./DetallePedidoService");
+                        await DetallePedidoService.updateEstado(codigoPedido,"Finalizado");
+                        return {message: "El pedido a finalizado"};
+                    default: throw { status: 400, message: "idAreaTrabajo no válido" }; 
+                }
+                
+                await Promise.all(
+                    DetalleAreaTrabajo.map(detalle =>
+                        DetalleAreaTrabajoDAO.updateidAreaTrabajo(nuevoIdAreaTrabajo, detalle.idCaracteristicas))
+                );
+
+                return { message: "II: Se actualizó correctamente el área de trabajo", nuevoIdAreaTrabajo };
+            }
+            
+            return { message: "No se actualizó el área de trabajo porque al menos un estado es 0" };
         }catch(error){
             if (error.status) throw error;
             throw { status: 500, message: "Error en DetalleAreaTrabajo", detalle: error.message };
         }
-    }
+    },
 
 };
 
