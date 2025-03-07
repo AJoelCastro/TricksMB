@@ -23,7 +23,7 @@ const DetalleAreaTrabajoController = {
         }
     },
 
-    async updateidAreaTrabajo(codigoPedido){
+    async updateidAreaTrabajo(res, req){
         try{
             const {codigoPedido} = req.params;
             const mensaje = await DetalleAreaTrabajoService.updateidAreaTrabajo(codigoPedido);
