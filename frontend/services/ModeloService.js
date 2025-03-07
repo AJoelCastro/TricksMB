@@ -42,7 +42,20 @@ const ModeloService = {
             console.error("Error al obtener el modelo por código de pedido:", error.response?.data || error.message);
             throw error;
         }
-    }
+    },
+    getImagenById: async (idModelo) => {
+        console.log("service",idModelo);
+        try {
+            const token = await AuthService.getToken();
+            const response = await axios.get(`${API_URL}/modelo/imagen/${idModelo}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error al obtener imagenes por idModelo:", error.response?.data || error.message);
+            throw error;
+        }
+    },
 };
 
 export default ModeloService;
