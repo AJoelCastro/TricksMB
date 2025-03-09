@@ -314,7 +314,7 @@ const Corte = () => {
                     console.error("Característica vacias o nulas:", datos);
                     info = false;
                     return;
-                } 
+                }  
             }
             if (info === false) {
                 Alert.alert("Error", "Hubo un problema al actualizar el pedido.");
