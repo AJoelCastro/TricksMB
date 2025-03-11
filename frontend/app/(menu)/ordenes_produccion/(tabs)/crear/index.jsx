@@ -219,7 +219,7 @@ export default function crear() {
         try {
             let fechaEntregaFormateada = fechaEntrega.toISOString().split("T")[0];
             const datosPedido={
-                clienteTipo:dni, fechaEntrega:fechaEntregaFormateada, serieInicio:selectSerieInicio, serieFinal:selectSerieFin, nomModelo:modelo, nombreTaco:nombreTaco, alturaTaco:tallaTaco, material, tipoMaterial, suela, accesorios, forro
+                clienteTipo:tipoCliente==="natural"?dni:ruc, fechaEntrega:fechaEntregaFormateada, serieInicio:selectSerieInicio, serieFinal:selectSerieFin, nomModelo:modelo, nombreTaco:nombreTaco, alturaTaco:tallaTaco, material, tipoMaterial, suela, accesorios, forro
             }
             if (!Object.values(datosPedido).every(valor => valor && valor.trim() !== "")) {
                             Alert.alert("Error", "Por favor, completa todos los campos.");
@@ -295,7 +295,6 @@ export default function crear() {
             Alert.alert("Error", "Hubo un problema al crear el pedido.");
         }
     }; 
-
 
     return (
         <KeyboardAvoidingView
