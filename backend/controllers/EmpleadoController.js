@@ -23,6 +23,16 @@ const EmpleadoController = {
         } catch(error){
             res.status(error.status).send(error.message);
         }
+    },
+
+    async getEmpleados(req, res){
+        try{
+            const {nomArea} = req.body;
+            const empleados = await EmpleadoService.getEmpleados(nomArea);
+            res.status(200).send(empleados);
+        }catch(error){
+            res.status(error.status).send(error.message);
+        }
     }
 };
 
