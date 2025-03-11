@@ -361,7 +361,7 @@ return (
                             <TextInput 
                                 value={cliente.nombre}
                                 mode='outlined'
-                                label={"Nombre"}
+                                label={"Cliente"}
                                 editable={false}
                             >
                             </TextInput>
@@ -441,7 +441,7 @@ return (
                         </View>
                     </View>
                 </View>
-                <View className='flex mt-4 mb-4 gap-5'>
+                <View className='flex-row mt-4 mb-4 gap-5'>
                     <View className='flex-row items-center gap-4'>
                         <Text className='font-bold'>Serie Inicio</Text>
                         <View className='h-8 bg-gray-100 border-l-2 items-center justify-center w-[30%]'>
