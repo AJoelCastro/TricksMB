@@ -23,7 +23,7 @@ const Actualizar = () => {
             }
         } catch (error) {
             console.log(error);
-            alert(`Error al obtener el pedido, verifique que el código "${codigoOrden}" sea correcto.`);
+            alert(`1 Error al obtener el pedido, verifique que el código "${codigoOrden}" sea correcto.`);
         }
     };
     const iniciarProceso = async () => {
@@ -47,7 +47,7 @@ const Actualizar = () => {
                 console.error('Error al obtener el pedido, verifique que el código sea correcto.');
             }
         } catch (error) {
-            alert(`Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto.`);
+            alert(`2 Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto.`);
         }
     }
     useEffect(() => {
@@ -79,11 +79,11 @@ const Actualizar = () => {
                     console.error('Error al obtener el pedido, verifique que el código sea correcto.');
                 }
             } catch (error) {
-                alert(`Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto`, error);
+                alert(`3 Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto`, error);
             }
         }
         verificarAreaTrabajo();
-    },[estado])
+    },[estado==="Proceso"]);
     
     const options = [
         { id: 1, title: 'corte', icon: 'content-cut', color: estado==='Editable' ? 'bg-gray-700' : 'bg-red-500' },
