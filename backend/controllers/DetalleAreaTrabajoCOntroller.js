@@ -34,7 +34,6 @@ const DetalleAreaTrabajoController = {
         }
     }
 
-
 };
 
 module.exports = DetalleAreaTrabajoController;

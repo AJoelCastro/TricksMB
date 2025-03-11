@@ -20,6 +20,16 @@ class EmpleadoDAO{
             throw error;
         }
     }
+
+    static async getEmpleados(idArea){
+        try{
+            const query = "SELECT * FROM Empleado WHERE Area_trabajo_idArea_trabajo = (?)";
+            const [rows] = await db.execute(query,[idArea]);
+            return rows;
+        }catch(error){
+            throw error;
+        }
+    }
 }
 
 module.exports = EmpleadoDAO;

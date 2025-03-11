@@ -1,0 +1,1 @@
+const DetalleEmpleadoPedido = require('../models/DetalleEmpleadoPedido');
