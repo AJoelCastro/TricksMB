@@ -23,7 +23,7 @@ const Actualizar = () => {
             }
         } catch (error) {
             console.log(error);
-            alert(`1 Error al obtener el pedido, verifique que el código "${codigoOrden}" sea correcto.`);
+            alert(`Error al obtener el pedido, verifique que el código "${codigoOrden}" sea correcto.`);
         }
     };
     const iniciarProceso = async () => {
@@ -47,7 +47,7 @@ const Actualizar = () => {
                 console.error('Error al obtener el pedido, verifique que el código sea correcto.');
             }
         } catch (error) {
-            alert(`2 Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto.`);
+            alert(`Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto.`);
         }
     }
     useEffect(() => {
@@ -60,7 +60,6 @@ const Actualizar = () => {
                 let codigoPedido = codigoOrden;
                 const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
                 console.log(data);
-                console.log("m",data[0].Area_trabajo_idArea_trabajo);
                 switch (data[0].Area_trabajo_idArea_trabajo) {
                     case 1:
                         setAreaTrabajo("corte");
@@ -79,7 +78,7 @@ const Actualizar = () => {
                     console.error('Error al obtener el pedido, verifique que el código sea correcto.');
                 }
             } catch (error) {
-                alert(`3 Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto`, error);
+                alert(`Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto`, error);
             }
         }
         verificarAreaTrabajo();

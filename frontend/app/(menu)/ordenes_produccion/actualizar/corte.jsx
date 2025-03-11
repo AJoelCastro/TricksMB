@@ -338,6 +338,7 @@ const Corte = () => {
                     terminado: item.Cantidad_avance // Agrega la propiedad "terminado"
                 }));
                 const filasTransformadas = transformarDatosDetalleAreaTrabajo(dataExtra);
+                console.log("a",data);
                 setDataDetalleAreaTrabajo(filasTransformadas);
             }
             catch (error) {
