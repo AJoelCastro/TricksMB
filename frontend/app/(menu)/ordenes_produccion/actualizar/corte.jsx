@@ -411,39 +411,35 @@ return (
                                 </Card.Content> 
                             </Card>
                         </View>
-                        <View className='w-[48%] '>
-                            <View className=' '>
+                        <View className='w-[48%] gap-2 justify-center'>
                                 <TextInput
                                     editable={false}
                                     mode='outlined'
                                     label={"Tipo de calzado"}
                                     value={tipoCalzado} 
                                 />
-                            </View>
-                            <View className=' '>
                                 <TextInput
                                     label="Modelo"
                                     mode="outlined"
                                     value={modelo.Nombre}
                                     editable={false}
                                 />
-                            </View>
+                                <TextInput
+                                    mode='outlined'
+                                    label="Fecha de creacion"
+                                    value={currentDate}
+                                    editable={false}
+                                    right={<TextInput.Icon icon="calendar" />}
+                                />
+                                <TextInput
+                                    label="Fecha de entrega"
+                                    mode='outlined'
+                                    value={fechaEntrega.toISOString().split("T")[0]}
+                                    editable={false}
+                                    right={<TextInput.Icon icon="calendar" />}
+                                />
                         </View>
                     </View>
-                    <TextInput
-                        mode='outlined'
-                        label="Fecha de creacion"
-                        value={currentDate}
-                        editable={false}
-                        right={<TextInput.Icon icon="calendar" />}
-                    />
-                    <TextInput
-                        label="Fecha de entrega"
-                        mode='outlined'
-                        value={fechaEntrega.toISOString().split("T")[0]}
-                        editable={false}
-                        right={<TextInput.Icon icon="calendar" />}
-                    />
                 </View>
                 <View className='flex mt-4 mb-4 gap-5'>
                     <View className='flex-row items-center gap-4'>
