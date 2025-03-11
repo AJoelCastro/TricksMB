@@ -30,7 +30,7 @@ const Actualizar = () => {
         try {
             let estado = "Proceso"
             const data = await DetallePedidoService.updateEstado(codigoOrden, estado);
-            console.log(data);
+            setEstado("Proceso");
             if (!data) {
                 console.error('Error al obtener el pedido, verifique que el código sea correcto.');
             }
@@ -60,7 +60,6 @@ const Actualizar = () => {
                 let codigoPedido = codigoOrden;
                 const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
                 console.log(data);
-                console.log("m",data[0].Area_trabajo_idArea_trabajo);
                 switch (data[0].Area_trabajo_idArea_trabajo) {
                     case 1:
                         setAreaTrabajo("corte");
@@ -83,7 +82,7 @@ const Actualizar = () => {
             }
         }
         verificarAreaTrabajo();
-    },[estado])
+    },[estado==="Proceso"]);
     
     const options = [
         { id: 1, title: 'corte', icon: 'content-cut', color: estado==='Editable' ? 'bg-gray-700' : 'bg-red-500' },
