@@ -46,11 +46,12 @@ const Actualizar = () => {
     }
     const verificarProceso = async () => {
         try {
+            setEstado("");
             const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
             console.log(data);
             setEstado(data.Estado);
             if (!data) {
-                console.error('Error al obtener el pedido, verifique que el código sea correcto.');
+                console.error('Error al obtener el detalle delpedido');
             }
         } catch (error) {
             alert(`Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto.`);
@@ -63,32 +64,34 @@ const Actualizar = () => {
                 return;
             }
             try {
-                let codigoPedido = codigoOrden;
-                const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
-                console.log(data);
-                switch (data[0].Area_trabajo_idArea_trabajo) {
-                    case 1:
-                        setAreaTrabajo("corte");
-                        break;
-                    case 2:
-                        setAreaTrabajo("perfilado");
-                        break;
-                    case 3:
-                        setAreaTrabajo("armado");
-                        break;
-                    case 4:
-                        setAreaTrabajo("alistado");
-                        break;
-                }
-                if (!data) {
-                    console.error('Error al obtener el pedido, verifique que el código sea correcto.');
+                if (estado === "Proceso") {
+                    let codigoPedido = codigoOrden;
+                    const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
+                    console.log("data verificar", data);
+                    switch (data[0].Area_trabajo_idArea_trabajo) {
+                        case 1:
+                            setAreaTrabajo("corte");
+                            break;
+                        case 2:
+                            setAreaTrabajo("perfilado");
+                            break;
+                        case 3:
+                            setAreaTrabajo("armado");
+                            break;
+                        case 4:
+                            setAreaTrabajo("alistado");
+                            break;
+                    }
+                    if (!data) {
+                        console.error('Error al obtener el pedido, verifique que el código sea correcto.');
+                    }
                 }
             } catch (error) {
-                alert(`Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto`, error);
+                alert(`aaa Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto`, error);
             }
         }
         verificarAreaTrabajo();
-    },[estado==="Proceso"]);
+    },[estado]);
     
     const options = [
         { id: 1, title: 'corte', icon: 'content-cut', color: estado==='Editable' ? 'bg-gray-700' : 'bg-red-500' },
