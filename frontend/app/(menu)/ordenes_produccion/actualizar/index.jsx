@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import {TextInput} from 'react-native-paper';
+import {Checkbox, TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon1 from 'react-native-vector-icons/FontAwesome';
 import DetallePedidoService from '@/services/DetallePedidoService';
@@ -14,6 +14,12 @@ const Actualizar = () => {
     const [codigoOrden, setCodigoOrden] = useState('');
     const [estado, setEstado] = useState("");
     const [areaTrabajo, setAreaTrabajo] = useState("");
+    const data = [
+        { id: 1, label: 'Opción 1', selected: false },
+        { id: 2, label: 'Opción 2', selected: false },
+        { id: 3, label: 'Opción 3', selected: false },
+        { id: 4, label: 'Opción 4', selected: false }
+    ];
     const handleOptionPress = async (option) => {
         try {
             const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
@@ -114,23 +120,31 @@ const Actualizar = () => {
             }
             { estado === "Proceso" &&
                 (
-                    <View className=' mt-4 gap-4 ' >
-                        {options.filter((option) => option.title === areaTrabajo).map((option) => (
-                            <TouchableOpacity
-                                key={option.id}
-                                onPress={() => handleOptionPress(option)}
-                                activeOpacity={0.8}
-                                disabled={estado === "Editable"}
-                            >
-                                <View
-                                    className={`justify-center items-center rounded-2xl p-2 ${option.color}`}
+                    <View className=' mt-4 gap-2 ' >
+                        <View className='gap-4'>
+                            {options.filter((option) => option.title === areaTrabajo).map((option) => (
+                                <TouchableOpacity
+                                    key={option.id}
+                                    onPress={() => handleOptionPress(option)}
+                                    activeOpacity={0.8}
+                                    disabled={estado === "Editable"}
                                 >
-                                    <Icon name={option.icon} size={40} color="#FFF" />
-                                    <Text className="mt-2 text-white text-lg font-bold">{option.title}</Text>
-                                </View>
-                            </TouchableOpacity>
-                        ))}
+                                    <View
+                                        className={`justify-center items-center rounded-2xl p-2 ${option.color}`}
+                                    >
+                                        <Icon name={option.icon} size={40} color="#FFF" />
+                                        <Text className="mt-2 text-white text-lg font-bold">{option.title}</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                        <View>
+                            {
+                                
+                            }
+                        </View>
                     </View>
+                    
                 )
             }
         </View>

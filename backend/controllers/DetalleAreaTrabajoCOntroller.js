@@ -23,13 +23,14 @@ const DetalleAreaTrabajoController = {
         }
     },
 
-    async updateidAreaTrabajo(res, req){
+    async updateidAreaTrabajo(req, res){
         try{
             const {codigoPedido} = req.params;
             const mensaje = await DetalleAreaTrabajoService.updateidAreaTrabajo(codigoPedido);
             return res.status(200).json(mensaje);
         }catch(error){
-            console.error("Error al actualizar el Area de trabajo");
+            console.log("Error ", error);
+            console.error("Error al actualizar el Area de trabajo", error);
             return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor"});
         }
     }

@@ -51,58 +51,7 @@ const Corte = () => {
             };
         }, [])
     );
-    const opcionesTaco = [
-        { key: "3", label: "Talla 3" },
-        { key: "4", label: "Talla 4" },
-        { key: "5", label: "Talla 5" },
-        { key: "7", label: "Talla 7" },
-        { key: "9", label: "Talla 9" },
-        { key: "12", label: "Talla 12" },
-        { key: "15", label: "Talla 15" },
-    ];
 
-    const opcionesMaterial = [
-        { key: "1", label: "sintetico" },
-        { key: "2", label: "sintetico1" },
-        { key: "3", label: "sintetico2" },
-        { key: "4", label: "sintetico3" },
-        { key: "5", label: "sintetico4" },
-        { key: "6", label: "sintetico5" },
-        { key: "7", label: "sintetico6" },
-    ];
-
-    const opcionesTipoMaterial = [
-        { key: "1", label: "sintetico" },
-        { key: "2", label: "sintetico" },
-        { key: "3", label: "sintetico" },
-        { key: "4", label: "sintetico" },
-        { key: "5", label: "sintetico" },
-        { key: "6", label: "sintetico" },
-        { key: "7", label: "sintetico" },
-    ];
-
-    const opcionesSerieInicio = [
-        { key: "31", label: "Talla 31" },
-        { key: "32", label: "Talla 32" },
-        { key: "33", label: "Talla 33" },
-        { key: "34", label: "Talla 34" },
-        { key: "35", label: "Talla 35" },
-        { key: "36", label: "Talla 36" },
-        { key: "37", label: "Talla 37" },
-        { key: "38", label: "Talla 38" },
-        { key: "39", label: "Talla 39" },
-    ];
-    const opcionesSerieFin = [
-        { key: "32", label: "Talla 32" },
-        { key: "33", label: "Talla 33" },
-        { key: "34", label: "Talla 34" },
-        { key: "35", label: "Talla 35" },
-        { key: "36", label: "Talla 36" },
-        { key: "37", label: "Talla 37" },
-        { key: "38", label: "Talla 38" },
-        { key: "39", label: "Talla 39" },
-        { key: "40", label: "Talla 40" },
-    ];
     const [cliente, setCliente] = useState("");
     const [modelo, setModelo] = useState([]);
     const [selectSerieInicio, setSelectSerieInicio] = useState("");
@@ -125,6 +74,7 @@ const Corte = () => {
     const [openDatePicker, setOpenDatePicker] = useState(false);
     const [idDetallePedido, setIdDetallePedido] = useState();
     const [dataDetalleAreaTrabajo, setDataDetalleAreaTrabajo] = useState([]);
+    const [actualizado, setActualizado] = useState(false);
     const getCurrentDate = () => {
         const date = new Date();
         return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
@@ -322,6 +272,7 @@ const Corte = () => {
             }
             else {
                 Alert.alert("Pedido actualizado", "El pedido se ha actualizado correctamente.");
+                setActualizado(true);
                 resetearCampos();
             }
         }catch (error) {
@@ -338,7 +289,6 @@ const Corte = () => {
                     terminado: item.Cantidad_avance // Agrega la propiedad "terminado"
                 }));
                 const filasTransformadas = transformarDatosDetalleAreaTrabajo(dataExtra);
-                console.log("a",data);
                 setDataDetalleAreaTrabajo(filasTransformadas);
             }
             catch (error) {
@@ -347,6 +297,29 @@ const Corte = () => {
         };
         obtenerDetalleAreaTrab();
     }, []);
+    useEffect(() => {
+        const obtenerEstadosDetalleAreaTrabajo = async () => {
+            try {
+                let codigoPedido = codigoOrden
+                const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
+                console.log("data",data); 
+                let actualizar = true;
+                data.map((item) => {
+                    console.log("estado",item.Estado);
+                    if (item.Estado === 0){
+                        actualizar = false;
+                    }
+                })  
+                if (actualizar === true){
+                    const update = await DetalleAreaTrabajoService.actualizarAreaTrabajo(codigoPedido);
+                    console.log("actualizar",update);
+                }
+            }catch (error) {
+                console.error("Error al obtener los detalles del area de trabajo:", error);
+            }
+        }
+        obtenerEstadosDetalleAreaTrabajo();
+    }, [actualizado===true]);
 return (
     <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -492,7 +465,6 @@ return (
                                     }}
                                     editable={false}
                                 />
-                                
                                 <TextInput
                                     label="Pares"
                                     className='rounded flex-1'
