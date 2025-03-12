@@ -20,7 +20,6 @@ const DetalleAreaTrabajoService= {
         }
     },
     updatePedido : async (idCaracteristicas,datos) =>{
-        console.log("datos",datos, idCaracteristicas)
         try{
             const token = await AuthService.getToken();
             if(!token) throw new Error("No hay token disponible");
@@ -35,5 +34,20 @@ const DetalleAreaTrabajoService= {
             throw error;
         }
     },
+    actualizarAreaTrabajo : async (codigoPedido) =>{        
+        try{
+            const token = await AuthService.getToken();
+            if(!token) throw new Error("No hay token disponible");
+            
+            const response = await axios.put(`${API_URL}/detalleAreaTrabajo/actualizarAreaTrabajo/${codigoPedido}`,null,{
+                headers: {Authorization: `Bearer ${token}`}
+            });
+
+            return response.data;
+        } catch(error){
+            console.error("Error al actualizar area de trabajo: ", error.response?.data || error.message);
+            throw error;
+        }
+    }
 }
 export default DetalleAreaTrabajoService;
