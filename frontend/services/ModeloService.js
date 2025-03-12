@@ -44,7 +44,6 @@ const ModeloService = {
         }
     },
     getImagenById: async (idModelo) => {
-        console.log("service",idModelo);
         try {
             const token = await AuthService.getToken();
             const response = await axios.get(`${API_URL}/modelo/imagen/${idModelo}`, {
