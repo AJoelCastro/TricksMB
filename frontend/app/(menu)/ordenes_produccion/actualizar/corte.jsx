@@ -264,7 +264,7 @@ const Corte = () => {
                     console.error("Característica vacias o nulas:", datos);
                     info = false;
                     return;
-                }  
+                } 
             }
             if (info === false) {
                 Alert.alert("Error", "Hubo un problema al actualizar el pedido.");
@@ -312,7 +312,12 @@ const Corte = () => {
                 })
                 if (actualizar === true){
                     const update = await DetalleAreaTrabajoService.actualizarAreaTrabajo(codigoPedido);
-                    console.log("actualizar",update);
+                    if (!update) {
+                        error("Característica vacias o nulas:", update);
+                        return;
+                    }else{
+                        alert("El pedido se ha actualizado correctamente.");
+                    }
                 }
             }catch (error) {
                 console.error("Error al obtener los detalles del area de trabajo:", error);
