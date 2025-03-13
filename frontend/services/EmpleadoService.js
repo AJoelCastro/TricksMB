@@ -14,7 +14,7 @@ const EmpleadoService = {
             });
             return response.data;
         } catch (error) {
-            console.error("Error al crear cliente:", error.response?.data || error.message);
+            console.error("Error al crear el detalle empleado pedido:", error.response?.data || error.message);
             throw error;
         }
     },
@@ -26,7 +26,7 @@ const EmpleadoService = {
             });
             return response.data;
         } catch (error) {
-            console.error("Error al obtener clientes:", error.response?.data || error.message);
+            console.error("Error al obtener empleados por area:", error.response?.data || error.message);
             throw error;
         }
     },
