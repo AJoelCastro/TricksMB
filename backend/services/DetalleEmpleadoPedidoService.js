@@ -22,9 +22,9 @@ const DetalleEmpleadoPedidoService = {
             if(!nomArea) throw {status: 400, message: "nombre de area requerido para buscar detalle empleado pedido"};
             if(!codigoPedido) throw {status: 400, message: "codigo de pedido requerido para buscar detalle empleado pedido"};
 
-            const {idArea} = await AreaTrabajoService.getAreaTrabajoByNombre(nomArea);
+            const data1 = await AreaTrabajoService.getAreaTrabajoByNombre(nomArea);
+            let idArea = data1[0].idArea_trabajo;
             const {idDetalle_pedido} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
-
             return await DetalleEmpleadoPedidoDAO.getAllDetallePedido(idArea, idDetalle_pedido);
         } catch(error){
             console.error("Error al obtener detalle empleado pedido", error);
