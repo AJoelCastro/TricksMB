@@ -1,6 +1,5 @@
 
 const DetalleEmpleadoPedidoService = require('../services/DetalleEmpleadoPedidoService');
-const { getAllDetallePedido } = require('./DetallePedidoController');
 
 const DetalleEmpleadoPedidoController = {
     async createDetalleEmpleadoPedido(req,res){
@@ -22,12 +21,12 @@ const DetalleEmpleadoPedidoController = {
             const {nomArea, codigoPedido} = req.query;
             const detalleEmpleadoPedido = await DetalleEmpleadoPedidoService.getAllDetalleEmpleadoPedido(nomArea, codigoPedido);
             if(!detalleEmpleadoPedido){
-                return res.status(400).json({ success: false, message: "Error al obtener detalle empleado pedido" });
+                return res.status(400).json({ success: false, message: "1Error al obtener detalle empleado pedido" });
             }
             res.status(200).json({ success: true, message: "Detalle empleado pedido obtenido exitosamente", detalleEmpleadoPedido });
         }catch(error){
             console.error(error);
-            res.status(500).json({ success: false, message: "Error al obtener detalle empleado pedido" });
+            res.status(500).json({ success: false, message: "2Error al obtener detalle empleado pedido" });
         }
     }
 
