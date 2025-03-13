@@ -1,9 +1,25 @@
 import axios from 'axios';
-import AuthService from './AuthService'
+import AuthService from './AuthService';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 const DetalleAreaTrabajoService= {
+
+    createDetalleAreaTrabajo : async (nomArea, codigoPedido) =>{
+        try{
+            const token = await AuthService.getToken();
+            if(!token) throw new Error("No hay token disponible");
+            
+            const response = await axios.post(`${API_URL}/detalleAreaTrabajo/crear`,{nomArea, codigoPedido}, {
+                headers: {Authorization: `Bearer ${token}`}
+            });
+
+            return response.data;
+        }catch(error){
+            console.error("Error al crear detalle de área de trabajo: ", error.response?.data || error.message);
+            throw error;
+        }
+    },
     obtenerTodos : async (codigoPedido) =>{
         try{
             const token = await AuthService.getToken();

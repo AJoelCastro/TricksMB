@@ -1,5 +1,17 @@
 const DetalleAreaTrabajoService = require('../services/DetalleAreaTrabajoService');
 const DetalleAreaTrabajoController = {
+
+    async createDetalleAreaTrabajo(req, res) {
+        try{
+            const {nomArea, codigoPedido} = req.body;
+            const detallesAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido);
+            return res.status(200).json(detallesAreaTrabajo);
+        } catch(error){
+            console.error("Error al crear detalle de área de trabajo:", error);
+            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor"});
+        }
+    },
+
     async getDetalleAreaTrabajo(req, res) {
         try {
             const {codigoPedido} = req.params;
@@ -23,7 +35,7 @@ const DetalleAreaTrabajoController = {
         }
     },
 
-    async updateidAreaTrabajo(req, res){
+    /*async updateidAreaTrabajo(req, res){
         try{
             const {codigoPedido} = req.params;
             const mensaje = await DetalleAreaTrabajoService.updateidAreaTrabajo(codigoPedido);
@@ -33,7 +45,7 @@ const DetalleAreaTrabajoController = {
             console.error("Error al actualizar el Area de trabajo", error);
             return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor"});
         }
-    }
+    }*/
 
 };
 
