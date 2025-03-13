@@ -17,7 +17,7 @@ const DetalleEmpleadoPedidoService = {
         }
     },
 
-    async getAllDetallePedido(nomArea, codigoPedido){
+    async getAllDetalleEmpleadoPedido(nomArea, codigoPedido){
         try{
             if(!nomArea) throw {status: 400, message: "nombre de area requerido para buscar detalle empleado pedido"};
             if(!codigoPedido) throw {status: 400, message: "codigo de pedido requerido para buscar detalle empleado pedido"};

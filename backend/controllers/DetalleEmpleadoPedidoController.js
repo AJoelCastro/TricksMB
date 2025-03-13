@@ -20,7 +20,7 @@ const DetalleEmpleadoPedidoController = {
     async getAllDetalleEmpleadoPedido(req,res){
         try{
             const {nomArea, codigoPedido} = req.body;
-            const detalleEmpleadoPedido = await DetalleEmpleadoPedidoService.getAllDetallePedido(nomArea, codigoPedido);
+            const detalleEmpleadoPedido = await DetalleEmpleadoPedidoService.getAllDetalleEmpleadoPedido(nomArea, codigoPedido);
             if(!detalleEmpleadoPedido){
                 return res.status(400).json({ success: false, message: "Error al obtener detalle empleado pedido" });
             }
