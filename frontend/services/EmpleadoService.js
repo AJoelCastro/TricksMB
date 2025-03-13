@@ -18,10 +18,10 @@ const EmpleadoService = {
             throw error;
         }
     },
-    obtenerAllDetalleEmpleadoPedido: async () => {
+    obtenerAllDetalleEmpleadoPedido: async (nomArea, codigoPedido) => {
         try {
             const token = await AuthService.getToken();
-            const response = await axios.get(`${API_URL}/cliente/clientes`, {
+            const response = await axios.get(`${API_URL}/empleado/obtenerEmpleadoPedido`,{nomArea, codigoPedido}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;
