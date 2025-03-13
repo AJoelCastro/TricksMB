@@ -75,8 +75,7 @@ const DetallePedidoService = {
 
             const obj = await DetallePedidoDAO.updateEstado(codigoPedido, estado);
             if (obj.estado === "Proceso") {
-                const { idDetalle_pedido } = await DetallePedidoDAO.getDetallePedidoByCodigoPedido(codigoPedido);
-                const detalleAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(idDetalle_pedido);
+                const detalleAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo("Corte",codigoPedido);
                 console.log("service",detalleAreaTrabajo);
                 return { mensaje: "Pedido en proceso y detalle de área de trabajo creado", detalleAreaTrabajo };
             }
