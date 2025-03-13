@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon1 from 'react-native-vector-icons/FontAwesome';
 import DetallePedidoService from '@/services/DetallePedidoService';
 import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
+import EmpleadoService from '@/services/EmpleadoService';
 
 const Actualizar = () => {
 
@@ -49,7 +50,38 @@ const Actualizar = () => {
             setEstado("");
             const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
             console.log(data);
+            let codigoPedido = codigoOrden
             setEstado(data.Estado);
+            if (data.Estado === "Proceso") {
+                const dataDetalleAreaTrabajo = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
+                let nomArea;
+                switch (dataDetalleAreaTrabajo[0].Area_trabajo_idArea_trabajo) {
+                    case 1:
+                        nomArea = "corte";
+                        console.log(nomArea);
+                        const dataDetalleEmpleadoPedido1 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
+                        console.log("Empleados",dataDetalleEmpleadoPedido1);
+                        break;
+                    case 2:
+                        nomArea = "perfilado";
+                        console.log(nomArea);
+                        const dataDetalleEmpleadoPedido2 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
+                        console.log("Empleados",dataDetalleEmpleadoPedido2);
+                        break;
+                    case 3:
+                        nomArea = "armado";
+                        console.log(nomArea);
+                        const dataDetalleEmpleadoPedido3 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
+                        console.log("Empleados",dataDetalleEmpleadoPedido3);
+                        break;
+                    case 4:
+                        nomArea = "alistado";
+                        console.log(nomArea);
+                        const dataDetalleEmpleadoPedido4 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
+                        console.log("Empleados",dataDetalleEmpleadoPedido4);
+                        break;
+                }
+            }
             if (!data) {
                 console.error('Error al obtener el detalle delpedido');
             }

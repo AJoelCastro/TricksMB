@@ -21,6 +21,8 @@ const EmpleadoService = {
     obtenerAllDetalleEmpleadoPedido: async (nomArea, codigoPedido) => {
         try {
             const token = await AuthService.getToken();
+            if (!token) throw new Error("No hay token disponible");
+            
             const response = await axios.get(`${API_URL}/empleado/obtenerEmpleadoPedido`,{nomArea, codigoPedido}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
