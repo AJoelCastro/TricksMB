@@ -17,7 +17,8 @@ const EmpleadoService = {
             console.error("Error al crear cliente:", error.response?.data || error.message);
             throw error;
         }
-    },obtenerClientes: async () => {
+    },
+    obtenerAllDetalleEmpleadoPedido: async () => {
         try {
             const token = await AuthService.getToken();
             const response = await axios.get(`${API_URL}/cliente/clientes`, {
