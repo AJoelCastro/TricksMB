@@ -5,7 +5,7 @@ const DetalleEmpleadoPedidoController = {
     async createDetalleEmpleadoPedido(req,res){
         try{
             const {dni, codigoPedido} = req.body;
-            const detalleEmpleadoPedido = await DetalleEmpleadoPedidoService.createDetalleEmpleadoPedido(dni, idPcodigoPedidoedido);
+            const detalleEmpleadoPedido = await DetalleEmpleadoPedidoService.createDetalleEmpleadoPedido(dni, codigoPedido);
             if(!detalleEmpleadoPedido){
                 return res.status(400).json({ success: false, message: "Error al crear detalle empleado pedido" });
             }
