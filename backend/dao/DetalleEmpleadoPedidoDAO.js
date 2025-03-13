@@ -14,7 +14,7 @@ class DetalleEmpleadoPedidoDAO{
     static async getAllDetallePedido(idArea, idDetalle_pedido){
         try{
             const query = `SELECT * FROM Detalle_empleadoPedido WHERE Empleado_idEmpleado IN (SELECT idEmpleado FROM 
-            Empleado WHERE Area_trabajo_idArea_trabajo = ?) AND Pedido_idPedido = ?`;
+            Empleado WHERE Area_trabajo_idArea_trabajo = ?) AND Detalle_pedido_idDetalle_pedido = ?`;
             const [rows] = await db.execute(query, [idArea, idDetalle_pedido]);
             return rows;
         } catch(error){
