@@ -80,16 +80,14 @@ const DetalleAreaTrabajoService = {
             if (!codigoPedido) throw { status: 400, message: "Codigo de pedido es requerido" };
 
             const DetalleAreaTrabajo = await this.getDetalleAreaTrabajo(codigoPedido);
-
             if (!DetalleAreaTrabajo || DetalleAreaTrabajo.length === 0) 
                 throw { status: 404, message: "No se encontraron detalles del área de trabajo" };
 
-            const todosCompletos =  DetalleAreaTrabajo.every(detalle => detalle.estado === 1);
-
+            const todosCompletos =  DetalleAreaTrabajo.every(detalle => detalle.Estado === 1);
             if(todosCompletos){
                 let nuevoIdAreaTrabajo;
-                const areaTrabajoActual = DetalleAreaTrabajo[0].idAreaTrabajo;
-
+                const areaTrabajoActual = DetalleAreaTrabajo[0].Area_trabajo_idArea_trabajo;
+                console.log("areaTrabajoActual",areaTrabajoActual); 
                 switch(areaTrabajoActual){
                     case 1 : nuevoIdAreaTrabajo = 2; break;
                     case 2 : nuevoIdAreaTrabajo = 3; break;
@@ -103,7 +101,7 @@ const DetalleAreaTrabajoService = {
                 
                 await Promise.all(
                     DetalleAreaTrabajo.map(detalle =>
-                        DetalleAreaTrabajoDAO.updateidAreaTrabajo(nuevoIdAreaTrabajo, detalle.idCaracteristicas))
+                        DetalleAreaTrabajoDAO.updateidAreaTrabajo(nuevoIdAreaTrabajo, detalle.Caracteristicas_idCaracteristicas))
                 );
 
                 return { message: "II: Se actualizó correctamente el área de trabajo", nuevoIdAreaTrabajo };

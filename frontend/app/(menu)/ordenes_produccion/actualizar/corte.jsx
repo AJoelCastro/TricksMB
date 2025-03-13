@@ -309,7 +309,7 @@ const Corte = () => {
                     if (item.Estado === 0){
                         actualizar = false;
                     }
-                })  
+                })
                 if (actualizar === true){
                     const update = await DetalleAreaTrabajoService.actualizarAreaTrabajo(codigoPedido);
                     console.log("actualizar",update);
