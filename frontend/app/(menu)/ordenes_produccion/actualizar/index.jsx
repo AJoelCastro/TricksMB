@@ -24,7 +24,6 @@ const Actualizar = () => {
     const handleOptionPress = async (option) => {
         try {
             const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
-            console.log(data);
             if (data) {
                 route.push(`/ordenes_produccion/actualizar/${option.title}?codigoOrden=${codigoOrden}`);
             }
@@ -59,23 +58,27 @@ const Actualizar = () => {
                     case 1:
                         nomArea = "corte";
                         console.log(nomArea);
+                        setAreaTrabajo("corte");
                         const dataDetalleEmpleadoPedido1 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
                         console.log("Empleados",dataDetalleEmpleadoPedido1);
                         break;
                     case 2:
                         nomArea = "perfilado";
                         console.log(nomArea);
+                        setAreaTrabajo("perfilado");
                         const dataDetalleEmpleadoPedido2 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
                         console.log("Empleados",dataDetalleEmpleadoPedido2);
                         break;
                     case 3:
                         nomArea = "armado";
+                        setAreaTrabajo("armado");
                         console.log(nomArea);
                         const dataDetalleEmpleadoPedido3 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
                         console.log("Empleados",dataDetalleEmpleadoPedido3);
                         break;
                     case 4:
                         nomArea = "alistado";
+                        setAreaTrabajo("alistado");
                         console.log(nomArea);
                         const dataDetalleEmpleadoPedido4 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
                         console.log("Empleados",dataDetalleEmpleadoPedido4);
@@ -89,41 +92,6 @@ const Actualizar = () => {
             alert(`Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto.`);
         }
     }
-    useEffect(() => {
-        const verificarAreaTrabajo = async () => {
-            if (isFirstRender.current) {
-                isFirstRender.current = false; // Marcar que la primera renderización ya pasó
-                return;
-            }
-            try {
-                if (estado === "Proceso") {
-                    let codigoPedido = codigoOrden;
-                    const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
-                    console.log("data verificar", data);
-                    switch (data[0].Area_trabajo_idArea_trabajo) {
-                        case 1:
-                            setAreaTrabajo("corte");
-                            break;
-                        case 2:
-                            setAreaTrabajo("perfilado");
-                            break;
-                        case 3:
-                            setAreaTrabajo("armado");
-                            break;
-                        case 4:
-                            setAreaTrabajo("alistado");
-                            break;
-                    }
-                    if (!data) {
-                        console.error('Error al obtener el pedido, verifique que el código sea correcto.');
-                    }
-                }
-            } catch (error) {
-                alert(`aaa Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto`, error);
-            }
-        }
-        verificarAreaTrabajo();
-    },[estado]);
     
     const options = [
         { id: 1, title: 'corte', icon: 'content-cut', color: estado==='Editable' ? 'bg-gray-700' : 'bg-red-500' },
