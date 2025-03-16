@@ -1,8 +1,8 @@
 const db = require('../config/db');
 
-class QrDAO{
+class CajaDAO{
 
-    static async createQr(){
+    static async createCaja(){
 
     } 
 }
