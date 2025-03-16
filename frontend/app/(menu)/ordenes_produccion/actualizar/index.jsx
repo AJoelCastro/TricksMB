@@ -10,11 +10,11 @@ import EmpleadoService from '@/services/EmpleadoService';
 
 const Actualizar = () => {
 
-    const isFirstRender = useRef(true);
     const route = useRouter();
     const [codigoOrden, setCodigoOrden] = useState('');
     const [estado, setEstado] = useState("");
     const [areaTrabajo, setAreaTrabajo] = useState("");
+    const [empleados, setEmpleados] = useState("");
     const data = [
         { id: 1, label: 'Opción 1', selected: false },
         { id: 2, label: 'Opción 2', selected: false },
@@ -45,9 +45,11 @@ const Actualizar = () => {
     }
     const verificarProceso = async () => {
         try {
+            setEmpleados("");
+            setAreaTrabajo("");
             setEstado("");
             const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
-            console.log(data);
+            console.log("data", data);
             let codigoPedido = codigoOrden
             setEstado(data.Estado);
             if (data.Estado === "Proceso") {
@@ -59,6 +61,14 @@ const Actualizar = () => {
                         console.log(nomArea);
                         setAreaTrabajo("corte");
                         const dataDetalleEmpleadoPedido1 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
+                        if (!dataDetalleEmpleadoPedido1) {
+                            return;
+                        }
+                        if(dataDetalleEmpleadoPedido1.detalleEmpleadoPedido.length === 0){
+                            alert("No hay empleados asignados a esta área de trabajo");
+                        }else{
+                            setEmpleados(dataDetalleEmpleadoPedido1.detalleEmpleadoPedido);
+                        }
                         console.log("Empleados",dataDetalleEmpleadoPedido1);
                         break;
                     case 2:
@@ -85,10 +95,10 @@ const Actualizar = () => {
                 }
             }
             if (!data) {
-                console.error('Error al obtener el detalle delpedido');
+                console.error('Error al obtener el detalle del pedido');
             }
         } catch (error) {
-            alert(`Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto.`);
+            alert("Error al obtener el pedido", error);
         }
     }
     

@@ -17,7 +17,6 @@ const ModeloService = {
         }
     },
     getAllModeloById: async (id) => {
-        console.log(id);
         try {
             const token = await AuthService.getToken();
             const response = await axios.get(`${API_URL}/modelo/id`, {
