@@ -150,11 +150,23 @@ const Actualizar = () => {
                                 </TouchableOpacity>
                             ))}
                         </View>
-                        <View>
-                            {
-                                
-                            }
-                        </View>
+                        {empleados !== "" ?(
+                            <View className='gap-4'>
+                                <Text className='text-lg font-bold text-black'>Empleados asignados:</Text>
+                                <View className='gap-2'>
+                                    {empleados.map((empleado) => (
+                                        <View key={empleado.idEmpleado} className='flex-row items-center'>
+                                            <Icon name="account" size={20} color="black" />
+                                            <Text className='text-black'>{empleado.empleado}</Text>
+                                        </View>
+                                    ))}
+                                </View>
+                            </View>
+                        )
+                        :
+                        (
+                            <Text className='text-lg font-bold text-black'>No hay empleados asignados a esta área de trabajo</Text>
+                        )}
                     </View>
                     
                 )
