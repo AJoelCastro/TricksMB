@@ -10,11 +10,11 @@ import EmpleadoService from '@/services/EmpleadoService';
 
 const Actualizar = () => {
 
-    const isFirstRender = useRef(true);
     const route = useRouter();
     const [codigoOrden, setCodigoOrden] = useState('');
     const [estado, setEstado] = useState("");
     const [areaTrabajo, setAreaTrabajo] = useState("");
+    const [empleados, setEmpleados] = useState("");
     const data = [
         { id: 1, label: 'Opción 1', selected: false },
         { id: 2, label: 'Opción 2', selected: false },
@@ -24,13 +24,11 @@ const Actualizar = () => {
     const handleOptionPress = async (option) => {
         try {
             const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
-            console.log(data);
             if (data) {
                 route.push(`/ordenes_produccion/actualizar/${option.title}?codigoOrden=${codigoOrden}`);
             }
         } catch (error) {
-            console.log(error);
-            alert(`Error al obtener el pedido, verifique que el código "${codigoOrden}" sea correcto.`);
+            error("Error al obtener el pedido", error);
         }
     };
     const iniciarProceso = async () => {
@@ -47,9 +45,11 @@ const Actualizar = () => {
     }
     const verificarProceso = async () => {
         try {
+            setEmpleados("");
+            setAreaTrabajo("");
             setEstado("");
             const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
-            console.log(data);
+            console.log("data", data);
             let codigoPedido = codigoOrden
             setEstado(data.Estado);
             if (data.Estado === "Proceso") {
@@ -59,23 +59,35 @@ const Actualizar = () => {
                     case 1:
                         nomArea = "corte";
                         console.log(nomArea);
+                        setAreaTrabajo("corte");
                         const dataDetalleEmpleadoPedido1 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
+                        if (!dataDetalleEmpleadoPedido1) {
+                            return;
+                        }
+                        if(dataDetalleEmpleadoPedido1.detalleEmpleadoPedido.length === 0){
+                            alert("No hay empleados asignados a esta área de trabajo");
+                        }else{
+                            setEmpleados(dataDetalleEmpleadoPedido1.detalleEmpleadoPedido);
+                        }
                         console.log("Empleados",dataDetalleEmpleadoPedido1);
                         break;
                     case 2:
                         nomArea = "perfilado";
                         console.log(nomArea);
+                        setAreaTrabajo("perfilado");
                         const dataDetalleEmpleadoPedido2 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
                         console.log("Empleados",dataDetalleEmpleadoPedido2);
                         break;
                     case 3:
                         nomArea = "armado";
+                        setAreaTrabajo("armado");
                         console.log(nomArea);
                         const dataDetalleEmpleadoPedido3 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
                         console.log("Empleados",dataDetalleEmpleadoPedido3);
                         break;
                     case 4:
                         nomArea = "alistado";
+                        setAreaTrabajo("alistado");
                         console.log(nomArea);
                         const dataDetalleEmpleadoPedido4 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
                         console.log("Empleados",dataDetalleEmpleadoPedido4);
@@ -83,47 +95,12 @@ const Actualizar = () => {
                 }
             }
             if (!data) {
-                console.error('Error al obtener el detalle delpedido');
+                console.error('Error al obtener el detalle del pedido');
             }
         } catch (error) {
-            alert(`Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto.`);
+            alert("Error al obtener el pedido", error);
         }
     }
-    useEffect(() => {
-        const verificarAreaTrabajo = async () => {
-            if (isFirstRender.current) {
-                isFirstRender.current = false; // Marcar que la primera renderización ya pasó
-                return;
-            }
-            try {
-                if (estado === "Proceso") {
-                    let codigoPedido = codigoOrden;
-                    const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
-                    console.log("data verificar", data);
-                    switch (data[0].Area_trabajo_idArea_trabajo) {
-                        case 1:
-                            setAreaTrabajo("corte");
-                            break;
-                        case 2:
-                            setAreaTrabajo("perfilado");
-                            break;
-                        case 3:
-                            setAreaTrabajo("armado");
-                            break;
-                        case 4:
-                            setAreaTrabajo("alistado");
-                            break;
-                    }
-                    if (!data) {
-                        console.error('Error al obtener el pedido, verifique que el código sea correcto.');
-                    }
-                }
-            } catch (error) {
-                alert(`aaa Error al iniciar el proceso, verifique que el código "${codigoOrden}" sea correcto`, error);
-            }
-        }
-        verificarAreaTrabajo();
-    },[estado]);
     
     const options = [
         { id: 1, title: 'corte', icon: 'content-cut', color: estado==='Editable' ? 'bg-gray-700' : 'bg-red-500' },
@@ -173,11 +150,23 @@ const Actualizar = () => {
                                 </TouchableOpacity>
                             ))}
                         </View>
-                        <View>
-                            {
-                                
-                            }
-                        </View>
+                        {empleados !== "" ?(
+                            <View className='gap-4'>
+                                <Text className='text-lg font-bold text-black'>Empleados asignados:</Text>
+                                <View className='gap-2'>
+                                    {empleados.map((empleado) => (
+                                        <View key={empleado.idEmpleado} className='flex-row items-center'>
+                                            <Icon name="account" size={20} color="black" />
+                                            <Text className='text-black'>{empleado.empleado}</Text>
+                                        </View>
+                                    ))}
+                                </View>
+                            </View>
+                        )
+                        :
+                        (
+                            <Text className='text-lg font-bold text-black'>No hay empleados asignados a esta área de trabajo</Text>
+                        )}
                     </View>
                     
                 )

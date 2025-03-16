@@ -6,7 +6,6 @@ const API_URL = process.env.EXPO_PUBLIC_API_URL;
 const CaracteristicasService = {
     
     crearCaracteristicas : async (datosCaracteristicas) =>{
-        console.log(datosCaracteristicas)
         const token = await AuthService.getToken();
         if(!token) throw new Error("No hay token disponible");
         try{
