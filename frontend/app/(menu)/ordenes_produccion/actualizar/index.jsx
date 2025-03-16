@@ -28,8 +28,7 @@ const Actualizar = () => {
                 route.push(`/ordenes_produccion/actualizar/${option.title}?codigoOrden=${codigoOrden}`);
             }
         } catch (error) {
-            console.log(error);
-            alert(`Error al obtener el pedido, verifique que el código "${codigoOrden}" sea correcto.`);
+            error("Error al obtener el pedido", error);
         }
     };
     const iniciarProceso = async () => {
