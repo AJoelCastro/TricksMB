@@ -14,7 +14,7 @@ const Actualizar = () => {
     const [codigoOrden, setCodigoOrden] = useState('');
     const [estado, setEstado] = useState("");
     const [areaTrabajo, setAreaTrabajo] = useState("");
-    const [empleados, setEmpleados] = useState("");
+    const [empleados, setEmpleados] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [dataEmpleados, setDataEmpleados] = useState([]);
     const [checked, setChecked] = useState(false);
@@ -113,7 +113,15 @@ const Actualizar = () => {
         obtenerEmpleadosPorArea();
     }, [showModal])
     
-    
+    const agregarOQuitarEmpleado = (item) => {
+        if (empleados.some(e => e.idEmpleado === item.idEmpleado)) {
+            // Si el empleado ya está en la lista, lo quitamos
+            setEmpleados(empleados.filter(e => e.idEmpleado !== item.idEmpleado));
+        } else {
+            // Si el empleado no está en la lista, lo agregamos
+            setEmpleados([...empleados, item]);
+        }
+    };
     
     const options = [
         { id: 1, title: 'corte', icon: 'content-cut', color: estado==='Editable' ? 'bg-gray-700' : 'bg-red-500' },
@@ -168,9 +176,12 @@ const Actualizar = () => {
                                 ))}
                             </View>
                             {empleados !== "" ?(
-                                <View className='gap-4'>
-                                    <Text className='text-lg font-bold text-black'>Empleados asignados:</Text>
-                                    <View className="bg-white p-4 rounded-lg w-[90%] ">
+                                <View className='gap-1 mt-2'>
+                                    <View className=' p-2 bg-white border-b border-gray-300 items-center'>
+                                        <Text  className='text-lg font-bold text-black '>Empleados Asignados</Text>
+                                    </View>
+                                    {console.log(empleados)}
+                                    <View className="bg-white p-4 rounded-lg w-[100%]">
                                         <FlatList 
                                             data={empleados}
                                             keyExtractor={(item) => item.idEmpleado}
@@ -191,6 +202,12 @@ const Actualizar = () => {
                                         />
                                         
                                     </View>
+                                    <Pressable onPress={() => setShowModal(!showModal)}>
+                                        <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#15a1ff] rounded-xl p-2 w-[50%] mx-auto'>
+                                            <Text className='text-xl font-bold text-white '>Agregar</Text>
+                                            <Icon1 name="plus" size={20} color="#fff" />
+                                        </View>
+                                    </Pressable>
                                 </View>
                             )
                             :
@@ -221,8 +238,8 @@ const Actualizar = () => {
                                                     status={checked ? 'checked' : 'unchecked'}
                                                     onPress={() => {
                                                         setChecked(!checked);
-                                                        setEmpleados(item);
-                                                        console.log(empleados);
+                                                        agregarOQuitarEmpleado(item);
+                                                        console.log("item",item);
                                                     }}
                                                     color='#3B82F6'
                                                 />
