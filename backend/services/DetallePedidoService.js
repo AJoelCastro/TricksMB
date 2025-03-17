@@ -1,5 +1,8 @@
 const DetallePedidoDAO = require('../dao/DetallePedidoDAO');
 
+const DetalleAreaTrabajoService = require('./DetalleAreaTrabajoService');
+const CajaService = require('./CajaService');
+
 const DetallePedidoService = {
     async createDetallePedido(idPedido, idModelo, codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela,
         accesorios, forro) {
