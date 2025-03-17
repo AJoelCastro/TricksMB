@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import {Checkbox, TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -102,6 +102,9 @@ const Actualizar = () => {
         }
     }
     
+    const openModal = async () => {
+        
+    }
     const options = [
         { id: 1, title: 'corte', icon: 'content-cut', color: estado==='Editable' ? 'bg-gray-700' : 'bg-red-500' },
         { id: 2, title: 'perfilado', icon: 'brush', color: estado==='Editable' ? 'bg-gray-700' : 'bg-sky-700' },
@@ -165,7 +168,9 @@ const Actualizar = () => {
                         )
                         :
                         (
-                            <Text className='text-lg font-bold text-black '>No hay empleados asignados a esta área de trabajo</Text>
+                            <Pressable onPress={openModal}  className='rounded-xl p-3 bg-gray-700 mt-3'>
+                                <Text className='text-white mx-auto text-lg font-semibold'>No hay empleados asignados</Text>
+                            </Pressable>
                         )}
                     </View>
                     
