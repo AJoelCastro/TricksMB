@@ -15,6 +15,7 @@ const Actualizar = () => {
     const [estado, setEstado] = useState("");
     const [areaTrabajo, setAreaTrabajo] = useState("");
     const [empleados, setEmpleados] = useState("");
+    const [showModal, setShowModal] = useState(false);
     const data = [
         { id: 1, label: 'Opción 1', selected: false },
         { id: 2, label: 'Opción 2', selected: false },
@@ -102,9 +103,7 @@ const Actualizar = () => {
         }
     }
     
-    const openModal = async () => {
-        
-    }
+    
     const options = [
         { id: 1, title: 'corte', icon: 'content-cut', color: estado==='Editable' ? 'bg-gray-700' : 'bg-red-500' },
         { id: 2, title: 'perfilado', icon: 'brush', color: estado==='Editable' ? 'bg-gray-700' : 'bg-sky-700' },
@@ -168,7 +167,7 @@ const Actualizar = () => {
                         )
                         :
                         (
-                            <Pressable onPress={openModal}  className='rounded-xl p-3 bg-gray-700 mt-3'>
+                            <Pressable onPress={setShowModal(!showModal)}  className='rounded-xl p-3 bg-gray-700 mt-3'>
                                 <Text className='text-white mx-auto text-lg font-semibold'>No hay empleados asignados</Text>
                             </Pressable>
                         )}
