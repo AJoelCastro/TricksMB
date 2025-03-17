@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, Pressable, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, Pressable, Modal, FlatList,KeyboardAvoidingView, Platform, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
-import {Checkbox, TextInput} from 'react-native-paper';
+import {Card, Checkbox, TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon1 from 'react-native-vector-icons/FontAwesome';
 import DetallePedidoService from '@/services/DetallePedidoService';
@@ -16,12 +16,8 @@ const Actualizar = () => {
     const [areaTrabajo, setAreaTrabajo] = useState("");
     const [empleados, setEmpleados] = useState("");
     const [showModal, setShowModal] = useState(false);
-    const data = [
-        { id: 1, label: 'Opción 1', selected: false },
-        { id: 2, label: 'Opción 2', selected: false },
-        { id: 3, label: 'Opción 3', selected: false },
-        { id: 4, label: 'Opción 4', selected: false }
-    ];
+    const [dataEmpleados, setDataEmpleados] = useState([]);
+    const [checked, setChecked] = useState(false);
     function capitalizarPrimeraLetra(palabra) {
         return palabra.charAt(0).toUpperCase() + palabra.slice(1);
     }
@@ -61,8 +57,7 @@ const Actualizar = () => {
                 let nomArea;
                 switch (dataDetalleAreaTrabajo[0].Area_trabajo_idArea_trabajo) {
                     case 1:
-                        nomArea = "corte";
-                        console.log(nomArea);
+                        nomArea = "Corte";
                         setAreaTrabajo("corte");
                         const dataDetalleEmpleadoPedido1 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
                         if (!dataDetalleEmpleadoPedido1) {
@@ -76,23 +71,20 @@ const Actualizar = () => {
                         console.log("Empleados",dataDetalleEmpleadoPedido1);
                         break;
                     case 2:
-                        nomArea = "perfilado";
-                        console.log(nomArea);
+                        nomArea = "Perfilado";
                         setAreaTrabajo("perfilado");
                         const dataDetalleEmpleadoPedido2 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
                         console.log("Empleados",dataDetalleEmpleadoPedido2);
                         break;
                     case 3:
-                        nomArea = "armado";
+                        nomArea = "Armado";
                         setAreaTrabajo("armado");
-                        console.log(nomArea);
                         const dataDetalleEmpleadoPedido3 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
                         console.log("Empleados",dataDetalleEmpleadoPedido3);
                         break;
                     case 4:
-                        nomArea = "alistado";
+                        nomArea = "Alistado";
                         setAreaTrabajo("alistado");
-                        console.log(nomArea);
                         const dataDetalleEmpleadoPedido4 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
                         console.log("Empleados",dataDetalleEmpleadoPedido4);
                         break;
@@ -111,14 +103,15 @@ const Actualizar = () => {
                 try {
                     let nomArea = capitalizarPrimeraLetra(areaTrabajo);
                     const dataEmpleados = await EmpleadoService.obtenerEmpleadosPorArea(nomArea);
-                    console.log("Empleados",dataEmpleados);
+                    console.log("Empleados por area",dataEmpleados);
+                    setDataEmpleados(dataEmpleados);
                 } catch (error) {
                     alert("Error al obtener empleados", error);
                 }
             }
         }
         obtenerEmpleadosPorArea();
-    }, [])
+    }, [showModal])
     
     
     
@@ -130,91 +123,132 @@ const Actualizar = () => {
     ];
 
     return (
-        <View className="flex-1 p-4 bg-gray-100">
-            <TextInput
-                label={"Codigo de orden"}
-                mode="outlined"
-                placeholder="Ingresa el código"
-                value={codigoOrden}
-                onChangeText={setCodigoOrden}
-                right={<TextInput.Icon icon="magnify" onPress={verificarProceso}/>}
-            />
-            { estado === "Editable" &&
-                    <TouchableOpacity
-                        onPress={iniciarProceso}
-                        activeOpacity={0.8}
-                        className={`h-[15%]  justify-center items-center rounded-2xl ${estado === "Editable" ? "bg-blue-500" : "bg-gray-700"} mt-4`}
-                        disabled={estado === "Editable" ? false : true}
-                    >
-                        <Icon1 name="play-circle" size={40} color="#FFF" />
-                        <Text className="mt-2 text-white text-lg font-bold">Iniciar proceso</Text>
-                    </TouchableOpacity>
-            }
-            { estado === "Proceso" &&
-                (
-                    <View className=' mt-4 gap-2 ' >
-                        <View className='gap-4'>
-                            {options.filter((option) => option.title === areaTrabajo).map((option) => (
-                                <TouchableOpacity
-                                    key={option.id}
-                                    onPress={() => handleOptionPress(option)}
-                                    activeOpacity={0.8}
-                                    disabled={estado === "Editable"}
-                                >
-                                    <View
-                                        className={`justify-center items-center rounded-2xl p-2 ${option.color}`}
-                                    >
-                                        <Icon name={option.icon} size={40} color="#FFF" />
-                                        <Text className="mt-2 text-white text-lg font-bold">{option.title}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            ))}
-                        </View>
-                        {empleados !== "" ?(
-                            <View className='gap-4'>
-                                <Text className='text-lg font-bold text-black'>Empleados asignados:</Text>
-                                <View className='gap-2'>
-                                    {empleados.map((empleado) => (
-                                        <View key={empleado.idEmpleado} className='flex-row items-center'>
-                                            <Icon name="account" size={20} color="black" />
-                                            <Text className='text-black'>{empleado.empleado}</Text>
-                                        </View>
-                                    ))}
-                                </View>
-                            </View>
-                        )
-                        :
-                        (
-                            <Pressable onPress={() => setShowModal(!showModal)} className='rounded-xl p-3 bg-gray-700 mt-3'>
-                                <Text className='text-white mx-auto text-lg font-semibold'>No hay empleados asignados</Text>
-                            </Pressable>
-                        )}
-                    </View>
-                    
-                )
-            }
-            
-            <Modal
-                visible={showModal}
-                onRequestClose={() => setShowModal(!showModal)}
-                animationType="fade"
-                transparent={true}
-            >
-                <View className="flex-1 justify-center items-center bg-gray-900/50 ">
-                    <View className="bg-white p-4 rounded-lg">
-                        <Text className="text-lg font-bold mb-2">No hay empleados asignados</Text>
-                        <Pressable
-                            onPress={() => setShowModal(!showModal)}
-                            className="bg-blue-500 px-4 py-2 rounded-lg"
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}
+        >
+            <View className="flex-1 p-4 bg-gray-100">
+                <TextInput
+                    label={"Codigo de orden"}
+                    mode="outlined"
+                    placeholder="Ingresa el código"
+                    value={codigoOrden}
+                    onChangeText={setCodigoOrden}
+                    right={<TextInput.Icon icon="magnify" onPress={verificarProceso}/>}
+                />
+                { estado === "Editable" &&
+                        <TouchableOpacity
+                            onPress={iniciarProceso}
+                            activeOpacity={0.8}
+                            className={`h-[15%]  justify-center items-center rounded-2xl ${estado === "Editable" ? "bg-blue-500" : "bg-gray-700"} mt-4`}
+                            disabled={estado === "Editable" ? false : true}
                         >
-                            <Text className="text-white text-center">Cerrar</Text>
-                        </Pressable>
-                    </View>
-                </View>
-            </Modal>
-                
-            
-        </View>
+                            <Icon1 name="play-circle" size={40} color="#FFF" />
+                            <Text className="mt-2 text-white text-lg font-bold">Iniciar proceso</Text>
+                        </TouchableOpacity>
+                }
+                { estado === "Proceso" &&
+                    (
+                        <View className=' mt-4 gap-2 ' >
+                            <View className='gap-4'>
+                                {options.filter((option) => option.title === areaTrabajo).map((option) => (
+                                    <TouchableOpacity
+                                        key={option.id}
+                                        onPress={() => handleOptionPress(option)}
+                                        activeOpacity={0.8}
+                                        disabled={estado === "Editable"}
+                                    >
+                                        <View
+                                            className={`justify-center items-center rounded-2xl p-2 ${option.color}`}
+                                        >
+                                            <Icon name={option.icon} size={40} color="#FFF" />
+                                            <Text className="mt-2 text-white text-lg font-bold">{option.title}</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                            {empleados !== "" ?(
+                                <View className='gap-4'>
+                                    <Text className='text-lg font-bold text-black'>Empleados asignados:</Text>
+                                    <View className="bg-white p-4 rounded-lg w-[90%] ">
+                                        <FlatList 
+                                            data={empleados}
+                                            keyExtractor={(item) => item.idEmpleado}
+                                            renderItem={({ item }) => (
+                                                <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
+                                                    <View className='flex-row p-2'>
+                                                        <Card.Content>
+                                                            <View className='gap-1'>
+                                                                <Text variant="titleMedium">Nombres: {item.Nombres}</Text>
+                                                                <Text variant="titleMedium">DNI: {item.Dni}</Text>
+                                                            </View>
+                                                        </Card.Content>
+                                                    </View>
+                                                    
+                                                </Card>
+                                                
+                                            )}
+                                        />
+                                        
+                                    </View>
+                                </View>
+                            )
+                            :
+                            (
+                                <Pressable onPress={() => setShowModal(!showModal)} className='rounded-xl p-3 bg-gray-700 mt-3'>
+                                    <Text className='text-white mx-auto text-lg font-semibold'>No hay empleados asignados</Text>
+                                </Pressable>
+                            )}
+                        </View>
+                        
+                    )
+                }
+                    <Modal
+                        visible={showModal}
+                        onRequestClose={() => setShowModal(!showModal)}
+                        animationType="fade"
+                        transparent={true}
+                    >
+                        <SafeAreaView className="flex-1 justify-center items-center bg-gray-900/50 ">
+                            <View className="bg-white p-4 rounded-lg w-[90%] ">
+                                <FlatList 
+                                    data={dataEmpleados}
+                                    keyExtractor={(item) => item.idEmpleado}
+                                    renderItem={({ item }) => (
+                                        <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
+                                            <View className='flex-row p-2'>
+                                                <Checkbox
+                                                    status={checked ? 'checked' : 'unchecked'}
+                                                    onPress={() => {
+                                                        setChecked(!checked);
+                                                        setEmpleados(item);
+                                                        console.log(empleados);
+                                                    }}
+                                                    color='#3B82F6'
+                                                />
+                                                <Card.Content>
+                                                    <View className='gap-1'>
+                                                        <Text variant="titleMedium">Nombres: {item.Nombres}</Text>
+                                                        <Text variant="titleMedium">DNI: {item.Dni}</Text>
+                                                    </View>
+                                                </Card.Content>
+                                            </View>
+                                            
+                                        </Card>
+                                        
+                                    )}
+                                />
+                                <Pressable
+                                    onPress={() => setShowModal(!showModal)}
+                                    className="bg-blue-500 px-4 py-2 rounded-lg"
+                                    >
+                                    <Text className="text-white text-center">Cerrar</Text>
+                                </Pressable>
+                            </View>
+                        </SafeAreaView>
+                    </Modal>
+            </View>
+        </KeyboardAvoidingView>
     );
 };
 

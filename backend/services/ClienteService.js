@@ -45,7 +45,7 @@ const ClienteService = {
         }else if(value.length == 11){
             return await ClienteDAO.getClienteJuridicoByRuc(value);
         }
-        throw{status:500, message:`Anyaaaaaaaa`};
+        throw{status:500, message:`Cliente encontrado`};
     },
 
     async getClienteByCodigoPedido(codigoPedido){

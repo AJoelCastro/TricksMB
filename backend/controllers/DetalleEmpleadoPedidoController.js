@@ -1,4 +1,3 @@
-
 const DetalleEmpleadoPedidoService = require('../services/DetalleEmpleadoPedidoService');
 
 const DetalleEmpleadoPedidoController = {
@@ -17,7 +16,7 @@ const DetalleEmpleadoPedidoController = {
     },
 
     async getAllDetalleEmpleadoPedido(req,res){
-        try{
+        try{ 
             const {nomArea, codigoPedido} = req.query;
             const detalleEmpleadoPedido = await DetalleEmpleadoPedidoService.getAllDetalleEmpleadoPedido(nomArea, codigoPedido);
             if(!detalleEmpleadoPedido){
