@@ -1,5 +1,4 @@
 const DetallePedidoDAO = require('../dao/DetallePedidoDAO');
-const DetalleAreaTrabajoService = require('./DetalleAreaTrabajoService');
 
 const DetallePedidoService = {
     async createDetallePedido(idPedido, idModelo, codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela,
@@ -68,6 +67,7 @@ const DetallePedidoService = {
     },
 
     async updateEstado(codigoPedido, estado) {
+        const DetalleAreaTrabajoService = require('./DetalleAreaTrabajoService');
         try {
             if (!codigoPedido) {
                 throw { status: 400, message: "El código de pedido es requerido" };
@@ -75,7 +75,8 @@ const DetallePedidoService = {
 
             const obj = await DetallePedidoDAO.updateEstado(codigoPedido, estado);
             if (obj.estado === "Proceso") {
-                const detalleAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo("Corte",codigoPedido);
+                let nomArea = "Corte";
+                const detalleAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea,codigoPedido);
                 console.log("service",detalleAreaTrabajo);
                 return { mensaje: "Pedido en proceso y detalle de área de trabajo creado", detalleAreaTrabajo };
             }

@@ -17,6 +17,7 @@ class AreaTrabajoDAO{
         try{
             const query =  'SELECT * FROM Area_trabajo WHERE Nombre = ?';
             const rows = await db.execute(query, [nombre]);
+            console.log("Area DAO",rows[0]);
             return rows[0];
         }catch(error){
             console.error('Error al buscar area de trabajo por nombre. ', error);
