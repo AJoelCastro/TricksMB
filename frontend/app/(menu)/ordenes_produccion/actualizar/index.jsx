@@ -165,7 +165,7 @@ const Actualizar = () => {
                         )
                         :
                         (
-                            <Text className='text-lg font-bold text-black'>No hay empleados asignados a esta área de trabajo</Text>
+                            <Text className='text-lg font-bold text-black '>No hay empleados asignados a esta área de trabajo</Text>
                         )}
                     </View>
                     
