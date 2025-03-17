@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity, Pressable, Modal } from 'react-native';
 import { useRouter } from 'expo-router';
 import {Checkbox, TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -22,6 +22,9 @@ const Actualizar = () => {
         { id: 3, label: 'Opción 3', selected: false },
         { id: 4, label: 'Opción 4', selected: false }
     ];
+    function capitalizarPrimeraLetra(palabra) {
+        return palabra.charAt(0).toUpperCase() + palabra.slice(1);
+    }
     const handleOptionPress = async (option) => {
         try {
             const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
@@ -102,6 +105,21 @@ const Actualizar = () => {
             alert("Error al obtener el pedido", error);
         }
     }
+    useEffect(() => {
+        const obtenerEmpleadosPorArea = async () => {
+            if(showModal===true){
+                try {
+                    let nomArea = capitalizarPrimeraLetra(areaTrabajo);
+                    const dataEmpleados = await EmpleadoService.obtenerEmpleadosPorArea(nomArea);
+                    console.log("Empleados",dataEmpleados);
+                } catch (error) {
+                    alert("Error al obtener empleados", error);
+                }
+            }
+        }
+        obtenerEmpleadosPorArea();
+    }, [])
+    
     
     
     const options = [
@@ -167,7 +185,7 @@ const Actualizar = () => {
                         )
                         :
                         (
-                            <Pressable onPress={setShowModal(!showModal)}  className='rounded-xl p-3 bg-gray-700 mt-3'>
+                            <Pressable onPress={() => setShowModal(!showModal)} className='rounded-xl p-3 bg-gray-700 mt-3'>
                                 <Text className='text-white mx-auto text-lg font-semibold'>No hay empleados asignados</Text>
                             </Pressable>
                         )}
@@ -175,6 +193,27 @@ const Actualizar = () => {
                     
                 )
             }
+            
+            <Modal
+                visible={showModal}
+                onRequestClose={() => setShowModal(!showModal)}
+                animationType="fade"
+                transparent={true}
+            >
+                <View className="flex-1 justify-center items-center bg-gray-900/50 ">
+                    <View className="bg-white p-4 rounded-lg">
+                        <Text className="text-lg font-bold mb-2">No hay empleados asignados</Text>
+                        <Pressable
+                            onPress={() => setShowModal(!showModal)}
+                            className="bg-blue-500 px-4 py-2 rounded-lg"
+                        >
+                            <Text className="text-white text-center">Cerrar</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
+                
+            
         </View>
     );
 };

@@ -16,7 +16,6 @@ const DetalleAreaTrabajoService = {
             if (!caracteristicas.length) {
                 throw { status: 404, message: "No se encontraron características para este detalle de pedido" };
             }
-            console.log("DATS",idAreaTrabajo, caracteristicas, idDetalle_pedido)
             const detallesCreados = await Promise.all(
                 caracteristicas.map(caracteristica =>
                     DetalleAreaTrabajoDAO.crearDetalleAreaTrabajo(
