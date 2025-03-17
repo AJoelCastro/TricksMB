@@ -10,6 +10,7 @@ const caracteristicasRoutes = require('./routes/CaracteristicasRoutes');
 const detallePedidoRoutes = require('./routes/DetallePedidoRoutes');
 const AreaTrabajoRoutes = require('./routes/AreaTrabajoRoutes');
 const Empleado = require('./routes/EmpleadoRoutes');
+const CajaRoutes = require('./routes/CajaRoutes');
 
 const errorHandler = require('./utils/errorHandler'); // Importamos errorHandler
 require('dotenv').config();
@@ -48,6 +49,7 @@ app.use('/tipoCalzado', tipoCalzadoRoutes);
 app.use('/detalleAreaTrabajo', DetalleAreaTrabajoRoutes);
 app.use('/empleado', Empleado);
 app.use('/areaTrabajo', AreaTrabajoRoutes);
+app.use('/caja', CajaRoutes);
 // Manejo de rutas no encontradas
 app.use((req, res, next) => {
     res.status(404).json({ error: 'Ruta no encontrada' });
@@ -66,8 +68,22 @@ app.listen(PORT, HOST, () => {
     console.log(`🚀 Servidor corriendo en http://${HOST}:${PORT}`);
 });
 
-const ip = require('ip');
-console.log('Tu IP actual es:', ip.address());
+const os = require("os");
+
+const getLocalIP = () => {
+    const interfaces = os.networkInterfaces();
+    for (const iface of Object.values(interfaces)) {
+        for (const config of iface) {
+            if (config.family === "IPv4" && !config.internal) {
+                return config.address;
+            }
+        }
+    }
+    return "No se encontró la IP";
+};
+
+console.log("Tu IP actual es:", getLocalIP());
+
 
 
 
