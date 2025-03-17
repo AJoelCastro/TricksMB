@@ -35,11 +35,11 @@ const EmpleadoService = {
             if(!nomArea) throw {status: 400, message: "nombre de area requerido para buscar empleados"};
 
             const AreaTrabajoService = require('./AreaTrabajoService');
-            const {idArea} = await AreaTrabajoService.getAreaTrabajoByNombre(nomArea);
+            const {idArea_trabajo} = await AreaTrabajoService.getAreaTrabajoByNombre(nomArea);
 
-            if(!idArea) throw {status: 404, message: "No se encontró el area de trabajo"};
+            if(!idArea_trabajo) throw {status: 404, message: "No se encontró el area de trabajo"};
 
-            return await EmpleadoDAO.getEmpleados(idArea);
+            return await EmpleadoDAO.getEmpleados(idArea_trabajo);
         } catch(error){
             console.error("Error al obtener empleados", error);
             throw error;

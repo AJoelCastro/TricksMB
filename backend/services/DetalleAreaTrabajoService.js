@@ -9,13 +9,13 @@ const DetalleAreaTrabajoService = {
             if (!codigoPedido) {
                 throw { status: 400, message: "Codigo del pedido es requerido" };
             }   
-            const {idAreaTrabajo} = await AreaTrabajoService.getAreaTrabajoByNombre(nomArea);
+            const data = await AreaTrabajoService.getAreaTrabajoByNombre(nomArea);
+            let idAreaTrabajo = data[0].idArea_trabajo;
             const {idDetalle_pedido} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
             const caracteristicas = await CaracteristicasService.getCaracteristicasByIdDetallePedido(idDetalle_pedido);
             if (!caracteristicas.length) {
                 throw { status: 404, message: "No se encontraron características para este detalle de pedido" };
             }
-
             const detallesCreados = await Promise.all(
                 caracteristicas.map(caracteristica =>
                     DetalleAreaTrabajoDAO.crearDetalleAreaTrabajo(
