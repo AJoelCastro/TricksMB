@@ -27,9 +27,8 @@ const EmpleadoController = {
 
     async getEmpleados(req, res){
         try{
-            const dataEmpleado = req.params;
-            console.log(dataEmpleado);
-            const empleados = await EmpleadoService.getEmpleados(dataEmpleado.nomArea);
+            const {nomArea} = req.query;
+            const empleados = await EmpleadoService.getEmpleados(nomArea);
             res.status(200).send(empleados);
         }catch(error){
             res.status(error.status).send(error.message);

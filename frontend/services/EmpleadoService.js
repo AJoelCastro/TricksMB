@@ -35,9 +35,8 @@ const EmpleadoService = {
     },
 
     obtenerEmpleadosPorArea: async (nomArea) => {
-        console.log("Empleados", nomArea);
         try {
-            const token = await AuthService.getToken();
+            const token = await AuthService.getToken(); 
             if (!token) throw new Error("No hay token disponible");
 
             const response = await axios.get(`${API_URL}/empleado/buscarPorArea`, {

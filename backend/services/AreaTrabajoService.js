@@ -16,7 +16,7 @@ const AreaTrabajoService = {
             const areaTrabajo = await AreaTrabajoDAO.getByNombre(nombre);
             if(!areaTrabajo)
                 throw {status: 404,message:"Area de trabajo no encontrado"};
-            return areaTrabajo;
+            return areaTrabajo[0];
         } catch(error){
             throw error;
         }
