@@ -95,7 +95,6 @@ const Actualizar = () => {
                         nomArea = "Corte";
                         setAreaTrabajo("corte");
                         const dataDetalleEmpleadoPedido1 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
-                        console.log("data detalle empleado pedido",dataDetalleEmpleadoPedido1.detalleEmpleadoPedido);
                         if (!dataDetalleEmpleadoPedido1) {
                             return;
                         }
