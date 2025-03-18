@@ -93,6 +93,7 @@ const Actualizar = () => {
                         nomArea = "Corte";
                         setAreaTrabajo("corte");
                         const dataDetalleEmpleadoPedido1 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
+                        console.log("data detalle empleado pedido",dataDetalleEmpleadoPedido1.detalleEmpleadoPedido);
                         if (!dataDetalleEmpleadoPedido1) {
                             return;
                         }
@@ -100,6 +101,7 @@ const Actualizar = () => {
                             alert("No hay empleados asignados a esta área de trabajo");
                             
                         }else{
+                            setEmpleadosAsignados(dataDetalleEmpleadoPedido1.detalleEmpleadoPedido);
                             setShowEmpleadosAsignados(true);
                         }
                         break;
@@ -254,14 +256,14 @@ const Actualizar = () => {
                                     <View className="bg-white p-4 rounded-lg w-[100%]">
                                         <FlatList 
                                             data={empleadosAsignados}
-                                            keyExtractor={(item) => item.idEmpleado}
+                                            keyExtractor={(item) => item.Empleado_idEmpleado}
                                             renderItem={({ item }) => (
                                                 <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
                                                     <View className='flex-row p-2'>
                                                         <Card.Content>
                                                             <View className='gap-1'>
                                                                 <Text variant="titleMedium">Nombres: {item.Nombres}</Text>
-                                                                <Text variant="titleMedium">DNI: {item.Dni}</Text>
+                                                                <Text variant="titleMedium">DNI: {item.DNI}</Text>
                                                             </View>
                                                         </Card.Content>
                                                     </View>
