@@ -190,6 +190,8 @@ const Actualizar = () => {
             }
             if(bandera){
                 alert("Empleados asignados exitosamente");
+                setEmpleados([]);
+                verificarProceso();
             }
         }catch(error){
             alert("Error al asignar empleados", error);
