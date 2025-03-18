@@ -39,6 +39,7 @@ const Actualizar = () => {
             let estado = "Proceso"
             const data = await DetallePedidoService.updateEstado(codigoOrden, estado);
             setEstado("Proceso");
+            console.log("data iniciar proceso", data);  
             if (!data) {
                 console.error('Error al obtener el pedido, verifique que el código sea correcto.');
             }

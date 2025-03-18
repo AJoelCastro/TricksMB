@@ -69,6 +69,7 @@ const DetallePedidoController = {
             const {codigoPedido} = req.params;
             const {estado} = req.body;
             const detallePedido = await DetallePedidoService.updateEstado(codigoPedido, estado);
+            console.log("DPC detallePedido ",detallePedido);
             return res.status(200).json(detallePedido);
         }
         catch (error) {
