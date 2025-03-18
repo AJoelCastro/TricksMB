@@ -46,7 +46,7 @@ const Actualizar = () => {
     }
     const verificarProceso = async () => {
         try {
-            setEmpleados("");
+            setEmpleados([]);
             setAreaTrabajo("");
             setEstado("");
             const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
@@ -139,6 +139,28 @@ const Actualizar = () => {
         }
     }, [empleados]);
 
+    const asignarEmpleados = async () => {
+        try {
+            let bandera= true;
+            let codigoPedido = codigoOrden;
+            for (const empleado of empleados) {
+                console.log(empleado, codigoPedido);
+                let dni = empleado.Dni
+                const dataAsignar = await EmpleadoService.crearDetalleEmpleadoPedido(dni, codigoPedido);
+                console.log("Data Asignar",dataAsignar);
+                if(!dataAsignar){
+                    bandera = false;
+                    console.error("Error al asignar empleados", dataAsignar);
+                }
+            }
+            if(bandera){
+                alert("Empleados asignados exitosamente");
+            }
+        }catch(error){
+            alert("Error al asignar empleados", error);
+        }
+    }
+
     const options = [
         { id: 1, title: 'corte', icon: 'content-cut', color: estado==='Editable' ? 'bg-gray-700' : 'bg-red-500' },
         { id: 2, title: 'perfilado', icon: 'brush', color: estado==='Editable' ? 'bg-gray-700' : 'bg-sky-700' },
@@ -221,6 +243,7 @@ const Actualizar = () => {
                                         <Pressable onPress={() => {
                                             setShowModal(!showModal);
                                             setAsignarVisible(true);
+                                            console.log("agregar",empleados)
                                             }
                                         }>
                                             <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#15a1ff] rounded-xl p-2 mx-auto'>
@@ -230,7 +253,7 @@ const Actualizar = () => {
                                         </Pressable>
                                         {
                                             asignarVisible &&(
-                                                <Pressable onPress={() => setShowModal(!showModal)}>
+                                                <Pressable onPress={asignarEmpleados}>
                                                     <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#13bf1e] px-6 rounded-xl p-2 mx-auto'>
                                                         <Text className='text-xl font-bold text-white '>Asignar</Text>
                                                     </View>

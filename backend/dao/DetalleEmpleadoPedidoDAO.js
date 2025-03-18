@@ -1,11 +1,11 @@
 const db = require('../config/db');
 
 class DetalleEmpleadoPedidoDAO{
-    static async createDetalleEmpleadoPedido(idEmpleado, idPedido){
+    static async createDetalleEmpleadoPedido(idEmpleado, idDetalle_pedido){
         try{
-            const query = 'INSERT INTO Detalle_empleadoPedido (Empleado_idEmpleado, Pedido_idPedido) VALUES (?, ?)';
-            const [rows] = await db.execute(query, [idEmpleado, idPedido]);
-            return {id: rows.insertId, idEmpleado, idPedido};
+            const query = 'INSERT INTO Detalle_empleadoPedido (Empleado_idEmpleado, Detalle_pedido_idDetalle_pedido) VALUES (?, ?)';
+            const [rows] = await db.execute(query, [idEmpleado, idDetalle_pedido]);
+            return {id: rows.insertId, idEmpleado, idDetalle_pedido};
         } catch(error){
             throw error;
         }
