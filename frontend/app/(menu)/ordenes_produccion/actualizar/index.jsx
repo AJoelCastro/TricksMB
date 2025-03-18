@@ -19,6 +19,8 @@ const Actualizar = () => {
     const [dataEmpleados, setDataEmpleados] = useState([]);
     const [checkedEmpleados, setCheckedEmpleados] = useState({});
     const [asignarVisible, setAsignarVisible] = useState(false);
+    const [empleadosAsignados, setEmpleadosAsignados] = useState([]);
+    const [showEmpleadosAsignados, setShowEmpleadosAsignados] = useState(false);
     function capitalizarPrimeraLetra(palabra) {
         return palabra.charAt(0).toUpperCase() + palabra.slice(1);
     }
@@ -66,10 +68,10 @@ const Actualizar = () => {
                         }
                         if(dataDetalleEmpleadoPedido1.detalleEmpleadoPedido.length === 0){
                             alert("No hay empleados asignados a esta área de trabajo");
+                            
                         }else{
-                            setEmpleados(dataDetalleEmpleadoPedido1.detalleEmpleadoPedido);
+                            setShowEmpleadosAsignados(true);
                         }
-                        console.log("Empleados",dataDetalleEmpleadoPedido1);
                         break;
                     case 2:
                         nomArea = "Perfilado";
@@ -213,14 +215,15 @@ const Actualizar = () => {
                                     </TouchableOpacity>
                                 ))}
                             </View>
-                            {empleados.length > 0 ?(
-                                <View className='gap-1 mt-2'>
+                            {
+                                showEmpleadosAsignados ===true? (
+                                    <View className='gap-1 mt-2'>
                                     <View className=' p-2 bg-white border-b border-gray-300 items-center'>
                                         <Text  className='text-lg font-bold text-black '>Empleados Asignados</Text>
                                     </View>
                                     <View className="bg-white p-4 rounded-lg w-[100%]">
                                         <FlatList 
-                                            data={empleados}
+                                            data={empleadosAsignados}
                                             keyExtractor={(item) => item.idEmpleado}
                                             renderItem={({ item }) => (
                                                 <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
@@ -239,37 +242,70 @@ const Actualizar = () => {
                                         />
                                         
                                     </View>
-                                    <View className='flex-row gap-4 justify-center'>
-                                        <Pressable onPress={() => {
-                                            setShowModal(!showModal);
-                                            setAsignarVisible(true);
-                                            console.log("agregar",empleados)
-                                            }
-                                        }>
-                                            <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#15a1ff] rounded-xl p-2 mx-auto'>
-                                                <Text className='text-xl font-bold text-white '>Agregar</Text>
-                                                <Icon1 name="plus" size={20} color="#fff" />
+                                </View>
+                                )
+                                :
+                                (
+                                    empleados.length > 0 ?(
+                                        <View className='gap-1 mt-2'>
+                                            <View className=' p-2 bg-white border-b border-gray-300 items-center'>
+                                                <Text  className='text-lg font-bold text-black '>Empleados Asignados</Text>
                                             </View>
-                                        </Pressable>
-                                        {
-                                            asignarVisible &&(
-                                                <Pressable onPress={asignarEmpleados}>
-                                                    <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#13bf1e] px-6 rounded-xl p-2 mx-auto'>
-                                                        <Text className='text-xl font-bold text-white '>Asignar</Text>
+                                            <View className="bg-white p-4 rounded-lg w-[100%]">
+                                                <FlatList 
+                                                    data={empleados}
+                                                    keyExtractor={(item) => item.idEmpleado}
+                                                    renderItem={({ item }) => (
+                                                        <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
+                                                            <View className='flex-row p-2'>
+                                                                <Card.Content>
+                                                                    <View className='gap-1'>
+                                                                        <Text variant="titleMedium">Nombres: {item.Nombres}</Text>
+                                                                        <Text variant="titleMedium">DNI: {item.Dni}</Text>
+                                                                    </View>
+                                                                </Card.Content>
+                                                            </View>
+                                                            
+                                                        </Card>
+                                                        
+                                                    )}
+                                                />
+                                                
+                                            </View>
+                                            <View className='flex-row gap-4 justify-center'>
+                                                <Pressable onPress={() => {
+                                                    setShowModal(!showModal);
+                                                    setAsignarVisible(true);
+                                                    console.log("agregar",empleados)
+                                                    }
+                                                }>
+                                                    <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#15a1ff] rounded-xl p-2 mx-auto'>
+                                                        <Text className='text-xl font-bold text-white '>Agregar</Text>
+                                                        <Icon1 name="plus" size={20} color="#fff" />
                                                     </View>
                                                 </Pressable>
-                                            )
-                                        }
-                                        
-                                    </View>
-                                </View>
-                            )
-                            :
-                            (
-                                <Pressable onPress={() => setShowModal(!showModal)} className='rounded-xl p-3 bg-gray-700 mt-3'>
-                                    <Text className='text-white mx-auto text-lg font-semibold'>Asignar Empleados</Text>
-                                </Pressable>
-                            )}
+                                                {
+                                                    asignarVisible &&(
+                                                        <Pressable onPress={asignarEmpleados}>
+                                                            <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#13bf1e] px-6 rounded-xl p-2 mx-auto'>
+                                                                <Text className='text-xl font-bold text-white '>Asignar</Text>
+                                                            </View>
+                                                        </Pressable>
+                                                    )
+                                                }
+                                                
+                                            </View>
+                                        </View>
+                                    )
+                                    :
+                                    (
+                                        <Pressable onPress={() => setShowModal(!showModal)} className='rounded-xl p-3 bg-gray-700 mt-3'>
+                                            <Text className='text-white mx-auto text-lg font-semibold'>Asignar Empleados</Text>
+                                        </Pressable>
+                                    )
+                                )
+                            }
+                            
                         </View>
                         
                     )
