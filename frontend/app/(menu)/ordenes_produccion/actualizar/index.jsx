@@ -18,6 +18,7 @@ const Actualizar = () => {
     const [showModal, setShowModal] = useState(false);
     const [dataEmpleados, setDataEmpleados] = useState([]);
     const [checkedEmpleados, setCheckedEmpleados] = useState({});
+    const [asignarVisible, setAsignarVisible] = useState(false);
     function capitalizarPrimeraLetra(palabra) {
         return palabra.charAt(0).toUpperCase() + palabra.slice(1);
     }
@@ -99,6 +100,7 @@ const Actualizar = () => {
     }
     useEffect(() => {
         const obtenerEmpleadosPorArea = async () => {
+            setDataEmpleados([]);
             if(showModal===true){
                 try {
                     let nomArea = capitalizarPrimeraLetra(areaTrabajo);
@@ -216,17 +218,26 @@ const Actualizar = () => {
                                         
                                     </View>
                                     <View className='flex-row gap-4 justify-center'>
-                                        <Pressable onPress={() => setShowModal(!showModal)}>
+                                        <Pressable onPress={() => {
+                                            setShowModal(!showModal);
+                                            setAsignarVisible(true);
+                                            }
+                                        }>
                                             <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#15a1ff] rounded-xl p-2 mx-auto'>
                                                 <Text className='text-xl font-bold text-white '>Agregar</Text>
                                                 <Icon1 name="plus" size={20} color="#fff" />
                                             </View>
                                         </Pressable>
-                                        <Pressable onPress={() => setShowModal(!showModal)}>
-                                            <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#13bf1e] px-6 rounded-xl p-2 mx-auto'>
-                                                <Text className='text-xl font-bold text-white '>Asignar</Text>
-                                            </View>
-                                        </Pressable>
+                                        {
+                                            asignarVisible &&(
+                                                <Pressable onPress={() => setShowModal(!showModal)}>
+                                                    <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#13bf1e] px-6 rounded-xl p-2 mx-auto'>
+                                                        <Text className='text-xl font-bold text-white '>Asignar</Text>
+                                                    </View>
+                                                </Pressable>
+                                            )
+                                        }
+                                        
                                     </View>
                                 </View>
                             )
