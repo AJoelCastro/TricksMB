@@ -17,7 +17,7 @@ const Actualizar = () => {
     const [empleados, setEmpleados] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [dataEmpleados, setDataEmpleados] = useState([]);
-    const [checked, setChecked] = useState(false);
+    const [checkedEmpleados, setCheckedEmpleados] = useState({});
     function capitalizarPrimeraLetra(palabra) {
         return palabra.charAt(0).toUpperCase() + palabra.slice(1);
     }
@@ -113,6 +113,11 @@ const Actualizar = () => {
     }, [showModal])
     
     const agregarOQuitarEmpleado = (item) => {
+        setCheckedEmpleados((prev) => {
+            const newChecked = { ...prev, [item.idEmpleado]: !prev[item.idEmpleado] };
+            return newChecked;
+        });
+
         if (Array.isArray(empleados) && empleados.some(e => e.idEmpleado === item.idEmpleado)) {
             // Si el empleado ya está en la lista, lo quitamos
             setEmpleados(empleados.filter(e => e.idEmpleado !== item.idEmpleado));
@@ -122,6 +127,18 @@ const Actualizar = () => {
         }
     };
     
+    useEffect(() => {
+        if (empleados.length > 0) {
+            const initialChecked = {};
+            empleados.forEach((emp) => {
+                initialChecked[emp.idEmpleado] = true;
+                console.log("cheked 1", initialChecked[emp.idEmpleado]);
+            });
+            setCheckedEmpleados(initialChecked);
+            console.log("cheked 2", initialChecked);
+        }
+    }, [empleados]);
+
     const options = [
         { id: 1, title: 'corte', icon: 'content-cut', color: estado==='Editable' ? 'bg-gray-700' : 'bg-red-500' },
         { id: 2, title: 'perfilado', icon: 'brush', color: estado==='Editable' ? 'bg-gray-700' : 'bg-sky-700' },
@@ -240,9 +257,8 @@ const Actualizar = () => {
                                         <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
                                             <View className='flex-row p-2'>
                                                 <Checkbox
-                                                    status={checked ? 'checked' : 'unchecked'}
+                                                    status={checkedEmpleados[item.idEmpleado] ? 'checked' : 'unchecked'}
                                                     onPress={() => {
-                                                        setChecked(!checked);
                                                         agregarOQuitarEmpleado(item);
                                                     }}
                                                     color='#3B82F6'
