@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, Pressable, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, Pressable, Modal, FlatList,KeyboardAvoidingView, Platform, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
-import {Checkbox, TextInput} from 'react-native-paper';
+import {Card, Checkbox, TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon1 from 'react-native-vector-icons/FontAwesome';
 import DetallePedidoService from '@/services/DetallePedidoService';
@@ -14,14 +14,13 @@ const Actualizar = () => {
     const [codigoOrden, setCodigoOrden] = useState('');
     const [estado, setEstado] = useState("");
     const [areaTrabajo, setAreaTrabajo] = useState("");
-    const [empleados, setEmpleados] = useState("");
+    const [empleados, setEmpleados] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    const data = [
-        { id: 1, label: 'Opción 1', selected: false },
-        { id: 2, label: 'Opción 2', selected: false },
-        { id: 3, label: 'Opción 3', selected: false },
-        { id: 4, label: 'Opción 4', selected: false }
-    ];
+    const [dataEmpleados, setDataEmpleados] = useState([]);
+    const [checkedEmpleados, setCheckedEmpleados] = useState({});
+    const [asignarVisible, setAsignarVisible] = useState(false);
+    const [empleadosAsignados, setEmpleadosAsignados] = useState([]);
+    const [showEmpleadosAsignados, setShowEmpleadosAsignados] = useState(false);
     function capitalizarPrimeraLetra(palabra) {
         return palabra.charAt(0).toUpperCase() + palabra.slice(1);
     }
@@ -49,7 +48,7 @@ const Actualizar = () => {
     }
     const verificarProceso = async () => {
         try {
-            setEmpleados("");
+            setEmpleados([]);
             setAreaTrabajo("");
             setEstado("");
             const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
@@ -61,8 +60,7 @@ const Actualizar = () => {
                 let nomArea;
                 switch (dataDetalleAreaTrabajo[0].Area_trabajo_idArea_trabajo) {
                     case 1:
-                        nomArea = "corte";
-                        console.log(nomArea);
+                        nomArea = "Corte";
                         setAreaTrabajo("corte");
                         const dataDetalleEmpleadoPedido1 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
                         if (!dataDetalleEmpleadoPedido1) {
@@ -70,29 +68,26 @@ const Actualizar = () => {
                         }
                         if(dataDetalleEmpleadoPedido1.detalleEmpleadoPedido.length === 0){
                             alert("No hay empleados asignados a esta área de trabajo");
+                            
                         }else{
-                            setEmpleados(dataDetalleEmpleadoPedido1.detalleEmpleadoPedido);
+                            setShowEmpleadosAsignados(true);
                         }
-                        console.log("Empleados",dataDetalleEmpleadoPedido1);
                         break;
                     case 2:
-                        nomArea = "perfilado";
-                        console.log(nomArea);
+                        nomArea = "Perfilado";
                         setAreaTrabajo("perfilado");
                         const dataDetalleEmpleadoPedido2 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
                         console.log("Empleados",dataDetalleEmpleadoPedido2);
                         break;
                     case 3:
-                        nomArea = "armado";
+                        nomArea = "Armado";
                         setAreaTrabajo("armado");
-                        console.log(nomArea);
                         const dataDetalleEmpleadoPedido3 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
                         console.log("Empleados",dataDetalleEmpleadoPedido3);
                         break;
                     case 4:
-                        nomArea = "alistado";
+                        nomArea = "Alistado";
                         setAreaTrabajo("alistado");
-                        console.log(nomArea);
                         const dataDetalleEmpleadoPedido4 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
                         console.log("Empleados",dataDetalleEmpleadoPedido4);
                         break;
@@ -107,21 +102,67 @@ const Actualizar = () => {
     }
     useEffect(() => {
         const obtenerEmpleadosPorArea = async () => {
+            setDataEmpleados([]);
             if(showModal===true){
                 try {
                     let nomArea = capitalizarPrimeraLetra(areaTrabajo);
                     const dataEmpleados = await EmpleadoService.obtenerEmpleadosPorArea(nomArea);
-                    console.log("Empleados",dataEmpleados);
+                    setDataEmpleados(dataEmpleados);
                 } catch (error) {
                     alert("Error al obtener empleados", error);
                 }
             }
         }
         obtenerEmpleadosPorArea();
-    }, [])
+    }, [showModal])
     
+    const agregarOQuitarEmpleado = (item) => {
+        setCheckedEmpleados((prev) => {
+            const newChecked = { ...prev, [item.idEmpleado]: !prev[item.idEmpleado] };
+            return newChecked;
+        });
+
+        if (Array.isArray(empleados) && empleados.some(e => e.idEmpleado === item.idEmpleado)) {
+            // Si el empleado ya está en la lista, lo quitamos
+            setEmpleados(empleados.filter(e => e.idEmpleado !== item.idEmpleado));
+        } else {
+            // Si el empleado no está en la lista, lo agregamos
+            setEmpleados([...empleados, item]);
+        }
+    };
     
-    
+    useEffect(() => {
+        if (empleados.length > 0) {
+            const initialChecked = {};
+            empleados.forEach((emp) => {
+                initialChecked[emp.idEmpleado] = true;
+            });
+            setCheckedEmpleados(initialChecked);
+        }
+    }, [empleados]);
+
+    const asignarEmpleados = async () => {
+        try {
+            let bandera= true;
+            let codigoPedido = codigoOrden;
+            for (const empleado of empleados) {
+                console.log(empleado, codigoPedido);
+                let dni = empleado.Dni
+                const dataAsignar = await EmpleadoService.crearDetalleEmpleadoPedido(dni, codigoPedido);
+                console.log("Data Asignar",dataAsignar);
+                if(!dataAsignar){
+                    bandera = false;
+                    console.error("Error al asignar empleados", dataAsignar);
+                }
+            }
+            if(bandera){
+                alert("Empleados asignados exitosamente");
+            }
+        }catch(error){
+            alert("Error al asignar empleados", error);
+        }
+    }
+
     const options = [
         { id: 1, title: 'corte', icon: 'content-cut', color: estado==='Editable' ? 'bg-gray-700' : 'bg-red-500' },
         { id: 2, title: 'perfilado', icon: 'brush', color: estado==='Editable' ? 'bg-gray-700' : 'bg-sky-700' },
@@ -130,91 +171,189 @@ const Actualizar = () => {
     ];
 
     return (
-        <View className="flex-1 p-4 bg-gray-100">
-            <TextInput
-                label={"Codigo de orden"}
-                mode="outlined"
-                placeholder="Ingresa el código"
-                value={codigoOrden}
-                onChangeText={setCodigoOrden}
-                right={<TextInput.Icon icon="magnify" onPress={verificarProceso}/>}
-            />
-            { estado === "Editable" &&
-                    <TouchableOpacity
-                        onPress={iniciarProceso}
-                        activeOpacity={0.8}
-                        className={`h-[15%]  justify-center items-center rounded-2xl ${estado === "Editable" ? "bg-blue-500" : "bg-gray-700"} mt-4`}
-                        disabled={estado === "Editable" ? false : true}
-                    >
-                        <Icon1 name="play-circle" size={40} color="#FFF" />
-                        <Text className="mt-2 text-white text-lg font-bold">Iniciar proceso</Text>
-                    </TouchableOpacity>
-            }
-            { estado === "Proceso" &&
-                (
-                    <View className=' mt-4 gap-2 ' >
-                        <View className='gap-4'>
-                            {options.filter((option) => option.title === areaTrabajo).map((option) => (
-                                <TouchableOpacity
-                                    key={option.id}
-                                    onPress={() => handleOptionPress(option)}
-                                    activeOpacity={0.8}
-                                    disabled={estado === "Editable"}
-                                >
-                                    <View
-                                        className={`justify-center items-center rounded-2xl p-2 ${option.color}`}
-                                    >
-                                        <Icon name={option.icon} size={40} color="#FFF" />
-                                        <Text className="mt-2 text-white text-lg font-bold">{option.title}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            ))}
-                        </View>
-                        {empleados !== "" ?(
-                            <View className='gap-4'>
-                                <Text className='text-lg font-bold text-black'>Empleados asignados:</Text>
-                                <View className='gap-2'>
-                                    {empleados.map((empleado) => (
-                                        <View key={empleado.idEmpleado} className='flex-row items-center'>
-                                            <Icon name="account" size={20} color="black" />
-                                            <Text className='text-black'>{empleado.empleado}</Text>
-                                        </View>
-                                    ))}
-                                </View>
-                            </View>
-                        )
-                        :
-                        (
-                            <Pressable onPress={() => setShowModal(!showModal)} className='rounded-xl p-3 bg-gray-700 mt-3'>
-                                <Text className='text-white mx-auto text-lg font-semibold'>No hay empleados asignados</Text>
-                            </Pressable>
-                        )}
-                    </View>
-                    
-                )
-            }
-            
-            <Modal
-                visible={showModal}
-                onRequestClose={() => setShowModal(!showModal)}
-                animationType="fade"
-                transparent={true}
-            >
-                <View className="flex-1 justify-center items-center bg-gray-900/50 ">
-                    <View className="bg-white p-4 rounded-lg">
-                        <Text className="text-lg font-bold mb-2">No hay empleados asignados</Text>
-                        <Pressable
-                            onPress={() => setShowModal(!showModal)}
-                            className="bg-blue-500 px-4 py-2 rounded-lg"
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}
+        >
+            <View className="flex-1 p-4 bg-gray-100">
+                <TextInput
+                    label={"Codigo de orden"}
+                    mode="outlined"
+                    placeholder="Ingresa el código"
+                    value={codigoOrden}
+                    onChangeText={setCodigoOrden}
+                    right={<TextInput.Icon icon="magnify" onPress={verificarProceso}/>}
+                />
+                { estado === "Editable" &&
+                        <TouchableOpacity
+                            onPress={iniciarProceso}
+                            activeOpacity={0.8}
+                            className={`h-[15%]  justify-center items-center rounded-2xl ${estado === "Editable" ? "bg-blue-500" : "bg-gray-700"} mt-4`}
+                            disabled={estado === "Editable" ? false : true}
                         >
-                            <Text className="text-white text-center">Cerrar</Text>
-                        </Pressable>
-                    </View>
-                </View>
-            </Modal>
-                
-            
-        </View>
+                            <Icon1 name="play-circle" size={40} color="#FFF" />
+                            <Text className="mt-2 text-white text-lg font-bold">Iniciar proceso</Text>
+                        </TouchableOpacity>
+                }
+                { estado === "Proceso" &&
+                    (
+                        <View className=' mt-4 gap-2 ' >
+                            <View className='gap-4'>
+                                {options.filter((option) => option.title === areaTrabajo).map((option) => (
+                                    <TouchableOpacity
+                                        key={option.id}
+                                        onPress={() => handleOptionPress(option)}
+                                        activeOpacity={0.8}
+                                        disabled={estado === "Editable"}
+                                    >
+                                        <View
+                                            className={`justify-center items-center rounded-2xl p-2 ${option.color}`}
+                                        >
+                                            <Icon name={option.icon} size={40} color="#FFF" />
+                                            <Text className="mt-2 text-white text-lg font-bold">{option.title}</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                            {
+                                showEmpleadosAsignados ===true? (
+                                    <View className='gap-1 mt-2'>
+                                    <View className=' p-2 bg-white border-b border-gray-300 items-center'>
+                                        <Text  className='text-lg font-bold text-black '>Empleados Asignados</Text>
+                                    </View>
+                                    <View className="bg-white p-4 rounded-lg w-[100%]">
+                                        <FlatList 
+                                            data={empleadosAsignados}
+                                            keyExtractor={(item) => item.idEmpleado}
+                                            renderItem={({ item }) => (
+                                                <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
+                                                    <View className='flex-row p-2'>
+                                                        <Card.Content>
+                                                            <View className='gap-1'>
+                                                                <Text variant="titleMedium">Nombres: {item.Nombres}</Text>
+                                                                <Text variant="titleMedium">DNI: {item.Dni}</Text>
+                                                            </View>
+                                                        </Card.Content>
+                                                    </View>
+                                                    
+                                                </Card>
+                                                
+                                            )}
+                                        />
+                                        
+                                    </View>
+                                </View>
+                                )
+                                :
+                                (
+                                    empleados.length > 0 ?(
+                                        <View className='gap-1 mt-2'>
+                                            <View className=' p-2 bg-white border-b border-gray-300 items-center'>
+                                                <Text  className='text-lg font-bold text-black '>Empleados Asignados</Text>
+                                            </View>
+                                            <View className="bg-white p-4 rounded-lg w-[100%]">
+                                                <FlatList 
+                                                    data={empleados}
+                                                    keyExtractor={(item) => item.idEmpleado}
+                                                    renderItem={({ item }) => (
+                                                        <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
+                                                            <View className='flex-row p-2'>
+                                                                <Card.Content>
+                                                                    <View className='gap-1'>
+                                                                        <Text variant="titleMedium">Nombres: {item.Nombres}</Text>
+                                                                        <Text variant="titleMedium">DNI: {item.Dni}</Text>
+                                                                    </View>
+                                                                </Card.Content>
+                                                            </View>
+                                                            
+                                                        </Card>
+                                                        
+                                                    )}
+                                                />
+                                                
+                                            </View>
+                                            <View className='flex-row gap-4 justify-center'>
+                                                <Pressable onPress={() => {
+                                                    setShowModal(!showModal);
+                                                    setAsignarVisible(true);
+                                                    console.log("agregar",empleados)
+                                                    }
+                                                }>
+                                                    <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#15a1ff] rounded-xl p-2 mx-auto'>
+                                                        <Text className='text-xl font-bold text-white '>Agregar</Text>
+                                                        <Icon1 name="plus" size={20} color="#fff" />
+                                                    </View>
+                                                </Pressable>
+                                                {
+                                                    asignarVisible &&(
+                                                        <Pressable onPress={asignarEmpleados}>
+                                                            <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#13bf1e] px-6 rounded-xl p-2 mx-auto'>
+                                                                <Text className='text-xl font-bold text-white '>Asignar</Text>
+                                                            </View>
+                                                        </Pressable>
+                                                    )
+                                                }
+                                                
+                                            </View>
+                                        </View>
+                                    )
+                                    :
+                                    (
+                                        <Pressable onPress={() => setShowModal(!showModal)} className='rounded-xl p-3 bg-gray-700 mt-3'>
+                                            <Text className='text-white mx-auto text-lg font-semibold'>Asignar Empleados</Text>
+                                        </Pressable>
+                                    )
+                                )
+                            }
+                            
+                        </View>
+                        
+                    )
+                }
+                    <Modal
+                        visible={showModal}
+                        onRequestClose={() => setShowModal(!showModal)}
+                        animationType="fade"
+                        transparent={true}
+                    >
+                        <SafeAreaView className="flex-1 justify-center items-center bg-gray-900/50 ">
+                            <View className="bg-white p-4 rounded-lg w-[90%] ">
+                                <FlatList 
+                                    data={dataEmpleados}
+                                    keyExtractor={(item) => item.idEmpleado}
+                                    renderItem={({ item }) => (
+                                        <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
+                                            <View className='flex-row p-2'>
+                                                <Checkbox
+                                                    status={checkedEmpleados[item.idEmpleado] ? 'checked' : 'unchecked'}
+                                                    onPress={() => {
+                                                        agregarOQuitarEmpleado(item);
+                                                    }}
+                                                    color='#3B82F6'
+                                                />
+                                                <Card.Content>
+                                                    <View className='gap-1'>
+                                                        <Text variant="titleMedium">Nombres: {item.Nombres}</Text>
+                                                        <Text variant="titleMedium">DNI: {item.Dni}</Text>
+                                                    </View>
+                                                </Card.Content>
+                                            </View>
+                                            
+                                        </Card>
+                                        
+                                    )}
+                                />
+                                <Pressable
+                                    onPress={() => setShowModal(!showModal)}
+                                    className="bg-blue-500 px-4 py-2 rounded-lg"
+                                    >
+                                    <Text className="text-white text-center">Cerrar</Text>
+                                </Pressable>
+                            </View>
+                        </SafeAreaView>
+                    </Modal>
+            </View>
+        </KeyboardAvoidingView>
     );
 };
 

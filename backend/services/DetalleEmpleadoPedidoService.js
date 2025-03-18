@@ -21,9 +21,9 @@ const DetalleEmpleadoPedidoService = {
         try{
             if(!nomArea) throw {status: 400, message: "nombre de area requerido para buscar detalle empleado pedido"};
             if(!codigoPedido) throw {status: 400, message: "codigo de pedido requerido para buscar detalle empleado pedido"};
-
-            const data1 = await AreaTrabajoService.getAreaTrabajoByNombre(nomArea);
-            let idArea = data1[0].idArea_trabajo;
+            const DetallePedidoService = require('./DetallePedidoService');
+            const {idArea_trabajo} = await AreaTrabajoService.getAreaTrabajoByNombre(nomArea);
+            let idArea = idArea_trabajo;
             const {idDetalle_pedido} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
             return await DetalleEmpleadoPedidoDAO.getAllDetallePedido(idArea, idDetalle_pedido);
         } catch(error){

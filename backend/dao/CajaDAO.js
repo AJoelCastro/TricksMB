@@ -1,5 +1,5 @@
 const db = require('../config/db');
-const CodQR = require('qrcode');
+// const CodQR = require('qrcode');
 
 class CajaDAO{
 
