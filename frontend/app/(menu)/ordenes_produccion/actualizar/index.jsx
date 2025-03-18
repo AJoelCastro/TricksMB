@@ -36,24 +36,53 @@ const Actualizar = () => {
     };
     const iniciarProceso = async () => {
         try {
-            let estado = "Proceso"
-            const data = await DetallePedidoService.updateEstado(codigoOrden, estado);
-            setEstado("Proceso");
-            console.log("data iniciar proceso", data);  
-            if (!data) {
+            let estado = "Proceso";
+            const dataIniciar = await DetallePedidoService.updateEstado(codigoOrden, estado);
+            if (dataIniciar) {
+                setEstado("Proceso"); // Actualiza el estado después de que se complete la operación
+                alert(`${dataIniciar.detalleAreaTrabajo.message}`);
+            } else {
                 console.error('Error al obtener el pedido, verifique que el código sea correcto.');
             }
         } catch (error) {
             alert("Error al iniciar el proceso", error);
         }
-    }
+    };
+    
+    useEffect(() => {
+        const obtenerAreaTrabajo = async () => {
+            if (estado === "Proceso") {
+                try {
+                    let codigoPedido = codigoOrden
+                    const dataDetalleAreaTrabajo = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
+                    switch (dataDetalleAreaTrabajo[0].Area_trabajo_idArea_trabajo) {
+                        case 1:
+                            setAreaTrabajo("corte");
+                            break;
+                        case 2:
+                            setAreaTrabajo("perfilado");
+                            break;
+                        case 3:
+                            setAreaTrabajo("armado");
+                            break;
+                        case 4:
+                            setAreaTrabajo("alistado");
+                            break;
+                    }
+                }catch (error) {
+                    console.error("Error al obtener el area de trabajo.");
+                }
+            }
+            
+        };
+        obtenerAreaTrabajo();
+    },[estado])
     const verificarProceso = async () => {
         try {
             setEmpleados([]);
             setAreaTrabajo("");
             setEstado("");
             const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
-            console.log("data", data);
             let codigoPedido = codigoOrden
             setEstado(data.Estado);
             if (data.Estado === "Proceso") {
