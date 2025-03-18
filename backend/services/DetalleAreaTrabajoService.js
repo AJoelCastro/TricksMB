@@ -10,9 +10,10 @@ const DetalleAreaTrabajoService = {
                 throw { status: 400, message: "Codigo del pedido es requerido" };
             }   
             const data = await AreaTrabajoService.getAreaTrabajoByNombre(nomArea);
-            let idAreaTrabajo = data[0].idArea_trabajo;
+            let idAreaTrabajo = data.idArea_trabajo;
             const {idDetalle_pedido} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
             const caracteristicas = await CaracteristicasService.getCaracteristicasByIdDetallePedido(idDetalle_pedido);
+            console.log("DATS caracteristicas",caracteristicas);
             if (!caracteristicas.length) {
                 throw { status: 404, message: "No se encontraron características para este detalle de pedido" };
             }
