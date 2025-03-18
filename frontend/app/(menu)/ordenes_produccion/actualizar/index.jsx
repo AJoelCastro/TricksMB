@@ -132,10 +132,8 @@ const Actualizar = () => {
             const initialChecked = {};
             empleados.forEach((emp) => {
                 initialChecked[emp.idEmpleado] = true;
-                console.log("cheked 1", initialChecked[emp.idEmpleado]);
             });
             setCheckedEmpleados(initialChecked);
-            console.log("cheked 2", initialChecked);
         }
     }, [empleados]);
 
