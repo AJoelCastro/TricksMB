@@ -20,6 +20,24 @@ class CajaDAO{
             throw error;
         }
     } 
+
+    static async getAllCajaByPedido(idCaracteristica){
+        try{
+            const query = `
+                SELECT * 
+                FROM Caja
+                WHERE Caracteristicas_idCaracteristicas = ?
+            `;
+            const [rows] = await db.execute(query, [idCaracteristica]);
+            return rows;
+        }catch(error){
+            console.error(error);
+            throw error;
+        }
+
+
+    }
+
 }
 
 module.exports = CajaDAO;
