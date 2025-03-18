@@ -103,7 +103,6 @@ const Actualizar = () => {
                 try {
                     let nomArea = capitalizarPrimeraLetra(areaTrabajo);
                     const dataEmpleados = await EmpleadoService.obtenerEmpleadosPorArea(nomArea);
-                    console.log("Empleados por area",dataEmpleados);
                     setDataEmpleados(dataEmpleados);
                 } catch (error) {
                     alert("Error al obtener empleados", error);
@@ -114,7 +113,7 @@ const Actualizar = () => {
     }, [showModal])
     
     const agregarOQuitarEmpleado = (item) => {
-        if (empleados.some(e => e.idEmpleado === item.idEmpleado)) {
+        if (Array.isArray(empleados) && empleados.some(e => e.idEmpleado === item.idEmpleado)) {
             // Si el empleado ya está en la lista, lo quitamos
             setEmpleados(empleados.filter(e => e.idEmpleado !== item.idEmpleado));
         } else {
@@ -175,12 +174,11 @@ const Actualizar = () => {
                                     </TouchableOpacity>
                                 ))}
                             </View>
-                            {empleados !== "" ?(
+                            {empleados.length > 0 ?(
                                 <View className='gap-1 mt-2'>
                                     <View className=' p-2 bg-white border-b border-gray-300 items-center'>
                                         <Text  className='text-lg font-bold text-black '>Empleados Asignados</Text>
                                     </View>
-                                    {console.log(empleados)}
                                     <View className="bg-white p-4 rounded-lg w-[100%]">
                                         <FlatList 
                                             data={empleados}
@@ -202,18 +200,25 @@ const Actualizar = () => {
                                         />
                                         
                                     </View>
-                                    <Pressable onPress={() => setShowModal(!showModal)}>
-                                        <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#15a1ff] rounded-xl p-2 w-[50%] mx-auto'>
-                                            <Text className='text-xl font-bold text-white '>Agregar</Text>
-                                            <Icon1 name="plus" size={20} color="#fff" />
-                                        </View>
-                                    </Pressable>
+                                    <View className='flex-row gap-4 justify-center'>
+                                        <Pressable onPress={() => setShowModal(!showModal)}>
+                                            <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#15a1ff] rounded-xl p-2 mx-auto'>
+                                                <Text className='text-xl font-bold text-white '>Agregar</Text>
+                                                <Icon1 name="plus" size={20} color="#fff" />
+                                            </View>
+                                        </Pressable>
+                                        <Pressable onPress={() => setShowModal(!showModal)}>
+                                            <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#13bf1e] px-6 rounded-xl p-2 mx-auto'>
+                                                <Text className='text-xl font-bold text-white '>Asignar</Text>
+                                            </View>
+                                        </Pressable>
+                                    </View>
                                 </View>
                             )
                             :
                             (
                                 <Pressable onPress={() => setShowModal(!showModal)} className='rounded-xl p-3 bg-gray-700 mt-3'>
-                                    <Text className='text-white mx-auto text-lg font-semibold'>No hay empleados asignados</Text>
+                                    <Text className='text-white mx-auto text-lg font-semibold'>Asignar Empleados</Text>
                                 </Pressable>
                             )}
                         </View>
@@ -239,7 +244,6 @@ const Actualizar = () => {
                                                     onPress={() => {
                                                         setChecked(!checked);
                                                         agregarOQuitarEmpleado(item);
-                                                        console.log("item",item);
                                                     }}
                                                     color='#3B82F6'
                                                 />
