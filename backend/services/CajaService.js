@@ -28,6 +28,30 @@ const CajaService = {
             console.error("Error al crear cajas:", error);
             throw error;
         }
+    },
+
+    async getAllCajaByPedido(codigoPedido){
+        try{
+            const {DetallePedido_idDetallePedido} = await DetallePedido.getDetallePedidoByCodigoPedido(codigoPedido);
+            if(!DetallePedido_idDetallePedido) throw {status: 404, message: "No se encontró el detalle de pedido"};
+
+            const caracteristicas = await Caracteristica.getCaracteristicasByIdDetallePedido(DetallePedido_idDetallePedido);
+            if(caracteristicas.length === 0) throw {status: 404, message: "No se encontraron caracteristicas"};
+            
+            const cajas = await Promise.all(caracteristicas.map(async (caracteristica) => {
+                try {
+                    return await CajaDAO.getAllCajaByPedido(caracteristica.idCaracteristicas);
+                } catch (error) {
+                    console.error(`Error obteniendo cajas para característica ${caracteristica.idCaracteristicas}:`, error);
+                    return [];
+                }
+            }));
+
+            return cajas.flat();
+        }catch(error){
+            console.error("Error al obtener cajas por pedido:", error);
+            throw error;
+        }
     }
 }
 
