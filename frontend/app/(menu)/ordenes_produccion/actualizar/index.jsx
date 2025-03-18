@@ -18,7 +18,6 @@ const Actualizar = () => {
     const [showModal, setShowModal] = useState(false);
     const [dataEmpleados, setDataEmpleados] = useState([]);
     const [checkedEmpleados, setCheckedEmpleados] = useState({});
-    const [asignarVisible, setAsignarVisible] = useState(false);
     const [empleadosAsignados, setEmpleadosAsignados] = useState([]);
     const [showEmpleadosAsignados, setShowEmpleadosAsignados] = useState(false);
     function capitalizarPrimeraLetra(palabra) {
@@ -79,6 +78,9 @@ const Actualizar = () => {
     },[estado])
     const verificarProceso = async () => {
         try {
+            setCheckedEmpleados({});
+            setEmpleadosAsignados([]);
+            setShowEmpleadosAsignados(false);
             setEmpleados([]);
             setAreaTrabajo("");
             setEstado("");
@@ -93,7 +95,6 @@ const Actualizar = () => {
                         nomArea = "Corte";
                         setAreaTrabajo("corte");
                         const dataDetalleEmpleadoPedido1 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
-                        console.log("data detalle empleado pedido",dataDetalleEmpleadoPedido1.detalleEmpleadoPedido);
                         if (!dataDetalleEmpleadoPedido1) {
                             return;
                         }
@@ -307,7 +308,6 @@ const Actualizar = () => {
                                             <View className='flex-row gap-4 justify-center'>
                                                 <Pressable onPress={() => {
                                                     setShowModal(!showModal);
-                                                    setAsignarVisible(true);
                                                     console.log("agregar",empleados)
                                                     }
                                                 }>
@@ -316,16 +316,13 @@ const Actualizar = () => {
                                                         <Icon1 name="plus" size={20} color="#fff" />
                                                     </View>
                                                 </Pressable>
-                                                {
-                                                    asignarVisible &&(
-                                                        <Pressable onPress={asignarEmpleados}>
-                                                            <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#13bf1e] px-6 rounded-xl p-2 mx-auto'>
-                                                                <Text className='text-xl font-bold text-white '>Asignar</Text>
-                                                            </View>
-                                                        </Pressable>
-                                                    )
-                                                }
                                                 
+                                                <Pressable onPress={asignarEmpleados}>
+                                                    <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#13bf1e] px-6 rounded-xl p-2 mx-auto'>
+                                                        <Text className='text-xl font-bold text-white '>Asignar</Text>
+                                                    </View>
+                                                </Pressable>
+                                                    
                                             </View>
                                         </View>
                                     )
