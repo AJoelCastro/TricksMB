@@ -268,13 +268,14 @@ const Corte = () => {
                 } 
             }
             if (info === false) {
-                Alert.alert("Error", "Hubo un problema al actualizar el pedido.");
+                alert("Error", "Hubo un problema al actualizar el pedido.");
                 return ;
             }
             else {
-                Alert.alert("Pedido actualizado", "El pedido se ha actualizado correctamente.");
+                alert("Pedido actualizado", "El pedido se ha actualizado correctamente.");
                 setActualizado(true);
                 resetearCampos();
+                router.back();
             }
         }catch (error) {
             console.error("Error al actualizar pedido:", error);
