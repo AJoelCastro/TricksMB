@@ -20,6 +20,7 @@ import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 const { width } = Dimensions.get('window');
 const { height } = Dimensions.get('window');
 const Corte = () => {
+    const router = useRouter();
     const {codigoOrden} = useLocalSearchParams();
     const getFechaActualizacion= () => {
                 const date = new Date();
