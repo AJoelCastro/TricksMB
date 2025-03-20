@@ -62,7 +62,6 @@ class ClienteDAO {
                 INNER JOIN Cliente c ON cj.Cliente_idCliente = c.idCliente
                 WHERE cj.Ruc = ?`;
             const [rows] = await db.execute(query, [ruc]);
-            console.log([rows]);
             return rows.length ? rows[0] : null;
         } catch (error) {
             console.error("Error al buscar cliente jurídico por RUC:", error);
@@ -78,7 +77,6 @@ class ClienteDAO {
                 INNER JOIN Cliente c ON cj.Cliente_idCliente = c.idCliente
                 WHERE cj.Razon_social = ?`;
             const [rows] = await db.execute(query, [razonSocial]);
-            console.log([rows]);
             return rows.length ? rows[0] : null;
         } catch (error) {
             console.error("Error al buscar cliente jurídico por Razon Social:", error);

@@ -65,7 +65,6 @@ const ClienteController = {
             let cliente;
             if (tipoCliente === "juridico") {
                 cliente = await ClienteService.getClienteJuridicoByRuc(identificador);
-                console.log("cliente controller",cliente)
             } else {
                 return res.status(400).json({ error: "Tipo de cliente inválido" });
             }

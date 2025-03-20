@@ -32,7 +32,6 @@ const UsuarioController = {
                     process.env.JWT_SECRET || 'secreto_super_seguro',
                     { expiresIn: '16h' }
                 );
-                console.log(token)
 
                 res.json({ success: true, message: "Inicio de sesión exitoso", token });
             } else {
