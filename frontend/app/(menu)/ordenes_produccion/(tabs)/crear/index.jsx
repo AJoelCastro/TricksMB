@@ -93,7 +93,6 @@ export default function crear() {
     const [tipoCalzado, setTipoCalzado] = useState("");
     const [fechaEntrega, setFechaEntrega] = useState(new Date());
     const [openDatePicker, setOpenDatePicker] = useState(false);
-    const [codigoOrden, setCodigoOrden] = useState("");
     const getCurrentDate = () => {
         const date = new Date();
         return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
