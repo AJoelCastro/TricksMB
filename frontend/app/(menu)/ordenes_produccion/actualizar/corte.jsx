@@ -375,7 +375,7 @@ return (
                     )
                 }
                 {/* Aqui se renderizan los datos de los empleados asignados a esta orden */}
-                <View>
+                <View className='mb-3'>
                     {empleados.map((empleado, index) => (
                         <View key={index} className='flex-row justify-between'>
                             <View className='w-[65%] '>
