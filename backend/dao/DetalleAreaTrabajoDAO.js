@@ -19,7 +19,7 @@ class DetalleAreaTrabajoDAO{
     static async getDetalleAreaTrabajo(idCaracteristicas){
         try{
             const query = `
-                SELECT * FROM Detalle_areaTrabajo WHERE Caracteristicas_idCaracteristicas = ?
+                SELECT * FROM Detalle_areaTrabajo WHERE Caracteristicas_idCaracteristicas = ? AND Estado = 0
             `;
             const [rows] = await db.execute(query, [idCaracteristicas]);
             return rows;
