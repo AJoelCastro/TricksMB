@@ -403,8 +403,9 @@ return (
                         <View className='w-[30%]'>
                             <Card style={{ borderRadius: 10 }}>
                                 <Card.Cover
-                                    style={{ height: height*0.6, resizeMode: 'contain' }}
-                                    source={{ uri: modelo?.imagenes?.[0] }} />
+                                    style={{ resizeMode: 'contain' }}
+                                    source={{ uri: modelo?.imagenes?.[0] }} 
+                                />
                                 <Card.Content>
                                     <Text variant="titleMedium">{modelo.Nombre}</Text>
                                 </Card.Content> 
@@ -472,103 +473,110 @@ return (
                         </View>
                     </View>
                 </View>
-                <View className='flex-row w-[92%]'>
-                    <View className='flex-1 w'>
+                <View className='flex-row '>
+                    <View className='flex-1'>
                         {filas.map((fila, index) => (
-                            <View key={fila.id} className='flex-row gap-2 mb-2 '>
-                                <TextInput
-                                    label="Talla"
-                                    className='rounded flex-1'
-                                    keyboardType='numeric'
-                                    placeholder='Talla'
-                                    style={{ height:40, width: width * 0.10 }}
-                                    mode='outlined'
-                                    value={fila.talla}
-                                    onChangeText={(text) => {
-                                        const nuevasFilas = [...filas];
-                                        nuevasFilas[index].talla = text;
-                                        setFilas(nuevasFilas);
-                                    }}
-                                    editable={false}
-                                />
-                                <TextInput
-                                    label="Pares"
-                                    className='rounded flex-1'
-                                    placeholder='Pares'
-                                    style={{ height:40, width: width * 0.10 }}
-                                    mode='outlined'
-                                    keyboardType='numeric'
-                                    value={fila.pares}
-                                    onChangeText={(text) => {
-                                        const nuevasFilas = [...filas];
-                                        nuevasFilas[index].pares = text;
-                                        setFilas(nuevasFilas);
-                                    }}
-                                    editable={false}
-                                />
-                                
-                                <TextInput
-                                    label="Color"
-                                    className='rounded flex-1'
-                                    placeholder='Color'
-                                    style={{ height:40, width: width * 0.18 }}
-                                    mode='outlined'
-                                    value={fila.color}
-                                    onChangeText={(text) => {
-                                        const nuevasFilas = [...filas];
-                                        nuevasFilas[index].color = text;
-                                        setFilas(nuevasFilas);
-                                    }}
-                                    editable={false}
-                                />
+                            <View key={fila.id} className='flex-row  gap-2 mb-2 '>
+                                <View className='w-[20%]'>
+                                    <TextInput
+                                        label="Talla"
+                                        keyboardType='numeric'
+                                        placeholder='Talla'
+                                        style={{ height:40}}
+                                        mode='outlined'
+                                        value={fila.talla}
+                                        onChangeText={(text) => {
+                                            const nuevasFilas = [...filas];
+                                            nuevasFilas[index].talla = text;
+                                            setFilas(nuevasFilas);
+                                        }}
+                                        editable={false}
+                                    />
+                                </View>
+                                <View className='w-[20%]'>
+                                    <TextInput
+                                        label="Pares"
+                                        placeholder='Pares'
+                                        style={{ height:40 }}
+                                        mode='outlined'
+                                        keyboardType='numeric'
+                                        value={fila.pares}
+                                        onChangeText={(text) => {
+                                            const nuevasFilas = [...filas];
+                                            nuevasFilas[index].pares = text;
+                                            setFilas(nuevasFilas);
+                                        }}
+                                        editable={false}
+                                    />
+                                </View>
+                                <View className='w-[45%]'>
+                                    <TextInput
+                                        label="Color"
+                                        placeholder='Color'
+                                        style={{ height:40 }}
+                                        mode='outlined'
+                                        value={fila.color}
+                                        onChangeText={(text) => {
+                                            const nuevasFilas = [...filas];
+                                            nuevasFilas[index].color = text;
+                                            setFilas(nuevasFilas);
+                                        }}
+                                        editable={false}
+                                    />
+                                </View>
                             </View>
                         ))}
                     </View>
                     <View className='flex-1'>
                         {dataDetalleAreaTrabajo.map((fila, index) => (
-                            
-                            <View key={fila.id} className='flex-row justify-between gap-2 mb-2 w-full'>
-                                <TextInput
-                                    label={"Terminado"}
-                                    placeholder='Color'
-                                    style={{ height:40, width: width * 0.10 }}
-                                    mode='outlined'
-                                    value={fila.terminado}
-                                    editable={false}
-                                />
-                                <TextInput
-                                    label={"Avance"}
-                                    placeholder='Avance'
-                                    style={{ height:40, width: width * 0.10 }}
-                                    mode='outlined'
-                                    value={fila.avance}
-                                    keyboardType='numeric'
-                                    onChangeText={(text) => {
-                                        const nuevasFilas = [...dataDetalleAreaTrabajo];
-                                        
-                                        if((Number(text) +Number(nuevasFilas[index].terminado)) > filas[index].pares){
-                                            alert("El  total no puede ser mayor a la cantidad de pares");
-                                            nuevasFilas[index].avance = "";
-                                        }
-                                        else{
-                                            nuevasFilas[index].avance = text;
-                                        }
-                                        
-                                        setDataDetalleAreaTrabajo(nuevasFilas);
-                                    }}
-                                />
-                                <TextInput
-                                    label={"Comentario"}
-                                    placeholder='Comentario'
-                                    style={{ height:40, width: width * 0.30 }}
-                                    mode='outlined'
-                                    value={fila.comentario}
-                                    onChangeText={(text) => {
-                                        const nuevasFilas = [...dataDetalleAreaTrabajo];
-                                        nuevasFilas[index].comentario = text;
-                                        setDataDetalleAreaTrabajo(nuevasFilas);
-                                    }}
-                                />
+                            <View key={fila.id} className='flex-row gap-2 mb-2'>
+                                <View className='w-[25%]'>
+                                    <TextInput
+                                        label={"Terminado"}
+                                        placeholder='Color'
+                                        style={{ height:40}}
+                                        mode='outlined'
+                                        value={fila.terminado}
+                                        editable={false}
+                                    />
+                                </View>
+                                <View className='w-[25%]'>
+                                    <TextInput
+                                        label={"Avance"}
+                                        placeholder='Avance'
+                                        style={{ height:40 }}
+                                        mode='outlined'
+                                        value={fila.avance}
+                                        keyboardType='numeric'
+                                        onChangeText={(text) => {
+                                            const nuevasFilas = [...dataDetalleAreaTrabajo];
+                                            
+                                            if((Number(text) +Number(nuevasFilas[index].terminado)) > filas[index].pares){
+                                                alert("El  total no puede ser mayor a la cantidad de pares");
+                                                nuevasFilas[index].avance = "";
+                                            }
+                                            else{
+                                                nuevasFilas[index].avance = text;
+                                            }
+                                            
+                                            setDataDetalleAreaTrabajo(nuevasFilas);
+                                        }}
+                                    />
+                                </View>
+                                <View className='w-[45%]'>
+                                    <TextInput
+                                        label={"Comentario"}
+                                        placeholder='Comentario'
+                                        style={{ height:40}}
+                                        mode='outlined'
+                                        value={fila.comentario}
+                                        onChangeText={(text) => {
+                                            const nuevasFilas = [...dataDetalleAreaTrabajo];
+                                            nuevasFilas[index].comentario = text;
+                                            setDataDetalleAreaTrabajo(nuevasFilas);
+                                        }}
+                                    />
+                                </View>
                             </View>
                         ))}
                     </View>
