@@ -19,7 +19,6 @@ const UsuarioService = {
 
     async findUser(correo, contrasenia) {
         const user = await UsuarioDAO.encUser(correo);
-        console.log(user);
         if (!user) return null;
 
         const isPasswordValid = await bcrypt.compare(contrasenia, user.Contrasenia);
