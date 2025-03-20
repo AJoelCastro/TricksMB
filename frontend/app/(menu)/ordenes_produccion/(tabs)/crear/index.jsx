@@ -229,8 +229,7 @@ export default function crear() {
             if (!pedido) {
                 return;
             }
-            setCodigoOrden(pedido.codigoPedido)
-            return pedido.idDetallePedido;
+            return pedido;
         } catch (error) {
             console.error("(index(crear))Error al crear pedido:", error);
         }
@@ -277,19 +276,25 @@ export default function crear() {
                     console.error("Error al crear característica para:", datosCaracteristicas);
                     return;
                 }
+                return caracteristicas;
             }
-            Alert.alert("Orden creada correctamente: ", codigoOrden);
-            resetearCampos();
+            
         } catch (error) {
             console.error("(index(crear))Error al crear caracteristicas:", error);
         }
     }
     const handleCrearPedido = async () => {
         try {
-            const idPedido = await crearPedido();
-            if (idPedido) {
-                await crearCaracteristicas(idPedido);
+            const pedido = await crearPedido();
+            if (!pedido) {
+                return;
             }
+            let idDetallePedido = pedido.idDetalle_pedido;
+            const caracteristicas = await crearCaracteristicas(idDetallePedido);
+            if (!caracteristicas) {
+                return;
+            }
+            alert(`Pedido ${pedido.Codigo_pedido} creado con exito `);
         } catch (error) {
             console.error("Error al crear el pedido:", error);
             Alert.alert("Error", "Hubo un problema al crear el pedido.");

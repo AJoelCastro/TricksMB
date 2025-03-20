@@ -270,7 +270,7 @@ const Corte = () => {
             if (info === false) {
                 alert("Error", "Hubo un problema al actualizar el pedido.");
                 return ;
-            }
+            } 
             else {
                 alert("Pedido actualizado", "El pedido se ha actualizado correctamente.");
                 setActualizado(true);
