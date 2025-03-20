@@ -24,13 +24,18 @@ const Actualizar = () => {
         return palabra.charAt(0).toUpperCase() + palabra.slice(1);
     }
     const handleOptionPress = async (option) => {
-        try {
-            const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
-            if (data) {
-                route.push(`/ordenes_produccion/actualizar/${option.title}?codigoOrden=${codigoOrden}`); 
+        if (empleadosAsignados.length > 0) {
+            try {
+                const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
+                if (data) {
+                    route.push(`/ordenes_produccion/actualizar/${option.title}?codigoOrden=${codigoOrden}`); 
+                }
+            } catch (error) {
+                error("Error al obtener el pedido", error);
             }
-        } catch (error) {
-            error("Error al obtener el pedido", error);
+        }
+        else {
+            alert("Asigne empleados primero");
         }
     };
     const iniciarProceso = async () => {
