@@ -16,12 +16,38 @@ import TipoCalzadoService from '@/services/TipoCalzadoService';
 import CaracteristicasService from '@/services/CaracteristicasService';
 import PedidoService from '@/services/PedidoService';
 import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
+import EmpleadoService from '@/services/EmpleadoService';
 
 const { width } = Dimensions.get('window');
 const { height } = Dimensions.get('window');
 const Corte = () => {
-    const router = useRouter();
     const {codigoOrden} = useLocalSearchParams();
+
+    const router = useRouter();
+    const [cliente, setCliente] = useState("");
+    const [modelo, setModelo] = useState([]);
+    const [selectSerieInicio, setSelectSerieInicio] = useState("");
+    const [selectSerieFin, setSelectSerieFin] = useState("");
+    const [tipoCliente, setTipoCliente] = useState("");
+    const [dni, setDni] = useState("");
+    const [ruc, setRuc] = useState("");
+    const [nombreTaco, setNombreTaco] = useState("");
+    const [tallaTaco, setTallaTaco] = useState("");
+    const [modalModeloVisible, setModalModeloVisible] = useState(false);
+    const [material, setMaterial] = useState("");
+    const [tipoMaterial, setTipoMaterial] = useState("");
+    const [accesorios, setAccesorios] = useState("");
+    const [suela, setSuela] = useState("");
+    const [forro, setForro] = useState("");
+    const [dataModelos, setDataModelos] = useState([]);
+    const [dataTipoCalzado, setDataTipoCalzado] = useState([]);
+    const [tipoCalzado, setTipoCalzado] = useState("");
+    const [fechaEntrega, setFechaEntrega] = useState(new Date());
+    const [openDatePicker, setOpenDatePicker] = useState(false);
+    const [idDetallePedido, setIdDetallePedido] = useState();
+    const [dataDetalleAreaTrabajo, setDataDetalleAreaTrabajo] = useState([]);
+    const [actualizado, setActualizado] = useState(false);
+    const [empleados, setEmpleados] = useState([]);
     const getFechaActualizacion= () => {
                 const date = new Date();
                 const year = date.getFullYear();
@@ -52,30 +78,6 @@ const Corte = () => {
             };
         }, [])
     );
-
-    const [cliente, setCliente] = useState("");
-    const [modelo, setModelo] = useState([]);
-    const [selectSerieInicio, setSelectSerieInicio] = useState("");
-    const [selectSerieFin, setSelectSerieFin] = useState("");
-    const [tipoCliente, setTipoCliente] = useState("");
-    const [dni, setDni] = useState("");
-    const [ruc, setRuc] = useState("");
-    const [nombreTaco, setNombreTaco] = useState("");
-    const [tallaTaco, setTallaTaco] = useState("");
-    const [modalModeloVisible, setModalModeloVisible] = useState(false);
-    const [material, setMaterial] = useState("");
-    const [tipoMaterial, setTipoMaterial] = useState("");
-    const [accesorios, setAccesorios] = useState("");
-    const [suela, setSuela] = useState("");
-    const [forro, setForro] = useState("");
-    const [dataModelos, setDataModelos] = useState([]);
-    const [dataTipoCalzado, setDataTipoCalzado] = useState([]);
-    const [tipoCalzado, setTipoCalzado] = useState("");
-    const [fechaEntrega, setFechaEntrega] = useState(new Date());
-    const [openDatePicker, setOpenDatePicker] = useState(false);
-    const [idDetallePedido, setIdDetallePedido] = useState();
-    const [dataDetalleAreaTrabajo, setDataDetalleAreaTrabajo] = useState([]);
-    const [actualizado, setActualizado] = useState(false);
     const getCurrentDate = () => {
         const date = new Date();
         return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
@@ -113,21 +115,6 @@ const Corte = () => {
         }
     };
 
-    const cargarModelosPorId = async () => {
-        try {
-            let id = tipoCalzado.idTipo;
-            const modelos = await ModeloService.getAllModeloById(id);
-            
-            if (!modelos) {
-                console.error("No se encontraron los modelos por ID");
-                return;
-            }
-            setDataModelos(modelos);
-        } catch (error) {
-            console.error("Error cargando modelos por ID:", error);
-        }
-    };
-        
     useEffect(() => {
         const cargarTipoCalzado = async () => {
             try {
@@ -231,6 +218,14 @@ const Corte = () => {
                 const dataCaracteristicas = await CaracteristicasService.getAllCaracteristicasById(idDetallePedido);
                 const filasTransformadas = transformarDatos(dataCaracteristicas);
                 setFilas(filasTransformadas);
+                // Aqui se obtienen los empleados
+                let nomArea = "Corte"
+                const dataEmpleados = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
+                console.log("Empleados obtenidos",dataEmpleados);
+                if (!dataEmpleados) {
+                    return;
+                }
+                setEmpleados(dataEmpleados.detalleEmpleadoPedido);
             } catch (error) {
                 console.error("Error al obtener el pedido:", error);
                 set

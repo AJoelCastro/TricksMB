@@ -27,7 +27,7 @@ const Actualizar = () => {
         try {
             const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
             if (data) {
-                route.push(`/ordenes_produccion/actualizar/${option.title}?codigoOrden=${codigoOrden}`);
+                route.push(`/ordenes_produccion/actualizar/${option.title}?codigoOrden=${codigoOrden}`); 
             }
         } catch (error) {
             error("Error al obtener el pedido", error);

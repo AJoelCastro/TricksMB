@@ -26,7 +26,7 @@ const DetalleEmpleadoPedidoController = {
             res.status(200).json({ success: true, message: "Detalle empleado pedido obtenido exitosamente", detalleEmpleadoPedido });
         }catch(error){
             console.error(error);
-            res.status(500).json({ success: false, message: "2Error al obtener detalle empleado pedido" });
+            res.status(500).json({ success: false, message: "Error al obtener detalle empleado pedido" });
         }
     }
 
