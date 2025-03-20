@@ -221,7 +221,6 @@ const Corte = () => {
                 // Aqui se obtienen los empleados
                 let nomArea = "Corte"
                 const dataEmpleados = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
-                console.log("Empleados obtenidos",dataEmpleados);
                 if (!dataEmpleados) {
                     return;
                 }
@@ -299,10 +298,8 @@ const Corte = () => {
             try {
                 let codigoPedido = codigoOrden
                 const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
-                console.log("data",data); 
                 let actualizar = true;
                 data.map((item) => {
-                    console.log("estado",item.Estado);
                     if (item.Estado === 0){
                         actualizar = false;
                     }
@@ -329,24 +326,26 @@ return (
     >
         <ScrollView className='mx-4 gap-2'>
             <SafeAreaView>
-                
+                {/* Aqui se renderizan los datos del cliente de acuerdo a su tipo */}
                 { tipoCliente==="natural" &&(
                     <View className='gap-2 mb-2'>
-                        <View className='flex-col'>
-                            <TextInput 
-                                value={cliente.nombre}
-                                mode='outlined'
-                                label={"Cliente"}
-                                editable={false}
-                            >
-                            </TextInput>
-                            <TextInput 
-                                value={cliente.Dni}
-                                mode='outlined'
-                                label={"DNI"}
-                                editable={false}
-                            >
-                            </TextInput>
+                        <View className='flex-row justify-between'>
+                            <View className='w-[65%] '>
+                                <TextInput 
+                                    value={cliente.nombre}
+                                    mode='outlined'
+                                    label={"Cliente"}
+                                    editable={false}
+                                />
+                            </View>
+                            <View className='w-[30%]'>
+                                <TextInput 
+                                    value={cliente.Dni}
+                                    mode='outlined'
+                                    label={"DNI"}
+                                    editable={false}
+                                />
+                            </View>
                         </View>
                         
                     </View>
@@ -354,25 +353,50 @@ return (
                 }
                 { tipoCliente==="juridico" &&(
                     <View className='gap-2 mb-2'>
-                        <View className='flex-col'>
-                            <TextInput 
-                                value={cliente.nombre}
-                                mode='outlined'
-                                label={"Razon Social"}
-                                editable={false}
-                            >
-                            </TextInput>
-                            <TextInput 
-                                value={cliente.Ruc}
-                                mode='outlined'
-                                label={"RUC"}
-                                editable={false}
-                            >
-                            </TextInput>
+                        <View className='flex-row justify-between'>
+                            <View className='w-[65%] '>
+                                <TextInput 
+                                    value={cliente.nombre}
+                                    mode='outlined'
+                                    label={"Cliente"}
+                                    editable={false}
+                                />
+                            </View>
+                            <View className='w-[30%]'>
+                                <TextInput 
+                                    value={cliente.Ruc}
+                                    mode='outlined'
+                                    label={"RUC"}
+                                    editable={false}
+                                />
+                            </View>
                         </View>
                     </View>
                     )
                 }
+                {/* Aqui se renderizan los datos de los empleados asignados a esta orden */}
+                <View>
+                    {empleados.map((empleado, index) => (
+                        <View key={index} className='flex-row justify-between'>
+                            <View className='w-[65%] '>
+                                <TextInput 
+                                    value={empleado.Nombres}
+                                    mode='outlined'
+                                    label={"Trabajador"}
+                                    editable={false}
+                                />
+                            </View>
+                            <View className='w-[30%]'>
+                                <TextInput 
+                                    value={empleado.DNI}
+                                    mode='outlined'
+                                    label={"DNI"}
+                                    editable={false}
+                                />  
+                            </View>
+                        </View>
+                    ))}
+                </View>
                 <View className='gap-2'>
                     <View className='flex-row justify-between'>
                         {/* IMAGEN */}
