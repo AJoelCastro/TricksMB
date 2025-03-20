@@ -220,8 +220,8 @@ export default function crear() {
                 clienteTipo:tipoCliente==="natural"?dni:ruc, fechaEntrega:fechaEntregaFormateada, serieInicio:selectSerieInicio, serieFinal:selectSerieFin, nomModelo:modelo, nombreTaco:nombreTaco, alturaTaco:tallaTaco, material, tipoMaterial, suela, accesorios, forro
             }
             if (!Object.values(datosPedido).every(valor => valor && valor.trim() !== "")) {
-                            Alert.alert("Error", "Por favor, completa todos los campos.");
-                            return;
+                Alert.alert("Error", "Por favor, completa todos los campos.");
+                return;
             }
             const pedido = await DetallePedidoService.crearPedido(datosPedido);
             if (!pedido) {
@@ -287,12 +287,12 @@ export default function crear() {
             if (!pedido) {
                 return;
             }
-            let idDetallePedido = pedido.idDetalle_pedido;
+            let idDetallePedido = pedido.idDetallePedido;
             const caracteristicas = await crearCaracteristicas(idDetallePedido);
             if (!caracteristicas) {
                 return;
             }
-            alert(`Pedido ${pedido.Codigo_pedido} creado con exito `);
+            alert(`Pedido ${pedido.codigoPedido} creado con exito `);
         } catch (error) {
             console.error("Error al crear el pedido:", error);
             Alert.alert("Error", "Hubo un problema al crear el pedido.");
