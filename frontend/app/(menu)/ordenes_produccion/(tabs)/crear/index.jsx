@@ -293,6 +293,7 @@ export default function crear() {
                 return;
             }
             alert(`Pedido ${pedido.codigoPedido} creado con exito `);
+            resetearCampos();
         } catch (error) {
             console.error("Error al crear el pedido:", error);
             Alert.alert("Error", "Hubo un problema al crear el pedido.");
