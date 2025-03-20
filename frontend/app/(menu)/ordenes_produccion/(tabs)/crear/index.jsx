@@ -176,7 +176,6 @@ export default function crear() {
                     
                 })
             )
-            console.log("img",obteniendoImagenes);
             if (!modelos) {
                 console.error("No se encontraron los modelos por ID");
                 return;
