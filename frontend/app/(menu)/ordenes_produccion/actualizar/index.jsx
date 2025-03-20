@@ -43,6 +43,7 @@ const Actualizar = () => {
         try {
             let estado = "Proceso";
             const dataIniciar = await DetallePedidoService.updateEstado(codigoOrden, estado);
+            console.log("dataIniciar",dataIniciar);
             if (dataIniciar) {
                 setEstado("Proceso"); // Actualiza el estado después de que se complete la operación
                 alert(`${dataIniciar.detalleAreaTrabajo.message}`);
@@ -60,6 +61,7 @@ const Actualizar = () => {
                 try {
                     let codigoPedido = codigoOrden
                     const dataDetalleAreaTrabajo = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
+                    console.log("dataDetalleAreaTrabajo",dataDetalleAreaTrabajo);
                     switch (dataDetalleAreaTrabajo[0].Area_trabajo_idArea_trabajo) {
                         case 1:
                             setAreaTrabajo("corte");
@@ -116,7 +118,16 @@ const Actualizar = () => {
                         nomArea = "Perfilado";
                         setAreaTrabajo("perfilado");
                         const dataDetalleEmpleadoPedido2 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
-                        console.log("Empleados",dataDetalleEmpleadoPedido2);
+                        if (!dataDetalleEmpleadoPedido2) {
+                            return;
+                        }
+                        if(dataDetalleEmpleadoPedido2.detalleEmpleadoPedido.length === 0){
+                            alert("No hay empleados asignados a esta área de trabajo");
+                            
+                        }else{
+                            setEmpleadosAsignados(dataDetalleEmpleadoPedido2.detalleEmpleadoPedido);
+                            setShowEmpleadosAsignados(true);
+                        }
                         break;
                     case 3:
                         nomArea = "Armado";

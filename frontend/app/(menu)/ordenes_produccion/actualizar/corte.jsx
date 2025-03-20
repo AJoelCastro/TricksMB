@@ -305,12 +305,15 @@ const Corte = () => {
                     }
                 })
                 if (actualizar === true){
-                    const update = await DetalleAreaTrabajoService.actualizarAreaTrabajo(codigoPedido);
-                    if (!update) {
+                    let nomArea= "Perfilado"
+                    const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido)
+                    console.log("updateAreaTrabajo",updateAreaTrabajo);
+                    if (!updateAreaTrabajo) {
                         error("Característica vacias o nulas:", update);
                         return;
                     }else{
                         alert("El pedido se ha actualizado correctamente.");
+                        router.back();
                     }
                 }
             }catch (error) {

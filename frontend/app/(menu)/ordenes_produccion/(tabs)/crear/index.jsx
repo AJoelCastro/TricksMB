@@ -254,6 +254,7 @@ export default function crear() {
     };
     const crearCaracteristicas= async(idDetallePedido)=>{
         try {
+            let dataCaracteristicas = [];
             for (const fila of filas) { // ✅ Usar for...of en lugar de map
                 const datosCaracteristicas = {
                     idDetallePedido,
@@ -267,15 +268,16 @@ export default function crear() {
                     Alert.alert("Error", "Por favor, completa todos los campos.");
                     return;
                 }
-    
+                console.log("datosCaracteristicas",datosCaracteristicas);
                 // ✅ Llamada a la API con `await`
                 const caracteristicas = await CaracteristicasService.crearCaracteristicas(datosCaracteristicas);
+                dataCaracteristicas.push(caracteristicas.caracteristica);
                 if (!caracteristicas) {
-                    console.error("Error al crear característica para:", datosCaracteristicas);
+                    console.error("Error al crear característica para:", dataCaracteristicas);
                     return;
                 }
-                return caracteristicas;
             }
+            return dataCaracteristicas;
             
         } catch (error) {
             console.error("(index(crear))Error al crear caracteristicas:", error);
