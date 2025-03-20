@@ -58,7 +58,6 @@ const CaracteristicasController = {
 
     async deleteCaracteristicas(req, res) {
         try {
-            console.log(req.params)
             const { idCaracteristicas } = req.params;
             const result = await CaracteristicasService.deleteCaracteristicas(idCaracteristicas);
             return res.status(200).json(result);

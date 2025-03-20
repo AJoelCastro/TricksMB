@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, Text, View, Alert } from 'react-native';
+import { SafeAreaView, Text, View, Alert, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -85,14 +85,17 @@ const Home = () => {
 
                 {/* Botón de Iniciar Sesión */}
                 <View className='mx-16 mt-2'>
-                    <CustomButtom 
-                        title={loading ? "Cargando..." : "Iniciar Sesión"}
-                        touch={() => {
-                            console.log("Botón presionado");
-                            handleLogin();
-                        }}
-                        disabled={!isFormValid} 
-                    />
+                    {loading ? (
+                        <ActivityIndicator size="small" color="#151718" />
+                    ) : (
+                        <CustomButtom 
+                            title="Iniciar Sesión"
+                            touch={() => {
+                                handleLogin();
+                            }}
+                            disabled={!isFormValid} 
+                        />
+                    )}
                 </View>
             </View>
         </SafeAreaView>

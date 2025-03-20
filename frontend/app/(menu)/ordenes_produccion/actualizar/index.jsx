@@ -24,13 +24,19 @@ const Actualizar = () => {
         return palabra.charAt(0).toUpperCase() + palabra.slice(1);
     }
     const handleOptionPress = async (option) => {
-        try {
-            const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
-            if (data) {
-                route.push(`/ordenes_produccion/actualizar/${option.title}?codigoOrden=${codigoOrden}`);
+        // Lógica para manejar la selección de la opción de asignar empleados sino no puede ser redirigido a la pestaña
+        if (empleadosAsignados.length > 0) {
+            try {
+                const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
+                if (data) {
+                    route.push(`/ordenes_produccion/actualizar/${option.title}?codigoOrden=${codigoOrden}`); 
+                }
+            } catch (error) {
+                error("Error al obtener el pedido", error);
             }
-        } catch (error) {
-            error("Error al obtener el pedido", error);
+        }
+        else {
+            alert("Asigne empleados primero");
         }
     };
     const iniciarProceso = async () => {
@@ -190,6 +196,8 @@ const Actualizar = () => {
             }
             if(bandera){
                 alert("Empleados asignados exitosamente");
+                setEmpleados([]);
+                verificarProceso();
             }
         }catch(error){
             alert("Error al asignar empleados", error);

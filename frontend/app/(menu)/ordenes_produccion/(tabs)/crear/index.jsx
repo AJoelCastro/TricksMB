@@ -93,7 +93,6 @@ export default function crear() {
     const [tipoCalzado, setTipoCalzado] = useState("");
     const [fechaEntrega, setFechaEntrega] = useState(new Date());
     const [openDatePicker, setOpenDatePicker] = useState(false);
-    const [codigoOrden, setCodigoOrden] = useState("");
     const getCurrentDate = () => {
         const date = new Date();
         return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
@@ -177,7 +176,6 @@ export default function crear() {
                     
                 })
             )
-            console.log("img",obteniendoImagenes);
             if (!modelos) {
                 console.error("No se encontraron los modelos por ID");
                 return;
@@ -222,15 +220,14 @@ export default function crear() {
                 clienteTipo:tipoCliente==="natural"?dni:ruc, fechaEntrega:fechaEntregaFormateada, serieInicio:selectSerieInicio, serieFinal:selectSerieFin, nomModelo:modelo, nombreTaco:nombreTaco, alturaTaco:tallaTaco, material, tipoMaterial, suela, accesorios, forro
             }
             if (!Object.values(datosPedido).every(valor => valor && valor.trim() !== "")) {
-                            Alert.alert("Error", "Por favor, completa todos los campos.");
-                            return;
+                Alert.alert("Error", "Por favor, completa todos los campos.");
+                return;
             }
             const pedido = await DetallePedidoService.crearPedido(datosPedido);
             if (!pedido) {
                 return;
             }
-            setCodigoOrden(pedido.codigoPedido)
-            return pedido.idDetallePedido;
+            return pedido;
         } catch (error) {
             console.error("(index(crear))Error al crear pedido:", error);
         }
@@ -277,19 +274,26 @@ export default function crear() {
                     console.error("Error al crear característica para:", datosCaracteristicas);
                     return;
                 }
+                return caracteristicas;
             }
-            Alert.alert("Orden creada correctamente: ", codigoOrden);
-            resetearCampos();
+            
         } catch (error) {
             console.error("(index(crear))Error al crear caracteristicas:", error);
         }
     }
     const handleCrearPedido = async () => {
         try {
-            const idPedido = await crearPedido();
-            if (idPedido) {
-                await crearCaracteristicas(idPedido);
+            const pedido = await crearPedido();
+            if (!pedido) {
+                return;
             }
+            let idDetallePedido = pedido.idDetallePedido;
+            const caracteristicas = await crearCaracteristicas(idDetallePedido);
+            if (!caracteristicas) {
+                return;
+            }
+            alert(`Pedido ${pedido.codigoPedido} creado con exito `);
+            resetearCampos();
         } catch (error) {
             console.error("Error al crear el pedido:", error);
             Alert.alert("Error", "Hubo un problema al crear el pedido.");

@@ -31,7 +31,7 @@ const DetallePedidoService = {
             return detallePedido;
         } catch (error) {
             if (error.status) throw error; // Si ya tiene status, lo relanzamos
-            throw { status: 500, message: "Error en DetallePedidoService", detalle: error.message };
+            throw { status: 500, message: "Error en DetallePedido Service", detalle: error.message };
         }
     },
 
@@ -47,7 +47,7 @@ const DetallePedidoService = {
             return obj;
         } catch (error) {
             if (error.status) throw error;
-            throw { status: 500, message: "Error en DetallePedidoService", detalle: error.message }
+            throw { status: 500, message: "Error en DetallePedido Service", detalle: error.message }
         }
     },
 
@@ -65,7 +65,7 @@ const DetallePedidoService = {
             return obj;
         } catch (error) {
             if (error.status) throw error;
-            throw { status: 500, message: "Error en DetallePedidoService", detalle: error.message }
+            throw { status: 500, message: "Error en DetallePedido Service", detalle: error.message }
         }
     },
 
@@ -86,7 +86,7 @@ const DetallePedidoService = {
             return obj;
         } catch (error) {
             if (error.status) throw error;
-            throw { status: 500, message: "Error en DetallePedidoService", detalle: error.message };
+            throw { status: 500, message: "Error en DetallePedido Service", detalle: error.message };
         }
     },
 
@@ -95,7 +95,7 @@ const DetallePedidoService = {
             return await DetallePedidoDAO.getAllDetallePedido();
         } catch(error){
             if(error.status) throw error;
-            throw {status: 500, message: "Error en DetallePedidoService", detalle: error.message};
+            throw {status: 500, message: "Error en DetallePedido Service", detalle: error.message};
         }
     }
 };
