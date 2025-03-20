@@ -24,6 +24,7 @@ const Actualizar = () => {
         return palabra.charAt(0).toUpperCase() + palabra.slice(1);
     }
     const handleOptionPress = async (option) => {
+        // Lógica para manejar la selección de la opción de asignar empleados sino no puede ser redirigido a la pestaña
         if (empleadosAsignados.length > 0) {
             try {
                 const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
