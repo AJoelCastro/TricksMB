@@ -202,10 +202,8 @@ const Actualizar = () => {
             let bandera= true;
             let codigoPedido = codigoOrden;
             for (const empleado of empleados) {
-                console.log(empleado, codigoPedido);
                 let dni = empleado.Dni
                 const dataAsignar = await EmpleadoService.crearDetalleEmpleadoPedido(dni, codigoPedido);
-                console.log("Data Asignar",dataAsignar);
                 if(!dataAsignar){
                     bandera = false;
                     console.error("Error al asignar empleados", dataAsignar);
