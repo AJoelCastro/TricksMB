@@ -9,7 +9,6 @@ import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 import EmpleadoService from '@/services/EmpleadoService';
 
 const Actualizar = () => {
-    const {bandera} = useLocalSearchParams();
     const route = useRouter();
     const [codigoOrden, setCodigoOrden] = useState('');
     const [estado, setEstado] = useState("");
@@ -61,7 +60,6 @@ const Actualizar = () => {
                 try {
                     let codigoPedido = codigoOrden
                     const dataDetalleAreaTrabajo = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
-                    console.log("dataDetalleAreaTrabajo",dataDetalleAreaTrabajo);
                     switch (dataDetalleAreaTrabajo[0].Area_trabajo_idArea_trabajo) {
                         case 1:
                             setAreaTrabajo("corte");
@@ -148,7 +146,16 @@ const Actualizar = () => {
                         nomArea = "Alistado";
                         setAreaTrabajo("alistado");
                         const dataDetalleEmpleadoPedido4 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
-                        console.log("Empleados",dataDetalleEmpleadoPedido4);
+                        if (!dataDetalleEmpleadoPedido4) {
+                            return;
+                        }
+                        if(dataDetalleEmpleadoPedido4.detalleEmpleadoPedido.length === 0){
+                            alert("No hay empleados asignados a esta área de trabajo");
+                            
+                        }else{
+                            setEmpleadosAsignados(dataDetalleEmpleadoPedido4.detalleEmpleadoPedido);
+                            setShowEmpleadosAsignados(true);
+                        }
                         break;
                 }
             }
@@ -213,11 +220,7 @@ const Actualizar = () => {
             alert("Error al asignar empleados", error);
         }
     }
-    useEffect(() => {
-        if(bandera){
-            verificarProceso();
-        }
-    },[bandera])
+
     const options = [
         { id: 1, title: 'corte', icon: 'content-cut', color: estado==='Editable' ? 'bg-gray-700' : 'bg-red-500' },
         { id: 2, title: 'perfilado', icon: 'brush', color: estado==='Editable' ? 'bg-gray-700' : 'bg-sky-700' },
@@ -330,7 +333,6 @@ const Actualizar = () => {
                                             <View className='flex-row gap-4 justify-center'>
                                                 <Pressable onPress={() => {
                                                     setShowModal(!showModal);
-                                                    console.log("agregar",empleados)
                                                     }
                                                 }>
                                                     <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#15a1ff] rounded-xl p-2 mx-auto'>
