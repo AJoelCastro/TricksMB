@@ -16,11 +16,38 @@ import TipoCalzadoService from '@/services/TipoCalzadoService';
 import CaracteristicasService from '@/services/CaracteristicasService';
 import PedidoService from '@/services/PedidoService';
 import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
+import EmpleadoService from '@/services/EmpleadoService';
 
 const { width } = Dimensions.get('window');
 const { height } = Dimensions.get('window');
 const Perfilado = () => {
     const {codigoOrden} = useLocalSearchParams();
+
+    const router = useRouter();
+    const [cliente, setCliente] = useState("");
+    const [modelo, setModelo] = useState([]);
+    const [selectSerieInicio, setSelectSerieInicio] = useState("");
+    const [selectSerieFin, setSelectSerieFin] = useState("");
+    const [tipoCliente, setTipoCliente] = useState("");
+    const [dni, setDni] = useState("");
+    const [ruc, setRuc] = useState("");
+    const [nombreTaco, setNombreTaco] = useState("");
+    const [tallaTaco, setTallaTaco] = useState("");
+    const [modalModeloVisible, setModalModeloVisible] = useState(false);
+    const [material, setMaterial] = useState("");
+    const [tipoMaterial, setTipoMaterial] = useState("");
+    const [accesorios, setAccesorios] = useState("");
+    const [suela, setSuela] = useState("");
+    const [forro, setForro] = useState("");
+    const [dataModelos, setDataModelos] = useState([]);
+    const [dataTipoCalzado, setDataTipoCalzado] = useState([]);
+    const [tipoCalzado, setTipoCalzado] = useState("");
+    const [fechaEntrega, setFechaEntrega] = useState(new Date());
+    const [openDatePicker, setOpenDatePicker] = useState(false);
+    const [idDetallePedido, setIdDetallePedido] = useState();
+    const [dataDetalleAreaTrabajo, setDataDetalleAreaTrabajo] = useState([]);
+    const [actualizado, setActualizado] = useState(false);
+    const [empleados, setEmpleados] = useState([]);
     const getFechaActualizacion= () => {
                 const date = new Date();
                 const year = date.getFullYear();
@@ -51,30 +78,6 @@ const Perfilado = () => {
             };
         }, [])
     );
-
-    const [cliente, setCliente] = useState("");
-    const [modelo, setModelo] = useState([]);
-    const [selectSerieInicio, setSelectSerieInicio] = useState("");
-    const [selectSerieFin, setSelectSerieFin] = useState("");
-    const [tipoCliente, setTipoCliente] = useState("");
-    const [dni, setDni] = useState("");
-    const [ruc, setRuc] = useState("");
-    const [nombreTaco, setNombreTaco] = useState("");
-    const [tallaTaco, setTallaTaco] = useState("");
-    const [modalModeloVisible, setModalModeloVisible] = useState(false);
-    const [material, setMaterial] = useState("");
-    const [tipoMaterial, setTipoMaterial] = useState("");
-    const [accesorios, setAccesorios] = useState("");
-    const [suela, setSuela] = useState("");
-    const [forro, setForro] = useState("");
-    const [dataModelos, setDataModelos] = useState([]);
-    const [dataTipoCalzado, setDataTipoCalzado] = useState([]);
-    const [tipoCalzado, setTipoCalzado] = useState("");
-    const [fechaEntrega, setFechaEntrega] = useState(new Date());
-    const [openDatePicker, setOpenDatePicker] = useState(false);
-    const [idDetallePedido, setIdDetallePedido] = useState();
-    const [dataDetalleAreaTrabajo, setDataDetalleAreaTrabajo] = useState([]);
-    const [actualizado, setActualizado] = useState(false);
     const getCurrentDate = () => {
         const date = new Date();
         return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
@@ -112,21 +115,6 @@ const Perfilado = () => {
         }
     };
 
-    const cargarModelosPorId = async () => {
-        try {
-            let id = tipoCalzado.idTipo;
-            const modelos = await ModeloService.getAllModeloById(id);
-            
-            if (!modelos) {
-                console.error("No se encontraron los modelos por ID");
-                return;
-            }
-            setDataModelos(modelos);
-        } catch (error) {
-            console.error("Error cargando modelos por ID:", error);
-        }
-    };
-        
     useEffect(() => {
         const cargarTipoCalzado = async () => {
             try {
@@ -230,6 +218,14 @@ const Perfilado = () => {
                 const dataCaracteristicas = await CaracteristicasService.getAllCaracteristicasById(idDetallePedido);
                 const filasTransformadas = transformarDatos(dataCaracteristicas);
                 setFilas(filasTransformadas);
+                // Aqui se obtienen los empleados
+                let nomArea = "Perfilado"
+                const dataEmpleados = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
+                console.log("Empleados",dataEmpleados);
+                if (!dataEmpleados) {
+                    return;
+                }
+                setEmpleados(dataEmpleados.detalleEmpleadoPedido);
             } catch (error) {
                 console.error("Error al obtener el pedido:", error);
                 set
@@ -267,13 +263,13 @@ const Perfilado = () => {
                 } 
             }
             if (info === false) {
-                Alert.alert("Error", "Hubo un problema al actualizar el pedido.");
+                alert("Error", "Hubo un problema al actualizar el pedido.");
                 return ;
-            }
+            } 
             else {
-                Alert.alert("Pedido actualizado", "El pedido se ha actualizado correctamente.");
+                alert("Pedido actualizado", "El pedido se ha actualizado correctamente.");
                 setActualizado(true);
-                resetearCampos();
+                
             }
         }catch (error) {
             console.error("Error al actualizar pedido:", error);
@@ -299,32 +295,36 @@ const Perfilado = () => {
     }, []);
     useEffect(() => {
         const obtenerEstadosDetalleAreaTrabajo = async () => {
-            try {
-                let codigoPedido = codigoOrden
-                const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
-                console.log("data",data); 
-                let actualizar = true;
-                data.map((item) => {
-                    console.log("estado",item.Estado);
-                    if (item.Estado === 0){
-                        actualizar = false;
+            if (actualizado === true){
+                try {
+                    let codigoPedido = codigoOrden
+                    const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
+                    let actualizar = true;
+                    data.map((item) => {
+                        if (item.Estado === 0){
+                            actualizar = false;
+                        }
+                    })
+                    if (actualizar === true){
+                        let nomArea= "Armado"
+                        const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido)
+                        console.log("updateAreaTrabajo",updateAreaTrabajo);
+                        if (!updateAreaTrabajo) {
+                            error("Característica vacias o nulas:", update);
+                            return;
+                        }else{
+                            alert(`${updateAreaTrabajo.message}`);
+                            resetearCampos();
+                            router.back();
+                        }
                     }
-                })
-                // if (actualizar === true){
-                //     const update = await DetalleAreaTrabajoService.actualizarAreaTrabajo(codigoPedido);
-                //     if (!update) {
-                //         error("Característica vacias o nulas:", update);
-                //         return;
-                //     }else{
-                //         alert("El pedido se ha actualizado correctamente.");
-                //     }
-                // }
-            }catch (error) {
-                console.error("Error al obtener los detalles del area de trabajo:", error);
+                }catch (error) {
+                    console.error("Error al obtener los detalles del area de trabajo:", error);
+                }
             }
         }
         obtenerEstadosDetalleAreaTrabajo();
-    }, [actualizado===true]);
+    }, [actualizado]);
 return (
     <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -332,24 +332,26 @@ return (
     >
         <ScrollView className='mx-4 gap-2'>
             <SafeAreaView>
-                
+                {/* Aqui se renderizan los datos del cliente de acuerdo a su tipo */}
                 { tipoCliente==="natural" &&(
                     <View className='gap-2 mb-2'>
-                        <View className='flex-col'>
-                            <TextInput 
-                                value={cliente.nombre}
-                                mode='outlined'
-                                label={"Cliente"}
-                                editable={false}
-                            >
-                            </TextInput>
-                            <TextInput 
-                                value={cliente.Dni}
-                                mode='outlined'
-                                label={"DNI"}
-                                editable={false}
-                            >
-                            </TextInput>
+                        <View className='flex-row justify-between'>
+                            <View className='w-[65%] '>
+                                <TextInput 
+                                    value={cliente.nombre}
+                                    mode='outlined'
+                                    label={"Cliente"}
+                                    editable={false}
+                                />
+                            </View>
+                            <View className='w-[30%]'>
+                                <TextInput 
+                                    value={cliente.Dni}
+                                    mode='outlined'
+                                    label={"DNI"}
+                                    editable={false}
+                                />
+                            </View>
                         </View>
                         
                     </View>
@@ -357,33 +359,59 @@ return (
                 }
                 { tipoCliente==="juridico" &&(
                     <View className='gap-2 mb-2'>
-                        <View className='flex-col'>
-                            <TextInput 
-                                value={cliente.nombre}
-                                mode='outlined'
-                                label={"Razon Social"}
-                                editable={false}
-                            >
-                            </TextInput>
-                            <TextInput 
-                                value={cliente.Ruc}
-                                mode='outlined'
-                                label={"RUC"}
-                                editable={false}
-                            >
-                            </TextInput>
+                        <View className='flex-row justify-between'>
+                            <View className='w-[65%] '>
+                                <TextInput 
+                                    value={cliente.nombre}
+                                    mode='outlined'
+                                    label={"Cliente"}
+                                    editable={false}
+                                />
+                            </View>
+                            <View className='w-[30%]'>
+                                <TextInput 
+                                    value={cliente.Ruc}
+                                    mode='outlined'
+                                    label={"RUC"}
+                                    editable={false}
+                                />
+                            </View>
                         </View>
                     </View>
                     )
                 }
+                {/* Aqui se renderizan los datos de los empleados asignados a esta orden */}
+                <View className='mb-3'>
+                    {empleados.map((empleado, index) => (
+                        <View key={index} className='flex-row justify-between'>
+                            <View className='w-[65%] '>
+                                <TextInput 
+                                    value={empleado.Nombres}
+                                    mode='outlined'
+                                    label={"Trabajador"}
+                                    editable={false}
+                                />
+                            </View>
+                            <View className='w-[30%]'>
+                                <TextInput 
+                                    value={empleado.DNI}
+                                    mode='outlined'
+                                    label={"DNI"}
+                                    editable={false}
+                                />  
+                            </View>
+                        </View>
+                    ))}
+                </View>
                 <View className='gap-2'>
                     <View className='flex-row justify-between'>
                         {/* IMAGEN */}
                         <View className='w-[30%]'>
                             <Card style={{ borderRadius: 10 }}>
                                 <Card.Cover
-                                    style={{ height: height*0.6, resizeMode: 'contain' }}
-                                    source={{ uri: modelo?.imagenes?.[0] }} />
+                                    style={{ resizeMode: 'contain' }}
+                                    source={{ uri: modelo?.imagenes?.[0] }} 
+                                />
                                 <Card.Content>
                                     <Text variant="titleMedium">{modelo.Nombre}</Text>
                                 </Card.Content> 
@@ -451,103 +479,110 @@ return (
                         </View>
                     </View>
                 </View>
-                <View className='flex-row w-[92%]'>
-                    <View className='flex-1 w'>
+                <View className='flex-row '>
+                    <View className='flex-1'>
                         {filas.map((fila, index) => (
-                            <View key={fila.id} className='flex-row gap-2 mb-2 '>
-                                <TextInput
-                                    label="Talla"
-                                    className='rounded flex-1'
-                                    keyboardType='numeric'
-                                    placeholder='Talla'
-                                    style={{ height:40, width: width * 0.10 }}
-                                    mode='outlined'
-                                    value={fila.talla}
-                                    onChangeText={(text) => {
-                                        const nuevasFilas = [...filas];
-                                        nuevasFilas[index].talla = text;
-                                        setFilas(nuevasFilas);
-                                    }}
-                                    editable={false}
-                                />
-                                <TextInput
-                                    label="Pares"
-                                    className='rounded flex-1'
-                                    placeholder='Pares'
-                                    style={{ height:40, width: width * 0.10 }}
-                                    mode='outlined'
-                                    keyboardType='numeric'
-                                    value={fila.pares}
-                                    onChangeText={(text) => {
-                                        const nuevasFilas = [...filas];
-                                        nuevasFilas[index].pares = text;
-                                        setFilas(nuevasFilas);
-                                    }}
-                                    editable={false}
-                                />
-                                
-                                <TextInput
-                                    label="Color"
-                                    className='rounded flex-1'
-                                    placeholder='Color'
-                                    style={{ height:40, width: width * 0.18 }}
-                                    mode='outlined'
-                                    value={fila.color}
-                                    onChangeText={(text) => {
-                                        const nuevasFilas = [...filas];
-                                        nuevasFilas[index].color = text;
-                                        setFilas(nuevasFilas);
-                                    }}
-                                    editable={false}
-                                />
+                            <View key={fila.id} className='flex-row  gap-2 mb-2 '>
+                                <View className='w-[20%]'>
+                                    <TextInput
+                                        label="Talla"
+                                        keyboardType='numeric'
+                                        placeholder='Talla'
+                                        style={{ height:40}}
+                                        mode='outlined'
+                                        value={fila.talla}
+                                        onChangeText={(text) => {
+                                            const nuevasFilas = [...filas];
+                                            nuevasFilas[index].talla = text;
+                                            setFilas(nuevasFilas);
+                                        }}
+                                        editable={false}
+                                    />
+                                </View>
+                                <View className='w-[20%]'>
+                                    <TextInput
+                                        label="Pares"
+                                        placeholder='Pares'
+                                        style={{ height:40 }}
+                                        mode='outlined'
+                                        keyboardType='numeric'
+                                        value={fila.pares}
+                                        onChangeText={(text) => {
+                                            const nuevasFilas = [...filas];
+                                            nuevasFilas[index].pares = text;
+                                            setFilas(nuevasFilas);
+                                        }}
+                                        editable={false}
+                                    />
+                                </View>
+                                <View className='w-[45%]'>
+                                    <TextInput
+                                        label="Color"
+                                        placeholder='Color'
+                                        style={{ height:40 }}
+                                        mode='outlined'
+                                        value={fila.color}
+                                        onChangeText={(text) => {
+                                            const nuevasFilas = [...filas];
+                                            nuevasFilas[index].color = text;
+                                            setFilas(nuevasFilas);
+                                        }}
+                                        editable={false}
+                                    />
+                                </View>
                             </View>
                         ))}
                     </View>
                     <View className='flex-1'>
                         {dataDetalleAreaTrabajo.map((fila, index) => (
-                            
-                            <View key={fila.id} className='flex-row justify-between gap-2 mb-2 w-full'>
-                                <TextInput
-                                    label={"Terminado"}
-                                    placeholder='Color'
-                                    style={{ height:40, width: width * 0.10 }}
-                                    mode='outlined'
-                                    value={fila.terminado}
-                                    editable={false}
-                                />
-                                <TextInput
-                                    label={"Avance"}
-                                    placeholder='Avance'
-                                    style={{ height:40, width: width * 0.10 }}
-                                    mode='outlined'
-                                    value={fila.avance}
-                                    keyboardType='numeric'
-                                    onChangeText={(text) => {
-                                        const nuevasFilas = [...dataDetalleAreaTrabajo];
-                                        
-                                        if((Number(text) +Number(nuevasFilas[index].terminado)) > filas[index].pares){
-                                            alert("El  total no puede ser mayor a la cantidad de pares");
-                                            nuevasFilas[index].avance = "";
-                                        }
-                                        else{
-                                            nuevasFilas[index].avance = text;
-                                        }
-                                        
-                                        setDataDetalleAreaTrabajo(nuevasFilas);
-                                    }}
-                                />
-                                <TextInput
-                                    label={"Comentario"}
-                                    placeholder='Comentario'
-                                    style={{ height:40, width: width * 0.30 }}
-                                    mode='outlined'
-                                    value={fila.comentario}
-                                    onChangeText={(text) => {
-                                        const nuevasFilas = [...dataDetalleAreaTrabajo];
-                                        nuevasFilas[index].comentario = text;
-                                        setDataDetalleAreaTrabajo(nuevasFilas);
-                                    }}
-                                />
+                            <View key={fila.id} className='flex-row gap-2 mb-2'>
+                                <View className='w-[25%]'>
+                                    <TextInput
+                                        label={"Terminado"}
+                                        placeholder='Color'
+                                        style={{ height:40}}
+                                        mode='outlined'
+                                        value={fila.terminado}
+                                        editable={false}
+                                    />
+                                </View>
+                                <View className='w-[25%]'>
+                                    <TextInput
+                                        label={"Avance"}
+                                        placeholder='Avance'
+                                        style={{ height:40 }}
+                                        mode='outlined'
+                                        value={fila.avance}
+                                        keyboardType='numeric'
+                                        onChangeText={(text) => {
+                                            const nuevasFilas = [...dataDetalleAreaTrabajo];
+                                            
+                                            if((Number(text) +Number(nuevasFilas[index].terminado)) > filas[index].pares){
+                                                alert("El  total no puede ser mayor a la cantidad de pares");
+                                                nuevasFilas[index].avance = "";
+                                            }
+                                            else{
+                                                nuevasFilas[index].avance = text;
+                                            }
+                                            
+                                            setDataDetalleAreaTrabajo(nuevasFilas);
+                                        }}
+                                    />
+                                </View>
+                                <View className='w-[45%]'>
+                                    <TextInput
+                                        label={"Comentario"}
+                                        placeholder='Comentario'
+                                        style={{ height:40}}
+                                        mode='outlined'
+                                        value={fila.comentario}
+                                        onChangeText={(text) => {
+                                            const nuevasFilas = [...dataDetalleAreaTrabajo];
+                                            nuevasFilas[index].comentario = text;
+                                            setDataDetalleAreaTrabajo(nuevasFilas);
+                                        }}
+                                    />
+                                </View>
                             </View>
                         ))}
                     </View>

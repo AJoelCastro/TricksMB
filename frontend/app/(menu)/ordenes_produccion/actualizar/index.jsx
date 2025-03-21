@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { View, Text, TouchableOpacity, Pressable, Modal, FlatList,KeyboardAvoidingView, Platform, SafeAreaView } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import {Card, Checkbox, TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon1 from 'react-native-vector-icons/FontAwesome';
@@ -9,7 +9,6 @@ import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 import EmpleadoService from '@/services/EmpleadoService';
 
 const Actualizar = () => {
-
     const route = useRouter();
     const [codigoOrden, setCodigoOrden] = useState('');
     const [estado, setEstado] = useState("");
@@ -61,7 +60,6 @@ const Actualizar = () => {
                 try {
                     let codigoPedido = codigoOrden
                     const dataDetalleAreaTrabajo = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
-                    console.log("dataDetalleAreaTrabajo",dataDetalleAreaTrabajo);
                     switch (dataDetalleAreaTrabajo[0].Area_trabajo_idArea_trabajo) {
                         case 1:
                             setAreaTrabajo("corte");
@@ -133,13 +131,31 @@ const Actualizar = () => {
                         nomArea = "Armado";
                         setAreaTrabajo("armado");
                         const dataDetalleEmpleadoPedido3 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
-                        console.log("Empleados",dataDetalleEmpleadoPedido3);
+                        if (!dataDetalleEmpleadoPedido3) {
+                            return;
+                        }
+                        if(dataDetalleEmpleadoPedido3.detalleEmpleadoPedido.length === 0){
+                            alert("No hay empleados asignados a esta área de trabajo");
+                            
+                        }else{
+                            setEmpleadosAsignados(dataDetalleEmpleadoPedido3.detalleEmpleadoPedido);
+                            setShowEmpleadosAsignados(true);
+                        }
                         break;
                     case 4:
                         nomArea = "Alistado";
                         setAreaTrabajo("alistado");
                         const dataDetalleEmpleadoPedido4 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
-                        console.log("Empleados",dataDetalleEmpleadoPedido4);
+                        if (!dataDetalleEmpleadoPedido4) {
+                            return;
+                        }
+                        if(dataDetalleEmpleadoPedido4.detalleEmpleadoPedido.length === 0){
+                            alert("No hay empleados asignados a esta área de trabajo");
+                            
+                        }else{
+                            setEmpleadosAsignados(dataDetalleEmpleadoPedido4.detalleEmpleadoPedido);
+                            setShowEmpleadosAsignados(true);
+                        }
                         break;
                 }
             }
@@ -180,26 +196,14 @@ const Actualizar = () => {
             setEmpleados([...empleados, item]);
         }
     };
-    
-    useEffect(() => {
-        if (empleados.length > 0) {
-            const initialChecked = {};
-            empleados.forEach((emp) => {
-                initialChecked[emp.idEmpleado] = true;
-            });
-            setCheckedEmpleados(initialChecked);
-        }
-    }, [empleados]);
 
     const asignarEmpleados = async () => {
         try {
             let bandera= true;
             let codigoPedido = codigoOrden;
             for (const empleado of empleados) {
-                console.log(empleado, codigoPedido);
                 let dni = empleado.Dni
                 const dataAsignar = await EmpleadoService.crearDetalleEmpleadoPedido(dni, codigoPedido);
-                console.log("Data Asignar",dataAsignar);
                 if(!dataAsignar){
                     bandera = false;
                     console.error("Error al asignar empleados", dataAsignar);
@@ -327,7 +331,6 @@ const Actualizar = () => {
                                             <View className='flex-row gap-4 justify-center'>
                                                 <Pressable onPress={() => {
                                                     setShowModal(!showModal);
-                                                    console.log("agregar",empleados)
                                                     }
                                                 }>
                                                     <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#15a1ff] rounded-xl p-2 mx-auto'>
