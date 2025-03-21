@@ -313,7 +313,7 @@ const Corte = () => {
                             error("Característica vacias o nulas:", update);
                             return;
                         }else{
-                            alert("El pedido se ha actualizado correctamente.");
+                            alert(`${updateAreaTrabajo.message}`);
                             resetearCampos();
                             router.back();
                         }

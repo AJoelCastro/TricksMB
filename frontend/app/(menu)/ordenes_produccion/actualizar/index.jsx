@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { View, Text, TouchableOpacity, Pressable, Modal, FlatList,KeyboardAvoidingView, Platform, SafeAreaView } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import {Card, Checkbox, TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon1 from 'react-native-vector-icons/FontAwesome';
@@ -9,7 +9,7 @@ import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 import EmpleadoService from '@/services/EmpleadoService';
 
 const Actualizar = () => {
-
+    const {bandera} = useLocalSearchParams();
     const route = useRouter();
     const [codigoOrden, setCodigoOrden] = useState('');
     const [estado, setEstado] = useState("");
@@ -133,7 +133,16 @@ const Actualizar = () => {
                         nomArea = "Armado";
                         setAreaTrabajo("armado");
                         const dataDetalleEmpleadoPedido3 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
-                        console.log("Empleados",dataDetalleEmpleadoPedido3);
+                        if (!dataDetalleEmpleadoPedido3) {
+                            return;
+                        }
+                        if(dataDetalleEmpleadoPedido3.detalleEmpleadoPedido.length === 0){
+                            alert("No hay empleados asignados a esta área de trabajo");
+                            
+                        }else{
+                            setEmpleadosAsignados(dataDetalleEmpleadoPedido3.detalleEmpleadoPedido);
+                            setShowEmpleadosAsignados(true);
+                        }
                         break;
                     case 4:
                         nomArea = "Alistado";
@@ -180,16 +189,6 @@ const Actualizar = () => {
             setEmpleados([...empleados, item]);
         }
     };
-    
-    useEffect(() => {
-        if (empleados.length > 0) {
-            const initialChecked = {};
-            empleados.forEach((emp) => {
-                initialChecked[emp.idEmpleado] = true;
-            });
-            setCheckedEmpleados(initialChecked);
-        }
-    }, [empleados]);
 
     const asignarEmpleados = async () => {
         try {
@@ -214,7 +213,11 @@ const Actualizar = () => {
             alert("Error al asignar empleados", error);
         }
     }
-
+    useEffect(() => {
+        if(bandera){
+            verificarProceso();
+        }
+    },[bandera])
     const options = [
         { id: 1, title: 'corte', icon: 'content-cut', color: estado==='Editable' ? 'bg-gray-700' : 'bg-red-500' },
         { id: 2, title: 'perfilado', icon: 'brush', color: estado==='Editable' ? 'bg-gray-700' : 'bg-sky-700' },

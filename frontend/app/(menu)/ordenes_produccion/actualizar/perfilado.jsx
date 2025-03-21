@@ -269,8 +269,7 @@ const Perfilado = () => {
             else {
                 alert("Pedido actualizado", "El pedido se ha actualizado correctamente.");
                 setActualizado(true);
-                resetearCampos();
-                router.back();
+                
             }
         }catch (error) {
             console.error("Error al actualizar pedido:", error);
@@ -296,33 +295,36 @@ const Perfilado = () => {
     }, []);
     useEffect(() => {
         const obtenerEstadosDetalleAreaTrabajo = async () => {
-            try {
-                let codigoPedido = codigoOrden
-                const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
-                let actualizar = true;
-                data.map((item) => {
-                    if (item.Estado === 0){
-                        actualizar = false;
+            if (actualizado === true){
+                try {
+                    let codigoPedido = codigoOrden
+                    const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
+                    let actualizar = true;
+                    data.map((item) => {
+                        if (item.Estado === 0){
+                            actualizar = false;
+                        }
+                    })
+                    if (actualizar === true){
+                        let nomArea= "Armado"
+                        const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido)
+                        console.log("updateAreaTrabajo",updateAreaTrabajo);
+                        if (!updateAreaTrabajo) {
+                            error("Característica vacias o nulas:", update);
+                            return;
+                        }else{
+                            alert(`${updateAreaTrabajo.message}`);
+                            resetearCampos();
+                            router.back();
+                        }
                     }
-                })
-                if (actualizar === true){
-                    let nomArea= "Armado"
-                    const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido)
-                    console.log("updateAreaTrabajo",updateAreaTrabajo);
-                    if (!updateAreaTrabajo) {
-                        error("Característica vacias o nulas:", update);
-                        return;
-                    }else{
-                        alert("El pedido se ha actualizado correctamente.");
-                        router.back();
-                    }
+                }catch (error) {
+                    console.error("Error al obtener los detalles del area de trabajo:", error);
                 }
-            }catch (error) {
-                console.error("Error al obtener los detalles del area de trabajo:", error);
             }
         }
         obtenerEstadosDetalleAreaTrabajo();
-    }, [actualizado===true]);
+    }, [actualizado]);
 return (
     <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
