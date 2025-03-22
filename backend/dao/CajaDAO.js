@@ -1,20 +1,20 @@
 const db = require('../config/db');
-// const CodQR = require('qrcode');
+const CodQR = require('qrcode');
 
 class CajaDAO{
 
     static async createCaja(idCaracteristica){
         try{
-            const query = await db.query(`ISERT INTO Caja (Caracteristicas_idCaracteristicas, CodigoQR) VALUES (?, ?)`);
+            const query = `INSERT INTO Caja (Caracteristicas_idCaracteristicas, CodigoQR) VALUES (?, ?)`;
             const [result] = await db.execute(query, [idCaracteristica, "tempQR"]);
 
             const idCaja = result.insertId;
+            const URL = `http://tricks.com/caja/${idCaja}`;
+            const qrImage = await CodQR.toDataURL(URL);
 
-            const qrCodData = `http://tricks.com/caja/${idCaja}`;
+            await db.query(`UPDATE Caja SET CodigoQR = ? WHERE idCaja = ?`, [qrImage, idCaja]);
 
-            await db.query(`UPDATE Caja SET CodigoQR = ? WHERE idCaja = ?`, [qrCodData, idCaja]);
-
-            return { idCaja, idCaracteristica, qrCodData };
+            return {idCaja, idCaracteristica, qrImage};
         }catch(error){
             console.error(error);
             throw error;
