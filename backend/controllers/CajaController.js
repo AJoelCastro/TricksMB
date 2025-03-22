@@ -1,6 +1,6 @@
 const CajaService = require('../services/CajaService');
 const PDFDocument = require('pdfkit'); // Para generar el PDF
-
+const fs = require('fs');
 const CajaController = {
     async createCaja(req, res) {
         try {
@@ -11,6 +11,11 @@ const CajaController = {
             const result = await CajaService.createCaja(codigoPedido);
             const pdfBuffer = await generatePDF(result.cajas);
             console.log("✅ PDF generado:", pdfBuffer);
+            // Guardar el PDF localmente
+            const pdfPath = `./cajas_${codigoPedido}.pdf`; // Ruta donde se guardará el PDF
+            fs.writeFileSync(pdfPath, pdfBuffer); // Guarda el PDF en el sistema de archivos
+
+            console.log("✅ PDF generado y guardado en:", pdfPath);
             res.status(200).json({ message: "Cajas creadas y PDF enviado por correo.", cajas: result.cajas });
         } catch (error) {
             console.error("Error en CajaController.createCaja:", error);
