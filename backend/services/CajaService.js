@@ -1,13 +1,10 @@
 const CajaDAO = require("../dao/CajaDAO");
 const db = require("../config/db");
-const cloudinary = require("../config/cloudinary");
 
 
 const CajaService = {
     async createCaja(codigoPedido) {
         const connection = await db.getConnection();
-        const PdfService = require("./PdfService");
-        const WhatsAppService = require("./WhatsAppService");
         const DetallePedido = require("./DetallePedidoService");
         const Caracteristica = require("./CaracteristicasService");
         try {
@@ -33,14 +30,6 @@ const CajaService = {
             connection.release();
 
             console.log("✅ Cajas creadas:", cajas);
-
-            // 🔹 Generar PDF con los códigos QR
-            const pdfBuffer = await PdfService.createPDF(cajas);
-
-            const pdfUrl = await uploadPDFToCloudinary(pdfBuffer);
-
-            // 🔹 Enviar PDF por WhatsApp
-            await WhatsAppService.sendPDFtoWhatsApp(pdfUrl);
 
             return { status: 200, message: "Cajas creadas y PDF enviado por WhatsApp", cajas };
         } catch (error) {
@@ -78,24 +67,5 @@ const CajaService = {
         }
     }
 }; 
-
-async function uploadPDFToCloudinary(pdfBuffer) {
-    return new Promise((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-            { resource_type: "raw", folder: "pdfs" },
-            (error, result) => {
-                if (error) {
-                    console.error("❌ Error subiendo a Cloudinary:", error);
-                    reject(error);
-                } else {
-                    resolve(result.secure_url);
-                }
-            }
-        );
-
-        uploadStream.end(pdfBuffer); // <- Aquí es donde se sube el PDF
-    });
-}
-
 
 module.exports = CajaService;
