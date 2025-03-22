@@ -48,8 +48,12 @@ export default function MenuLayout() {
         />
         <Stack.Screen
             name='almacen/index'
-            options={{
-                headerShown: false
+            options={{ 
+              headerTitle:"Menu",
+              headerStyle:{
+                backgroundColor:backgroundColor,
+              },
+              headerTintColor:textColor,
             }}
         />
       </Stack>

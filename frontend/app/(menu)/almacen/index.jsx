@@ -11,13 +11,7 @@ export default function Almacen(){
     return (
       <View>
         <View>
-          <Header title={"Almacén Seleccionado"}
-            LeftIcon = {() => <Icon name ="cog" size = {24} color="black"/>}
-            RightIcon= { () => <Icon name ="user" size = {24} color="black"/>}
-            onLeftPress={ () => console.log("Configuración presionada")}
-            onRightPress={() => console.log("Perfil Seleccionado")} 
-          >
-          </Header>
+          
           <CustomButtom title="Ingresar Productos"
           />
           <CustomButtom title="Registrar Venta"></CustomButtom>
