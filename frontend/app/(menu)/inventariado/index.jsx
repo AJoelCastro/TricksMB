@@ -37,42 +37,67 @@ const Inventario=() =>{
     <View className='flex-1'>
       <View className='flex-row justify-between p-4'>
         <Text className='font-normal text-2xl'>Abrir camara</Text>
-        <Switch value={showCamera} onValueChange={setShowCamera} />
+        <Switch value={showCamera} onValueChange={setShowCamera} disabled={!showRegisters}/>
       </View>
-      <View>
         {
           showCamera&&(
-            <CameraView 
-              facing={facing}
-              onBarcodeScanned={qrLeido ? undefined : handreLeerQr}
-            >
-              <View className='h-[70%]'>
-                <TouchableOpacity  onPress={toggleCameraFacing}>
-                  <Text>Flip Camera</Text>
-                </TouchableOpacity>
+            <View className='p-4 h-[50%]'>
+              <CameraView 
+                facing={facing}
+                onBarcodeScanned={qrLeido ? undefined : handreLeerQr}
+                style={{flex:1, justifyContent:'center', alignItems:'center'}}
+              >
+              </CameraView>
+              <View className='flex-row justify-center gap-4 mt-8'>
+                  <Pressable
+                    className='bg-[#3f76f5] p-4 rounded-lg'
+                    onPress={()=>{
+                    setShowRegisters(false);
+                    setShowCamera(true);}}
+                  >
+                    <Text className='text-white'>
+                      Capturar
+                    </Text>
+                  </Pressable>
+                  <Pressable
+                    className='bg-[#f62e2a] p-4 rounded-lg' 
+                    onPress={()=>{
+                    setShowRegisters(false);
+                    setShowCamera(true);}}
+                  >
+                    <Text className='text-white'>
+                      Cancelar
+                    </Text>
+                  </Pressable>
               </View>
-            </CameraView>
+            </View>
+            
           )
           
         }
-      </View>
       {
         showRegisters?(
           <View className='flex-row justify-center gap-4'>
-            <View className="bg-[#634AFF] p-4 rounded-lg">
-              <Pressable onPress={()=>setShowRegisters(false)}>
+              <Pressable
+                className='bg-[#634AFF] p-4 rounded-lg'
+                onPress={()=>{
+                setShowRegisters(false);
+                setShowCamera(true);}}
+              >
                 <Text className='text-white'>
                   Registrar Ingreso
                 </Text>
               </Pressable>
-            </View>
-            <View className="bg-[#634AFF] p-4 rounded-lg">
-              <Pressable>
+              <Pressable
+                className='bg-[#634AFF] p-4 rounded-lg' 
+                onPress={()=>{
+                setShowRegisters(false);
+                setShowCamera(true);}}
+              >
                 <Text className='text-white'>
                   Registrar Salida
                 </Text>
               </Pressable>
-            </View>
           </View>
         ):null
       }
