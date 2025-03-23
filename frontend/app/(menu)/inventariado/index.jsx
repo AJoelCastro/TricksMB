@@ -60,7 +60,7 @@ const Inventario=() =>{
         showRegisters?(
           <View className='flex-row justify-center gap-4'>
             <View className="bg-[#634AFF] p-4 rounded-lg">
-              <Pressable onPressOut={()=>setShowRegisters(false)}>
+              <Pressable onPress={()=>setShowRegisters(false)}>
                 <Text className='text-white'>
                   Registrar Ingreso
                 </Text>
