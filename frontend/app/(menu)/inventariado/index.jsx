@@ -45,7 +45,7 @@ const Inventario=() =>{
               <CameraView 
                 facing={facing}
                 onBarcodeScanned={qrLeido ? undefined : handreLeerQr}
-                style={{flex:1, justifyContent:'center', alignItems:'center'}}
+                style={{flex:1, justifyContent:'center', alignItems:'center', }}
               >
               </CameraView>
               <View className='flex-row justify-center gap-4 mt-8'>
