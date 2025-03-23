@@ -33,17 +33,13 @@ const Armado = () => {
     const [ruc, setRuc] = useState("");
     const [nombreTaco, setNombreTaco] = useState("");
     const [tallaTaco, setTallaTaco] = useState("");
-    const [modalModeloVisible, setModalModeloVisible] = useState(false);
     const [material, setMaterial] = useState("");
     const [tipoMaterial, setTipoMaterial] = useState("");
     const [accesorios, setAccesorios] = useState("");
     const [suela, setSuela] = useState("");
     const [forro, setForro] = useState("");
-    const [dataModelos, setDataModelos] = useState([]);
-    const [dataTipoCalzado, setDataTipoCalzado] = useState([]);
     const [tipoCalzado, setTipoCalzado] = useState("");
     const [fechaEntrega, setFechaEntrega] = useState(new Date());
-    const [openDatePicker, setOpenDatePicker] = useState(false);
     const [idDetallePedido, setIdDetallePedido] = useState();
     const [dataDetalleAreaTrabajo, setDataDetalleAreaTrabajo] = useState([]);
     const [actualizado, setActualizado] = useState(false);
@@ -115,22 +111,6 @@ const Armado = () => {
         }
     };
 
-    useEffect(() => {
-        const cargarTipoCalzado = async () => {
-            try {
-                const tipos = await TipoCalzadoService.getAllTipoCalzado();
-                if (!tipos) {
-                    console.error("No se encontraron los tipos de calzado");
-                    return;
-                }
-                
-                setDataTipoCalzado(tipos);
-            } catch (error) {
-                console.error("Error cargando tipos de calzado:", error);
-            }
-        }
-        cargarTipoCalzado();
-    }, [])
 
     useEffect(() => {
         if (tipoCliente === "natural" && dni) {
