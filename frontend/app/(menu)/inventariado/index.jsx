@@ -32,6 +32,7 @@ const Inventario=() =>{
   }
 
   const handleBarcodeScanned = ({ data }) => {
+    console.log("data", data);
     setScannedData(data);
     setQrLeido(true);
     // Aquí puedes agregar cualquier lógica adicional que necesites después de escanear el código QR
