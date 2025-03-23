@@ -2,8 +2,8 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Button, Pressable, Text, TouchableOpacity, View } from 'react-native';
-import { Switch } from 'react-native-paper';
-
+import { Switch, Card } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/FontAwesome';
 const Inventario=() =>{
   const [facing, setFacing] = useState('back');
   const [permission, requestPermission]=useCameraPermissions();
@@ -32,8 +32,8 @@ const Inventario=() =>{
   }
 
   const handleBarcodeScanned = ({ data }) => {
-    console.log("data", data);
-    setScannedData(data);
+    const numeroCaja = data.split('/').pop();
+    setScannedData(numeroCaja);
     setQrLeido(true);
     // Aquí puedes agregar cualquier lógica adicional que necesites después de escanear el código QR
   };
@@ -49,12 +49,24 @@ const Inventario=() =>{
               <CameraView 
                 facing={facing}
                 onBarcodeScanned={qrLeido?null:handleBarcodeScanned}
-                style={{flex:1, justifyContent:'center', alignItems:'center', }}
+                style={{flex:1 }}
               >
-              </CameraView>
+                <View style={{ position: 'absolute', bottom: 20, alignSelf: 'center' }}>
+                  <Pressable onPress={toggleCameraFacing}>
+                    <Icon name="refresh" size={32} color="white" />
+                  </Pressable>
+                </View>
+              </CameraView> 
               {scannedData && (
                 <View className='mt-4'>
-                  <Text className='text-center'>Código QR escaneado: {scannedData}</Text>
+                  <Card style={{ borderRadius: 10, elevation: 5 }}>
+                      <View className='p-2'>
+                          <Card.Content>
+                            <Text className='text-center' variant="titleMedium">QR LEIDO: {scannedData}</Text>
+                          </Card.Content>
+                      </View>
+                      
+                  </Card>
                 </View>
               )}
               <View className='flex-row justify-center gap-4 mt-8'>
