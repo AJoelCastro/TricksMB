@@ -36,8 +36,8 @@ const Inventario=() =>{
   return (
     <View className='flex-1'>
       <View className='flex-row justify-between p-4'>
-        <Text className='font-normal text-2xl'>Abrir camara</Text>
-        <Switch value={showCamera} onValueChange={setShowCamera} disabled={!showRegisters}/>
+        <Text className='font-normal text-2xl'>Camara</Text>
+        <Switch value={showCamera} onValueChange={setShowCamera} disabled={showRegisters?true: true}/>
       </View>
         {
           showCamera&&(
