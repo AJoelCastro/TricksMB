@@ -41,15 +41,23 @@ export default function MenuLayout() {
             }}
         />
         <Stack.Screen
-            name='inventariado/index'
-            options={{
-                headerShown: false
+            name="inventariado/index"
+            options={{ 
+              headerTitle:"Inventario",
+              headerStyle:{
+                backgroundColor:backgroundColor,
+              },
+              headerTintColor:textColor,
             }}
         />
         <Stack.Screen
             name='almacen/index'
-            options={{
-                headerShown: false
+            options={{ 
+              headerTitle:"Almacen",
+              headerStyle:{
+                backgroundColor:backgroundColor,
+              },
+              headerTintColor:textColor,
             }}
         />
       </Stack>
