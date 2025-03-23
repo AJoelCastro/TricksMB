@@ -11,6 +11,7 @@ const Inventario=() =>{
   const [qrLeido, setQrLeido] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [showRegisters, setShowRegisters] = useState(true);
+  const [scannedData, setScannedData] = useState(null);
   if (!permission) {
     // Camera permissions are still loading.
     return <View />;
@@ -30,9 +31,11 @@ const Inventario=() =>{
     setFacing(current => (current === 'back' ? 'front' : 'back'));
   }
 
-  const handreLeerQr = () => {
-    
-  }
+  const handleBarcodeScanned = ({ data }) => {
+    setScannedData(data);
+    setQrLeido(true);
+    // Aquí puedes agregar cualquier lógica adicional que necesites después de escanear el código QR
+  };
   return (
     <View className='flex-1'>
       <View className='flex-row justify-between p-4'>
@@ -44,32 +47,40 @@ const Inventario=() =>{
             <View className='p-4 h-[50%]'>
               <CameraView 
                 facing={facing}
-                onBarcodeScanned={qrLeido ? undefined : handreLeerQr}
+                onBarcodeScanned={qrLeido?null:handleBarcodeScanned}
                 style={{flex:1, justifyContent:'center', alignItems:'center', }}
               >
               </CameraView>
+              {scannedData && (
+                <View className='mt-4'>
+                  <Text className='text-center'>Código QR escaneado: {scannedData}</Text>
+                </View>
+              )}
               <View className='flex-row justify-center gap-4 mt-8'>
                   <Pressable
                     className='bg-[#3f76f5] p-4 rounded-lg'
                     onPress={()=>{
-                    setShowRegisters(false);
-                    setShowCamera(true);}}
+                    }}
                   >
                     <Text className='text-white'>
-                      Capturar
+                      Ingresar
                     </Text>
                   </Pressable>
                   <Pressable
                     className='bg-[#f62e2a] p-4 rounded-lg' 
                     onPress={()=>{
-                    setShowRegisters(false);
-                    setShowCamera(true);}}
+                      setShowCamera(false);
+                      setShowRegisters(true);
+                      setQrLeido(false);
+                      setScannedData(null)
+                    }}
                   >
                     <Text className='text-white'>
                       Cancelar
                     </Text>
                   </Pressable>
               </View>
+              
             </View>
             
           )
