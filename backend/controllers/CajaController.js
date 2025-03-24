@@ -1,3 +1,5 @@
+const { getCajaById } = require('../dao/CajaDAO');
+const { get } = require('../routes/usuarioRoutes');
 const CajaService = require('../services/CajaService');
 
 const CajaController = {
@@ -21,7 +23,20 @@ const CajaController = {
             console.error("Error en CajaController.getAllCajaByPedido:", error);
             res.send({message: "Error al obtener cajas por pedido", status: error.status });
         }
+    },
+
+    async getCajaById(req, res) {
+        try{
+            const { id } = req.params;
+            const caja = await CajaService.getCajaById(id);
+            res.send({caja, status:200});
+        }catch(error){
+            console.error("Error en CajaController.getCajaById:", error);
+            res.send({message: "Error al obtener caja por id", status: error.status });
+        }
     }
+
+    
 };
 
 module.exports = CajaController;
