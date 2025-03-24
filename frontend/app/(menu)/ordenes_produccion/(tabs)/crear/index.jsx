@@ -135,12 +135,13 @@ export default function crear() {
         try {
             let identificador = dni;
             const cliente = await ClienteService.buscarCliente(tipoCliente, identificador);
+            console.log("cliente", cliente);
             if (!cliente) {
                 console.error("No se encontró el cliente");
                 return;
             }
             
-            setCliente(cliente);
+            setCliente(cliente.cliente);
         } catch (error) {
             console.error("Error cargando cliente:", error);
         }
@@ -165,14 +166,14 @@ export default function crear() {
             let id = tipoCalzado.idTipo;
             const modelos = await ModeloService.getAllModeloById(id);
             const obteniendoImagenes = await Promise.all(
-                modelos.map(async (modelo) => {
+                modelos.modelo.map(async (modelo) => {
                     let idModelo = modelo.idModelo;
                     const imagen = await ModeloService.getImagenById(idModelo);
                     if (!imagen) {
                         console.error("No se encontraron las imagenes");
                         return {...modelo, imagenes:[]};
                     }
-                    return {...modelo, imagenes: imagen.map(img => img.Url)};
+                    return {...modelo, imagenes: imagen.imagen.map(img => img.Url)};
                     
                 })
             )
@@ -197,7 +198,7 @@ export default function crear() {
                     return;
                 }
                 
-                setDataTipoCalzado(tipos);
+                setDataTipoCalzado(tipos.tipoCalzado);
             } catch (error) {
                 console.error("Error cargando tipos de calzado:", error);
             }
@@ -262,13 +263,11 @@ export default function crear() {
                     cantidad: fila.pares,
                     color: fila.color
                 };
-    
                 // ✅ Verifica si algún valor es vacío
                 if (!Object.values(datosCaracteristicas).every(valor => valor && valor.toString().trim() !== "")) {
                     Alert.alert("Error", "Por favor, completa todos los campos.");
                     return;
                 }
-                console.log("datosCaracteristicas",datosCaracteristicas);
                 // ✅ Llamada a la API con `await`
                 const caracteristicas = await CaracteristicasService.crearCaracteristicas(datosCaracteristicas);
                 dataCaracteristicas.push(caracteristicas.caracteristica);
@@ -289,12 +288,12 @@ export default function crear() {
             if (!pedido) {
                 return;
             }
-            let idDetallePedido = pedido.idDetallePedido;
+            let idDetallePedido = pedido.detallePedido.idDetallePedido;
             const caracteristicas = await crearCaracteristicas(idDetallePedido);
             if (!caracteristicas) {
                 return;
             }
-            alert(`Pedido ${pedido.codigoPedido} creado con exito `);
+            alert(`Pedido ${pedido.detallePedido.codigoPedido} creado con exito `);
             resetearCampos();
         } catch (error) {
             console.error("Error al crear el pedido:", error);

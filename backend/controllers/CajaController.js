@@ -1,5 +1,3 @@
-const { getCajaById } = require('../dao/CajaDAO');
-const { get } = require('../routes/usuarioRoutes');
 const CajaService = require('../services/CajaService');
 
 const CajaController = {
@@ -37,7 +35,7 @@ const CajaController = {
     async getCajaById(req, res) {
         try{
             const data = req.params;
-            console.log("id", req.params);
+            console.log("id", data);
             const caja = await CajaService.getCajaById(data);
             console.log("caja", caja);
             res.send({caja, status:200});
