@@ -16,10 +16,10 @@ const DetalleAreaTrabajoController = {
         try {
             const {codigoPedido} = req.params;
             const detallesAreaTrabajo = await DetalleAreaTrabajoService.getDetalleAreaTrabajo(codigoPedido);
-            return res.status(200).json(detallesAreaTrabajo);
+            return res.json({detallesAreaTrabajo, status: 200});
         } catch (error) {
             console.error("Error al obtener detalle de área de trabajo:", error);
-            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+            return res.json({ error: error.message || "Error interno del servidor", status: error.status  });
         }
     },
 
@@ -28,10 +28,10 @@ const DetalleAreaTrabajoController = {
             const {idCaracteristicas} = req.params;
             const { cantidadAvance, comentario, estado} = req.body;
             const detalleAreaTrabajo = await DetalleAreaTrabajoService.updateDetalleAreaTrabajo(idCaracteristicas, cantidadAvance, comentario, estado);
-            return res.status(200).json(detalleAreaTrabajo);
+            return res.json({detalleAreaTrabajo, status: 200});
         } catch (error) {
             console.error("Error al actualizar detalle de área de trabajo:", error);
-            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+            return res.json({ error: error.message || "Error interno del servidor", status: error.status  });
         }
     },
 

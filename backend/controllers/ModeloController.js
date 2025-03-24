@@ -1,3 +1,4 @@
+const { json } = require('body-parser');
 const ModeloService = require('../services/ModeloService');
 
 const ModeloController = {
@@ -6,20 +7,20 @@ const ModeloController = {
         try {
             const { idTipo, nombre } = req.body;
             const modelo = await ModeloService.createModelo(idTipo, nombre);
-            return res.status(201).json(modelo);
+            res,json({modelo, status: 201});
         } catch (error) {
             console.error("Error al crear modelo:", error);
-            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+            res.json({ error: error.message || "Error interno del servidor", status: error.status });
         }
     },
 
     async getAllModelo(req, res) {
         try {
             const modelos = await ModeloService.getAllModelo();
-            return res.status(200).json(modelos);
+            res.json({ modelos, status: 200 });
         } catch (error) {
             console.error("Error al obtener modelos:", error);
-            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+            res.json({ error: error.message || "Error interno del servidor", status: error.status });
         }
     },
 
@@ -27,10 +28,10 @@ const ModeloController = {
         try {
             const id = req.query.id;
             const modelo = await ModeloService.getAllModeloById(id);
-            return res.status(200).json(modelo);
+            res.json({ modelo, status: 200 });
         } catch (error) {
             console.error("Error al obtener modelo por id:", error);
-            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+            res.json({ error: error.message || "Error interno del servidor", status: error.status });
         }
     },
 
@@ -38,10 +39,10 @@ const ModeloController = {
         try {
             const {codigoPedido} = req.params;
             const modelo = await ModeloService.getModeloByCodigoPedido(codigoPedido);
-            return res.status(200).json(modelo);
+            res.json({modelo, status: 200});
         } catch (error) {
             console.error("Error al obtener modelo por código de pedido:", error);
-            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+            res.json({ error: error.message || "Error interno del servidor", status: error.status });
         }
     }
 };

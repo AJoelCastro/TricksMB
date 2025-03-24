@@ -7,10 +7,10 @@ const PedidoController = {
         try {
             const {codigoPedido} = req.params;
             const pedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
-            return res.status(200).json(pedido);
+            res.status(200).json(pedido);
         } catch (error) {
             console.error("Error al obtener pedido por código de pedido:", error);
-            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+            res.json({ error: error.message || "Error interno del servidor", status: error.status });
         }
     },
 
@@ -18,10 +18,10 @@ const PedidoController = {
         try {
             const { codigoPedido, fechaEntrega, serieInicio, serieFinal } = req.body;
             const pedido = await PedidoService.updatePedido(codigoPedido, fechaEntrega, serieInicio, serieFinal);
-            return res.status(200).json(pedido);
+            res.status(200).json(pedido);
         } catch (error) {
             console.error("Error al actualizar pedido:", error);
-            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+            res.json({ error: error.message || "Error interno del servidor", status: error.status });
         }
     }
 };

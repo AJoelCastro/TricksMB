@@ -5,10 +5,10 @@ const ImagenController = {
         try{
             const {idModelo} = req.params;
             const imagen = await ImagenService.getImagen(idModelo);
-            return  res.status(200).json(imagen);
+            res.json({imagen, status: 200});
         } catch(error){
             console.error("Error al obtener imagen por id:", error);
-            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+            res.json({ error: error.message || "Error interno del servidor", status: error.status });
         }
     }
 

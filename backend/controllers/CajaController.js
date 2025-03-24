@@ -1,7 +1,5 @@
 const CajaService = require('../services/CajaService');
 
-
-
 const CajaController = {
     async createCaja(req, res) {
         try {
@@ -10,21 +8,18 @@ const CajaController = {
             res.json({ message: "Cajas creadas y PDF enviado por correo.", cajas: result.cajas, status:200 });
         } catch (error) {
             console.error("Error en CajaController.createCaja:", error);
-            res.status(error.status || 500).send(error.message);
+            res.send({message: "Error al crear cajas", status: error.status });
         }
     },
 
     async getAllCajaByPedido(req, res) {
         try {
             const { codigoPedido } = req.params;
-            if (!codigoPedido) {
-                throw { status: 400, message: "El código de pedido es requerido" };
-            }
             const cajas = await CajaService.getAllCajaByPedido(codigoPedido);
-            res.status(200).send(cajas);
+            res.send({cajas, status:200});
         } catch (error) {
             console.error("Error en CajaController.getAllCajaByPedido:", error);
-            res.status(error.status || 500).send(error.message);
+            res.send({message: "Error al obtener cajas por pedido", status: error.status });
         }
     }
 };
