@@ -16,7 +16,7 @@ const CajaController = {
             fs.writeFileSync(pdfPath, pdfBuffer); // Guarda el PDF en el sistema de archivos
 
             console.log("✅ PDF generado y guardado en:", pdfPath);
-            res.status(200).json({ message: "Cajas creadas y PDF enviado por correo.", cajas: result.cajas });
+            res.json({ message: "Cajas creadas y PDF enviado por correo.", cajas: result.cajas, status:200 });
         } catch (error) {
             console.error("Error en CajaController.createCaja:", error);
             res.status(error.status || 500).send(error.message);

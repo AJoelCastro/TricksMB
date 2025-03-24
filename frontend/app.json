@@ -4,7 +4,7 @@
     "slug": "TricksMB",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/namiTest.jpg",
+    "icon": "./assets/images/tricks.gif",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -26,7 +26,7 @@
         "backgroundColor": "#ffffff"
       },
       "softwareKeyboardLayoutMode": "resize",
-      "screenOrientation": "unspecified"
+      "screenOrientation": "portrait"
     },
     "web": {
       "bundler": "metro",
@@ -38,10 +38,9 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/namiTest.jpg",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "image": "./assets/images/tricks.gif",
+          "resizeMode": "cover",
+          "backgroundColor": "#000000"
         }
       ],
       [

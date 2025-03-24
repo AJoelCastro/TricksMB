@@ -375,13 +375,15 @@ const Actualizar = () => {
                                     renderItem={({ item }) => (
                                         <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
                                             <View className='flex-row p-2'>
-                                                <Checkbox
-                                                    status={checkedEmpleados[item.idEmpleado] ? 'checked' : 'unchecked'}
-                                                    onPress={() => {
-                                                        agregarOQuitarEmpleado(item);
-                                                    }}
-                                                    color='#3B82F6'
-                                                />
+                                                <View className='bg-white rounded-full'>
+                                                    <Checkbox
+                                                        status={checkedEmpleados[item.idEmpleado] ? 'checked' : 'unchecked'}
+                                                        onPress={() => {
+                                                            agregarOQuitarEmpleado(item);
+                                                        }}
+                                                        color='#3B82F6'
+                                                    />
+                                                </View>
                                                 <Card.Content>
                                                     <View className='gap-1'>
                                                         <Text variant="titleMedium">Nombres: {item.Nombres}</Text>
