@@ -100,6 +100,7 @@ const DetallePedidoService = {
     }, 
     async getDetallePedidoByidDetallePedido(idDetalle_pedido) {
         try {
+            console.log("idDetalle_pedido", idDetalle_pedido);
             if (!idDetalle_pedido) {
                 throw { status: 400, message: "El id del detalle de pedido es requerido" };
             }

@@ -31,6 +31,20 @@ const CajaService = {
             console.error("Error al obtener cajas en CS FRONT:", error.response?.data || error.message);
             throw error;
         }
+    },
+    getCajaById: async (id) => {
+        try {
+            const token = await AuthService.getToken();
+            if (!token) throw new Error("No hay token disponible");
+
+            const response = await axios.get(`${API_URL}/caja/obtener/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error al obtener caja por id en CS FRONT:", error.response?.data || error.message);  
+            throw error;
+        }
     }
 };
 

@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import {View, ScrollView, Text, TouchableOpacity, StyleSheet, Dimensions, Alert, Modal, FlatList, Platform , KeyboardAvoidingView, SafeAreaView} from 'react-native'
+import {View, ScrollView, Text, StyleSheet, Alert, Platform , KeyboardAvoidingView, SafeAreaView} from 'react-native'
 import { Button, Card, TextInput } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 
-import ModalSelector from "react-native-modal-selector";
 import ClienteService from '@/services/ClienteService';
 import ModeloService from '@/services/ModeloService';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import DateTimePicker from "@react-native-community/datetimepicker";
 import DetallePedidoService from "../../../../../frontend/services/DetallePedidoService";
 
 import TipoCalzadoService from '@/services/TipoCalzadoService';
@@ -18,8 +15,6 @@ import PedidoService from '@/services/PedidoService';
 import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 import EmpleadoService from '@/services/EmpleadoService';
 
-const { width } = Dimensions.get('window');
-const { height } = Dimensions.get('window');
 const Perfilado = () => {
     const {codigoOrden} = useLocalSearchParams();
 
@@ -33,17 +28,13 @@ const Perfilado = () => {
     const [ruc, setRuc] = useState("");
     const [nombreTaco, setNombreTaco] = useState("");
     const [tallaTaco, setTallaTaco] = useState("");
-    const [modalModeloVisible, setModalModeloVisible] = useState(false);
     const [material, setMaterial] = useState("");
     const [tipoMaterial, setTipoMaterial] = useState("");
     const [accesorios, setAccesorios] = useState("");
     const [suela, setSuela] = useState("");
     const [forro, setForro] = useState("");
-    const [dataModelos, setDataModelos] = useState([]);
-    const [dataTipoCalzado, setDataTipoCalzado] = useState([]);
     const [tipoCalzado, setTipoCalzado] = useState("");
     const [fechaEntrega, setFechaEntrega] = useState(new Date());
-    const [openDatePicker, setOpenDatePicker] = useState(false);
     const [idDetallePedido, setIdDetallePedido] = useState();
     const [dataDetalleAreaTrabajo, setDataDetalleAreaTrabajo] = useState([]);
     const [actualizado, setActualizado] = useState(false);
@@ -114,23 +105,6 @@ const Perfilado = () => {
             console.error("Error cargando cliente:", error);
         }
     };
-
-    useEffect(() => {
-        const cargarTipoCalzado = async () => {
-            try {
-                const tipos = await TipoCalzadoService.getAllTipoCalzado();
-                if (!tipos) {
-                    console.error("No se encontraron los tipos de calzado");
-                    return;
-                }
-                
-                setDataTipoCalzado(tipos);
-            } catch (error) {
-                console.error("Error cargando tipos de calzado:", error);
-            }
-        }
-        cargarTipoCalzado();
-    }, [])
 
     useEffect(() => {
         if (tipoCliente === "natural" && dni) {
@@ -313,7 +287,7 @@ const Perfilado = () => {
                             error("Característica vacias o nulas:", update);
                             return;
                         }else{
-                            alert(`${updateAreaTrabajo.message}`);
+                            alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`);
                             resetearCampos();
                             router.back();
                         }

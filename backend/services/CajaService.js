@@ -81,45 +81,52 @@ const CajaService = {
 
     async getCajaById(idCaja) {
         
-    const CaracteristicasService = require("./CaracteristicasService");
-    const DetallePedidoService = require("./DetallePedidoService");
-    const ModeloService = require("./ModeloService");
-    const TipoCalzadoService = require("./TipoCalzadoService");
-    const imagenService = require("./ImagenService");
+        const CaracteristicasService = require("./CaracteristicasService");
+        const DetallePedidoService = require("./DetallePedidoService");
+        const ModeloService = require("./ModeloService");
+        const TipoCalzadoService = require("./TipoCalzadoService");
+        const imagenService = require("./ImagenService");
 
-    try {
-        if (!idCaja || typeof idCaja !== "number") throw { status: 400, message: "ID de caja inválido" };
+        try {
+            if (!idCaja || typeof idCaja !== "number") throw { status: 400, message: "ID de caja inválido" };
+            console.log("idCaja", idCaja);
+            const caja = await CajaDAO.getCajaById(idCaja);
+            console.log("caja", caja);
+            if (!caja) throw { status: 404, message: "Caja no encontrada" };
 
-        const caja = await CajaDAO.getCajaById(idCaja);
-        if (!caja) throw { status: 404, message: "Caja no encontrada" };
+            const [caracteristica, detallePedido] = await Promise.all([
+                CaracteristicasService.getCaracteristicaByIdCaracteristicas(caja.idCaracteristicas),
+                DetallePedidoService.getDetallePedidoByidDetallePedido(caracteristica.idDetalle_pedido)
+            ]);
+            console.log("caracteristica", caracteristica);
+            console.log("detallePedido", detallePedido);
 
-        const [caracteristica, detallePedido] = await Promise.all([
-            CaracteristicasService.getCaracteristicaByIdCaracteristicas(caja.idCaracteristicas),
-            DetallePedidoService.getDetallePedidoByCodigoPedido(caja.idCaracteristicas)
-        ]);
+            if (!caracteristica || !detallePedido) throw { status: 404, message: "Datos incompletos" };
 
-        if (!caracteristica || !detallePedido) throw { status: 404, message: "Datos incompletos" };
+            const [modelo, imagen, tipoCalzado] = await Promise.all([
+                ModeloService.getModeloById(detallePedido.idModelo),
+                imagenService.getImagenByModelo(detallePedido.idModelo),
+                TipoCalzadoService.getTipoCalzadoById(modelo.idTipo)
+            ]);
+            console.log("modelo", modelo);
+            console.log("imagen", imagen);
+            console.log("tipoCalzado", tipoCalzado);
 
-        const [modelo, imagen, tipoCalzado] = await Promise.all([
-            ModeloService.getModeloById(detallePedido.idModelo),
-            imagenService.getImagenByModelo(detallePedido.idModelo),
-            TipoCalzadoService.getTipoCalzadoById(modelo.idTipo)
-        ]);
 
-        return {
-            codigoPedido: detallePedido.codigoPedido,
-            modelo: modelo.Nombre,
-            tipoCalzado: tipoCalzado.Nombre,
-            imagenUrl: imagen.Url,
-            talla: caracteristica.Talla,
-            color: caracteristica.Color,
-            fechaCreacion: caja.fechaCreacion
-        };
+            return {
+                codigoPedido: detallePedido.codigoPedido,
+                modelo: modelo.Nombre,
+                tipoCalzado: tipoCalzado.Nombre,
+                imagenUrl: imagen.Url,
+                talla: caracteristica.Talla,
+                color: caracteristica.Color,
+                fechaCreacion: caja.fechaCreacion
+            };
 
-    } catch (error) {
-        console.error("Error al obtener caja por id:", error);
-        throw error;
-    }
+        } catch (error) {
+            console.error("Error al obtener caja por id:", error);
+            throw error;
+        }
 }
 
 }; 
