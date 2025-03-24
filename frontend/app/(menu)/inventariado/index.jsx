@@ -1,9 +1,10 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { Button, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { Button, Pressable, Text, View } from 'react-native';
 import { Switch, Card } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import CajaService from '@/services/CajaService';
 const Inventario=() =>{
   const [facing, setFacing] = useState('back');
   const [permission, requestPermission]=useCameraPermissions();
@@ -33,15 +34,26 @@ const Inventario=() =>{
 
   const handleBarcodeScanned = ({ data }) => {
     const numeroCaja = data.split('/').pop();
+    console.log("numeroCaja", numeroCaja);
     setScannedData(numeroCaja);
     setQrLeido(true);
     // Aquí puedes agregar cualquier lógica adicional que necesites después de escanear el código QR
   };
+
+  const cargarCajaPorId = async () => {
+    try {
+      let id = Number(scannedData);
+      const caja = await CajaService.getCajaById(id);
+      console.log("caja", caja);
+    } catch (error) {
+      console.error("Error al obtener caja:", error);
+    }
+  }
   return (
     <View className='flex-1'>
       <View className='flex-row justify-between p-4'>
         <Text className='font-normal text-2xl'>Camara</Text>
-        <Switch value={showCamera} onValueChange={setShowCamera} disabled={showRegisters?true: true}/>
+        <Switch value={showCamera} onValueChange={setShowCamera} disabled={true}/>
       </View>
         {
           showCamera&&(
@@ -72,8 +84,7 @@ const Inventario=() =>{
               <View className='flex-row justify-center gap-4 mt-8'>
                   <Pressable
                     className='bg-[#3f76f5] p-4 rounded-lg'
-                    onPress={()=>{
-                    }}
+                    onPress={cargarCajaPorId}
                   >
                     <Text className='text-white'>
                       Ingresar

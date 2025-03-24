@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import {View, ScrollView, Text, TouchableOpacity, StyleSheet, Dimensions, Alert, Modal, FlatList, Platform , KeyboardAvoidingView, SafeAreaView} from 'react-native'
+import {View, ScrollView, Text, StyleSheet, Alert, Platform , KeyboardAvoidingView, SafeAreaView} from 'react-native'
 import { Button, Card, TextInput } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 
-import ModalSelector from "react-native-modal-selector";
 import ClienteService from '@/services/ClienteService';
 import ModeloService from '@/services/ModeloService';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import DateTimePicker from "@react-native-community/datetimepicker";
 import DetallePedidoService from "../../../../../frontend/services/DetallePedidoService";
 
 import TipoCalzadoService from '@/services/TipoCalzadoService';
@@ -19,8 +16,6 @@ import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 import EmpleadoService from '@/services/EmpleadoService';
 import CajaService from '@/services/CajaService';
 
-const { width } = Dimensions.get('window');
-const { height } = Dimensions.get('window');
 const Armado = () => {
     const {codigoOrden} = useLocalSearchParams();
 
@@ -302,7 +297,7 @@ const Armado = () => {
                             error("Característica vacias o nulas:", update);
                             return;
                         }else{
-                            alert(`${updateAreaTrabajo.message}`);
+                            alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`);
                             resetearCampos();
                             router.back();
                         }
