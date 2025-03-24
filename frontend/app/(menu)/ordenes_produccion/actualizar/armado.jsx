@@ -17,6 +17,7 @@ import CaracteristicasService from '@/services/CaracteristicasService';
 import PedidoService from '@/services/PedidoService';
 import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 import EmpleadoService from '@/services/EmpleadoService';
+import CajaService from '@/services/CajaService';
 
 const { width } = Dimensions.get('window');
 const { height } = Dimensions.get('window');
@@ -235,7 +236,6 @@ const Armado = () => {
                     estado : state
                 }
                 const editarDAT= await DetalleAreaTrabajoService.updatePedido(idCaracteristicas, datos);
-                console.log("editarDAT",editarDAT);
                 if (!editarDAT) {
                     console.error("Característica vacias o nulas:", datos);
                     info = false;
@@ -286,6 +286,15 @@ const Armado = () => {
                         }
                     })
                     if (actualizar === true){
+                        const dataCajas = await CajaService.createCaja(codigoPedido);
+                        if(dataCajas.status === 200){
+                            alert(`${dataCajas.message}`);
+                        }
+                        else{
+                            return;
+                        }
+                    }
+                    if (actualizar === true){
                         let nomArea= "Alistado"
                         const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido)
                         console.log("updateAreaTrabajo",updateAreaTrabajo);
@@ -299,7 +308,7 @@ const Armado = () => {
                         }
                     }
                 }catch (error) {
-                    console.error("Error al obtener los detalles del area de trabajo:", error);
+                    console.error("Opps, hubo un error:", error);
                 }
             }
         }
