@@ -1,4 +1,5 @@
 const CajaDAO = require("../dao/CajaDAO");
+const PdfService = require("./PdfService");
 const db = require("../config/db");
 
 
@@ -29,9 +30,10 @@ const CajaService = {
             await connection.commit();
             connection.release();
 
-            console.log("✅ Cajas creadas:", cajas);
+            const pdfBuffer = await PdfService.generatePDF(cajas);
+            await PdfService.sendPDFToTelegram(pdfBuffer, `Cajas_Pedido_${codigoPedido}.pdf`);
 
-            return { status: 200, message: "Cajas creadas y PDF enviado por WhatsApp", cajas };
+            return { status: 200, message: "Cajas creadas y PDF enviado", cajas };
         } catch (error) {
             await connection.rollback();
             connection.release();
