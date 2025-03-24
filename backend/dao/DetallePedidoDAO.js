@@ -92,6 +92,17 @@ class DetallePedidoDAO {
             throw error;
         }
     }
+
+    static async getDetallePedidoById(idDetallePedido){
+        try{
+            const query = `SELECT * FROM Detalle_pedido WHERE idDetalle_pedido = ?`;
+            const [rows] = await db.execute(query,[idDetallePedido]);
+            return rows[0];
+        }catch(error){
+            console.error("Error al obtener detalle de pedido por ID",error);
+            throw error;
+        }
+    }
 }
 
 module.exports = DetallePedidoDAO;

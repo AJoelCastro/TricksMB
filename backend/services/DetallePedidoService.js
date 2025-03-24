@@ -97,6 +97,22 @@ const DetallePedidoService = {
             if(error.status) throw error;
             throw {status: 500, message: "Error en DetallePedido Service", detalle: error.message};
         }
+    }, 
+    async getDetallePedidoByidDetallePedido(idDetalle_pedido) {
+        try {
+            if (!idDetalle_pedido) {
+                throw { status: 400, message: "El id del detalle de pedido es requerido" };
+            }
+            const obj =  await DetallePedidoDAO.getDetallePedidoByidDetallePedido(idDetalle_pedido);
+            if (!obj) {
+                throw { status: 404, message: "Detalle de pedido no encontrado" };
+            }
+            return obj;
+        } catch (error) {
+            if (error.status) throw error;
+            throw { status: 500, message: "Error en DetallePedido Service", detalle: error.message }
+        }
+
     }
 };
 
