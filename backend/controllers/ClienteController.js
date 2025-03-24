@@ -1,3 +1,4 @@
+const { stat } = require('fs');
 const ClienteService = require('../services/ClienteService');
 
 const ClienteController = {
@@ -5,17 +6,16 @@ const ClienteController = {
         try {
             const { tipoCliente, nombre, dni, razonSocial, ruc, representanteLegal, telefono } = req.body;
 
-            // Validar que los datos no sean undefined o null antes de consultar
             const clienteNatural = dni ? await ClienteService.getClienteNaturalByDni(dni) : null;
             const clienteJuridicoRuc = ruc ? await ClienteService.getClienteJuridicoByRuc(ruc) : null;
             const clienteJuridicoRazonSocial = razonSocial ? await ClienteService.getClienteJuridicoByRazonSocial(razonSocial) : null;
 
             if (clienteNatural || clienteJuridicoRuc || clienteJuridicoRazonSocial) {
-                return res.status(400).json({ error: "El cliente ya existe" });
+                res.json({ error: "El cliente ya se encuentra registrado" , status: error.status });
             }
 
             if (!tipoCliente) {
-                return res.status(400).json({ error: "Debe proporcionar el tipo de cliente" });
+                res.json({ error: "Debe proporcionar el tipo de cliente" , status: error.status });
             }
             
             const nuevoCliente = await ClienteService.createCliente(tipoCliente);
@@ -26,9 +26,9 @@ const ClienteController = {
                 await ClienteService.createClienteJuridico(nuevoCliente.idCliente, razonSocial, ruc, representanteLegal, telefono);
             }
 
-            return res.status(201).json({ message: "Cliente registrado con éxito", nuevoCliente });
+            res.json({ message: "Cliente registrado con éxito", nuevoCliente, status: 201 });
         } catch (error) {
-            return res.status(500).json({ error: "Error al registrar el cliente" });
+            res.json({ error: "Error al registrar el cliente", status: error.status  });
         }
     },
     
@@ -37,7 +37,7 @@ const ClienteController = {
             const { tipoCliente, identificador } = req.query; // `identificador` será el DNI o RUC
 
             if (!tipoCliente || !identificador) {
-                return res.status(400).json({ error: "Debe proporcionar tipo de cliente y DNI o RUC" });
+                res.json({ error: "Debe proporcionar tipo de cliente y DNI o RUC", status: error.status  });
             }
 
             let cliente;
@@ -45,13 +45,13 @@ const ClienteController = {
                 cliente = await ClienteService.getClienteNaturalByDni(identificador);
                 
             } else {
-                return res.status(400).json({ error: "Tipo de cliente inválido" });
+                res.json({ error: "Tipo de cliente inválido", status: error.status  });
             }
 
-            return res.json(cliente);
+            res.json({cliente, status: 200});
         } catch (error) {
             console.error("Error al buscar cliente:", error);
-            return res.status(500).json({ error: error.message });
+            res.json({ error: error.message, status: error.status });
         }
     },
     async buscarClienteJuridico(req, res) {
@@ -59,29 +59,29 @@ const ClienteController = {
             const { tipoCliente, identificador } = req.query; // `identificador` será el DNI o RUC
 
             if (!tipoCliente || !identificador) {
-                return res.status(400).json({ error: "Debe proporcionar tipo de cliente y DNI o RUC" });
+                res.json({ error: "Debe proporcionar tipo de cliente y DNI o RUC", status: error.status  });
             }
 
             let cliente;
             if (tipoCliente === "juridico") {
                 cliente = await ClienteService.getClienteJuridicoByRuc(identificador);
             } else {
-                return res.status(400).json({ error: "Tipo de cliente inválido" });
+                res.json({ error: "Tipo de cliente inválido", status: error.status  });
             }
 
-            return res.json(cliente);
+            res.json({cliente, status: 200});
         } catch (error) {
             console.error("Error al buscar cliente:", error);
-            return res.status(500).json({ error: error.message });
+            res.json({ error: error.message, status: error.status });
         }
     },
 
     async obtenerClientes(req, res) {
         try {
             const clientes = await ClienteService.getAllClientes();
-            return res.json(clientes);
+        res.json({ clientes, status: 200 });
         } catch (error) {
-            return res.status(500).json({ error: "Error al obtener clientes" });
+            res.json({ error: "Error al obtener clientes", status: error.status });
         }
     },
 
@@ -89,10 +89,10 @@ const ClienteController = {
         try {
             const {codigoPedido} = req.params;
             const cliente = await ClienteService.getClienteByCodigoPedido(codigoPedido);
-            return res.status(200).json(cliente);
+            res.json({cliente, status: 200});
         } catch (error) {
             console.error("Error al obtener cliente por código de pedido:", error);
-            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+            res.json({ error: error.message || "Error interno del servidor", status: error.status });
         }
     }
     

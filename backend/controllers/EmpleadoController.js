@@ -1,3 +1,4 @@
+const { json } = require("body-parser");
 const EmpleadoService = require("../services/EmpleadoService");
 
 const EmpleadoController = {
@@ -6,12 +7,12 @@ const EmpleadoController = {
             const {idAreaTrabajo, nombre, telefono, dni} = req.body;
             const empleado = await EmpleadoService.createEmpleado(idAreaTrabajo, nombre, telefono, dni);
             if(!empleado){
-                return res.status(400).json({ success: false, message: "Error al crear empleado" });
+                res.json({ success: false, message: "Error al registrar empleado", status: error.status });
             }
-            res.status(201).json({ success: true, message: "Empleado registrado exitosamente", empleado });
+            res.json({ success: true, message: "Empleado registrado exitosamente", empleado, status: 201 });
         } catch(error){
             console.error(error);
-            res.status(500).json({ success: false, message: "Error al registrar empleado" });
+            res.json({ success: false, message: "Error al registrar empleado", status: error.status });
         }
     },
 
@@ -19,9 +20,9 @@ const EmpleadoController = {
         try{
             const {dni} = req.params;
             const empleado = await EmpleadoService.getByDni(dni);
-            res.status(200).send(empleado);
+            res.json({empleado, status: 200});
         } catch(error){
-            res.status(error.status).send(error.message);
+            res.json({ success: false, message: "Error al buscar empleado por DNI", status: error.status });
         }
     },
 
@@ -29,9 +30,9 @@ const EmpleadoController = {
         try{
             const {nomArea} = req.query;
             const empleados = await EmpleadoService.getEmpleados(nomArea);
-            res.status(200).send(empleados);
+            res,json({empleados, status: 200});
         }catch(error){
-            res.status(error.status).send(error.message);
+            res.json({ success: false, message: "Error al obtener empleados", status: error.status });
         }
     }
 };

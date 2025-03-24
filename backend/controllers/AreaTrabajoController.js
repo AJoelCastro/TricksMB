@@ -5,10 +5,10 @@ const AreaTrabajoController = {
         try{
             const {nombre} = req.body;
             const areaTrabajo = await AreaTrabajoService.createAreaTrabajo(nombre);
-            res.status(201).send(areaTrabajo);
+            res.send({areaTrabajo, status:200});
         } catch(error){
             console.error(error);
-            res.status(500).send({message: "Error al crear area de trabajo"});  
+            res.send({message: "Error al crear area de trabajo", status: error.status });
         }
     },
 
@@ -16,10 +16,10 @@ const AreaTrabajoController = {
         try{
             const {nombre} = req.params;
             const areaTrabajo = await AreaTrabajoService.getAreaTrabajoByNombre(nombre);
-            res.status(200).send(areaTrabajo);
+            res.send({areaTrabajo, status:200});
         } catch(error){
             console.error(error);
-            res.status(500).send({message: "Error al buscar area de trabajo por nombre"});
+            res.send({message: "Error al buscar area de trabajo por nombre", status: error.status });
         }
     }
 

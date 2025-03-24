@@ -6,12 +6,12 @@ const DetalleEmpleadoPedidoController = {
             const {dni, codigoPedido} = req.body;
             const detalleEmpleadoPedido = await DetalleEmpleadoPedidoService.createDetalleEmpleadoPedido(dni, codigoPedido);
             if(!detalleEmpleadoPedido){
-                return res.status(400).json({ success: false, message: "Error al crear detalle empleado pedido" });
+                return res.json({ success: false, message: "Error al registrar detalle empleado pedido", status: error.status  });
             }
-            res.status(201).json({ success: true, message: "Detalle empleado pedido registrado exitosamente", detalleEmpleadoPedido });
+            res.json({ success: true, message: "Detalle empleado pedido registrado exitosamente", detalleEmpleadoPedido, status: 201 });
         }catch(error){
             console.error(error);
-            res.status(500).json({ success: false, message: "Error al registrar detalle empleado pedido" });
+            res.json({ success: false, message: "Error al registrar detalle empleado pedido", status: error.status  });
         }
     },
 
@@ -20,12 +20,12 @@ const DetalleEmpleadoPedidoController = {
             const {nomArea, codigoPedido} = req.query;
             const detalleEmpleadoPedido = await DetalleEmpleadoPedidoService.getAllDetalleEmpleadoPedido(nomArea, codigoPedido);
             if(!detalleEmpleadoPedido){
-                return res.status(400).json({ success: false, message: "1Error al obtener detalle empleado pedido" });
+                res.json({ success: false, message: "Error al obtener detalle empleado pedido", status: error.status  });
             }
-            res.status(200).json({ success: true, message: "Detalle empleado pedido obtenido exitosamente", detalleEmpleadoPedido });
+            res.json({ success: true, message: "Detalle empleado pedido obtenido exitosamente", detalleEmpleadoPedido, status: error.status  });
         }catch(error){
             console.error(error);
-            res.status(500).json({ success: false, message: "Error al obtener detalle empleado pedido" });
+            res.json({ success: false, message: "Error al obtener detalle empleado pedido", status: error.status  });
         }
     }
 

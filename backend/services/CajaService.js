@@ -67,7 +67,61 @@ const CajaService = {
             console.error("Error al obtener cajas por pedido:", error);
             throw error;
         }
+    },
+
+    async updateCaja(idCaja){
+        try{
+            if(!idCaja) throw {status: 400, message: "Falta el id de la caja"};
+            return await CajaDAO.updateCaja(idCaja);
+        }catch(error){
+            console.error("Error al actualizar caja:", error);
+            throw error;
+        }
+    },
+
+    async getCajaById(idCaja) {
+        
+    const CaracteristicasService = require("./CaracteristicasService");
+    const DetallePedidoService = require("./DetallePedidoService");
+    const ModeloService = require("./ModeloService");
+    const TipoCalzadoService = require("./TipoCalzadoService");
+    const imagenService = require("./ImagenService");
+
+    try {
+        if (!idCaja || typeof idCaja !== "number") throw { status: 400, message: "ID de caja inválido" };
+
+        const caja = await CajaDAO.getCajaById(idCaja);
+        if (!caja) throw { status: 404, message: "Caja no encontrada" };
+
+        const [caracteristica, detallePedido] = await Promise.all([
+            CaracteristicasService.getCaracteristicaByIdCaracteristicas(caja.idCaracteristicas),
+            DetallePedidoService.getDetallePedidoByCodigoPedido(caja.idCaracteristicas)
+        ]);
+
+        if (!caracteristica || !detallePedido) throw { status: 404, message: "Datos incompletos" };
+
+        const [modelo, imagen, tipoCalzado] = await Promise.all([
+            ModeloService.getModeloById(detallePedido.idModelo),
+            imagenService.getImagenByModelo(detallePedido.idModelo),
+            TipoCalzadoService.getTipoCalzadoById(modelo.idTipo)
+        ]);
+
+        return {
+            codigoPedido: detallePedido.codigoPedido,
+            modelo: modelo.Nombre,
+            tipoCalzado: tipoCalzado.Nombre,
+            imagenUrl: imagen.Url,
+            talla: caracteristica.Talla,
+            color: caracteristica.Color,
+            fechaCreacion: caja.fechaCreacion
+        };
+
+    } catch (error) {
+        console.error("Error al obtener caja por id:", error);
+        throw error;
     }
+}
+
 }; 
 
 module.exports = CajaService;

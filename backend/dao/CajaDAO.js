@@ -34,8 +34,28 @@ class CajaDAO{
             console.error(error);
             throw error;
         }
+    }
 
+    static async updateCaja(idCaja){
+        try{
+            const query = `UPDATE Caja SET Estado = ? WHERE idCaja = ?`;
+            const [rows] = await db.execute(query, [1,idCaja]);
+            return rows[0];
+        }catch(error){
+            console.error(error);
+            throw error;
+        }
+    }
 
+    static async getCajaById(idCaja){
+        try{
+            const query = `SELECT * FROM Caja WHERE idCaja = ?`;
+            const [rows] = await db.execute(query, [idCaja]);
+            return rows[0];
+        }catch(error){
+            console.error(error);
+            throw error;
+        }
     }
 
 }

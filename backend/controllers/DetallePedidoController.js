@@ -31,11 +31,11 @@ const DetallePedidoController = {
                 idPedido, idModelo, codigoPedido, nombreTaco, alturaTaco, material, 
                 tipoMaterial, suela, accesorios, forro
             );
-            return res.status(201).json(detallePedido);
+            res.json({detallePedido, status: 201});
 
         } catch (error) {
             console.error("Error al crear pedido:", error);
-            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+            res.json({ error: error.message || "Error interno del servidor", status: error.status });
         }
     },
 
@@ -43,10 +43,10 @@ const DetallePedidoController = {
         try {
             const {codigoPedido} = req.params;
             const detallePedido = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
-            return res.status(200).json(detallePedido);
+            res.json({detallePedido, status: 200});
         } catch (error) {
             console.error("Error al obtener detalle pedido por código:", error);
-            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+            res.json({ error: error.message || "Error interno del servidor", status: error.status });
         }
     },
 
@@ -57,11 +57,11 @@ const DetallePedidoController = {
             const detallePedido = await DetallePedidoService.updateDetallePedido(
                 codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorios, forro
             );
-            return res.status(200).json(detallePedido);
+            res.json({detallePedido, status: 200});
         }
         catch (error) {
             console.error("Error al actualizar detalle pedido:", error);
-            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+            res.json({ error: error.message || "Error interno del servidor", status: error.status });
         }
     },
     async updateEstado(req, res) {
@@ -69,21 +69,21 @@ const DetallePedidoController = {
             const {codigoPedido} = req.params;
             const {estado} = req.body;
             const detallePedido = await DetallePedidoService.updateEstado(codigoPedido, estado);
-            return res.status(200).json(detallePedido);
+            return res.json({detallePedido, status: 200});
         }
         catch (error) {
             console.error("Error al actualizar el estado del pedido:", error);
-            return res.status(error.status || 500).json({ error: error.message || "Error interno del servidor" });
+            res.json({ error: error.message || "Error interno del servidor", status: error.status });
         }
     },
 
     async getAllDetallePedido(req, res){
         try{
             const detallesPedidos = await DetallePedidoService.getAllDetallePedido();
-            return res.status(200).json(detallesPedidos);
-        }catch(erorr){
+            res.json({detallesPedidos, status: 200});
+        }catch(error){
             console.error("Error al actualizar el estado del pedido");
-            return res.status(error.status || 500).json({error: error.message}|| "Error interno del servidor");
+            res.json({ error: error.message || "Error interno del servidor", status: error.status });
         }
     }
 };
