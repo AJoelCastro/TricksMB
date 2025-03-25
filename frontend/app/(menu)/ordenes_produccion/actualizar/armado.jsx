@@ -190,6 +190,9 @@ const Armado = () => {
                 setCliente(dataCliente.cliente);
                 let idDetallePedido=data.detallePedido.idDetalle_pedido;
                 const dataCaracteristicas = await CaracteristicasService.getAllCaracteristicasById(idDetallePedido);
+                console.log("dataCaracteristicas", dataCaracteristicas);
+                const dataNueva = dataCaracteristicas.caracteristicas.filter(item => item.Estado === 1);
+                console.log("dataNueva", dataNueva); 
                 const filasTransformadas = transformarDatos(dataCaracteristicas.caracteristicas);
                 setFilas(filasTransformadas);
                 // Aqui se obtienen los empleados
@@ -213,13 +216,10 @@ const Armado = () => {
         try {
 
             for (const fila of dataDetalleAreaTrabajo) {
-                console.log("dataDetalleAreaTrabajo", dataDetalleAreaTrabajo);
-                console.log("fila", fila);
                 let state = null;
                 let idCaracteristicas = Number(fila.id);
                 const data = await CaracteristicasService.getCaracteristicaByIdCaracteristicas(idCaracteristicas);
-                console.log("data", data);
-                if((Number(fila.avance)+Number(fila.terminado)) === Number(data.caracteristica[0].Cantidad)){
+                if((Number(fila.avance)+Number(fila.terminado)) === Number(data.caracteristica.Cantidad)){
                     state = 1;
                 }
                 else {
@@ -238,8 +238,6 @@ const Armado = () => {
             }
             setActualizado(true);
             Alert.alert("Pedido actualizado", "El pedido se ha actualizado correctamente", [{text: "OK"}]);
-            resetearCampos();
-            router.back();
         }catch (error) {
             mostrarError(error);
         }
@@ -269,9 +267,7 @@ const Armado = () => {
                     let codigoPedido = codigoOrden
                     const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
                     let actualizar = true;
-                    console.log("data actualizado", data);
                     data.detallesAreaTrabajo.map((item) => {
-                        console.log("item", item);
                         if (item.Estado === 0){
                             actualizar = false;
                         }

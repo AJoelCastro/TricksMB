@@ -27,6 +27,7 @@ const ModeloController = {
     async getAllModeloById(req, res) {
         try {
             const id = req.query.id;
+            
             const modelo = await ModeloService.getAllModeloById(id);
             res.json({ modelo, status: 200 });
         } catch (error) {
