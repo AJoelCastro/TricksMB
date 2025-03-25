@@ -108,7 +108,7 @@ const Actualizar = () => {
                 const dataDetalleAreaTrabajo = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
                 console.log("dataDetalleAreaTrabajo", dataDetalleAreaTrabajo);
                 let nomArea;
-                switch (dataDetalleAreaTrabajo.detallesAreaTrabajo[1].Area_trabajo_idArea_trabajo) {
+                switch (dataDetalleAreaTrabajo.detallesAreaTrabajo[0].Area_trabajo_idArea_trabajo) {
                     case 1:
                         nomArea = "Corte";
                         setAreaTrabajo("corte");
