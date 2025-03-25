@@ -18,7 +18,8 @@ const CajaService = {
             throw error;
         }
     },
-    getAllCajaByPedido: async (codigoPedido) => {
+    
+    /*getAllCajaByPedido: async (codigoPedido) => {
         try {
             const token = await AuthService.getToken();
             if (!token) throw new Error("No hay token disponible");
@@ -31,7 +32,8 @@ const CajaService = {
             console.error("Error al obtener cajas en CS FRONT:", error.response?.data || error.message);
             throw error;
         }
-    },
+    },*/
+
     getCajaById: async (id) => {
         try {
             const token = await AuthService.getToken();

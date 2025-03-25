@@ -35,12 +35,9 @@ const CajaController = {
     async getCajaById(req, res) {
         try{
             const data = req.params;
-            console.log("id", data);
             const caja = await CajaService.getCajaById(data);
-            console.log("caja", caja);
             res.send({caja, status:200});
         }catch(error){
-            console.log("error aaaaaaa");
             console.error("Error en CajaController.getCajaById:", error);
             res.send({message: "Error al obtener caja por id", status: error.status });
         }

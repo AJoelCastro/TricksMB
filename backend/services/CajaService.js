@@ -86,41 +86,33 @@ const CajaService = {
         const ModeloService = require("./ModeloService");
         const TipoCalzadoService = require("./TipoCalzadoService");
         const imagenService = require("./ImagenService");
-
+        idCaja = parseInt(idCaja.id, 10);
         try {
             if (!idCaja || typeof idCaja !== "number") throw { status: 400, message: "ID de caja inválido" };
-            console.log("idCaja", idCaja);
             const caja = await CajaDAO.getCajaById(idCaja);
-            console.log("caja", caja);
-            if (!caja) throw { status: 404, message: "Caja no encontrada" };
 
-            const [caracteristica, detallePedido] = await Promise.all([
-                CaracteristicasService.getCaracteristicaByIdCaracteristicas(caja.idCaracteristicas),
-                DetallePedidoService.getDetallePedidoByidDetallePedido(caracteristica.idDetalle_pedido)
-            ]);
-            console.log("caracteristica", caracteristica);
-            console.log("detallePedido", detallePedido);
+            if (!caja) throw { status: 404, message: "Caja no encontrada" };
+            
+            const caracteristica = await  CaracteristicasService.getCaracteristicaByIdCaracteristicas(
+                caja.Caracteristicas_idCaracteristicas);
+
+            const detallePedido = await DetallePedidoService.getDetallePedidoByidDetallePedido(
+                caracteristica.Detalle_pedido_idDetalle_pedido);
 
             if (!caracteristica || !detallePedido) throw { status: 404, message: "Datos incompletos" };
 
-            const [modelo, imagen, tipoCalzado] = await Promise.all([
-                ModeloService.getModeloById(detallePedido.idModelo),
-                imagenService.getImagenByModelo(detallePedido.idModelo),
-                TipoCalzadoService.getTipoCalzadoById(modelo.idTipo)
-            ]);
-            console.log("modelo", modelo);
-            console.log("imagen", imagen);
-            console.log("tipoCalzado", tipoCalzado);
-
+            const modelo = await ModeloService.getModeloById(detallePedido.Modelo_idModelo);
+            const imagen = await imagenService.getImagen(detallePedido.Modelo_idModelo);
+            const tipoCalzado = await TipoCalzadoService.getTipoCalzadoByCodigoPedido(detallePedido.Codigo_pedido);
 
             return {
-                codigoPedido: detallePedido.codigoPedido,
+                codigoPedido: detallePedido.Codigo_pedido,
                 modelo: modelo.Nombre,
                 tipoCalzado: tipoCalzado.Nombre,
-                imagenUrl: imagen.Url,
+                imagenUrl: imagen[0].Url,
                 talla: caracteristica.Talla,
                 color: caracteristica.Color,
-                fechaCreacion: caja.fechaCreacion
+                fechaCreacion: new Date(caja.Fecha_creacion).toLocaleTimeString('es-ES', { hour12: false })
             };
 
         } catch (error) {

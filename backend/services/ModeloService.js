@@ -31,10 +31,10 @@ const ModeloService = {
         }
     },
 
-    async getAllModeloById(id){
+    async getAllModeloById(idTipo){
         try{
             if(!id) throw{status: 400 , message: "id requerido"};
-            return await ModeloDAO.getAllModeloById(id);
+            return await ModeloDAO.getAllModeloById(idTipo);
         }catch(error){
             throw error;
         }
@@ -44,6 +44,15 @@ const ModeloService = {
         try{
             if(!codigoPedido) throw {status: 400, message: "Código de pedido requerido"};
             return await ModeloDAO.getModeloByCodigoPedido(codigoPedido);
+        }catch(error){
+            throw error;
+        }
+    },
+
+    async getModeloById(idModelo){
+        try{
+            if(!idModelo) throw {status: 400, message: "idModelo requerido"};
+            return await ModeloDAO.getModeloById(idModelo);
         }catch(error){
             throw error;
         }
