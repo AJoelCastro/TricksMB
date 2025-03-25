@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { View, Text, TouchableOpacity, Pressable, Modal, FlatList,KeyboardAvoidingView, Platform, SafeAreaView } from 'react-native';
-import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, Pressable, Modal, FlatList,KeyboardAvoidingView, Platform, SafeAreaView, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 import {Card, Checkbox, TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon1 from 'react-native-vector-icons/FontAwesome';
@@ -38,19 +38,27 @@ const Actualizar = () => {
             alert("Asigne empleados primero");
         }
     };
+
+    const mostrarError = (error) => {
+        Alert.alert(
+            "Error",
+            `${error.message}`,
+            [{ text: "OK" }] // Botón requerido
+        );
+    };
+
     const iniciarProceso = async () => {
         try {
             let estado = "Proceso";
             const dataIniciar = await DetallePedidoService.updateEstado(codigoOrden, estado);
             console.log("dataIniciar",dataIniciar);
-            if (dataIniciar.status === 200) {
-                setEstado("Proceso"); // Actualiza el estado después de que se complete la operación
-                alert(`${dataIniciar.detallePedido.detalleAreaTrabajo.message}`);
-            } else {
-                console.error('Error al obtener el pedido, verifique que el código sea correcto.');
+            if (dataIniciar.status !== 200) {
+                throw new Error("Error al iniciar el proceso");
             }
+            setEstado("Proceso"); // Actualiza el estado después de que se complete la operación
+            alert(`${dataIniciar.detallePedido.detalleAreaTrabajo.message}`);
         } catch (error) {
-            alert("Error al iniciar el proceso", error);
+            mostrarError(error);
         }
     };
     
@@ -60,7 +68,7 @@ const Actualizar = () => {
                 try {
                     let codigoPedido = codigoOrden
                     const dataDetalleAreaTrabajo = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
-                    switch (dataDetalleAreaTrabajo[0].Area_trabajo_idArea_trabajo) {
+                    switch (dataDetalleAreaTrabajo.detallesAreaTrabajo[0].Area_trabajo_idArea_trabajo) {
                         case 1:
                             setAreaTrabajo("corte");
                             break;
@@ -91,19 +99,22 @@ const Actualizar = () => {
             setAreaTrabajo("");
             setEstado("");
             const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
-            console.log("data", data);
             let codigoPedido = codigoOrden
             setEstado(data.detallePedido.Estado);
+            if (data.status !== 200) {
+                throw new Error("Error al obtener el pedido");
+            }
             if (data.detallePedido.Estado === "Proceso") {
                 const dataDetalleAreaTrabajo = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
+                console.log("dataDetalleAreaTrabajo", dataDetalleAreaTrabajo);
                 let nomArea;
-                switch (dataDetalleAreaTrabajo[0].Area_trabajo_idArea_trabajo) {
+                switch (dataDetalleAreaTrabajo.detallesAreaTrabajo[0].Area_trabajo_idArea_trabajo) {
                     case 1:
                         nomArea = "Corte";
                         setAreaTrabajo("corte");
                         const dataDetalleEmpleadoPedido1 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
-                        if (!dataDetalleEmpleadoPedido1) {
-                            return;
+                        if (dataDetalleEmpleadoPedido1.status !== 201) {
+                            throw new Error("Error al obtener empleados por pedido");
                         }
                         if(dataDetalleEmpleadoPedido1.detalleEmpleadoPedido.length === 0){
                             alert("No hay empleados asignados a esta área de trabajo");
@@ -117,8 +128,8 @@ const Actualizar = () => {
                         nomArea = "Perfilado";
                         setAreaTrabajo("perfilado");
                         const dataDetalleEmpleadoPedido2 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
-                        if (!dataDetalleEmpleadoPedido2) {
-                            return;
+                        if (dataDetalleEmpleadoPedido2.status !== 201) {
+                            throw new Error("Error al obtener empleados por pedido");
                         }
                         if(dataDetalleEmpleadoPedido2.detalleEmpleadoPedido.length === 0){
                             alert("No hay empleados asignados a esta área de trabajo");
@@ -132,8 +143,8 @@ const Actualizar = () => {
                         nomArea = "Armado";
                         setAreaTrabajo("armado");
                         const dataDetalleEmpleadoPedido3 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
-                        if (!dataDetalleEmpleadoPedido3) {
-                            return;
+                        if (dataDetalleEmpleadoPedido2.status !== 201) {
+                            throw new Error("Error al obtener empleados por pedido");
                         }
                         if(dataDetalleEmpleadoPedido3.detalleEmpleadoPedido.length === 0){
                             alert("No hay empleados asignados a esta área de trabajo");
@@ -147,8 +158,8 @@ const Actualizar = () => {
                         nomArea = "Alistado";
                         setAreaTrabajo("alistado");
                         const dataDetalleEmpleadoPedido4 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
-                        if (!dataDetalleEmpleadoPedido4) {
-                            return;
+                        if (dataDetalleEmpleadoPedido4.status !== 201) {
+                            throw new Error("Error al obtener empleados por pedido");
                         }
                         if(dataDetalleEmpleadoPedido4.detalleEmpleadoPedido.length === 0){
                             alert("No hay empleados asignados a esta área de trabajo");
@@ -160,11 +171,9 @@ const Actualizar = () => {
                         break;
                 }
             }
-            if (!data) {
-                console.error('Error al obtener el detalle del pedido');
-            }
+
         } catch (error) {
-            alert("Error al obtener el pedido", error);
+            mostrarError(error);
         }
     }
     useEffect(() => {
@@ -174,7 +183,10 @@ const Actualizar = () => {
                 try {
                     let nomArea = capitalizarPrimeraLetra(areaTrabajo);
                     const dataEmpleados = await EmpleadoService.obtenerEmpleadosPorArea(nomArea);
-                    setDataEmpleados(dataEmpleados);
+                    if(dataEmpleados.status !== 200){
+                        throw new Error("Error al obtener empleados");
+                    }
+                    setDataEmpleados(dataEmpleados.empleados);
                 } catch (error) {
                     alert("Error al obtener empleados", error);
                 }
@@ -200,23 +212,19 @@ const Actualizar = () => {
 
     const asignarEmpleados = async () => {
         try {
-            let bandera= true;
             let codigoPedido = codigoOrden;
             for (const empleado of empleados) {
                 let dni = empleado.Dni
                 const dataAsignar = await EmpleadoService.crearDetalleEmpleadoPedido(dni, codigoPedido);
-                if(!dataAsignar){
-                    bandera = false;
-                    console.error("Error al asignar empleados", dataAsignar);
+                if(dataAsignar.status !== 201){
+                    throw new Error("Error al asignar empleados");
                 }
             }
-            if(bandera){
-                alert("Empleados asignados exitosamente");
-                setEmpleados([]);
-                verificarProceso();
-            }
+            alert("Empleados asignados exitosamente");
+            setEmpleados([]);
+            verificarProceso();
         }catch(error){
-            alert("Error al asignar empleados", error);
+            mostrarError(error);
         }
     }
 
@@ -227,53 +235,6 @@ const Actualizar = () => {
         { id: 4, title: 'alistado', icon: 'check-circle', color: estado==='Editable' ? 'bg-gray-700' : 'bg-green-600' },
     ];
 
-    const renderEmpleadosSection = () => {
-        if (empleados.length > 0) {
-            return (
-                <View className='gap-1 mt-2'>
-                    <View className=' p-2 bg-white border-b border-gray-300 items-center'>
-                        <Text  className='text-lg font-bold text-black '>Empleados Asignados</Text>
-                    </View>
-                    <View className="bg-white p-4 rounded-lg w-[100%]">
-                        <FlatList 
-                            data={empleados}
-                            keyExtractor={(item) => item.idEmpleado}
-                            renderItem={({ item }) => (
-                                <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
-                                    <View className='flex-row p-2'>
-                                        <Card.Content>
-                                            <View className='gap-1'>
-                                                <Text variant="titleMedium">Nombres: {item.Nombres}</Text>
-                                                <Text variant="titleMedium">DNI: {item.Dni}</Text>
-                                            </View>
-                                        </Card.Content>
-                                    </View>
-                                </Card>
-                            )}
-                        />
-                    </View>
-                    <View className='flex-row gap-4 justify-center'>
-                        <Pressable onPress={() => setShowModal(!showModal)}>
-                            <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#15a1ff] rounded-xl p-2 mx-auto'>
-                                <Text className='text-xl font-bold text-white '>Agregar</Text>
-                                <Icon1 name="plus" size={20} color="#fff" />
-                            </View>
-                        </Pressable>
-                        <Pressable onPress={asignarEmpleados}>
-                            <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#13bf1e] px-6 rounded-xl p-2 mx-auto'>
-                                <Text className='text-xl font-bold text-white '>Asignar</Text>
-                            </View>
-                        </Pressable>
-                    </View>
-                </View>
-            );
-        }
-        return (
-            <Pressable onPress={() => setShowModal(!showModal)} className='rounded-xl p-3 bg-gray-700 mt-3'>
-                <Text className='text-white mx-auto text-lg font-semibold'>Asignar Empleados</Text>
-            </Pressable>
-        );
-    };
 
     return (
         <KeyboardAvoidingView
@@ -350,7 +311,60 @@ const Actualizar = () => {
                                 </View>
                                 )
                                 :
-                                renderEmpleadosSection()
+                                (
+                                    empleados.length > 0 ?(
+                                        <View className='gap-1 mt-2'>
+                                            <View className=' p-2 bg-white border-b border-gray-300 items-center'>
+                                                <Text  className='text-lg font-bold text-black '>Empleados Asignados</Text>
+                                            </View>
+                                            <View className="bg-white p-4 rounded-lg w-[100%]">
+                                                <FlatList 
+                                                    data={empleados}
+                                                    keyExtractor={(item) => item.idEmpleado}
+                                                    renderItem={({ item }) => (
+                                                        <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
+                                                            <View className='flex-row p-2'>
+                                                                <Card.Content>
+                                                                    <View className='gap-1'>
+                                                                        <Text variant="titleMedium">Nombres: {item.Nombres}</Text>
+                                                                        <Text variant="titleMedium">DNI: {item.Dni}</Text>
+                                                                    </View>
+                                                                </Card.Content>
+                                                            </View>
+                                                            
+                                                        </Card>
+                                                        
+                                                    )}
+                                                />
+                                                
+                                            </View>
+                                            <View className='flex-row gap-4 justify-center'>
+                                                <Pressable onPress={() => {
+                                                    setShowModal(!showModal);
+                                                    }
+                                                }>
+                                                    <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#15a1ff] rounded-xl p-2 mx-auto'>
+                                                        <Text className='text-xl font-bold text-white '>Agregar</Text>
+                                                        <Icon1 name="plus" size={20} color="#fff" />
+                                                    </View>
+                                                </Pressable>
+                                                
+                                                <Pressable onPress={asignarEmpleados}>
+                                                    <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#13bf1e] px-6 rounded-xl p-2 mx-auto'>
+                                                        <Text className='text-xl font-bold text-white '>Asignar</Text>
+                                                    </View>
+                                                </Pressable>
+                                                    
+                                            </View>
+                                        </View>
+                                    )
+                                    :
+                                    (
+                                        <Pressable onPress={() => setShowModal(!showModal)} className='rounded-xl p-3 bg-gray-700 mt-3'>
+                                            <Text className='text-white mx-auto text-lg font-semibold'>Asignar Empleados</Text>
+                                        </Pressable>
+                                    )
+                                )
                             }
                             
                         </View>

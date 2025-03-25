@@ -30,7 +30,7 @@ const EmpleadoController = {
         try{
             const {nomArea} = req.query;
             const empleados = await EmpleadoService.getEmpleados(nomArea);
-            res,json({empleados, status: 200});
+            res.json({empleados, status: 200});
         }catch(error){
             res.json({ success: false, message: "Error al obtener empleados", status: error.status });
         }
