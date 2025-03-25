@@ -22,7 +22,7 @@ export default function Crear() {
     const opcionesTaco = [
         { key: "3", label: "Talla 3" },
         { key: "4", label: "Talla 4" },
-        { key: "5", label: "Talla 5" },
+        { key: "5", label: "Talla 5" }, 
         { key: "7", label: "Talla 7" },
         { key: "9", label: "Talla 9" },
         { key: "12", label: "Talla 12" },

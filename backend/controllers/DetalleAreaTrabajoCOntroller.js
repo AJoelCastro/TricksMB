@@ -30,8 +30,7 @@ const DetalleAreaTrabajoController = {
             const detalleAreaTrabajo = await DetalleAreaTrabajoService.updateDetalleAreaTrabajo(idCaracteristicas, cantidadAvance, comentario, estado);
             return res.json({detalleAreaTrabajo, status: 200});
         } catch (error) {
-            console.error("Error al actualizar detalle de área de trabajo:", error);
-            return res.json({ error: error.message || "Error interno del servidor", status: error.status  });
+            return error("Error interno del servidor");
         }
     },
 

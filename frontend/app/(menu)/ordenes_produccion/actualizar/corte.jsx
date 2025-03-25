@@ -211,13 +211,15 @@ const Corte = () => {
     
     const updatePedido = async () =>{
         try {
-            let info=true;
 
             for (const fila of dataDetalleAreaTrabajo) {
+                console.log("dataDetalleAreaTrabajo", dataDetalleAreaTrabajo);
+                console.log("fila", fila);
                 let state = null;
                 let idCaracteristicas = Number(fila.id);
                 const data = await CaracteristicasService.getCaracteristicaByIdCaracteristicas(idCaracteristicas);
-                if((Number(fila.avance)+Number(fila.terminado)) === Number(data[0].Cantidad)){
+                console.log("data", data);
+                if((Number(fila.avance)+Number(fila.terminado)) === Number(data.caracteristica[0].Cantidad)){
                     state = 1;
                 }
                 else {
@@ -230,23 +232,14 @@ const Corte = () => {
                 }
                 const editarDAT= await DetalleAreaTrabajoService.updatePedido(idCaracteristicas, datos);
                 console.log("editarDAT",editarDAT);
-                if (!editarDAT) {
-                    console.error("Característica vacias o nulas:", datos);
-                    info = false;
-                    return;
+                if (editarDAT.status !== 200) {
+                    throw new Error("Error al actualizar el pedido");
                 } 
             }
-            if (info === false) {
-                alert("Error", "Hubo un problema al actualizar el pedido.");
-                return ;
-            } 
-            else {
-                alert("Pedido actualizado", "El pedido se ha actualizado correctamente.");
-                setActualizado(true);
-                
-            }
+            setActualizado(true);
+            Alert.alert("Pedido actualizado", "El pedido se ha actualizado correctamente", [{text: "OK"}]);
         }catch (error) {
-            console.error("Error al actualizar pedido:", error);
+            mostrarError(error);
         }
     }
     useEffect(() => {
@@ -274,7 +267,9 @@ const Corte = () => {
                     let codigoPedido = codigoOrden
                     const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
                     let actualizar = true;
-                    data.map((item) => {
+                    console.log("data actualizado", data);
+                    data.detallesAreaTrabajo.map((item) => {
+                        console.log("item", item);
                         if (item.Estado === 0){
                             actualizar = false;
                         }
@@ -283,376 +278,377 @@ const Corte = () => {
                         let nomArea= "Perfilado"
                         const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido)
                         console.log("updateAreaTrabajo",updateAreaTrabajo);
-                        if (!updateAreaTrabajo) {
-                            error("Característica vacias o nulas:", update);
-                            return;
-                        }else{
-                            alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`);
-                            resetearCampos();
-                            router.back();
+                        if (updateAreaTrabajo.status !== 200) {
+                            throw new Error("Error al crear el detalle del area de trabajo");
                         }
+                        alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`);
+                        resetearCampos();
+                        router.back();
                     }
                 }catch (error) {
-                    console.error("Error al obtener los detalles del area de trabajo:", error);
+                    mostrarError(error);
+                    resetearCampos();
+                    router.back();
                 }
             }
         }
         obtenerEstadosDetalleAreaTrabajo();
     }, [actualizado]);
-return (
-    <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-    >
-        <ScrollView className='mx-4 gap-2'>
-            <SafeAreaView>
-                {/* Aqui se renderizan los datos del cliente de acuerdo a su tipo */}
-                { tipoCliente==="natural" &&(
-                    <View className='gap-2 mb-2'>
-                        <View className='flex-row justify-between'>
-                            <View className='w-[65%] '>
-                                <TextInput 
-                                    value={cliente.nombre}
-                                    mode='outlined'
-                                    label={"Cliente"}
-                                    editable={false}
-                                />
-                            </View>
-                            <View className='w-[30%]'>
-                                <TextInput 
-                                    value={cliente.Dni}
-                                    mode='outlined'
-                                    label={"DNI"}
-                                    editable={false}
-                                />
-                            </View>
-                        </View>
-                        
-                    </View>
-                    )
-                }
-                { tipoCliente==="juridico" &&(
-                    <View className='gap-2 mb-2'>
-                        <View className='flex-row justify-between'>
-                            <View className='w-[65%] '>
-                                <TextInput 
-                                    value={cliente.nombre}
-                                    mode='outlined'
-                                    label={"Cliente"}
-                                    editable={false}
-                                />
-                            </View>
-                            <View className='w-[30%]'>
-                                <TextInput 
-                                    value={cliente.Ruc}
-                                    mode='outlined'
-                                    label={"RUC"}
-                                    editable={false}
-                                />
-                            </View>
-                        </View>
-                    </View>
-                    )
-                }
-                {/* Aqui se renderizan los datos de los empleados asignados a esta orden */}
-                <View className='mb-3'>
-                    {empleados.map((empleado, index) => (
-                        <View key={index} className='flex-row justify-between'>
-                            <View className='w-[65%] '>
-                                <TextInput 
-                                    value={empleado.Nombres}
-                                    mode='outlined'
-                                    label={"Trabajador"}
-                                    editable={false}
-                                />
-                            </View>
-                            <View className='w-[30%]'>
-                                <TextInput 
-                                    value={empleado.DNI}
-                                    mode='outlined'
-                                    label={"DNI"}
-                                    editable={false}
-                                />  
-                            </View>
-                        </View>
-                    ))}
-                </View>
-                <View className='gap-2'>
-                    <View className='flex-row justify-between'>
-                        {/* IMAGEN */}
-                        <View className='w-[30%]'>
-                            <Card style={{ borderRadius: 10 }}>
-                                <Card.Cover
-                                    style={{ resizeMode: 'contain' }}
-                                    source={{ uri: modelo?.imagenes?.[0] }} 
-                                />
-                                <Card.Content>
-                                    <Text variant="titleMedium">{modelo?.modelo?.Nombre}</Text>
-                                </Card.Content> 
-                            </Card>
-                        </View>
-                        <View className='w-[48%] gap-2 justify-center'>
-                                <TextInput
-                                    editable={false}
-                                    mode='outlined'
-                                    label={"Tipo de calzado"}
-                                    value={tipoCalzado} 
-                                />
-                                <TextInput
-                                    label="Modelo"
-                                    mode="outlined"
-                                    value={modelo?.modelo?.Nombre}
-                                    editable={false}
-                                />
-                                <TextInput
-                                    mode='outlined'
-                                    label="Fecha de creacion"
-                                    value={currentDate}
-                                    editable={false}
-                                    right={<TextInput.Icon icon="calendar" />}
-                                />
-                                <TextInput
-                                    label="Fecha de entrega"
-                                    mode='outlined'
-                                    value={fechaEntrega.toISOString().split("T")[0]}
-                                    editable={false}
-                                    right={<TextInput.Icon icon="calendar" />}
-                                />
-                        </View>
-                    </View>
-                </View>
-                <View className='flex-row mt-4 mb-4 gap-5'>
-                    <View className='flex-row items-center gap-4'>
-                        <Text className='font-bold'>Serie Inicio</Text>
-                        <View className='h-8 bg-gray-100 border-l-2 items-center justify-center w-[30%]'>
 
-                            <TextInput
-                            editable={false}
-                            style={{ height: 40 }} 
-                            placeholder="Talla"
-                            placeholderTextColor={"black"}
-                            value={selectSerieInicio? `${selectSerieInicio}`: selectSerieInicio} 
-                            className='bg-gray-200 rounded-lg font-bold w-full'
-                            />
+    return (
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}
+        >
+            <ScrollView className='mx-4 gap-2'>
+                <SafeAreaView>
+                    {/* Aqui se renderizan los datos del cliente de acuerdo a su tipo */}
+                    { tipoCliente==="natural" &&(
+                        <View className='gap-2 mb-2'>
+                            <View className='flex-row justify-between'>
+                                <View className='w-[65%] '>
+                                    <TextInput 
+                                        value={cliente.nombre}
+                                        mode='outlined'
+                                        label={"Cliente"}
+                                        editable={false}
+                                    />
+                                </View>
+                                <View className='w-[30%]'>
+                                    <TextInput 
+                                        value={cliente.Dni}
+                                        mode='outlined'
+                                        label={"DNI"}
+                                        editable={false}
+                                    />
+                                </View>
+                            </View>
                             
                         </View>
-                        
+                        )
+                    }
+                    { tipoCliente==="juridico" &&(
+                        <View className='gap-2 mb-2'>
+                            <View className='flex-row justify-between'>
+                                <View className='w-[65%] '>
+                                    <TextInput 
+                                        value={cliente.nombre}
+                                        mode='outlined'
+                                        label={"Cliente"}
+                                        editable={false}
+                                    />
+                                </View>
+                                <View className='w-[30%]'>
+                                    <TextInput 
+                                        value={cliente.Ruc}
+                                        mode='outlined'
+                                        label={"RUC"}
+                                        editable={false}
+                                    />
+                                </View>
+                            </View>
+                        </View>
+                        )
+                    }
+                    {/* Aqui se renderizan los datos de los empleados asignados a esta orden */}
+                    <View className='mb-3'>
+                        {empleados.map((empleado, index) => (
+                            <View key={index} className='flex-row justify-between'>
+                                <View className='w-[65%] '>
+                                    <TextInput 
+                                        value={empleado.Nombres}
+                                        mode='outlined'
+                                        label={"Trabajador"}
+                                        editable={false}
+                                    />
+                                </View>
+                                <View className='w-[30%]'>
+                                    <TextInput 
+                                        value={empleado.DNI}
+                                        mode='outlined'
+                                        label={"DNI"}
+                                        editable={false}
+                                    />  
+                                </View>
+                            </View>
+                        ))}
                     </View>
-                    <View className='flex-row items-center gap-4'>
-                        <Text className='font-bold'>Serie Fin     </Text>
-                        <View className='h-8 bg-gray-100 border-l-2 items-center justify-center w-[30%]'>
-                            <TextInput
+                    <View className='gap-2'>
+                        <View className='flex-row justify-between'>
+                            {/* IMAGEN */}
+                            <View className='w-[30%]'>
+                                <Card style={{ borderRadius: 10 }}>
+                                    <Card.Cover
+                                        style={{ resizeMode: 'contain' }}
+                                        source={{ uri: modelo?.imagenes?.[0] }} 
+                                    />
+                                    <Card.Content>
+                                        <Text variant="titleMedium">{modelo?.modelo?.Nombre}</Text>
+                                    </Card.Content> 
+                                </Card>
+                            </View>
+                            <View className='w-[48%] gap-2 justify-center'>
+                                    <TextInput
+                                        editable={false}
+                                        mode='outlined'
+                                        label={"Tipo de calzado"}
+                                        value={tipoCalzado} 
+                                    />
+                                    <TextInput
+                                        label="Modelo"
+                                        mode="outlined"
+                                        value={modelo?.modelo?.Nombre}
+                                        editable={false}
+                                    />
+                                    <TextInput
+                                        mode='outlined'
+                                        label="Fecha de creacion"
+                                        value={currentDate}
+                                        editable={false}
+                                        right={<TextInput.Icon icon="calendar" />}
+                                    />
+                                    <TextInput
+                                        label="Fecha de entrega"
+                                        mode='outlined'
+                                        value={fechaEntrega.toISOString().split("T")[0]}
+                                        editable={false}
+                                        right={<TextInput.Icon icon="calendar" />}
+                                    />
+                            </View>
+                        </View>
+                    </View>
+                    <View className='flex-row mt-4 mb-4 gap-5'>
+                        <View className='flex-row items-center gap-4'>
+                            <Text className='font-bold'>Serie Inicio</Text>
+                            <View className='h-8 bg-gray-100 border-l-2 items-center justify-center w-[30%]'>
+
+                                <TextInput
                                 editable={false}
                                 style={{ height: 40 }} 
                                 placeholder="Talla"
                                 placeholderTextColor={"black"}
-                                value={selectSerieFin? `${selectSerieFin}`: selectSerieFin} 
+                                value={selectSerieInicio? `${selectSerieInicio}`: selectSerieInicio} 
                                 className='bg-gray-200 rounded-lg font-bold w-full'
-                            />
+                                />
+                                
+                            </View>
                             
                         </View>
-                    </View>
-                </View>
-                <View className='flex-row '>
-                    <View className='flex-1'>
-                        {filas.map((fila, index) => (
-                            <View key={fila.id} className='flex-row  gap-2 mb-2 '>
-                                <View className='w-[20%]'>
-                                    <TextInput
-                                        label="Talla"
-                                        keyboardType='numeric'
-                                        placeholder='Talla'
-                                        style={{ height:40}}
-                                        mode='outlined'
-                                        value={fila.talla}
-                                        onChangeText={(text) => {
-                                            const nuevasFilas = [...filas];
-                                            nuevasFilas[index].talla = text;
-                                            setFilas(nuevasFilas);
-                                        }}
-                                        editable={false}
-                                    />
-                                </View>
-                                <View className='w-[20%]'>
-                                    <TextInput
-                                        label="Pares"
-                                        placeholder='Pares'
-                                        style={{ height:40 }}
-                                        mode='outlined'
-                                        keyboardType='numeric'
-                                        value={fila.pares}
-                                        onChangeText={(text) => {
-                                            const nuevasFilas = [...filas];
-                                            nuevasFilas[index].pares = text;
-                                            setFilas(nuevasFilas);
-                                        }}
-                                        editable={false}
-                                    />
-                                </View>
-                                <View className='w-[45%]'>
-                                    <TextInput
-                                        label="Color"
-                                        placeholder='Color'
-                                        style={{ height:40 }}
-                                        mode='outlined'
-                                        value={fila.color}
-                                        onChangeText={(text) => {
-                                            const nuevasFilas = [...filas];
-                                            nuevasFilas[index].color = text;
-                                            setFilas(nuevasFilas);
-                                        }}
-                                        editable={false}
-                                    />
-                                </View>
+                        <View className='flex-row items-center gap-4'>
+                            <Text className='font-bold'>Serie Fin     </Text>
+                            <View className='h-8 bg-gray-100 border-l-2 items-center justify-center w-[30%]'>
+                                <TextInput
+                                    editable={false}
+                                    style={{ height: 40 }} 
+                                    placeholder="Talla"
+                                    placeholderTextColor={"black"}
+                                    value={selectSerieFin? `${selectSerieFin}`: selectSerieFin} 
+                                    className='bg-gray-200 rounded-lg font-bold w-full'
+                                />
+                                
                             </View>
-                        ))}
+                        </View>
                     </View>
-                    <View className='flex-1'>
-                        {dataDetalleAreaTrabajo.map((fila, index) => (
-                            <View key={fila.id} className='flex-row gap-2 mb-2'>
-                                <View className='w-[25%]'>
-                                    <TextInput
-                                        label={"Terminado"}
-                                        placeholder='Color'
-                                        style={{ height:40}}
-                                        mode='outlined'
-                                        value={fila.terminado}
-                                        editable={false}
-                                    />
+                    <View className='flex-row '>
+                        <View className='flex-1'>
+                            {filas.map((fila, index) => (
+                                <View key={fila.id} className='flex-row  gap-2 mb-2 '>
+                                    <View className='w-[20%]'>
+                                        <TextInput
+                                            label="Talla"
+                                            keyboardType='numeric'
+                                            placeholder='Talla'
+                                            style={{ height:40}}
+                                            mode='outlined'
+                                            value={fila.talla}
+                                            onChangeText={(text) => {
+                                                const nuevasFilas = [...filas];
+                                                nuevasFilas[index].talla = text;
+                                                setFilas(nuevasFilas);
+                                            }}
+                                            editable={false}
+                                        />
+                                    </View>
+                                    <View className='w-[20%]'>
+                                        <TextInput
+                                            label="Pares"
+                                            placeholder='Pares'
+                                            style={{ height:40 }}
+                                            mode='outlined'
+                                            keyboardType='numeric'
+                                            value={fila.pares}
+                                            onChangeText={(text) => {
+                                                const nuevasFilas = [...filas];
+                                                nuevasFilas[index].pares = text;
+                                                setFilas(nuevasFilas);
+                                            }}
+                                            editable={false}
+                                        />
+                                    </View>
+                                    <View className='w-[45%]'>
+                                        <TextInput
+                                            label="Color"
+                                            placeholder='Color'
+                                            style={{ height:40 }}
+                                            mode='outlined'
+                                            value={fila.color}
+                                            onChangeText={(text) => {
+                                                const nuevasFilas = [...filas];
+                                                nuevasFilas[index].color = text;
+                                                setFilas(nuevasFilas);
+                                            }}
+                                            editable={false}
+                                        />
+                                    </View>
                                 </View>
-                                <View className='w-[25%]'>
-                                    <TextInput
-                                        label={"Avance"}
-                                        placeholder='Avance'
-                                        style={{ height:40 }}
-                                        mode='outlined'
-                                        value={fila.avance}
-                                        keyboardType='numeric'
-                                        onChangeText={(text) => {
-                                            const nuevasFilas = [...dataDetalleAreaTrabajo];
-                                            
-                                            if((Number(text) +Number(nuevasFilas[index].terminado)) > filas[index].pares){
-                                                alert("El  total no puede ser mayor a la cantidad de pares");
-                                                nuevasFilas[index].avance = "";
-                                            }
-                                            else{
-                                                nuevasFilas[index].avance = text;
-                                            }
-                                            
-                                            setDataDetalleAreaTrabajo(nuevasFilas);
-                                        }}
-                                    />
+                            ))}
+                        </View>
+                        <View className='flex-1'>
+                            {dataDetalleAreaTrabajo.map((fila, index) => (
+                                <View key={fila.id} className='flex-row gap-2 mb-2'>
+                                    <View className='w-[25%]'>
+                                        <TextInput
+                                            label={"Terminado"}
+                                            placeholder='Color'
+                                            style={{ height:40}}
+                                            mode='outlined'
+                                            value={fila.terminado}
+                                            editable={false}
+                                        />
+                                    </View>
+                                    <View className='w-[25%]'>
+                                        <TextInput
+                                            label={"Avance"}
+                                            placeholder='Avance'
+                                            style={{ height:40 }}
+                                            mode='outlined'
+                                            value={fila.avance}
+                                            keyboardType='numeric'
+                                            onChangeText={(text) => {
+                                                const nuevasFilas = [...dataDetalleAreaTrabajo];
+                                                
+                                                if((Number(text) +Number(nuevasFilas[index].terminado)) > filas[index].pares){
+                                                    alert("El  total no puede ser mayor a la cantidad de pares");
+                                                    nuevasFilas[index].avance = "";
+                                                }
+                                                else{
+                                                    nuevasFilas[index].avance = text;
+                                                }
+                                                
+                                                setDataDetalleAreaTrabajo(nuevasFilas);
+                                            }}
+                                        />
+                                    </View>
+                                    <View className='w-[45%]'>
+                                        <TextInput
+                                            label={"Comentario"}
+                                            placeholder='Comentario'
+                                            style={{ height:40}}
+                                            mode='outlined'
+                                            value={fila.comentario}
+                                            onChangeText={(text) => {
+                                                const nuevasFilas = [...dataDetalleAreaTrabajo];
+                                                nuevasFilas[index].comentario = text;
+                                                setDataDetalleAreaTrabajo(nuevasFilas);
+                                            }}
+                                        />
+                                    </View>
                                 </View>
-                                <View className='w-[45%]'>
-                                    <TextInput
-                                        label={"Comentario"}
-                                        placeholder='Comentario'
-                                        style={{ height:40}}
-                                        mode='outlined'
-                                        value={fila.comentario}
-                                        onChangeText={(text) => {
-                                            const nuevasFilas = [...dataDetalleAreaTrabajo];
-                                            nuevasFilas[index].comentario = text;
-                                            setDataDetalleAreaTrabajo(nuevasFilas);
-                                        }}
-                                    />
-                                </View>
-                            </View>
-                        ))}
+                            ))}
+                        </View>
                     </View>
-                </View>
-                <Text className='font-bold mt-4 text-lg mx-auto'>
-                    Detalle de la orden
-                </Text>
-                <View className='mt-2 gap-2'>
-                    
-                    <TextInput
-                        label="Taco"
-                        mode="outlined"
-                        placeholder='Nombre de taco'
-                        placeholderTextColor={"gray"}
-                        value={nombreTaco}
-                        onChangeText={setNombreTaco}
-                        className='rounded-lg h-10'
-                        editable={false}
-                        
-                    />
-                </View>
-                <View className='mt-2 flex-row items-center gap-8'>
-                    <Text className='font-bold'>
-                        Altura de taco:
+                    <Text className='font-bold mt-4 text-lg mx-auto'>
+                        Detalle de la orden
                     </Text>
-                    <TextInput
-                        editable={false}
-                        style={{ height:40 }}
-                        value={tallaTaco ? `Talla ${tallaTaco}` : 'Seleccione una talla'} 
-                        className='bg-gray-200 rounded-lg font-bold '
-                    />
-                </View>
-                <View className='gap-2 mt-2 mb-4'>
-                    <TextInput
-                        label={"Material"}
-                        mode='outlined'
-                        editable={false}
-                        value={material}
-                    />
-                    
-                    <TextInput
-                        label={"Tipo de Material"}
-                        mode='outlined'
-                        editable={false}
-                        value={tipoMaterial}
-                    />
-                    
-                    <TextInput
-                        label={"Suela"}
-                        mode='outlined'
-                        value={suela}
-                        placeholder='Suela'
-                        onChangeText={setSuela}
-                        editable={false}
-                    />
-                    <TextInput
-                        label={"Accesorios"}
-                        mode='outlined'
-                        multiline={true}
-                        numberOfLines={1}
-                        value={accesorios}
-                        placeholder='Digite los accesorios'
-                        onChangeText={setAccesorios}
-                        editable={false}
-                    />
-                    <TextInput
-                        label={"Forro"}
-                        mode='outlined'
-                        value={forro}
-                        onChangeText={setForro}
-                        placeholder='Forro'
-                        editable={false}
-                    />
-                </View>
-                <Button mode='contained-tonal'icon="note" buttonColor='#6969' textColor='#000' onPress={updatePedido}>
-                    Actualizar Avance
-                </Button>
-                <View className='mb-32'>
+                    <View className='mt-2 gap-2'>
+                        
+                        <TextInput
+                            label="Taco"
+                            mode="outlined"
+                            placeholder='Nombre de taco'
+                            placeholderTextColor={"gray"}
+                            value={nombreTaco}
+                            onChangeText={setNombreTaco}
+                            className='rounded-lg h-10'
+                            editable={false}
+                            
+                        />
+                    </View>
+                    <View className='mt-2 flex-row items-center gap-8'>
+                        <Text className='font-bold'>
+                            Altura de taco:
+                        </Text>
+                        <TextInput
+                            editable={false}
+                            style={{ height:40 }}
+                            value={tallaTaco ? `Talla ${tallaTaco}` : 'Seleccione una talla'} 
+                            className='bg-gray-200 rounded-lg font-bold '
+                        />
+                    </View>
+                    <View className='gap-2 mt-2 mb-4'>
+                        <TextInput
+                            label={"Material"}
+                            mode='outlined'
+                            editable={false}
+                            value={material}
+                        />
+                        
+                        <TextInput
+                            label={"Tipo de Material"}
+                            mode='outlined'
+                            editable={false}
+                            value={tipoMaterial}
+                        />
+                        
+                        <TextInput
+                            label={"Suela"}
+                            mode='outlined'
+                            value={suela}
+                            placeholder='Suela'
+                            onChangeText={setSuela}
+                            editable={false}
+                        />
+                        <TextInput
+                            label={"Accesorios"}
+                            mode='outlined'
+                            multiline={true}
+                            numberOfLines={1}
+                            value={accesorios}
+                            placeholder='Digite los accesorios'
+                            onChangeText={setAccesorios}
+                            editable={false}
+                        />
+                        <TextInput
+                            label={"Forro"}
+                            mode='outlined'
+                            value={forro}
+                            onChangeText={setForro}
+                            placeholder='Forro'
+                            editable={false}
+                        />
+                    </View>
+                    <Button mode='contained-tonal'icon="note" buttonColor='#6969' textColor='#000' onPress={updatePedido}>
+                        Actualizar Avance
+                    </Button>
+                    <View className='mb-32'>
 
-                </View>
-            </SafeAreaView>
-        </ScrollView>
-    </KeyboardAvoidingView>
-);
+                    </View>
+                </SafeAreaView>
+            </ScrollView>
+        </KeyboardAvoidingView>
+    );
 }
 const styles = StyleSheet.create({
-cancelButton: {
-    backgroundColor: "#ff4444",  // Rojo
-    padding: 10,
-    borderRadius: 5,
-},
-cancelText: {
-    color: "#fff",
-    fontSize: 15,
-    fontWeight: "bold",
-},
+    cancelButton: {
+        backgroundColor: "#ff4444",  // Rojo
+        padding: 10,
+        borderRadius: 5,
+    },
+    cancelText: {
+        color: "#fff",
+        fontSize: 15,
+        fontWeight: "bold",
+    },
 });
 
 export default Corte;
