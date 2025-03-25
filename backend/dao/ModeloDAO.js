@@ -65,6 +65,16 @@ class ModeloDAO{
             throw error;
         }
     }
+
+    static async getModeloById(idModelo){
+        try{
+            const query = 'SELECT * FROM Modelo WHERE idModelo = ?';
+            const [rows] = await db.execute(query, [idModelo]);
+            return rows[0];
+        }catch(error){
+            throw error;
+        }
+    }
 }
 
 module.exports = ModeloDAO;

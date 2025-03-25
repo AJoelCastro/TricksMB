@@ -100,11 +100,10 @@ const DetallePedidoService = {
     }, 
     async getDetallePedidoByidDetallePedido(idDetalle_pedido) {
         try {
-            console.log("idDetalle_pedido", idDetalle_pedido);
             if (!idDetalle_pedido) {
                 throw { status: 400, message: "El id del detalle de pedido es requerido" };
             }
-            const obj =  await DetallePedidoDAO.getDetallePedidoByidDetallePedido(idDetalle_pedido);
+            const obj =  await DetallePedidoDAO.getDetallePedidoById(idDetalle_pedido);
             if (!obj) {
                 throw { status: 404, message: "Detalle de pedido no encontrado" };
             }
