@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Pressable, Modal, FlatList,KeyboardAvoidingView, Platform, SafeAreaView, Alert } from 'react-native';
-import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import {Card, Checkbox, TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon1 from 'react-native-vector-icons/FontAwesome';

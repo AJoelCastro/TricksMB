@@ -17,7 +17,7 @@ import CaracteristicasService from '@/services/CaracteristicasService';
 
 const { width } = Dimensions.get('window');
 
-export default function crear() {
+export default function Crear() {
     
     const opcionesTaco = [
         { key: "3", label: "Talla 3" },
