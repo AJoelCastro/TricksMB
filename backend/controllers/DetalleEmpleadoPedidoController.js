@@ -19,13 +19,13 @@ const DetalleEmpleadoPedidoController = {
         try{ 
             const {nomArea, codigoPedido} = req.query;
             const detalleEmpleadoPedido = await DetalleEmpleadoPedidoService.getAllDetalleEmpleadoPedido(nomArea, codigoPedido);
+            console.log("detalleEmpleadoPedido", detalleEmpleadoPedido);
             if(!detalleEmpleadoPedido){
-                res.json({ success: false, message: "Error al obtener detalle empleado pedido", status: 400  });
+                return res.json({ message: "No hay empleados asigndados en esta are", status: 400  });
             }
-            res.json({ success: true, message: "Detalle empleado pedido obtenido exitosamente", detalleEmpleadoPedido, status: 201  });
+            return res.json({ message: "Detalle empleado pedido obtenido exitosamente", detalleEmpleadoPedido, status: 201  });
         }catch(error){
-            console.error(error);
-            res.json({ success: false, message: "Error al obtener detalle empleado pedido", status: 500 });
+            return res.json({ message: "Error interno del servidor", status: 500 });
         }
     }
 

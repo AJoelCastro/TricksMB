@@ -155,29 +155,29 @@ const Corte = () => {
             try {
                 let codigoPedido = codigoOrden
                 const data = await DetallePedidoService.obtenerDetallePedido(codigoPedido);
-                setIdDetallePedido(data.idDetalle_pedido);
-                setAccesorios(data.Accesorios);
-                setTallaTaco(data.Altura_taco);
-                let fecha = new Date(data.Fecha_creacion);
+                setIdDetallePedido(data.detallePedido.idDetalle_pedido);
+                setAccesorios(data.detallePedido.Accesorios);
+                setTallaTaco(data.detallePedido.Altura_taco);
+                let fecha = new Date(data.detallePedido.Fecha_creacion);
                 setCurrentDate(fecha.toISOString().split("T")[0]);
-                setForro(data.Forro);
-                setMaterial(data.Material);
-                setNombreTaco(data.Nombre_taco);
-                setSuela(data.Suela);
-                setTipoMaterial(data.Tipo_material);
+                setForro(data.detallePedido.Forro);
+                setMaterial(data.detallePedido.Material);
+                setNombreTaco(data.detallePedido.Nombre_taco);
+                setSuela(data.detallePedido.Suela);
+                setTipoMaterial(data.detallePedido.Tipo_material);
                 const dataTipoCalzado = await TipoCalzadoService.getTipoCalzadoByCodigoPedido(codigoPedido);
-                setTipoCalzado(dataTipoCalzado.Nombre);
+                setTipoCalzado(dataTipoCalzado.tipoCalzado.Nombre);
                 const dataModelo = await ModeloService.getModeloByCodigoPedido(codigoPedido);
-                if (dataModelo) {
-                        let idModelo = dataModelo.idModelo;
+                if (dataModelo.status === 200) {
+                        let idModelo = dataModelo.modelo.idModelo;
                         const imagen = await ModeloService.getImagenById(idModelo);
-                        if (!imagen) {
-                            console.error("No se encontraron las imagenes");
+                        if (imagen.status !== 200) {
+                            Alert.alert("Error al obtener información", "No se encontraron las imagenes", [{text: "OK"}]);
                             return {...dataModelo, imagenes:[]};
                         }
                         const dataImagenes = {
                             ...dataModelo,
-                            imagenes: imagen.map(img => img.Url)
+                            imagenes: imagen.imagen.map(img => img.Url)
                         }
                         setModelo(dataImagenes);
                 }
@@ -186,11 +186,11 @@ const Corte = () => {
                 setSelectSerieFin(dataPedido.Serie_final);
                 setFechaEntrega(new Date(dataPedido.Fecha_entrega));
                 const dataCliente = await ClienteService.getClienteByCodigoPedido(codigoPedido);
-                setTipoCliente(dataCliente.Tipo_cliente);
-                setCliente(dataCliente);
-                let idDetallePedido=data.idDetalle_pedido;
+                setTipoCliente(dataCliente.cliente.Tipo_cliente);
+                setCliente(dataCliente.cliente);
+                let idDetallePedido=data.detallePedido.idDetalle_pedido;
                 const dataCaracteristicas = await CaracteristicasService.getAllCaracteristicasById(idDetallePedido);
-                const filasTransformadas = transformarDatos(dataCaracteristicas);
+                const filasTransformadas = transformarDatos(dataCaracteristicas.caracteristicas);
                 setFilas(filasTransformadas);
                 // Aqui se obtienen los empleados
                 let nomArea = "Corte"
@@ -201,7 +201,7 @@ const Corte = () => {
                 setEmpleados(dataEmpleados.detalleEmpleadoPedido);
             } catch (error) {
                 console.error("Error al obtener el pedido:", error);
-                set
+                
                 Alert.alert("Error", "Hubo un problema al obtener el pedido.");
             }
         };
@@ -253,8 +253,8 @@ const Corte = () => {
         const obtenerDetalleAreaTrab = async () => {
             try {
                 let codigoPedido = codigoOrden
-                const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
-                const dataExtra = data.map((item) => ({
+                const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido)
+                const dataExtra = data.detallesAreaTrabajo.map((item) => ({
                     ...item,
                     terminado: item.Cantidad_avance // Agrega la propiedad "terminado"
                 }));
@@ -387,7 +387,7 @@ return (
                                     source={{ uri: modelo?.imagenes?.[0] }} 
                                 />
                                 <Card.Content>
-                                    <Text variant="titleMedium">{modelo.Nombre}</Text>
+                                    <Text variant="titleMedium">{modelo?.modelo?.Nombre}</Text>
                                 </Card.Content> 
                             </Card>
                         </View>
@@ -401,7 +401,7 @@ return (
                                 <TextInput
                                     label="Modelo"
                                     mode="outlined"
-                                    value={modelo.Nombre}
+                                    value={modelo?.modelo?.Nombre}
                                     editable={false}
                                 />
                                 <TextInput

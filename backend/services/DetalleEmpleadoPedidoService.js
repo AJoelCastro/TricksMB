@@ -19,8 +19,8 @@ const DetalleEmpleadoPedidoService = {
 
     async getAllDetalleEmpleadoPedido(nomArea, codigoPedido){
         try{
-            if(!nomArea) throw {status: 400, message: "nombre de area requerido para buscar detalle empleado pedido"};
-            if(!codigoPedido) throw {status: 400, message: "codigo de pedido requerido para buscar detalle empleado pedido"};
+            if(!nomArea) throw new Error("nombre de area requerido para buscar detalle empleado pedido");
+            if(!codigoPedido) throw new Error("codigo de pedido requerido para buscar detalle empleado pedido");
             const DetallePedidoService = require('./DetallePedidoService');
             const {idArea_trabajo} = await AreaTrabajoService.getAreaTrabajoByNombre(nomArea);
             let idArea = idArea_trabajo;
