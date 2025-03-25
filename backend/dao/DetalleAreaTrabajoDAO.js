@@ -19,10 +19,17 @@ class DetalleAreaTrabajoDAO{
     static async getDetalleAreaTrabajo(idCaracteristicas){
         try{
             const query = `
-                SELECT * FROM Detalle_areaTrabajo WHERE Caracteristicas_idCaracteristicas = ? AND Estado = 0
+                SELECT * FROM Detalle_areaTrabajo WHERE Caracteristicas_idCaracteristicas = ?
             `;
             const [rows] = await db.execute(query, [idCaracteristicas]);
-            return rows;
+            let mayor = 0;
+            for (const item of rows) {
+                if (item.Area_trabajo_idArea_trabajo > mayor) {
+                    mayor = item.Area_trabajo_idArea_trabajo;
+                }
+            }
+            const data = await rows.filter(item => item.Area_trabajo_idArea_trabajo === mayor);
+            return data;
         }catch(error){
             throw error;
         }

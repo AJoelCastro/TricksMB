@@ -68,7 +68,13 @@ const Actualizar = () => {
                 try {
                     let codigoPedido = codigoOrden
                     const dataDetalleAreaTrabajo = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
-                    switch (dataDetalleAreaTrabajo.detallesAreaTrabajo[0].Area_trabajo_idArea_trabajo) {
+                    let mayor = 0;
+                    for (const item of dataDetalleAreaTrabajo.detallesAreaTrabajo) {
+                        if (item.Area_trabajo_idArea_trabajo > mayor) {
+                            mayor = item.Area_trabajo_idArea_trabajo;
+                        }
+                    }
+                    switch (mayor) {
                         case 1:
                             setAreaTrabajo("corte");
                             break;
@@ -107,8 +113,14 @@ const Actualizar = () => {
             if (data.detallePedido.Estado === "Proceso") {
                 const dataDetalleAreaTrabajo = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
                 console.log("dataDetalleAreaTrabajo", dataDetalleAreaTrabajo);
+                let mayor = 0;
+                for (const item of dataDetalleAreaTrabajo.detallesAreaTrabajo) {
+                    if (item.Area_trabajo_idArea_trabajo > mayor) {
+                        mayor = item.Area_trabajo_idArea_trabajo;
+                    }
+                }
                 let nomArea;
-                switch (dataDetalleAreaTrabajo.detallesAreaTrabajo[0].Area_trabajo_idArea_trabajo) {
+                switch (mayor) {
                     case 1:
                         nomArea = "Corte";
                         setAreaTrabajo("corte");
@@ -143,7 +155,7 @@ const Actualizar = () => {
                         nomArea = "Armado";
                         setAreaTrabajo("armado");
                         const dataDetalleEmpleadoPedido3 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
-                        if (dataDetalleEmpleadoPedido2.status !== 201) {
+                        if (dataDetalleEmpleadoPedido3.status !== 201) {
                             throw new Error("Error al obtener empleados por pedido");
                         }
                         if(dataDetalleEmpleadoPedido3.detalleEmpleadoPedido.length === 0){

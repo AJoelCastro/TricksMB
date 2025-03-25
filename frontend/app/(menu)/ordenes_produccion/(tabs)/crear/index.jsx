@@ -175,12 +175,14 @@ export default function Crear() {
 
     const cargarModelosPorId = async () => {
         try {
-            let id = tipoCalzado.idTipo;
+            let id = Number(tipoCalzado.idTipo);
             const modelos = await ModeloService.getAllModeloById(id);
+            console.log("modelos", modelos);
             const obteniendoImagenes = await Promise.all(
                 modelos.modelo.map(async (modelo) => {
                     let idModelo = modelo.idModelo;
                     const imagen = await ModeloService.getImagenById(idModelo);
+                    console.log("imagen", imagen);
                     if (!imagen) {
                         console.error("No se encontraron las imagenes");
                         return {...modelo, imagenes:[]};
@@ -205,6 +207,7 @@ export default function Crear() {
         const cargarTipoCalzado = async () => {
             try {
                 const tipos = await TipoCalzadoService.getAllTipoCalzado();
+                console.log("tipos", tipos);
                 if (!tipos) {
                     console.error("No se encontraron los tipos de calzado");
                     return;

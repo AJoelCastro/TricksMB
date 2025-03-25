@@ -33,7 +33,7 @@ const ModeloService = {
 
     async getAllModeloById(idTipo){
         try{
-            if(!id) throw{status: 400 , message: "id requerido"};
+            if(!idTipo) throw{status: 400 , message: "id requerido"};
             return await ModeloDAO.getAllModeloById(idTipo);
         }catch(error){
             throw error;
