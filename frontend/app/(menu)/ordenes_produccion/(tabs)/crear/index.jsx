@@ -93,6 +93,15 @@ export default function crear() {
     const [tipoCalzado, setTipoCalzado] = useState("");
     const [fechaEntrega, setFechaEntrega] = useState(new Date());
     const [openDatePicker, setOpenDatePicker] = useState(false);
+
+
+    const mostrarError = (error) => {
+        Alert.alert(
+            "Error",
+            `${error.message}`,
+            [{ text: "OK" }] // Botón requerido
+        );
+    };
     const getCurrentDate = () => {
         const date = new Date();
         return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
@@ -134,30 +143,33 @@ export default function crear() {
     const cargarClienteNatural = async () => {
         try {
             let identificador = dni;
+            setCliente("");
             const cliente = await ClienteService.buscarCliente(tipoCliente, identificador);
-            console.log("cliente", cliente);
-            if (!cliente) {
-                console.error("No se encontró el cliente");
-                return;
+            if (cliente.status === 404) {
+                setTipoCliente("");
+                Alert.alert("Error al buscar cliente", cliente.error, [{ text: "OK" }]);
             }
-            
-            setCliente(cliente.cliente);
+            if (cliente.status ===201) {
+                setCliente(cliente.cliente);
+            }
         } catch (error) {
-            console.error("Error cargando cliente:", error);
+            mostrarError(error.error);
         }
     };
     const cargarClienteJuridico = async () => {
         try {
             let identificador= ruc;
+            setCliente("");
             const cliente = await ClienteService.buscarCliente(tipoCliente, identificador);
-            if (!cliente) {
-                console.error("No se encontró el cliente");
-                return;
+            if (cliente.status === 404) {
+                setTipoCliente("");
+                Alert.alert("Error al buscar cliente", cliente.error, [{ text: "OK" }]);
             }
-            
-            setCliente(cliente);
+            if (cliente.status ===201) {
+                setCliente(cliente.cliente);
+            }
         } catch (error) {
-            console.error("Error cargando cliente:", error);
+            mostrarError(error.error);
         }
     };
 
@@ -320,7 +332,7 @@ export default function crear() {
                     onChangeText={setDocumento} 
                     keyboardType='numeric' 
                     maxLength={11}
-                    right={<TextInput.Icon icon="magnify" onPress={()=>verificarDocumento()}/>}
+                    right={<TextInput.Icon icon="magnify" onPress={verificarDocumento}/>}
                 />
                 { tipoCliente==="natural" &&(
                     <View className='gap-2 mb-2'>

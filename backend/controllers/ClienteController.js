@@ -37,21 +37,19 @@ const ClienteController = {
             const { tipoCliente, identificador } = req.query; // `identificador` será el DNI o RUC
 
             if (!tipoCliente || !identificador) {
-                res.json({ error: "Debe proporcionar tipo de cliente y DNI o RUC", status: error.status  });
+                return res.json({ error: "Debe proporcionar tipo de cliente y DNI o RUC", status: 400  });
             }
 
             let cliente;
             if (tipoCliente === "natural") {
                 cliente = await ClienteService.getClienteNaturalByDni(identificador);
-                
-            } else {
-                res.json({ error: "Tipo de cliente inválido", status: error.status  });
-            }
-
-            res.json({cliente, status: 200});
+                if(cliente===null){
+                    return res.json({ error: "Cliente no encontrado o no existe", status: 404  });
+                }
+                return res.json({cliente, status: 201});
+            } 
         } catch (error) {
-            console.error("Error al buscar cliente:", error);
-            res.json({ error: error.message, status: error.status });
+            return res.json({ error: "Error interno del servidor", status: 500});
         }
     },
     async buscarClienteJuridico(req, res) {
@@ -59,20 +57,21 @@ const ClienteController = {
             const { tipoCliente, identificador } = req.query; // `identificador` será el DNI o RUC
 
             if (!tipoCliente || !identificador) {
-                res.json({ error: "Debe proporcionar tipo de cliente y DNI o RUC", status: error.status  });
+                return res.json({ error: "Debe proporcionar tipo de cliente y DNI o RUC", status: 400  });
             }
 
             let cliente;
             if (tipoCliente === "juridico") {
                 cliente = await ClienteService.getClienteJuridicoByRuc(identificador);
-            } else {
-                res.json({ error: "Tipo de cliente inválido", status: error.status  });
+                if(cliente===null){
+                    return res.json({ error: "Cliente no encontrado o no existe", status: 404  });
+                }
+                return res.json({cliente, status: 201});
+                
             }
 
-            res.json({cliente, status: 200});
         } catch (error) {
-            console.error("Error al buscar cliente:", error);
-            res.json({ error: error.message, status: error.status });
+            return res.json({ error: "Error interno del servidor", status: 500});
         }
     },
 
