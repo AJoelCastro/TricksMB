@@ -23,7 +23,7 @@ const ClienteService = {
     obtenerClientes: async () => {
         try {
             const token = await AuthService.getToken();
-            const response = await axios.get(`${API_URL}/cliente/clientes`, {
+            const response = await axios.get(`${API_URL}/cliente/obtnerTodo`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;

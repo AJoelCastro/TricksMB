@@ -1,4 +1,3 @@
-const { stat } = require('fs');
 const ClienteService = require('../services/ClienteService');
 
 const ClienteController = {
@@ -75,7 +74,7 @@ const ClienteController = {
         }
     },
 
-    async obtenerClientes(req, res) {
+    async getAllClientes(req, res) {
         try {
             const clientes = await ClienteService.getAllClientes();
         res.json({ clientes, status: 200 });
@@ -93,8 +92,16 @@ const ClienteController = {
             console.error("Error al obtener cliente por código de pedido:", error);
             res.json({ error: error.message || "Error interno del servidor", status: error.status });
         }
-    }
+    },
     
+    async getClientesById(req, res) {
+        try {
+            const cliente = await ClienteService.getClientesById();
+            res.json({ cliente, status: 200 });
+        } catch (error) {
+            res.json({ error: "Error al obtener el cliente", status: 500 });
+        }
+    }
 }
 
 module.exports = ClienteController;
