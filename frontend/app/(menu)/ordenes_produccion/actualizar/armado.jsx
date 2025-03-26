@@ -81,7 +81,8 @@ const Armado = () => {
 
     // Funcion para mostrar errores
     const mostrarError = (error) => {
-        Alert.alert("Error", `${error.message} - ${error.status}` || "Error interno del servidor", [{text: "OK"}]);
+        console.log("error",error);
+        Alert.alert("Error", error?.message ? `${error.message}` : "Error interno del servidor", [{text: "OK"}]);
     }
 
     const cargarClienteNatural = async () => {
@@ -288,12 +289,17 @@ const Armado = () => {
                     if (updateAreaTrabajo.status !== 200) {
                         throw new Error("Error al crear el detalle del area de trabajo");
                     }
-                    const dataCaja = await CajaService.createCaja(codigoPedido);
-                    console.log("dataCaja",dataCaja);
-                    if(dataCaja.status !== 200){
-                        return;
+                    try {
+                        const dataCaja = await CajaService.createCaja(codigoPedido);
+                        
+                        if (dataCaja.status !== 200) {
+                            throw new Error("No se pudo crear la caja.");
+                        }
+        
+                        Alert.alert("Éxito", dataCaja.message, [{ text: "OK" }]);
+                    } catch (error) {
+                        mostrarError(error || "Error en la creación de cajas.");
                     }
-                    Alert.alert("Éxito", `${dataCaja.message}`, [{text: "OK"}]);
                     alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`);
                 }
             }catch (error) {

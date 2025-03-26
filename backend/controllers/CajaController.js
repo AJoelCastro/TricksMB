@@ -1,13 +1,14 @@
 const CajaService = require('../services/CajaService');
+const errorHandler = require('../utils/errorHandler');
 
 const CajaController = {
     async createCaja(req, res) {
         try {
             const { codigoPedido } = req.params;
             const result = await CajaService.createCaja(codigoPedido);
-            return res.json({ message: result.message, status: 200 });
+            return res.status(result.status).json({ message: result.message });
         } catch (error) {
-            throw error;
+            return errorHandler(res, error, error.status);
         }
     },
 

@@ -16,7 +16,9 @@ class CajaDAO{
 
             return {idCaja, idCaracteristica, qrImage};
         }catch(error){
-            throw error;
+            const cajaDao = new Error("Error interno al crear la caja.");
+            cajaDao.status = 500;
+            throw cajaDao;
         }
     } 
 

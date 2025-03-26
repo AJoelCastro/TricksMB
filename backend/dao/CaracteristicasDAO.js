@@ -17,10 +17,14 @@ class CaracteristicasDAO {
         try{
             const query = 'SELECT * FROM Caracteristicas WHERE Detalle_pedido_idDetalle_pedido = ?';
             const [result] = await db.execute(query, [idDetallePedido]);
-            console.log("result:",result);
+            if(result.length === 0){
+                const errorCaracteristicas = new Error("No se encontraron características para el detalle de pedido proporcionado.");
+                errorCaracteristicas.status = 404;
+                throw errorCaracteristicas;
+            }
             return result;
         }catch(error){
-            throw error;
+            throw error.status?error: {status: 500, message: "Error al obtener características por id del detalle de pedido"};
         }
     }
 
