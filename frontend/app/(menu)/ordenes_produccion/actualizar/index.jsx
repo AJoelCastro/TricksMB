@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Pressable, Modal, FlatList,KeyboardAvoidingView, Platform, SafeAreaView, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import {Card, Checkbox, TextInput} from 'react-native-paper';
+import {Card, Checkbox, Divider, TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon1 from 'react-native-vector-icons/FontAwesome';
 import DetallePedidoService from '@/services/DetallePedidoService';
@@ -21,8 +21,9 @@ const Actualizar = () => {
     const [empleadosAsignados, setEmpleadosAsignados] = useState([]);
     const [showEmpleadosAsignados, setShowEmpleadosAsignados] = useState(false);
     const [pedidos, setPedidos] = useState([]);
-    const [showModalPedidos, setShowModalPedidos] = useState(false);
-
+    const [filteredSuggestions, setFilteredSuggestions] = useState([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [showTextInputCodigoOrden, setShowTextInputCodigoOrden] = useState(false)
     useEffect(() => {
         const obtenerPedidos = async () => {
             try {
@@ -121,6 +122,8 @@ const Actualizar = () => {
             setEmpleados([]);
             setAreaTrabajo("");
             setEstado("");
+            console.log("codigoOrden", codigoOrden);
+            setShowSuggestions(false);
             const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
             let codigoPedido = codigoOrden
             setEstado(data.detallePedido.Estado);
@@ -257,6 +260,18 @@ const Actualizar = () => {
         }
     }
 
+    const handleSearch = (text) => {
+        setCodigoOrden(text);
+        if(text.length > 0){
+            const filteredPedidos = pedidos.filter(pedido => pedido.Codigo_pedido.toLowerCase().includes(text.toLowerCase()));
+            setFilteredSuggestions(filteredPedidos);
+            setShowSuggestions(true);
+        }else{
+            setFilteredSuggestions([]);
+            setShowSuggestions(false);
+        }
+    }
+
     const options = [
         { id: 1, title: 'corte', icon: 'content-cut', color: estado==='Editable' ? 'bg-gray-700' : 'bg-red-500' },
         { id: 2, title: 'perfilado', icon: 'brush', color: estado==='Editable' ? 'bg-gray-700' : 'bg-sky-700' },
@@ -270,19 +285,58 @@ const Actualizar = () => {
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={{ flex: 1 }}
         >
-            <View className="flex-1 p-4 bg-gray-100">
-                <TextInput
-                    label={"Codigo de orden"}
-                    mode="outlined"
-                    placeholder="Ingresa el código"
-                    value={codigoOrden}
-                    onChangeText={setCodigoOrden}
-                    right={<TextInput.Icon icon="magnify" onPress={verificarProceso}/>}
-                    onPressIn={() => {
-                        setShowModalPedidos(true);
-                    }}
-                />
+            <View 
+                className="flex-1 p-4 bg-gray-100"
                 
+            >
+                <View className='relative mb-4'>
+                    <TextInput
+                        label={"Codigo de orden"}
+                        mode="outlined"
+                        placeholder="Ingresa el código"
+                        value={codigoOrden}
+                        onChangeText={handleSearch}
+                        onPressIn={() => {
+                            setShowTextInputCodigoOrden(false);
+                        }}
+                        disabled={showTextInputCodigoOrden}
+                        onFocus={() => {
+                            if (codigoOrden.length > 0) {
+                                setShowSuggestions(true);
+                            }
+                        }}
+                        onBlur={() => {             // Al tocar fuera
+                            setTimeout(() => setShowSuggestions(false), 1200);
+                        }}
+                        right={<TextInput.Icon icon="magnify" onPressIn={()=>{
+                            verificarProceso();
+                            setShowTextInputCodigoOrden(true);
+                        }}/>}
+                    />
+                    {showSuggestions && filteredSuggestions.length > 0 &&(
+                        <View className='absolute z-10 top-16 w-full bg-white rounded-lg shadow-md max-h-80 right-0 left-0'>
+                            <FlatList
+                                data={filteredSuggestions}
+                                keyExtractor={(item) => item.Codigo_pedido}
+                                renderItem={({ item }) => (
+                                        <TouchableOpacity onPress={() => {
+                                            setCodigoOrden(item.Codigo_pedido);
+                                            setShowSuggestions(false);
+                                        }}>
+                                            <Card.Content className='p-2'>
+                                                <Text>{item.Codigo_pedido}</Text>
+                                            </Card.Content>
+                                            <Divider></Divider>
+                                        </TouchableOpacity>
+                                )}
+                            />
+                        </View>
+                    )}
+                    <Pressable 
+                        onPress={() => setShowSuggestions(false)}
+                        className={!showSuggestions ? "opacity-0 h-0" : "absolute inset-0 z-5 bg-transparent"}
+                    />
+                </View>
                 { estado === "Editable" &&
                         <TouchableOpacity
                             onPress={iniciarProceso}
