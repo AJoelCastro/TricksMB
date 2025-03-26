@@ -236,10 +236,14 @@ const Armado = () => {
                     throw new Error("Error al actualizar el pedido");
                 } 
             }
-            setActualizado(true);
             Alert.alert("Pedido actualizado", "El pedido se ha actualizado correctamente", [{text: "OK"}]);
+            obtenerEstadosDetalleAreaTrabajo();
+            resetearCampos();
+            router.back();
         }catch (error) {
             mostrarError(error);
+            resetearCampos();
+            router.back();
         }
     }
     useEffect(() => {
@@ -260,38 +264,31 @@ const Armado = () => {
         };
         obtenerDetalleAreaTrab();
     }, []);
-    useEffect(() => {
-        const obtenerEstadosDetalleAreaTrabajo = async () => {
-            if (actualizado === true) {
-                try {
-                    let codigoPedido = codigoOrden
-                    const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
-                    let actualizar = true;
-                    data.detallesAreaTrabajo.map((item) => {
-                        if (item.Estado === 0){
-                            actualizar = false;
-                        }
-                    })
-                    if (actualizar === true){
-                        let nomArea= "Alistado"
-                        const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido)
-                        console.log("updateAreaTrabajo",updateAreaTrabajo);
-                        if (updateAreaTrabajo.status !== 200) {
-                            throw new Error("Error al crear el detalle del area de trabajo");
-                        }
-                        alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`);
-                        resetearCampos();
-                        router.back();
+    const obtenerEstadosDetalleAreaTrabajo = async () => {
+            try {
+                let codigoPedido = codigoOrden
+                const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
+                let actualizar = true;
+                data.detallesAreaTrabajo.map((item) => {
+                    if (item.Estado === 0){
+                        actualizar = false;
                     }
-                }catch (error) {
-                    mostrarError(error);
-                    resetearCampos();
-                    router.back();
+                })
+                if (actualizar === true){
+                    let nomArea= "Alistado"
+                    const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido)
+                    console.log("updateAreaTrabajo",updateAreaTrabajo);
+                    if (updateAreaTrabajo.status !== 200) {
+                        throw new Error("Error al crear el detalle del area de trabajo");
+                    }
+                    alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`);
                 }
+            }catch (error) {
+                mostrarError(error);
+                resetearCampos();
+                router.back();
             }
-        }
-        obtenerEstadosDetalleAreaTrabajo();
-    }, [actualizado]);
+    }
 
     return (
         <KeyboardAvoidingView
