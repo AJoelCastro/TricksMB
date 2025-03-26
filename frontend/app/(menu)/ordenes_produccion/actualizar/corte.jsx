@@ -39,6 +39,7 @@ const Corte = () => {
     const [dataDetalleAreaTrabajo, setDataDetalleAreaTrabajo] = useState([]);
     const [actualizado, setActualizado] = useState(false);
     const [empleados, setEmpleados] = useState([]);
+    
     const getFechaActualizacion= () => {
                 const date = new Date();
                 const year = date.getFullYear();

@@ -19,6 +19,21 @@ const Actualizar = () => {
     const [checkedEmpleados, setCheckedEmpleados] = useState({});
     const [empleadosAsignados, setEmpleadosAsignados] = useState([]);
     const [showEmpleadosAsignados, setShowEmpleadosAsignados] = useState(false);
+    const [pedidos, setPedidos] = useState([]);
+
+    useEffect(() => {
+        const obtenerPedidos = async () => {
+            try {
+                const pedidos = await DetallePedidoService.obtenerTodosLosPedidos();
+                setPedidos(pedidos.detallesPedidos);
+            } catch (error) {
+                mostrarError(error);
+            }
+        }
+        obtenerPedidos();
+    }, [])
+    
+    
     function capitalizarPrimeraLetra(palabra) {
         return palabra.charAt(0).toUpperCase() + palabra.slice(1);
     }
@@ -261,6 +276,13 @@ const Actualizar = () => {
                     value={codigoOrden}
                     onChangeText={setCodigoOrden}
                     right={<TextInput.Icon icon="magnify" onPress={verificarProceso}/>}
+                />
+                <FlatList
+                    data={pedidos}
+                    keyExtractor={(item) => item.Codigo_pedido}
+                    renderItem={({ item }) => (
+                        <Text>{item.Codigo_pedido}</Text>
+                    )}
                 />
                 { estado === "Editable" &&
                         <TouchableOpacity

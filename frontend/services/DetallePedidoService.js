@@ -59,6 +59,31 @@ const DetallePedidoService = {
             console.error("(pedidoService)Error al actualizar pedido: ", error.response?.data || error.message);
             throw error;
         }
+    }, 
+    obtenerTodosLosPedidos: async () => {
+        const token = await AuthService.getToken();
+        if (!token) throw new Error("No hay token disponible");
+        try {
+            const response = await axios.get(`${API_URL}/detallePedido/todos`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (error) {
+            if (error.response) {
+                console.log("error.response",error.response);
+                // El servidor respondió con un código de error
+                console.log("error.response.data.error",error.response.data.error);
+                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+            } else if (error.request) {
+                console.log("error.request",error.request);
+                // No hubo respuesta del servidor
+                throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
+            } else {
+                // Otro tipo de error
+                throw new Error("Ocurrió un error inesperado al crear la caja.");
+            }
+        }
     }
+    
 }
 export default DetallePedidoService;
