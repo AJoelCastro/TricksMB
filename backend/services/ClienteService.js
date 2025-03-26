@@ -33,10 +33,6 @@ const ClienteService = {
         const clienteJuridico = await ClienteDAO.getClienteJuridicoByRazonSocial(razonSocial);
         return clienteJuridico || null;
     },
-    
-    async getAllClientes() {
-        return await ClienteDAO.getAllClientes();
-    },
 
     async getCliente(value){
         if(value.length === 8){
@@ -52,6 +48,26 @@ const ClienteService = {
         try{
             if(!codigoPedido) throw {status: 400, message: "Código de pedido requerido"};
             return await ClienteDAO.getClienteByCodigoPedido(codigoPedido);
+        }catch(error){
+            throw error;
+        }
+    },
+
+    async getAllClientes(){
+        try{
+            const clientes = await ClienteDAO.getAllClientes();
+            if(!clientes) throw {status: 404, message: "No se encontraron clientes"};
+            return clientes;
+        }catch(error){
+            throw error;
+        }
+    },
+
+    async getClientesById(){
+        try{
+            const cliente = await ClienteDAO.getClientesById();
+            if(!cliente) throw {status: 404, message: "No se encontró el cliente"};
+            return cliente;
         }catch(error){
             throw error;
         }

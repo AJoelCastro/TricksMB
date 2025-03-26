@@ -149,6 +149,25 @@ class ClienteDAO {
         }
     }
 
+    static async getClientesById() {
+        try{
+            const query = `SELECT cn.Dni, cj.Ruc 
+                FROM Cliente_natural cn 
+                LEFT JOIN Cliente_juridico cj 
+                ON cn.Cliente_idCliente = cj.Cliente_idCliente
+                UNION
+                SELECT cn.Dni, cj.Ruc 
+                FROM Cliente_juridico cj
+                LEFT JOIN Cliente_natural cn 
+                ON cj.Cliente_idCliente = cn.Cliente_idCliente`;
+            const [rows] = await db.execute(query);
+            return rows;
+        }catch(error){
+            console.error("Error al obtener cliente por id:", error);
+            throw error;
+        }
+    }
+
 }
 
 module.exports = ClienteDAO
