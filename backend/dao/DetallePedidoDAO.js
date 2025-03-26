@@ -37,7 +37,6 @@ class DetallePedidoDAO {
             }
             return rows[0];
         } catch (error) {
-            console.error("Error al obtener detalle de pedido por código de pedido:", error);
             throw error;
         }
     }

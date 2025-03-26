@@ -18,10 +18,14 @@ const CaracteristicasService = {
 
     async getCaracteristicasByIdDetallePedido(idDetallePedido){
         try{
-            if(!idDetallePedido) throw {status: 400, message: "Parametros incorrectos"};
+            if(!idDetallePedido){
+                const errorIdDetallePedido = new Error("El id del detalle de pedido es requerido");
+                errorIdDetallePedido.status = 400;
+                throw errorIdDetallePedido;
+            }
             return await CaracteristicasDAO.getCaracteristicasByIdDetallePedido(idDetallePedido);
         }catch(error){
-            throw error;
+            throw error.status?error: {status: 500, message: error.message};
         }
     },
 

@@ -5,40 +5,34 @@ const db = require("../config/db");
 
 const CajaService = {
     async createCaja(codigoPedido) {
-        const connection = await db.getConnection();
         const DetallePedido = require("./DetallePedidoService");
         const Caracteristica = require("./CaracteristicasService");
         try {
-            await connection.beginTransaction();
 
             // Obtener detalle del pedido
             const { idDetalle_pedido } = await DetallePedido.getDetallePedidoByCodigoPedido(codigoPedido);
-            const caracteristicas = await Caracteristica.getCaracteristicasByIdDetallePedido(idDetalle_pedido);
 
-            if (caracteristicas.length === 0) throw { status: 400, message: "No se encontraron características" };
+            const caracteristicas = await Caracteristica.getCaracteristicasByIdDetallePedido(idDetalle_pedido);
 
             const cajas = [];
             for (const caracteristica of caracteristicas) {
                 for (let i = 0; i < caracteristica.Cantidad; i++) {
                     const caja = await CajaDAO.createCaja(caracteristica.idCaracteristicas);
+                    if(!caja){
+                        const error = new Error("Error al crear la caja");
+                        error.status = 400;
+                        throw error;
+                    }
                     cajas.push(caja);
                 }
             }
 
-            if (cajas.length === 0) throw { status: 400, message: "No se crearon cajas" };
-
-            await connection.commit();
-            connection.release();
-
             const pdfBuffer = await PdfService.generatePDF(cajas);
             await PdfService.sendPDFToTelegram(pdfBuffer, `Cajas_Pedido_${codigoPedido}.pdf`);
 
-            return { status: 200, message: "Cajas creadas y PDF enviado", cajas };
+            return {status: 200, message: "Cajas creadas y PDF enviado por telegram."};
         } catch (error) {
-            await connection.rollback();
-            connection.release();
-            console.error("❌ Error al crear cajas:", error);
-            throw error;
+            throw error.status? error: { status: 500, message: "Error interno en la creación de cajas." };
         }
     },
 
