@@ -6,7 +6,7 @@ const ClienteController = require('../controllers/ClienteController');
 //router.post('/', authMiddleware, ClienteController.registrarCliente);
 router.post('/natural', authMiddleware, ClienteController.registrarCliente);
 router.post('/juridico', authMiddleware, ClienteController.registrarCliente);
-router.get('/clientesId', ClienteController.getClientesById);
+router.get('/clientesId', authMiddleware, ClienteController.getClientesById);
 router.get('/buscar/natural', authMiddleware, ClienteController.buscarClienteNatural);
 router.get('/buscar/juridico', authMiddleware, ClienteController.buscarClienteJuridico);
 router.get('/obtenerTodo', ClienteController.getAllClientes);
