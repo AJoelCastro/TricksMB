@@ -163,8 +163,9 @@ class ClienteDAO {
             const [rows] = await db.execute(query);
             return rows;
         }catch(error){
-            console.error("Error al obtener cliente por id:", error);
-            throw error;
+            const errorClientes = new Error("Error interno del servidor");
+            errorClientes.status = 500;
+            throw errorClientes;
         }
     }
 

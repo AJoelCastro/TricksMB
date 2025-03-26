@@ -93,7 +93,7 @@ export default function Crear() {
     const [tipoCalzado, setTipoCalzado] = useState("");
     const [fechaEntrega, setFechaEntrega] = useState(new Date());
     const [openDatePicker, setOpenDatePicker] = useState(false);
-
+    const [clientes, setClientes] = useState([]);
 
     const mostrarError = (error) => {
         Alert.alert(
@@ -102,6 +102,21 @@ export default function Crear() {
             [{ text: "OK" }] // Botón requerido
         );
     };
+
+    useEffect(() => {
+        const obtenerClientes = async () => {
+            try {
+                const clientes = await ClienteService.getClientesById();
+                console.log("clientes", clientes);
+                setClientes(clientes.cliente);
+            } catch (error) {
+                mostrarError(error);
+            }
+        }
+        obtenerClientes();
+    }, []);
+    
+    
     const getCurrentDate = () => {
         const date = new Date();
         return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD

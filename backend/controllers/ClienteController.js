@@ -71,7 +71,7 @@ const ClienteController = {
     async getClientesById(req, res, next) {
         try {
             const cliente = await ClienteService.getClientesById();
-            res.json({ cliente, status: 200 });
+            res.status(200).json({ cliente });
         } catch (error) {
             next(error);
         }
