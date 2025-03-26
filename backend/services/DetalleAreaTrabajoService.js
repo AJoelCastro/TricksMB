@@ -27,10 +27,9 @@ const DetalleAreaTrabajoService = {
                     )
                 )
             );
-            return {message: "El siguiente proceso esta listo",detallesCreados};
+            return {message: "El siguiente proceso esta listo",detallesCreados, status: 200};
         } catch (error) {
-            if (error.status) throw error;
-            throw { status: 500, message: "Error en DetalleAreaTrabajo", detalle: error.message };
+            throw { status: 500, message: "Error en Detalle Area Trabajo"};
         }
     },
 

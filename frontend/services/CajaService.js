@@ -5,17 +5,31 @@ const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 const CajaService = {
     createCaja: async (codigoPedido) => {
+        
+        const token = await AuthService.getToken();
+        if (!token){
+            throw new Error("No hay token disponible");
+        }
         try {
-            const token = await AuthService.getToken();
-            if (!token) throw new Error("No hay token disponible");
-
-            const response = await axios.post(`${API_URL}/caja/crear/${codigoPedido}`, {
+            const response = await axios.post(`${API_URL}/caja/crear/${codigoPedido}`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
+            console.log("response",response);
             return response.data;
         } catch (error) {
-            console.error("Error al crear cajas en CS FRONT:", error.response?.data || error.message);
-            throw error;
+            if (error.response) {
+                console.log("error.response",error.response);
+                // El servidor respondió con un código de error
+                console.log("error.response.data.error",error.response.data.error);
+                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+            } else if (error.request) {
+                console.log("error.request",error.request);
+                // No hubo respuesta del servidor
+                throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
+            } else {
+                // Otro tipo de error
+                throw new Error("Ocurrió un error inesperado al crear la caja.");
+            }
         }
     },
     

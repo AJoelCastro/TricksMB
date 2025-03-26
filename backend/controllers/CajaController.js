@@ -1,14 +1,14 @@
 const CajaService = require('../services/CajaService');
+const errorHandler = require('../utils/errorHandler');
 
 const CajaController = {
     async createCaja(req, res) {
         try {
             const { codigoPedido } = req.params;
             const result = await CajaService.createCaja(codigoPedido);
-            res.json({ message: "Cajas creadas y PDF enviado por correo.", cajas: result.cajas, status:200 });
+            return res.status(result.status).json({ message: result.message });
         } catch (error) {
-            console.error("Error en CajaController.createCaja:", error);
-            res.send({message: "Error al crear cajas", status: error.status });
+            return errorHandler(res, error, error.status);
         }
     },
 

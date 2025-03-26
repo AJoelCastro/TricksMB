@@ -14,6 +14,7 @@ import CaracteristicasService from '@/services/CaracteristicasService';
 import PedidoService from '@/services/PedidoService';
 import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 import EmpleadoService from '@/services/EmpleadoService';
+import CajaService from '@/services/CajaService';
 
 const Armado = () => {
     const {codigoOrden} = useLocalSearchParams();
@@ -77,6 +78,13 @@ const Armado = () => {
     const [currentDate, setCurrentDate] = useState(getCurrentDate()); // Estado para almacenar la fecha formateada
 
     const [filas, setFilas] = useState([]);
+
+    // Funcion para mostrar errores
+    const mostrarError = (error) => {
+        console.log("error",error);
+        Alert.alert("Error", error?.message ? `${error.message}` : "Error interno del servidor", [{text: "OK"}]);
+    }
+
     const cargarClienteNatural = async () => {
         try {
             let identificador = dni;
@@ -236,10 +244,14 @@ const Armado = () => {
                     throw new Error("Error al actualizar el pedido");
                 } 
             }
-            setActualizado(true);
             Alert.alert("Pedido actualizado", "El pedido se ha actualizado correctamente", [{text: "OK"}]);
+            obtenerEstadosDetalleAreaTrabajo();
+            resetearCampos();
+            router.back();
         }catch (error) {
             mostrarError(error);
+            resetearCampos();
+            router.back();
         }
     }
     useEffect(() => {
@@ -260,38 +272,40 @@ const Armado = () => {
         };
         obtenerDetalleAreaTrab();
     }, []);
-    useEffect(() => {
-        const obtenerEstadosDetalleAreaTrabajo = async () => {
-            if (actualizado === true) {
-                try {
-                    let codigoPedido = codigoOrden
-                    const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
-                    let actualizar = true;
-                    data.detallesAreaTrabajo.map((item) => {
-                        if (item.Estado === 0){
-                            actualizar = false;
-                        }
-                    })
-                    if (actualizar === true){
-                        let nomArea= "Alistado"
-                        const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido)
-                        console.log("updateAreaTrabajo",updateAreaTrabajo);
-                        if (updateAreaTrabajo.status !== 200) {
-                            throw new Error("Error al crear el detalle del area de trabajo");
-                        }
-                        alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`);
-                        resetearCampos();
-                        router.back();
+    const obtenerEstadosDetalleAreaTrabajo = async () => {
+            try {
+                let codigoPedido = codigoOrden
+                const data = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
+                let actualizar = true;
+                data.detallesAreaTrabajo.map((item) => {
+                    if (item.Estado === 0){
+                        actualizar = false;
                     }
-                }catch (error) {
-                    mostrarError(error);
-                    resetearCampos();
-                    router.back();
+                })
+                if (actualizar === true){
+                    let nomArea= "Alistado"
+                    const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido);
+                    console.log("updateAreaTrabajo",updateAreaTrabajo);
+                    if (updateAreaTrabajo.status !== 200) {
+                        throw new Error("Error al crear el detalle del area de trabajo");
+                    }
+                    try {
+                        const dataCaja = await CajaService.createCaja(codigoPedido);
+                        
+                        if (dataCaja.status !== 200) {
+                            throw new Error("No se pudo crear la caja.");
+                        }
+        
+                        Alert.alert("Éxito", dataCaja.message, [{ text: "OK" }]);
+                    } catch (error) {
+                        mostrarError(error || "Error en la creación de cajas.");
+                    }
+                    alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`);
                 }
+            }catch (error) {
+                mostrarError(error);
             }
-        }
-        obtenerEstadosDetalleAreaTrabajo();
-    }, [actualizado]);
+    }
 
     return (
         <KeyboardAvoidingView

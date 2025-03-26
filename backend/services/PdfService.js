@@ -47,8 +47,9 @@ const PdfService = {
                     y += rowHeight;
 
                 } catch (error) {
-                    console.error(`Error al agregar el QR de la caja ${caja.idCaja}:`, error);
-                    reject(error);
+                    const errorPdf = new Error("Error PDF no creado");
+                    errorPdf.status = 500;
+                    reject(errorPdf);
                 }
             });
 
@@ -69,7 +70,8 @@ const PdfService = {
         console.log("📄 PDF enviado con éxito por Telegram.");
         fs.unlinkSync(tempFilePath); // Eliminar el archivo temporal después de enviarlo
     } catch (error) {
-        console.error("❌ Error al enviar el PDF por Telegram:", error);
+        fs.unlinkSync(tempFilePath); // Eliminar el archivo temporal después de enviarlo
+        throw error.status? error: {status: 500, message: "❌ Error al enviar el PDF por Telegram"};
     }
 }
 
