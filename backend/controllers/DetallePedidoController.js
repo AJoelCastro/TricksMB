@@ -2,6 +2,7 @@ const PedidoService = require('../services/PedidoService');
 const DetallePedidoService = require('../services/DetallePedidoService');
 const ModeloService = require('../services/ModeloService');
 const ClienteService = require('../services/ClienteService');
+const errorHandler = require('../utils/errorHandler');
 
 const DetallePedidoController = {
     async createPedido(req, res) {
@@ -77,13 +78,13 @@ const DetallePedidoController = {
         }
     },
 
-    async getAllDetallePedido(req, res){
+    async getAllDetallePedido(req, res, next){
         try{
             const detallesPedidos = await DetallePedidoService.getAllDetallePedido();
             res.json({detallesPedidos, status: 200});
         }catch(error){
-            console.error("Error al actualizar el estado del pedido");
-            res.json({ error: error.message || "Error interno del servidor", status: error.status });
+            console.log(error);
+            next(error);
         }
     }
 };

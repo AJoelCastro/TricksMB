@@ -11,8 +11,8 @@ const detallePedidoRoutes = require('./routes/DetallePedidoRoutes');
 const AreaTrabajoRoutes = require('./routes/AreaTrabajoRoutes');
 const Empleado = require('./routes/EmpleadoRoutes');
 const CajaRoutes = require('./routes/CajaRoutes');
-
 const errorHandler = require('./utils/errorHandler'); // Importamos errorHandler
+
 require('dotenv').config();
 
 // Crear la aplicación
@@ -50,6 +50,7 @@ app.use('/detalleAreaTrabajo', DetalleAreaTrabajoRoutes);
 app.use('/empleado', Empleado);
 app.use('/areaTrabajo', AreaTrabajoRoutes);
 app.use('/caja', CajaRoutes);
+
 // Manejo de rutas no encontradas
 app.use((req, res, next) => {
     res.status(404).json({ error: 'Ruta no encontrada' });
@@ -57,7 +58,6 @@ app.use((req, res, next) => {
 
 // Manejo de errores global con `errorHandler`
 app.use((err, req, res, next) => {
-    console.error(err.stack);
     errorHandler(res, err, 500);
 });
 

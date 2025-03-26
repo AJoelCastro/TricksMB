@@ -8,6 +8,7 @@ import DetallePedidoService from '@/services/DetallePedidoService';
 import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 import EmpleadoService from '@/services/EmpleadoService';
 
+
 const Actualizar = () => {
     const route = useRouter();
     const [codigoOrden, setCodigoOrden] = useState('');
@@ -19,6 +20,22 @@ const Actualizar = () => {
     const [checkedEmpleados, setCheckedEmpleados] = useState({});
     const [empleadosAsignados, setEmpleadosAsignados] = useState([]);
     const [showEmpleadosAsignados, setShowEmpleadosAsignados] = useState(false);
+    const [pedidos, setPedidos] = useState([]);
+    const [showModalPedidos, setShowModalPedidos] = useState(false);
+
+    useEffect(() => {
+        const obtenerPedidos = async () => {
+            try {
+                const pedidos = await DetallePedidoService.obtenerTodosLosPedidos();
+                setPedidos(pedidos.detallesPedidos);
+            } catch (error) {
+                mostrarError(error);
+            }
+        }
+        obtenerPedidos();
+    }, [])
+    
+    
     function capitalizarPrimeraLetra(palabra) {
         return palabra.charAt(0).toUpperCase() + palabra.slice(1);
     }
@@ -261,7 +278,11 @@ const Actualizar = () => {
                     value={codigoOrden}
                     onChangeText={setCodigoOrden}
                     right={<TextInput.Icon icon="magnify" onPress={verificarProceso}/>}
+                    onPressIn={() => {
+                        setShowModalPedidos(true);
+                    }}
                 />
+                
                 { estado === "Editable" &&
                         <TouchableOpacity
                             onPress={iniciarProceso}

@@ -87,8 +87,9 @@ class DetallePedidoDAO {
             const [rows] = await db.execute(query);
             return rows;
         } catch(error){
-            console.error("Error al obtener todos los pedidos",error);
-            throw error;
+            const errorDao = new Error("Error interno del servidor");
+            errorDao.status = 500;
+            throw errorDao;
         }
     }
 

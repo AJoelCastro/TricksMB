@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, View, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import CustomButtom from '@/components/customButtom';
 
@@ -7,6 +7,7 @@ import ComboBox from '@/components/ComboBox';
 
 export default function Menu() {
     const route = useRouter();
+    
     return (
         <SafeAreaView className="h-full bg-white flex">
 

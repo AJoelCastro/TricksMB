@@ -50,7 +50,7 @@ const DetallePedidoService = {
             }
             return obj;
         } catch (error) {
-            throw error.status? error: { status: 500, message: error.message }
+            throw error.status? error: { status: 500, message: "Error en DetallePedido Service" }
         }
     },
 
@@ -95,10 +95,16 @@ const DetallePedidoService = {
 
     async getAllDetallePedido(){
         try{
-            return await DetallePedidoDAO.getAllDetallePedido();
+            
+            const pedidos = await DetallePedidoDAO.getAllDetallePedido();
+            if(pedidos.length === 0){
+                const errorGetAllDetallePedido = new Error("No se encontraron pedidos");
+                errorGetAllDetallePedido.status = 404;
+                throw errorGetAllDetallePedido;
+            }
+            return pedidos;
         } catch(error){
-            if(error.status) throw error;
-            throw {status: 500, message: "Error en DetallePedido Service", detalle: error.message};
+            throw error.status? error: {status: 500, message: "Error en Detalle Pedido Service"};
         }
     }, 
     
