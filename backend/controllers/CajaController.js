@@ -1,49 +1,45 @@
 const CajaService = require('../services/CajaService');
-const errorHandler = require('../utils/errorHandler');
 
 const CajaController = {
-    async createCaja(req, res) {
+    async createCaja(req, res, next) {
         try {
             const { codigoPedido } = req.params;
             const result = await CajaService.createCaja(codigoPedido);
-            return res.status(result.status).json({ message: result.message });
+            res.json({ message: result.message, status: 201 });
         } catch (error) {
-            return errorHandler(res, error, error.status);
+            next(error); 
         }
     },
 
-    async getAllCajaByPedido(req, res) {
+    async getAllCajaByPedido(req, res, next) {
         try {
             const { codigoPedido } = req.params;
             const cajas = await CajaService.getAllCajaByPedido(codigoPedido);
-            res.send({cajas, status:200});
+            res.json({ cajas, status: 200 });
         } catch (error) {
-            console.error("Error en CajaController.getAllCajaByPedido:", error);
-            res.send({message: "Error al obtener cajas por pedido", status: error.status });
+            next(error);
         }
     },
-    async updateCaja(req, res) {
-        try{
+
+    async updateCaja(req, res, next) {
+        try {
             const { id } = req.params;
             const caja = await CajaService.updateCaja(id);
-            res.send({caja, status:200});
-        }catch(error){
-            console.error("Error en CajaController.updateCaja:", error);
-            res.send({message: "Error al actualizar caja", status: error.status });
+            res.json({ caja, status: 200 });
+        } catch (error) {
+            next(error);
         }
     },
-    async getCajaById(req, res) {
-        try{
-            const data = req.params;
-            const caja = await CajaService.getCajaById(data);
-            res.send({caja, status:200});
-        }catch(error){
-            console.error("Error en CajaController.getCajaById:", error);
-            res.send({message: "Error al obtener caja por id", status: error.status });
+
+    async getCajaById(req, res, next) {
+        try {
+            const { id } = req.params;
+            const caja = await CajaService.getCajaById(id);
+            res.json({ caja, status: 200 });
+        } catch (error) {
+            next(error);
         }
     }
-
-    
 };
 
 module.exports = CajaController;

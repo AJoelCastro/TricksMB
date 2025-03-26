@@ -1,49 +1,43 @@
-const { json } = require('body-parser');
 const ModeloService = require('../services/ModeloService');
 
 const ModeloController = {
 
-    async createModelo(req, res) {
+    async createModelo(req, res, next) {
         try {
             const { idTipo, nombre } = req.body;
             const modelo = await ModeloService.createModelo(idTipo, nombre);
-            res,json({modelo, status: 201});
+            res.json({ modelo, status: 201 });
         } catch (error) {
-            console.error("Error al crear modelo:", error);
-            res.json({ error: error.message || "Error interno del servidor", status: error.status });
+            next(error);
         }
     },
 
-    async getAllModelo(req, res) {
+    async getAllModelo(req, res, next) {
         try {
             const modelos = await ModeloService.getAllModelo();
             res.json({ modelos, status: 200 });
         } catch (error) {
-            console.error("Error al obtener modelos:", error);
-            res.json({ error: error.message || "Error interno del servidor", status: error.status });
+            next(error);
         }
     },
 
-    async getAllModeloById(req, res) {
+    async getAllModeloById(req, res, next) {
         try {
             const id = req.query.id;
-            
             const modelo = await ModeloService.getAllModeloById(id);
             res.json({ modelo, status: 200 });
         } catch (error) {
-            console.error("Error al obtener modelo por id:", error);
-            res.json({ error: error.message || "Error interno del servidor", status: error.status });
+            next(error);
         }
     },
 
-    async getModeloByCodigoPedido(req, res) {
+    async getModeloByCodigoPedido(req, res, next) {
         try {
-            const {codigoPedido} = req.params;
+            const { codigoPedido } = req.params;
             const modelo = await ModeloService.getModeloByCodigoPedido(codigoPedido);
-            res.json({modelo, status: 200});
+            res.json({ modelo, status: 200 });
         } catch (error) {
-            console.error("Error al obtener modelo por código de pedido:", error);
-            res.json({ error: error.message || "Error interno del servidor", status: error.status });
+            next(error);
         }
     }
 };

@@ -1,27 +1,25 @@
-const { updatePedido } = require('../dao/PedidoDAO');
+const { stat } = require('fs');
 const PedidoService = require('../services/PedidoService');
 
 const PedidoController = {
 
-    async getPedidoByCodigoPedido(req, res) {
+    async getPedidoByCodigoPedido(req, res, next) {
         try {
-            const {codigoPedido} = req.params;
+            const { codigoPedido } = req.params;
             const pedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
-            res.status(200).json(pedido);
+            res.json({pedido, status: 200});
         } catch (error) {
-            console.error("Error al obtener pedido por código de pedido:", error);
-            res.json({ error: error.message || "Error interno del servidor", status: error.status });
+            next(error);
         }
     },
 
-    async updatePedido(req, res) {
+    async updatePedido(req, res, next) {
         try {
             const { codigoPedido, fechaEntrega, serieInicio, serieFinal } = req.body;
             const pedido = await PedidoService.updatePedido(codigoPedido, fechaEntrega, serieInicio, serieFinal);
-            res.status(200).json(pedido);
+            res.json({pedido, status: 200});
         } catch (error) {
-            console.error("Error al actualizar pedido:", error);
-            res.json({ error: error.message || "Error interno del servidor", status: error.status });
+            next(error);
         }
     }
 };

@@ -1,49 +1,44 @@
-const { json } = require('body-parser');
+const { stat } = require('fs');
 const TipoCalzadoService = require('../services/TipoCalzadoService');
 
 const TipoCalzadoController = {
 
-
-    async createTipoModelo(req, res) {
+    async createTipoModelo(req, res, next) {
         try {
             const { nombre } = req.body;
             const tipoCalzado = await TipoCalzadoService.createTipoModelo(nombre);
-            res.json({ tipoCalzado, status: 201 });
-        } catch (error) {
-            console.error("Error al crear tipo de calzado:", error);
-            res.json({ error: error.message || "Error interno del servidor", status: error.status });   
+            res.json({tipoCalzado, status: 201});
+        } catch (error) {;
+            next(error);
         }
     },
 
-    async getAllTipoCalzado(req, res) {
+    async getAllTipoCalzado(req, res, next) {
         try {
             const tipoCalzado = await TipoCalzadoService.getAllTipoCalzado();
-            res.json({ tipoCalzado, status: 200 });
+            res.json({tipoCalzado, status: 200});
         } catch (error) {
-            console.error("Error al obtener tipo de calzado:", error);
-            res.json({ error: error.message || "Error interno del servidor", status: error.status });
+            next(error);
         }
     },
 
-    async getTipoCalzadoByNombre(req,res){
-        try{
+    async getTipoCalzadoByNombre(req, res, next) {
+        try {
             const nombre = req.query.nombre;
             const tipoCalzado = await TipoCalzadoService.getTipoCalzadoByNombre(nombre);
             res.json({tipoCalzado, status: 200});
-        }catch(error){
-            console.error("Error al obtner el tipo de calzado por nombre: ", error);
-            res.json({ error: error.message || "Error interno del servidor", status: error.status });
+        } catch (error) {
+            next(error);
         }
     },
 
-    async getTipoCalzadoByCodigoPedido(req,res){
-        try{
-            const {codigoPedido} = req.params;
+    async getTipoCalzadoByCodigoPedido(req, res, next) {
+        try {
+            const { codigoPedido } = req.params;
             const tipoCalzado = await TipoCalzadoService.getTipoCalzadoByCodigoPedido(codigoPedido);
             res.json({tipoCalzado, status: 200});
-        }catch(error){
-            console.error("Error al obtener el tipo de calzado por código de pedido: ", error);
-            res.json({ error: error.message || "Error interno del servidor", status: error.status });
+        } catch (error) {
+            next(error);
         }
     }
 };
