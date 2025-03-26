@@ -66,7 +66,7 @@ const ClienteService = {
     async getClientesById(){
         try{
             const clientes = await ClienteDAO.getClientesById();
-            if(cliente.length === 0) {
+            if(clientes.length === 0) {
                 const errorClientes = new Error("No se encontró el cliente");
                 errorClientes.status = 404;
                 throw errorClientes;

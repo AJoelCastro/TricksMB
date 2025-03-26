@@ -94,7 +94,8 @@ export default function Crear() {
     const [fechaEntrega, setFechaEntrega] = useState(new Date());
     const [openDatePicker, setOpenDatePicker] = useState(false);
     const [clientes, setClientes] = useState([]);
-
+    const [showTextInputDocumento, setShowTextInputDocumento] = useState(false);
+    const [filteredClientes, setFilteredClientes] = useState([]);
     const mostrarError = (error) => {
         Alert.alert(
             "Error",
@@ -116,7 +117,19 @@ export default function Crear() {
         obtenerClientes();
     }, []);
     
-    
+    const handleSearch = (text) => {
+        setDocumento(text);
+        if(text.length > 0){
+            const filteredClientes = clientes.filter(cliente => cliente.Nombre.toLowerCase().includes(text.toLowerCase()));
+            setFilteredClientes(filteredClientes);
+            setShowTextInputDocumento(true);
+        }
+        else{
+            setFilteredClientes([]);
+            setShowTextInputDocumento(false);
+        }
+    }
+
     const getCurrentDate = () => {
         const date = new Date();
         return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
