@@ -101,6 +101,7 @@ const DetallePedidoService = {
             throw {status: 500, message: "Error en DetallePedido Service", detalle: error.message};
         }
     }, 
+    
     async getDetallePedidoByidDetallePedido(idDetalle_pedido) {
         try {
             if (!idDetalle_pedido) {
