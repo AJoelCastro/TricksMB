@@ -14,6 +14,7 @@ import CaracteristicasService from '@/services/CaracteristicasService';
 import PedidoService from '@/services/PedidoService';
 import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 import EmpleadoService from '@/services/EmpleadoService';
+import CajaService from '@/services/CajaService';
 
 const Armado = () => {
     const {codigoOrden} = useLocalSearchParams();
@@ -77,6 +78,12 @@ const Armado = () => {
     const [currentDate, setCurrentDate] = useState(getCurrentDate()); // Estado para almacenar la fecha formateada
 
     const [filas, setFilas] = useState([]);
+
+    // Funcion para mostrar errores
+    const mostrarError = (error) => {
+        Alert.alert("Error", `${error.message} - ${error.status}` || "Error interno del servidor", [{text: "OK"}]);
+    }
+
     const cargarClienteNatural = async () => {
         try {
             let identificador = dni;
@@ -276,17 +283,21 @@ const Armado = () => {
                 })
                 if (actualizar === true){
                     let nomArea= "Alistado"
-                    const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido)
+                    const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido);
                     console.log("updateAreaTrabajo",updateAreaTrabajo);
                     if (updateAreaTrabajo.status !== 200) {
                         throw new Error("Error al crear el detalle del area de trabajo");
                     }
+                    const dataCaja = await CajaService.createCaja(codigoPedido);
+                    console.log("dataCaja",dataCaja);
+                    if(dataCaja.status !== 200){
+                        return;
+                    }
+                    Alert.alert("Éxito", `${dataCaja.message}`, [{text: "OK"}]);
                     alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`);
                 }
             }catch (error) {
                 mostrarError(error);
-                resetearCampos();
-                router.back();
             }
     }
 

@@ -5,10 +5,9 @@ const CajaController = {
         try {
             const { codigoPedido } = req.params;
             const result = await CajaService.createCaja(codigoPedido);
-            res.json({ message: "Cajas creadas y PDF enviado por correo.", cajas: result.cajas, status:200 });
+            return res.json({ message: result.message, status: 200 });
         } catch (error) {
-            console.error("Error en CajaController.createCaja:", error);
-            res.send({message: "Error al crear cajas", status: error.status });
+            throw error;
         }
     },
 

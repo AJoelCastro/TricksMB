@@ -16,7 +16,6 @@ class CajaDAO{
 
             return {idCaja, idCaracteristica, qrImage};
         }catch(error){
-            console.error(error);
             throw error;
         }
     } 

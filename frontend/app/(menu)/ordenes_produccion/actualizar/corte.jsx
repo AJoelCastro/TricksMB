@@ -77,6 +77,12 @@ const Corte = () => {
     const [currentDate, setCurrentDate] = useState(getCurrentDate()); // Estado para almacenar la fecha formateada
 
     const [filas, setFilas] = useState([]);
+
+    // Funcion para mostrar errores
+    const mostrarError = (error) => {
+        Alert.alert("Error", error.message || "Error interno del servidor", [{text: "OK"}]);
+    }
+
     const cargarClienteNatural = async () => {
         try {
             let identificador = dni;

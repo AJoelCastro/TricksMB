@@ -5,10 +5,15 @@ const DetalleAreaTrabajoController = {
         try{
             const {nomArea, codigoPedido} = req.body;
             const detallesAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido);
+            if(detallesAreaTrabajo.status !== 200) {
+                const error = new Error(detallesAreaTrabajo.message);
+                error.status = detallesAreaTrabajo.status;
+                throw error;
+            }
             return res.json({detallesAreaTrabajo, status: 200});
         } catch(error){
             console.error("Error al crear detalle de área de trabajo:", error);
-            return res.json({ error: error.message || "Error interno del servidor",status: error.status});
+            return res.json({ message: error.message || "Error interno del servidor", status: error.status||500});
         }
     },
 
