@@ -8,6 +8,7 @@ import DetallePedidoService from '@/services/DetallePedidoService';
 import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 import EmpleadoService from '@/services/EmpleadoService';
 
+
 const Actualizar = () => {
     const route = useRouter();
     const [codigoOrden, setCodigoOrden] = useState('');
@@ -20,6 +21,7 @@ const Actualizar = () => {
     const [empleadosAsignados, setEmpleadosAsignados] = useState([]);
     const [showEmpleadosAsignados, setShowEmpleadosAsignados] = useState(false);
     const [pedidos, setPedidos] = useState([]);
+    const [showModalPedidos, setShowModalPedidos] = useState(false);
 
     useEffect(() => {
         const obtenerPedidos = async () => {
@@ -276,14 +278,11 @@ const Actualizar = () => {
                     value={codigoOrden}
                     onChangeText={setCodigoOrden}
                     right={<TextInput.Icon icon="magnify" onPress={verificarProceso}/>}
+                    onPressIn={() => {
+                        setShowModalPedidos(true);
+                    }}
                 />
-                <FlatList
-                    data={pedidos}
-                    keyExtractor={(item) => item.Codigo_pedido}
-                    renderItem={({ item }) => (
-                        <Text>{item.Codigo_pedido}</Text>
-                    )}
-                />
+                
                 { estado === "Editable" &&
                         <TouchableOpacity
                             onPress={iniciarProceso}

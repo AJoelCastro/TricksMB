@@ -78,13 +78,13 @@ const DetallePedidoController = {
         }
     },
 
-    async getAllDetallePedido(req, res){
+    async getAllDetallePedido(req, res, next){
         try{
             const detallesPedidos = await DetallePedidoService.getAllDetallePedido();
             res.json({detallesPedidos, status: 200});
         }catch(error){
             console.log(error);
-            errorHandler(res, error, error.status);
+            next(error);
         }
     }
 };
