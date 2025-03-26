@@ -71,7 +71,14 @@ const ClienteService = {
                 errorClientes.status = 404;
                 throw errorClientes;
             }
-            return cliente;
+
+            const clientesFiltrados = clientes.map(cliente => {
+            return Object.fromEntries(
+                Object.entries(cliente).filter(([_, value]) => value !== null)
+            );
+        });
+
+            return clientesFiltrados;
         }catch(error){
             throw error.status ? error : {status: 500, message: "Error al obtener clientes por id"};
         }
