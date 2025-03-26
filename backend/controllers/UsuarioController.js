@@ -1,60 +1,46 @@
+const { stat } = require('fs');
 const UsuarioService = require('../services/UsuarioService');
 const jwt = require('jsonwebtoken');
 
 const UsuarioController = {
-    async register(req, res) {
+    async register(req, res, next) {
         const { idEmpleado, correo, contrasenia } = req.body;
-        if (!idEmpleado || !correo || !contrasenia) {
-            res.json({ success: false, message: "Todos los campos son obligatorios" });
-        }
 
         try {
             const result = await UsuarioService.createUser(idEmpleado, correo, contrasenia);
-            res.json({ success: true, message: "Usuario registrado exitosamente", result , status: 201 });
+            res.json({result, status: 201});
         } catch (error) {
-            console.error(error);
-            res.json({ success: false, message: "Error al registrar usuario" });
+            next(error);
         }
     },
 
-    async login(req, res) {
+    async login(req, res, next) {
         const { correo, contrasenia } = req.body;
-        if (!correo || !contrasenia) {
-            res.json({ success: false, message: "Todos los campos son obligatorios", status: error.status });
-        }
-
+        
         try {
             const user = await UsuarioService.findUser(correo, contrasenia);
             if (user) {
-                // Generamos el token
                 const token = jwt.sign(
                     { userId: user.idUsuario, correo: user.Correo },
                     process.env.JWT_SECRET || 'secreto_super_seguro',
                     { expiresIn: '16h' }
                 );
-
-                res.json({ success: true, message: "Inicio de sesión exitoso", token });
+                res.json({ token, status: 200 });
             } else {
-                res.json({ success: false, message: "Correo o contraseña incorrectos" , status: error.status });
+                res.json({ error: "Correo o contraseña incorrectos", status: 400 });
             }
         } catch (error) {
-            console.error(error);
-            res.json({ success: false, message: "Error al iniciar sesión", status: error.status });
+            next(error);
         }
     },
 
-    async getByCorrreo(req, res) {
+    async getByCorreo(req, res, next) {
         const { correo } = req.params;
-        if (!correo) {
-            res.json({ message: "El correo es obligatorio", status: error.status });
-        }
-
         try {
             const user = await UsuarioService.getUserByCorreo(correo);
-            res.json({ user, status: 200 });
+            res.json({user, status: 200});
         } catch (error) {
-            console.error(error);
-            res.json({ message: "Error al obtener usuario por correo", status: error.status });
+            next(error);
         }
     }
 };
