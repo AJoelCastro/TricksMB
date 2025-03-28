@@ -127,9 +127,6 @@ const Actualizar = () => {
             const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
             let codigoPedido = codigoOrden
             setEstado(data.detallePedido.Estado);
-            if (data.status !== 200) {
-                throw new Error("Error al obtener el pedido");
-            }
             if (data.detallePedido.Estado === "Proceso") {
                 const dataDetalleAreaTrabajo = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
                 console.log("dataDetalleAreaTrabajo", dataDetalleAreaTrabajo);
