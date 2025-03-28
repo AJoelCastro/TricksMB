@@ -34,7 +34,8 @@ const CajaController = {
     async getCajaById(req, res, next) {
         try {
             const { id } = req.params;
-            const caja = await CajaService.getCajaById(id);
+            let idCaja = parseInt(id, 10);
+            const caja = await CajaService.getCajaById(idCaja);
             res.json({ caja, status: 200 });
         } catch (error) {
             next(error);

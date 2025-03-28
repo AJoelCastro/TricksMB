@@ -127,9 +127,6 @@ const Actualizar = () => {
             const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
             let codigoPedido = codigoOrden
             setEstado(data.detallePedido.Estado);
-            if (data.status !== 200) {
-                throw new Error("Error al obtener el pedido");
-            }
             if (data.detallePedido.Estado === "Proceso") {
                 const dataDetalleAreaTrabajo = await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
                 console.log("dataDetalleAreaTrabajo", dataDetalleAreaTrabajo);
@@ -145,9 +142,6 @@ const Actualizar = () => {
                         nomArea = "Corte";
                         setAreaTrabajo("corte");
                         const dataDetalleEmpleadoPedido1 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
-                        if (dataDetalleEmpleadoPedido1.status !== 201) {
-                            throw new Error("Error al obtener empleados por pedido");
-                        }
                         if(dataDetalleEmpleadoPedido1.detalleEmpleadoPedido.length === 0){
                             alert("No hay empleados asignados a esta área de trabajo");
                             
@@ -160,9 +154,7 @@ const Actualizar = () => {
                         nomArea = "Perfilado";
                         setAreaTrabajo("perfilado");
                         const dataDetalleEmpleadoPedido2 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
-                        if (dataDetalleEmpleadoPedido2.status !== 201) {
-                            throw new Error("Error al obtener empleados por pedido");
-                        }
+
                         if(dataDetalleEmpleadoPedido2.detalleEmpleadoPedido.length === 0){
                             alert("No hay empleados asignados a esta área de trabajo");
                             
@@ -175,9 +167,7 @@ const Actualizar = () => {
                         nomArea = "Armado";
                         setAreaTrabajo("armado");
                         const dataDetalleEmpleadoPedido3 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
-                        if (dataDetalleEmpleadoPedido3.status !== 201) {
-                            throw new Error("Error al obtener empleados por pedido");
-                        }
+
                         if(dataDetalleEmpleadoPedido3.detalleEmpleadoPedido.length === 0){
                             alert("No hay empleados asignados a esta área de trabajo");
                             
@@ -190,9 +180,6 @@ const Actualizar = () => {
                         nomArea = "Alistado";
                         setAreaTrabajo("alistado");
                         const dataDetalleEmpleadoPedido4 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
-                        if (dataDetalleEmpleadoPedido4.status !== 201) {
-                            throw new Error("Error al obtener empleados por pedido");
-                        }
                         if(dataDetalleEmpleadoPedido4.detalleEmpleadoPedido.length === 0){
                             alert("No hay empleados asignados a esta área de trabajo");
                             

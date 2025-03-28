@@ -62,9 +62,14 @@ class CaracteristicasDAO {
         try{
             const query = 'SELECT * FROM Caracteristicas WHERE idCaracteristicas = ?';
             const [result] = await db.execute(query, [idCaracteristicas]);
+            if(result.length === 0){
+                const errorCaracteristica = new Error("No se encontró la caracteristica con el id proporcionado.");
+                errorCaracteristica.status = 404;
+                throw errorCaracteristica;
+            }
             return result[0];
         }catch(error){
-            throw error;
+            throw error.status?error:{status: 500, message: "Error interno al obtener la caracteristica del servidor."};
         }
     }
 }

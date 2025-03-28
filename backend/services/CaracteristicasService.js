@@ -55,10 +55,14 @@ const CaracteristicasService = {
 
     async getCaracteristicaByIdCaracteristicas(idCaracteristicas){
         try{
-            if(!idCaracteristicas) throw {status: 400, message: "Parametros incorrectos"};
+            if(!idCaracteristicas){
+                const errorIdCaracteristicas = new Error("El id de la caracteristica es requerido");
+                errorIdCaracteristicas.status = 400;
+                throw errorIdCaracteristicas;
+            };
             return await CaracteristicasDAO.getCaracteristicaByIdCaracteristicas(idCaracteristicas);
         }catch(error){
-            throw error;
+            throw error.status?error:{status: 500, message: "Error interno en el servicio."};
         }
     },
 }

@@ -54,8 +54,9 @@ class CajaDAO{
             const [rows] = await db.execute(query, [idCaja]);
             return rows[0];
         }catch(error){
-            console.error(error);
-            throw error;
+            const cajaDao = new Error("Error interno al obtener la caja del servidor.");
+            cajaDao.status = 500;
+            throw cajaDao;
         }
     }
 
