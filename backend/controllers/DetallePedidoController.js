@@ -33,7 +33,7 @@ const DetallePedidoController = {
                 idPedido, idModelo, codigoPedido, nombreTaco, alturaTaco, material, 
                 tipoMaterial, suela, accesorios, forro
             );
-            res.status(201).json({ detallePedido });
+            res.json({ detallePedido, status: 201 });
 
         } catch (error) {
             next(error);
@@ -44,7 +44,7 @@ const DetallePedidoController = {
         try {
             const { codigoPedido } = req.params;
             const detallePedido = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
-            res.status(200).json({ detallePedido });
+            res.json({ detallePedido, status:200 });
         } catch (error) {
             next(error);
         }
@@ -58,7 +58,7 @@ const DetallePedidoController = {
             const detallePedido = await DetallePedidoService.updateDetallePedido(
                 codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorios, forro
             );
-            res.status(200).json({ detallePedido });
+            res.json({ detallePedido, status: 200 });
         } catch (error) {
             next(error);
         }
@@ -69,17 +69,26 @@ const DetallePedidoController = {
             const { codigoPedido } = req.params;
             const { estado } = req.body;
             const detallePedido = await DetallePedidoService.updateEstado(codigoPedido, estado);
-            res.status(200).json({ detallePedido });
+            res.json({ detallePedido, status: 200 });
         } catch (error) {
             next(error);
         }
     },
 
-    async getAllDetallePedido(req, res, next) {
+    async getAllCodigosPedidos(req, res, next) {
         try {
-            const detallesPedidos = await DetallePedidoService.getAllDetallePedido();
-            res.status(200).json({ detallesPedidos });
+            const detallesPedidos = await DetallePedidoService.getAllCodigosPedidos();
+            res.json({ detallesPedidos, status: 200 });
         } catch (error) {
+            next(error);
+        }
+    },
+
+    async getHistorialPedidos(req, res, next){
+        try{
+            const historialPedidos = await DetallePedidoService.getHistorialPedidos();
+            res.json({historialPedidos, status: 200});
+        }catch(error){
             next(error);
         }
     }

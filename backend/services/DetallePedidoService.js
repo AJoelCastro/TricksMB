@@ -1,7 +1,4 @@
-const DetallePedidoDAO = require('../dao/DetallePedidoDAO');
-
-const DetalleAreaTrabajoService = require('./DetalleAreaTrabajoService');
-const CajaService = require('./CajaService');
+const DetallePedidoDAO = require('../dao/DetallePedidoDAO');;
 
 const DetallePedidoService = {
     async createDetallePedido(idPedido, idModelo, codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela,
@@ -93,10 +90,10 @@ const DetallePedidoService = {
         }
     },
 
-    async getAllDetallePedido(){
+    async getAllCodigosPedidos(){
         try{
             
-            const pedidos = await DetallePedidoDAO.getAllDetallePedido();
+            const pedidos = await DetallePedidoDAO.getAllCodigosPedidos();
             if(pedidos.length === 0){
                 const errorGetAllDetallePedido = new Error("No se encontraron pedidos");
                 errorGetAllDetallePedido.status = 404;
@@ -122,7 +119,26 @@ const DetallePedidoService = {
             if (error.status) throw error;
             throw { status: 500, message: "Error en DetallePedido Service", detalle: error.message }
         }
+    },
 
+    async getHistorialPedidos(){
+        const ImagenService = require('./ImagenService')
+        try{
+            const detallePedidos = await DetallePedidoDAO.getAllDetallesPedidos();
+            const historialPedidos = await Promise.all(detallePedidos.map(async (pedido) => {
+                const imagenes = await ImagenService.getImagen(pedido.Modelo_idModelo);
+                const urls = imagenes.map(img => img.Url);
+                return {
+                        Imagenes: urls,
+                        Codigo_pedido: pedido.Codigo_pedido,
+                        Fecha_creacion: pedido.Fecha_creacion
+                    };
+            }));
+            return historialPedidos;
+        }catch(error){
+            if(error.status) throw error;
+            throw {status: 500, message: "Error en el DetallePedidoService: historial", detalle: error.message}
+        }
     }
 };
 

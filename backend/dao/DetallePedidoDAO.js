@@ -81,7 +81,7 @@ class DetallePedidoDAO {
         }
     }
 
-    static async getAllDetallePedido(){
+    static async getAllCodigsoPedidos(){
         try{
             const query = `SELECT Codigo_pedido FROM Detalle_pedido`
             const [rows] = await db.execute(query);
@@ -100,6 +100,17 @@ class DetallePedidoDAO {
             return rows[0];
         }catch(error){
             console.error("Error al obtener detalle de pedido por ID",error);
+            throw error;
+        }
+    }
+
+    static async getAllDetallesPedidos(){
+        try{
+            const query = `SELECT * FROM Detalle_pedido`;
+            const [rows] = await db.execute(query);
+            return rows;
+        }catch(error){
+            console.error("Error al obtener detalles de los pedidos", error);
             throw error;
         }
     }
