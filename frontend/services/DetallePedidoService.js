@@ -61,9 +61,9 @@ const DetallePedidoService = {
         }
     }, 
     obtenerTodosLosPedidos: async () => {
-        const token = await AuthService.getToken();
-        if (!token) throw new Error("No hay token disponible");
         try {
+            const token = await AuthService.getToken();
+            if (!token) throw new Error("No hay token disponible");
             const response = await axios.get(`${API_URL}/detallePedido/todos`, {
                 headers: { Authorization: `Bearer ${token}` }
             });

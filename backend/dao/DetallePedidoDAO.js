@@ -81,7 +81,7 @@ class DetallePedidoDAO {
         }
     }
 
-    static async getAllCodigsoPedidos(){
+    static async getAllCodigosPedidos(){
         try{
             const query = `SELECT Codigo_pedido FROM Detalle_pedido`
             const [rows] = await db.execute(query);
