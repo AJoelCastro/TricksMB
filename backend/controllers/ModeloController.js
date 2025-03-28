@@ -39,6 +39,15 @@ const ModeloController = {
         } catch (error) {
             next(error);
         }
+    },
+
+    async getStockForModelo(req, res, next){
+        try{
+            const stock = await ModeloService.getStockForModelo();
+            res.json({stock, status: 200});
+        }catch(error){
+            next(error);
+        }
     }
 };
 

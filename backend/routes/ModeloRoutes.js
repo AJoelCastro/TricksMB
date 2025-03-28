@@ -9,4 +9,5 @@ router.get('/todos', authMiddleware, ModeloController.getAllModelo);
 router.get('/id', authMiddleware,  ModeloController.getAllModeloById);
 router.get('/obtener/:codigoPedido', authMiddleware, ModeloController.getModeloByCodigoPedido);
 router.get('/imagen/:idModelo', authMiddleware, ImagenController.getImagen);
+router.get('/stock', ModeloController.getStockForModelo);
 module.exports = router;

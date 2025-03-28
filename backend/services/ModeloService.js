@@ -48,13 +48,38 @@ const ModeloService = {
             throw error;
         }
     },
-
+    //CambiarNombre
     async getModeloById(idModelo){
         try{
             if(!idModelo) throw {status: 400, message: "idModelo requerido"};
             return await ModeloDAO.getModeloById(idModelo);
         }catch(error){
             throw error;
+        }
+    },
+
+    async getStockForModelo(){
+        const CaracteristicasService = require("./CaracteristicasService");
+        const DetallePedidoDAO = require("../dao/DetallePedidoDAO");
+        try{
+            let detallesPedidos = await DetallePedidoDAO.getAllDetallesPedidos();
+            const stockModelos = await Promise.all(detallesPedidos.map(async (pedidos) =>{
+                const caracteristicas = await CaracteristicasService.getCaracteristicasByIdDetallePedido(pedidos.idDetalle_pedido);
+                const modelo = await this.getModeloByCodigoPedido(pedidos.Codigo_pedido)
+
+                return caracteristicas.map(caracteristica => ({
+                    CodigoPedido: pedidos.Codigo_pedido,
+                    Modelo: modelo.Nombre,
+                    Talla: caracteristica.Talla,
+                    Cantidad: caracteristica.Cantidad,
+                    Color: caracteristica.Color
+                }));
+            }))
+
+            return stockModelos;
+        }catch(error){
+            if(error.status) throw error;
+            throw{status: 500, message:  "Error en el DetalleService: Stock por modelo", detalle:error.message}
         }
     }
 
