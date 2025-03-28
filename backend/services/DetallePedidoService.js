@@ -108,16 +108,19 @@ const DetallePedidoService = {
     async getDetallePedidoByidDetallePedido(idDetalle_pedido) {
         try {
             if (!idDetalle_pedido) {
-                throw { status: 400, message: "El id del detalle de pedido es requerido" };
+                const errorIdDetallePedido = new Error("El id del detalle de pedido es requerido");
+                errorIdDetallePedido.status = 400;
+                throw errorIdDetallePedido;
             }
             const obj =  await DetallePedidoDAO.getDetallePedidoById(idDetalle_pedido);
-            if (!obj) {
-                throw { status: 404, message: "Detalle de pedido no encontrado" };
+            if (obj.length === 0) {
+                const errorObj = new Error("Detalle de pedido no encontrado");
+                errorObj.status = 404;
+                throw errorObj;
             }
             return obj;
         } catch (error) {
-            if (error.status) throw error;
-            throw { status: 500, message: "Error en DetallePedido Service", detalle: error.message }
+            throw error.status? error: { status: 500, message: "Error en DetallePedido Service", detalle: error.message }
         }
     },
 

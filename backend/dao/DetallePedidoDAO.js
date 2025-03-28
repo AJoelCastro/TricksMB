@@ -99,8 +99,9 @@ class DetallePedidoDAO {
             const [rows] = await db.execute(query,[idDetallePedido]);
             return rows[0];
         }catch(error){
-            console.error("Error al obtener detalle de pedido por ID",error);
-            throw error;
+            const errorDao = new Error("Error interno del servidor");
+            errorDao.status = 500;
+            throw errorDao;
         }
     }
 

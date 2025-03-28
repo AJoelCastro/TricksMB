@@ -50,6 +50,7 @@ const CajaService = {
 
     getCajaById: async (id) => {
         try {
+            console.log("id", id);
             const token = await AuthService.getToken();
             if (!token) throw new Error("No hay token disponible");
 

@@ -80,20 +80,25 @@ const CajaService = {
         const ModeloService = require("./ModeloService");
         const TipoCalzadoService = require("./TipoCalzadoService");
         const imagenService = require("./ImagenService");
-        idCaja = parseInt(idCaja.id, 10);
         try {
-            if (!idCaja || typeof idCaja !== "number") throw { status: 400, message: "ID de caja inválido" };
+            if (!idCaja || typeof idCaja !== "number") {
+                const erroridCaja = new Error("ID de caja inválido");
+                erroridCaja.status = 400;
+                throw erroridCaja;
+            };
             const caja = await CajaDAO.getCajaById(idCaja);
 
-            if (!caja) throw { status: 404, message: "Caja no encontrada" };
+            if (!caja) {
+                const errorCaja = new Error("Caja no encontrada");
+                errorCaja.status = 404;
+                throw errorCaja;
+            };
             
             const caracteristica = await  CaracteristicasService.getCaracteristicaByIdCaracteristicas(
                 caja.Caracteristicas_idCaracteristicas);
 
             const detallePedido = await DetallePedidoService.getDetallePedidoByidDetallePedido(
                 caracteristica.Detalle_pedido_idDetalle_pedido);
-
-            if (!caracteristica || !detallePedido) throw { status: 404, message: "Datos incompletos" };
 
             const modelo = await ModeloService.getModeloById(detallePedido.Modelo_idModelo);
             const imagen = await imagenService.getImagen(detallePedido.Modelo_idModelo);
@@ -106,12 +111,11 @@ const CajaService = {
                 imagenUrl: imagen[0].Url,
                 talla: caracteristica.Talla,
                 color: caracteristica.Color,
-                fechaCreacion: new Date(caja.Fecha_creacion).toLocaleTimeString('es-ES', { hour12: false })
+                fechaCreacion: new Date(caja.Fecha_creacion).toISOString().split('T')[0]
             };
 
         } catch (error) {
-            console.error("Error al obtener caja por id:", error);
-            throw error;
+            throw error.status? error: { status: 500, message: "Error interno en el servicio." };
         }
 }
 

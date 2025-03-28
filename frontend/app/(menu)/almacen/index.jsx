@@ -28,24 +28,41 @@ export default function Almacen(){
   });
 
   useEffect(() => {
+    if(scannedData !== null){
+      const cargarCajaPorId = async () => {
+        console.log("scannedData", scannedData);
+        try {
+          let id = Number(scannedData);
+          const caja = await CajaService.getCajaById(id);
+          console.log("caja", caja);
+        } catch (error) {
+          console.error("Error al obtener caja:", error);
+        }
+      }
+      cargarCajaPorId();
+    }
+  }, [scannedData])
+
+  useEffect(() => {
       if (loaded || error) {
           SplashScreen.hideAsync();
       }
   }, [loaded, error]);
   
   if (!loaded && !error) {
-  return null;
+    return null;
   }
+  
+
+
   if (!permission) {
-    // Camera permissions are still loading.
     return <View />;
   }
 
   if (!permission.granted) {
-    // Camera permissions are not granted yet.
     return (
-      <View >
-        <Text >We need your permission to show the camera</Text>
+      <View>
+        <Text>We need your permission to show the camera</Text>
         <Button onPress={requestPermission} title="grant permission" />
       </View>
     );
@@ -55,23 +72,14 @@ export default function Almacen(){
     setFacing(current => (current === 'back' ? 'front' : 'back'));
   }
 
-  const handleBarcodeScanned = ({ data }) => {
-    const numeroCaja = data.split('/').pop();
-    console.log("numeroCaja", numeroCaja);
+  const handleBarcodeScanned = async ({ data }) => {
+    const numeroCaja = await data.split('/').pop();
+
     setScannedData(numeroCaja);
     setQrLeido(true);
     // Aquí puedes agregar cualquier lógica adicional que necesites después de escanear el código QR
   };
 
-  const cargarCajaPorId = async () => {
-    try {
-      let id = Number(scannedData);
-      const caja = await CajaService.getCajaById(id);
-      console.log("caja", caja);
-    } catch (error) {
-      console.error("Error al obtener caja:", error);
-    }
-  }
   return (
     <View className='bg-white h-full'>
       {/* SELECCIONAR ALMACEN */}
@@ -137,7 +145,7 @@ export default function Almacen(){
                   <View className='flex-row justify-center gap-4 mt-8'>
                       <Pressable
                         className='bg-[#3f76f5] p-4 rounded-lg'
-                        onPress={cargarCajaPorId}
+                        onPress={null}
                       >
                         <Text className='text-white'>
                           Ingresar
