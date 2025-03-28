@@ -180,7 +180,6 @@ const Actualizar = () => {
                         nomArea = "Alistado";
                         setAreaTrabajo("alistado");
                         const dataDetalleEmpleadoPedido4 = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
-                        console.log("dataDetalleEmpleadoPedido4", dataDetalleEmpleadoPedido4);
                         if(dataDetalleEmpleadoPedido4.detalleEmpleadoPedido.length === 0){
                             alert("No hay empleados asignados a esta área de trabajo");
                             
