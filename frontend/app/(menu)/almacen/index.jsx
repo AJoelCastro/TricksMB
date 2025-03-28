@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, Pressable } from 'react-native'
+import { Text, View, Pressable,Alert } from 'react-native'
 import { useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { Switch, Card } from 'react-native-paper';
@@ -27,16 +27,22 @@ export default function Almacen(){
       'Inter-Light': require('../../../assets/fonts/DMSans-Light.ttf'),
   });
 
+  const mostrarError = (error) => {
+    Alert.alert(
+        "Error",
+        `${error.message}`,
+        [{ text: "OK" }] // Botón requerido
+    );
+};
   useEffect(() => {
     if(scannedData !== null){
       const cargarCajaPorId = async () => {
-        console.log("scannedData", scannedData);
         try {
           let id = Number(scannedData);
           const caja = await CajaService.getCajaById(id);
           console.log("caja", caja);
         } catch (error) {
-          console.error("Error al obtener caja:", error);
+          mostrarError(error);
         }
       }
       cargarCajaPorId();
