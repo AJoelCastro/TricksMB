@@ -135,6 +135,7 @@ const DetallePedidoService = {
                         Imagenes: urls,
                         Codigo_pedido: pedido.Codigo_pedido,
                         Fecha_creacion: new Date(pedido.Fecha_creacion).toLocaleDateString('es-ES'),
+                        Estado: pedido.Estado
                     };
             }));
             return historialPedidos;
