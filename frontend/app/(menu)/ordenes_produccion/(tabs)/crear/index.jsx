@@ -1,5 +1,5 @@
-import {View, ScrollView, Text, TouchableOpacity, StyleSheet, Dimensions, Alert, Modal, FlatList, Platform , KeyboardAvoidingView } from 'react-native';
-import { Button, Card, TextInput } from 'react-native-paper';
+import {View, ScrollView, Text, TouchableOpacity, StyleSheet, Dimensions, Alert, Modal, FlatList, Platform , KeyboardAvoidingView, Pressable } from 'react-native';
+import { Button, Card, Divider, TextInput } from 'react-native-paper';
 import React,{ useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 
@@ -96,6 +96,7 @@ export default function Crear() {
     const [clientes, setClientes] = useState([]);
     const [showTextInputDocumento, setShowTextInputDocumento] = useState(false);
     const [filteredClientes, setFilteredClientes] = useState([]);
+    const [showFilteredClientes, setshowFilteredClientes] = useState(false);
     const mostrarError = (error) => {
         Alert.alert(
             "Error",
@@ -108,7 +109,6 @@ export default function Crear() {
         const obtenerClientes = async () => {
             try {
                 const clientes = await ClienteService.getClientesById();
-                console.log("clientes", clientes);
                 setClientes(clientes.cliente);
             } catch (error) {
                 mostrarError(error);
@@ -120,13 +120,13 @@ export default function Crear() {
     const handleSearch = (text) => {
         setDocumento(text);
         if(text.length > 0){
-            const filteredClientes = clientes.filter(cliente => cliente.Nombre.toLowerCase().includes(text.toLowerCase()));
+            const filteredClientes = clientes.filter(cliente => cliente.identificador.includes(text));
             setFilteredClientes(filteredClientes);
-            setShowTextInputDocumento(true);
+            setshowFilteredClientes(true);
         }
         else{
             setFilteredClientes([]);
-            setShowTextInputDocumento(false);
+            setshowFilteredClientes(false);
         }
     }
 
@@ -153,6 +153,9 @@ export default function Crear() {
     };
 
     const verificarDocumento=()=>{
+        setTipoCliente("");
+        setDni("");
+        setRuc("");
         try {
             if(documento.length===8){
                 setDni(documento);
@@ -161,45 +164,52 @@ export default function Crear() {
                 setRuc(documento);
                 setTipoCliente("juridico");
             }else{
-                Alert.alert("Ingrese un documento valido")
+                Alert.alert("Ingrese un documento valido", "Debe ser un numero de DNI o RUC", [{ text: "OK" }]);
             }
         } catch (error) {
-            Error.error(error);
+            const errorMessage = new Error("Ingrese al validar documento");
+            mostrarError(errorMessage);
         }
     };
 
+
+
     const cargarClienteNatural = async () => {
+        console.log("dni", dni, typeof dni);
+        console.log("tipoCliente", tipoCliente);
         try {
             let identificador = dni;
-            setCliente("");
             const cliente = await ClienteService.buscarCliente(tipoCliente, identificador);
+            console.log("cliente", cliente);
             if (cliente.status === 404) {
                 setTipoCliente("");
                 Alert.alert("Error al buscar cliente", cliente.error, [{ text: "OK" }]);
             }
-            if (cliente.status ===201) {
+            if (cliente.status ===200) {
                 setCliente(cliente.cliente);
             }
         } catch (error) {
             mostrarError(error.error);
         }
     };
+    
     const cargarClienteJuridico = async () => {
         try {
             let identificador= ruc;
-            setCliente("");
             const cliente = await ClienteService.buscarCliente(tipoCliente, identificador);
             if (cliente.status === 404) {
                 setTipoCliente("");
                 Alert.alert("Error al buscar cliente", cliente.error, [{ text: "OK" }]);
             }
-            if (cliente.status ===201) {
+            if (cliente.status ===200) {
                 setCliente(cliente.cliente);
             }
         } catch (error) {
             mostrarError(error.error);
         }
     };
+
+    
 
     const cargarModelosPorId = async () => {
         try {
@@ -354,22 +364,51 @@ export default function Crear() {
                 <Text className='font-bold mt-2 mb-3 text-lg'>
                     Buscar Cliente por Tipo
                 </Text>
-                <TextInput 
-                    label="DNI O RUC"
-                    placeholder='Ingrese un numero de DNI o RUC'
-                    mode='outlined'
-                    className='h-10 rounded-lg' 
-                    value={documento} 
-                    onChangeText={setDocumento} 
-                    keyboardType='numeric' 
-                    maxLength={11}
-                    right={<TextInput.Icon icon="magnify" onPress={verificarDocumento}/>}
-                />
+                <View className='relative '>
+                    <TextInput 
+                        label="DNI O RUC"
+                        placeholder='Ingrese un numero de DNI o RUC'
+                        mode='outlined'
+                        className='h-10 rounded-lg' 
+                        value={documento} 
+                        onChangeText={handleSearch} 
+                        keyboardType='numeric' 
+                        maxLength={11}
+                        onPressIn={() => {setShowTextInputDocumento(false)}}
+                        disabled={showTextInputDocumento}
+                        right={<TextInput.Icon icon="magnify" onPress={()=>{
+                            verificarDocumento();
+                            setShowTextInputDocumento(true);
+                        }}/>}
+                        onBlur={() => {
+                            setTimeout(() => setshowFilteredClientes(false), 1200);
+                        }}
+                    />
+                    {showFilteredClientes && filteredClientes.length > 0 &&(
+                        <View className='absolute z-10 top-16 w-full bg-white rounded-lg shadow-md max-h-80 right-0 left-0 shadow-black/20'>
+                            {filteredClientes.map((item) => (
+                                <View key={item.identificador}>
+                                    <Pressable onPress={() => {
+                                        setDocumento(item.identificador);
+                                        setshowFilteredClientes(false);
+                                    }}>
+                                        <Card.Content style={{padding:10}}>
+                                            <Text>{item.identificador}</Text>
+                                        </Card.Content>
+                                        <Divider></Divider>
+                                    </Pressable>
+                                </View>
+                            ))}
+                        </View>
+                    )}
+                    <Pressable onPress={() => setshowFilteredClientes(false)}
+                        className={!showFilteredClientes ? "opacity-0 h-0" : "absolute inset-0 z-5 bg-transparent"}
+                    />
+                </View>
                 { tipoCliente==="natural" &&(
                     <View className='gap-2 mb-2'>
                         <View className='flex-col'>
                             <Text className='text-black text-lg font-bold'>Nombre: {cliente.Nombre}</Text>
-                            <Text className='text-black text-lg font-bold'>DNI: {cliente.Dni}</Text>
                         </View>
                         
                     </View>
@@ -379,7 +418,6 @@ export default function Crear() {
                     <View className='gap-2 mb-2'>
                         <View className='flex-row gap-6'>
                             <Text className='text-black text-lg font-bold'>Razon Social: {cliente.Razon_social}</Text>
-                            <Text className='text-black text-lg font-bold'>RUC: {cliente.Ruc}</Text>
                         </View>
                     </View>
                     )
