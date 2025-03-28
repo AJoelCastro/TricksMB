@@ -2,19 +2,20 @@ import React, { useEffect, useState } from 'react'
 import { Text, View, Pressable,Alert } from 'react-native'
 import { useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { Switch, Card } from 'react-native-paper';
+import { Switch, Card, Divider } from 'react-native-paper';
 import {useFonts} from "expo-font";
 import { CameraView, useCameraPermissions } from 'expo-camera';
 
 import CajaService from '@/services/CajaService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome5';
+import { Image } from 'expo-image';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function Almacen(){
 
-  const route = useRouter();
+  const router = useRouter();
   const [facing, setFacing] = useState('back');
   const [permission, requestPermission]=useCameraPermissions();
   const [qrLeido, setQrLeido] = useState(false);
@@ -22,6 +23,7 @@ export default function Almacen(){
   const [showRegisters, setShowRegisters] = useState(true);
   const [scannedData, setScannedData] = useState(null);
   const [almacenSeleccionado, setAlmacenSeleccionado] = useState("");
+  const [caja, setCaja] = useState(null);
   const [loaded, error] = useFonts({
       'Inter-Black': require('../../../assets/fonts/DMSans-Regular.ttf'),
       'Inter-Light': require('../../../assets/fonts/DMSans-Light.ttf'),
@@ -40,7 +42,7 @@ export default function Almacen(){
         try {
           let id = Number(scannedData);
           const caja = await CajaService.getCajaById(id);
-          console.log("caja", caja);
+          setCaja(caja.caja);
         } catch (error) {
           mostrarError(error);
         }
@@ -86,6 +88,28 @@ export default function Almacen(){
     // Aquí puedes agregar cualquier lógica adicional que necesites después de escanear el código QR
   };
 
+  const actualizarCaja = async () => {
+    try {
+      let id = Number(scannedData);
+      const caja = await CajaService.updateCaja(id);
+      if(caja.status === 200){
+        Alert.alert("Caja actualizada", "La caja ha sido actualizada correctamente");
+        setShowCamera(false);
+        setShowRegisters(true);
+        setQrLeido(false);
+        setScannedData(null)
+        setCaja(null)
+      }
+    } catch (error) {
+      mostrarError(error);
+      setShowCamera(false);
+      setShowRegisters(true);
+      setQrLeido(false);
+      setScannedData(null)
+      setCaja(null)
+    }
+  }
+
   return (
     <View className='bg-white h-full'>
       {/* SELECCIONAR ALMACEN */}
@@ -117,6 +141,15 @@ export default function Almacen(){
       :
       (
         <View className='h-full'>
+          <View>
+          {
+            !showCamera?(
+              <View className='mx-4 mt-6 '>
+                <Text style={{fontFamily:'Inter-Black', fontSize:26 }}>Almacén {almacenSeleccionado}</Text>
+              </View>
+            ):null
+          }
+          </View>
           <View className='flex-row justify-between p-4'>
             <Text className='font-normal text-2xl'>Camara</Text>
             <Switch value={showCamera} onValueChange={setShowCamera} disabled={true}/>
@@ -124,7 +157,7 @@ export default function Almacen(){
           {/* CAMARA */}
             {
               showCamera&&(
-                <View className='p-4 h-[50%]'>
+                <View className='p-4 h-[70%]'>
                   <CameraView 
                     facing={facing}
                     onBarcodeScanned={qrLeido?null:handleBarcodeScanned}
@@ -138,11 +171,24 @@ export default function Almacen(){
                   </CameraView> 
                   {scannedData && (
                     <View className='mt-4'>
-                      <Card style={{ borderRadius: 10, elevation: 5 }}>
-                          <View className='p-2'>
-                              <Card.Content>
-                                <Text className='text-center' variant="titleMedium">QR LEIDO: {scannedData}</Text>
-                              </Card.Content>
+                      <Card style={{ borderRadius: 10, elevation: 5, backgroundColor: 'white' }}>
+                          <View className='p-2 '>
+                              <View className='items-center'>
+                                <Text style={{fontFamily:'Inter-Black', fontSize:18}} >N° QR: {scannedData}</Text>
+                              </View>
+                              {
+                                caja!==null?(
+                                  <Card.Content className='flex-row gap-4 justify-between'>
+                                    <View>
+                                      <Text style={{fontFamily:'Inter-Black', fontSize:18}}>{caja.tipoCalzado} {caja.modelo}</Text>
+                                      <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Talla: {caja.talla}</Text>
+                                      <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Color: {caja.color}</Text>
+                                      <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Creada: {caja.fechaCreacion}</Text>
+                                    </View>
+                                    <Image source={caja.imagenUrl} style={{width: 100, height: 100}}/>
+                                  </Card.Content>
+                                ):null
+                              }
                           </View>
                           
                       </Card>
@@ -151,7 +197,7 @@ export default function Almacen(){
                   <View className='flex-row justify-center gap-4 mt-8'>
                       <Pressable
                         className='bg-[#3f76f5] p-4 rounded-lg'
-                        onPress={null}
+                        onPress={actualizarCaja}
                       >
                         <Text className='text-white'>
                           Ingresar
@@ -163,7 +209,8 @@ export default function Almacen(){
                           setShowCamera(false);
                           setShowRegisters(true);
                           setQrLeido(false);
-                          setScannedData(null)
+                          setScannedData(null);
+                          setCaja(null)
                         }}
                       >
                         <Text className='text-white'>
@@ -181,22 +228,24 @@ export default function Almacen(){
             showRegisters?(
               <View className='flex-row justify-center gap-4'>
                   <Pressable
-                    className='bg-[#634AFF] p-4 rounded-lg'
+                    className='bg-[#634AFF] p-4 rounded-lg w-[45%] gap-1'
                     onPress={()=>{
                     setShowRegisters(false);
                     setShowCamera(true);}}
                   >
-                    <Text className='text-white'>
+                    <Icon2 name="plus" size={24} color="white" />
+                    <Text className='text-white' style={{fontFamily:'Inter-Light', fontSize:16}}>
                       Registrar Ingreso
                     </Text>
                   </Pressable>
                   <Pressable
-                    className='bg-[#634AFF] p-4 rounded-lg' 
+                    className='bg-gray-100 p-4 rounded-lg w-[45%] gap-1' 
                     onPress={()=>{
                     setShowRegisters(false);
                     setShowCamera(true);}}
                   >
-                    <Text className='text-white'>
+                    <Icon2 name="minus" size={24} color="#634AFF" />
+                    <Text className='text-[#634AFF]' style={{fontFamily:'Inter-Light', fontSize:16}}>
                       Registrar Salida
                     </Text>
                   </Pressable>

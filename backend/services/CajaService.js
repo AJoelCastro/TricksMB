@@ -65,11 +65,14 @@ const CajaService = {
 
     async updateCaja(idCaja){
         try{
-            if(!idCaja) throw {status: 400, message: "Falta el id de la caja"};
+            if(!idCaja) {
+                const erroridCaja = new Error("Falta el id de la caja");
+                erroridCaja.status = 400;
+                throw erroridCaja;
+            }
             return await CajaDAO.updateCaja(idCaja);
         }catch(error){
-            console.error("Error al actualizar caja:", error);
-            throw error;
+            throw error.status? error: { status: 500, message: "Error interno en el servicio." };
         }
     },
 
