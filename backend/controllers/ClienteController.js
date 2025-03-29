@@ -4,19 +4,41 @@ const ClienteController = {
     async registrarCliente(req, res, next) {
         try {
             const { tipoCliente, nombre, dni, razonSocial, ruc, representanteLegal, telefono } = req.body;
-            const clienteNatural = dni ? await ClienteService.getClienteNaturalByDni(dni) : null;
-            const clienteJuridicoRuc = ruc ? await ClienteService.getClienteJuridicoByRuc(ruc) : null;
-            const clienteJuridicoRazonSocial = razonSocial ? await ClienteService.getClienteJuridicoByRazonSocial(razonSocial) : null;
-            
+
+            if (!["natural", "juridico"].includes(tipoCliente)) {
+                return res.status(400).json({ error: "Tipo de cliente inválido" });
+            }
+
+            if (tipoCliente === "natural" && (!nombre || !dni || !telefono)) {
+                return res.status(400).json({ error: "Faltan datos para cliente natural" });
+            }
+            if (tipoCliente === "juridico" && (!razonSocial || !ruc || !telefono)) {
+                return res.status(400).json({ error: "Faltan datos para cliente jurídico" });
+            }
+
+            if (tipoCliente === "natural") {
+                const clienteNatural = await ClienteService.getClienteNaturalByDni(dni);
+                if (clienteNatural) {
+                    return res.status(409).json({ error: "El DNI ya está registrado" });
+                }
+            } else if (tipoCliente === "juridico") {
+                const clienteJuridicoRuc = await ClienteService.getClienteJuridicoByRuc(ruc);
+                const clienteJuridicoRazonSocial = await ClienteService.getClienteJuridicoByRazonSocial(razonSocial);
+                if (clienteJuridicoRuc || clienteJuridicoRazonSocial) {
+                    return res.status(409).json({ error: "El RUC o la Razón Social ya están registrados" });
+                }
+            }
+
             const nuevoCliente = await ClienteService.createCliente(tipoCliente);
-            
+
             if (tipoCliente === "natural") {
                 await ClienteService.createClienteNatural(nuevoCliente.idCliente, nombre, dni, telefono);
-            } else if (tipoCliente === "juridico") {
+            } else {
                 await ClienteService.createClienteJuridico(nuevoCliente.idCliente, razonSocial, ruc, representanteLegal, telefono);
             }
 
-            res.json({nuevoCliente, status: 201 });
+            res.status(201).json({ nuevoCliente });
+
         } catch (error) {
             next(error);
         }
