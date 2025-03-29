@@ -1,11 +1,11 @@
-import { View, Text, TouchableOpacity, TextInput } from 'react-native'
+import { View, Text, Pressable, Alert, KeyboardAvoidingView } from 'react-native'
+import { TextInput } from 'react-native-paper';
 import React, { useEffect, useState } from 'react'
 import ClienteService from '../services/ClienteService';
-import { Alert } from 'react-native';
-import "../global.css"
 
 
 const Modal = () => {
+
     const [tipoCliente, setTipoCliente] = useState(""); // Estado para el tipo de cliente
     const [clienteNatural, setClienteNatural] = useState("");
     const [representanteLegal, setRepresentanteLegal] = useState("");
@@ -38,62 +38,68 @@ const Modal = () => {
       return true; // Si pasa todas las validaciones
   };
 
-    const handleCrearCliente = async () => {
-        try {
-            let datosCliente = { tipoCliente }; // Agregar el tipo de cliente
+  const handleCrearCliente = async () => {
+      try {
+          let datosCliente = { tipoCliente }; // Agregar el tipo de cliente
+        
+          if (tipoCliente === "natural") {
+                datosCliente = { ...datosCliente, nombre: clienteNatural, dni, telefono: telefonoNatural }
+
+          } else if (tipoCliente === "juridico") {
+                datosCliente = { ...datosCliente, razonSocial, ruc, representanteLegal, telefono: telefonoJuridico }
+          }
+
+          if (!validarDatosCliente(tipoCliente, dni, ruc, telefonoNatural, telefonoJuridico)) {
+              return; // Si hay error, no se ejecuta la petición
+          }
+
+          // Verificar que todos los campos estén llenos
+          if (!Object.values(datosCliente).every(valor => valor && valor.trim() !== "")) {
+              Alert.alert("Error", "Por favor, completa todos los campos.");
+              return;
+          }
+
+          await ClienteService.crearCliente(datosCliente,tipoCliente);
+          Alert.alert("Éxito", `Cliente ${tipoCliente} creado correctamente`);
           
-            if (tipoCliente === "natural") {
-                  datosCliente = { ...datosCliente, nombre: clienteNatural, dni, telefono: telefonoNatural }
+          // Reiniciar los campos
+          setTipoCliente("");
+          setDni("");
+          setClienteNatural("");
+          setTelefonoNatural("");
+          setRuc("");
+          setRazonSocial("");
+          setRepresentanteLegal("");
+          setTelefonoJuridico("");
+      } catch (error) {
+          mostrarError(error);
+      }
+  };
 
-            } else if (tipoCliente === "juridico") {
-                  datosCliente = { ...datosCliente, razonSocial, ruc, representanteLegal, telefono: telefonoJuridico }
-            }
-
-            if (!validarDatosCliente(tipoCliente, dni, ruc, telefonoNatural, telefonoJuridico)) {
-                return; // Si hay error, no se ejecuta la petición
-            }
-
-            // Verificar que todos los campos estén llenos
-            if (!Object.values(datosCliente).every(valor => valor && valor.trim() !== "")) {
-                Alert.alert("Error", "Por favor, completa todos los campos.");
-                return;
-            }
-
-            await ClienteService.crearCliente(datosCliente,tipoCliente);
-            Alert.alert("Éxito", `Cliente ${tipoCliente} creado correctamente`);
-            
-            // Reiniciar los campos
-            setTipoCliente("");
-            setDni("");
-            setClienteNatural("");
-            setTelefonoNatural("");
-            setRuc("");
-            setRazonSocial("");
-            setRepresentanteLegal("");
-            setTelefonoJuridico("");
-        } catch (error) {
-            Alert.alert("Error", "No se pudo crear el cliente.");
-        }
-    };
-
-  
+  const mostrarError = (error) => {
+    Alert.alert(
+        "Error",
+        `${error.message}`,
+        [{ text: "OK" }] // Botón requerido
+    );
+  };
   return (
-    <View className='p-2'>
+    <KeyboardAvoidingView behavior='padding' className='p-2'>
         <Text className='mx-auto font-bold text-xl'>Seleccionar tipo de cliente</Text>
         <View className='flex-row justify-between mx-10 mt-4'>
           <View className='bg-[#62d139] p-4 rounded-lg'>
-            <TouchableOpacity onPress={()=>setTipoCliente('natural')}>
+            <Pressable onPress={()=>setTipoCliente('natural')}>
               <Text className='text-white'>
                 Cliente Natural
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
           <View className='bg-[#62d139] p-4 rounded-lg'>
-            <TouchableOpacity onPress={()=>setTipoCliente('juridico')}>
+            <Pressable onPress={()=>setTipoCliente('juridico')}>
               <Text className='text-white'>  
                 Cliente Juridico
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
         {
@@ -104,23 +110,38 @@ const Modal = () => {
               </Text>
               <View>
                 <View>
-                  <Text className='mt-2 font-semibold'>
-                    Documento de identidad (DNI)
-                  </Text>
-                  <TextInput placeholder='DNI' value={dni} onChangeText={setDni} keyboardType='numeric' maxLength={8} className='border p-2 mt-2 rounded-lg'/>
+                  <TextInput 
+                    placeholder='10101010' 
+                    value={dni} 
+                    onChangeText={setDni} 
+                    keyboardType='numeric' 
+                    maxLength={8} 
+                    label='DNI'
+                    mode='outlined'
+                  />
                   
                 </View>
                 <View>
-                  <Text className='mt-2 font-semibold'>
-                    Nombres y Apellidos
-                  </Text>
-                  <TextInput placeholder='Ingrese sus nombres y apellidos' value={clienteNatural} onChangeText={setClienteNatural} className='border p-2 mt-2 rounded-lg'/>
+                  
+                  <TextInput 
+                    placeholder='Juan Perez' 
+                    value={clienteNatural} 
+                    onChangeText={setClienteNatural} 
+                    label='Nombres y Apellidos'
+                    mode='outlined'
+                  />
                 </View>
                 <View>
-                  <Text className='mt-2 font-semibold'>
-                    Numero de contacto
-                  </Text>
-                  <TextInput placeholder='Numero de telefono' value={telefonoNatural} onChangeText={setTelefonoNatural} keyboardType='numeric' maxLength={9} className='border p-2 mt-2 rounded-lg'/>
+                  
+                  <TextInput 
+                    placeholder='999999999' 
+                    value={telefonoNatural} 
+                    onChangeText={setTelefonoNatural} 
+                    keyboardType='numeric' 
+                    maxLength={9} 
+                    label='Numero de telefono'
+                    mode='outlined'
+                  />
                 </View>
               </View>
             </View>
@@ -134,28 +155,44 @@ const Modal = () => {
               </Text>
               <View>
                 <View>
-                  <Text className='mt-2 font-semibold'>
-                    Ingrese RUC
-                  </Text>
-                  <TextInput placeholder='Numero RUC' value={ruc} onChangeText={setRuc} keyboardType='numeric' maxLength={11}  className='border p-2 mt-2 rounded-lg'/>
+                  <TextInput 
+                    placeholder='10345678901' 
+                    value={ruc} 
+                    onChangeText={setRuc} 
+                    keyboardType='numeric' 
+                    maxLength={11}  
+                    label='RUC'
+                    mode='outlined'
+                  />
                 </View>
                 <View>
-                  <Text className='mt-2 font-semibold'>
-                    Razon social
-                  </Text>
-                  <TextInput placeholder='Razon social' value={razonSocial} onChangeText={setRazonSocial} className='border p-2 mt-2 rounded-lg'/>
+                  <TextInput 
+                    placeholder='Razon social' 
+                    value={razonSocial} 
+                    onChangeText={setRazonSocial} 
+                    label='Razon social'
+                    mode='outlined'
+                  />
                 </View>
                 <View>
-                  <Text className='mt-2 font-semibold'>
-                    Representante Legal
-                  </Text>
-                  <TextInput placeholder='Datos del RL' value={representanteLegal} onChangeText={setRepresentanteLegal} className='border p-2 mt-2 rounded-lg'/>
+                  <TextInput 
+                    placeholder='Datos del RL' 
+                    value={representanteLegal} 
+                    onChangeText={setRepresentanteLegal} 
+                    label='Representante Legal'
+                    mode='outlined'
+                  />
                 </View>
                 <View>
-                  <Text className='mt-2 font-semibold'>
-                    Numero de contacto
-                  </Text>
-                  <TextInput placeholder='Numero de telefono' value={telefonoJuridico} onChangeText={setTelefonoJuridico} keyboardType='numeric' maxLength={9} className='border p-2 mt-2 rounded-lg'/>
+                  <TextInput 
+                    placeholder='999999999' 
+                    value={telefonoJuridico} 
+                    onChangeText={setTelefonoJuridico} 
+                    keyboardType='numeric' 
+                    maxLength={9} 
+                    label='Numero de contacto'
+                    mode='outlined'
+                  />
                 </View>
               </View>
             </View>
@@ -163,11 +200,11 @@ const Modal = () => {
         }
         {/* Botón para registrar el cliente */}
             {tipoCliente && (
-                <TouchableOpacity className="bg-blue-500 p-4 rounded-lg mt-4" onPress={handleCrearCliente}>
+                <Pressable className="bg-blue-500 p-4 rounded-lg mt-4" onPress={handleCrearCliente}>
                     <Text className="text-white text-center font-bold">Registrar Cliente</Text>
-                </TouchableOpacity>
+                </Pressable>
             )}
-    </View>
+    </KeyboardAvoidingView>
 )
 }
 

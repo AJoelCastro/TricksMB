@@ -16,8 +16,17 @@ const ClienteService = {
             });
             return response.data;
         } catch (error) {
-            console.error("Error al crear cliente:", error.response?.data || error.message);
-            throw error;
+            if (error.response) {
+                // El servidor respondió con un código de error
+                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+            } else if (error.request) {
+                console.log("error.request",error.request);
+                // No hubo respuesta del servidor
+                throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
+            } else {
+                // Otro tipo de error
+                throw new Error("Ocurrió un error inesperado al crear la caja.");
+            }
         }
     },
     obtenerClientes: async () => {
@@ -28,8 +37,17 @@ const ClienteService = {
             });
             return response.data;
         } catch (error) {
-            console.error("Error al obtener clientes:", error.response?.data || error.message);
-            throw error;
+            if (error.response) {
+                // El servidor respondió con un código de error
+                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+            } else if (error.request) {
+                console.log("error.request",error.request);
+                // No hubo respuesta del servidor
+                throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
+            } else {
+                // Otro tipo de error
+                throw new Error("Ocurrió un error inesperado al crear la caja.");
+            }
         }
     },
     buscarCliente: async (tipoCliente, identificador) => {
@@ -49,8 +67,17 @@ const ClienteService = {
             });
             return response.data; // Retorna los datos del cliente encontrado
         } catch (error) {
-            console.error("Error al buscar el cliente:", error.response?.data || error.message);
-            throw error;
+            if (error.response) {
+                // El servidor respondió con un código de error
+                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+            } else if (error.request) {
+                console.log("error.request",error.request);
+                // No hubo respuesta del servidor
+                throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
+            } else {
+                // Otro tipo de error
+                throw new Error("Ocurrió un error inesperado al crear la caja.");
+            }
         }
     },
     getClienteByCodigoPedido: async (codigoPedido) => {
@@ -61,8 +88,17 @@ const ClienteService = {
             });
             return response.data;
         } catch (error) {
-            console.error("Error al obtener el cliente por código de pedido:", error.response?.data || error.message);
-            throw error;
+            if (error.response) {
+                // El servidor respondió con un código de error
+                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+            } else if (error.request) {
+                console.log("error.request",error.request);
+                // No hubo respuesta del servidor
+                throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
+            } else {
+                // Otro tipo de error
+                throw new Error("Ocurrió un error inesperado al crear la caja.");
+            }
         }
     },
     getClientesById: async () => {
