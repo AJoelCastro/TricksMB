@@ -2,8 +2,13 @@ const ClienteDAO = require('../dao/ClienteDAO');
 
 const ClienteService = {
     async createCliente(tipoCliente) {
-        if (!tipoCliente) throw new Error('Tipo de cliente es requerido');
-        return await ClienteDAO.createCliente(tipoCliente);
+        try{
+            if (!tipoCliente) throw new Error('Tipo de cliente es requerido');
+            return await ClienteDAO.createCliente(tipoCliente);
+        }catch(error){
+            console.log("aqui2");
+            throw error.status ? error : {status:500, message:"Error al crear cliente en servicio"};
+        }
     },
 
     async createClienteNatural(idCliente, nombre, dni, telefono) {
@@ -16,22 +21,34 @@ const ClienteService = {
         return await ClienteDAO.createClienteJuridico(idCliente, razonSocial, ruc, representanteLegal, telefono);
     },
 
-        async getClienteNaturalByDni(dni) {
-        if (!dni) return null; // Si DNI no está definido, devuelve null
-        const clienteNatural = await ClienteDAO.getClienteNaturalByDni(dni);
-        return clienteNatural || null; // Si no hay resultados, devuelve null en lugar de lanzar error
+    async getClienteNaturalByDni(dni) {
+        try{
+            if (!dni) return null; // Si DNI no está definido, devuelve null
+            const clienteNatural = await ClienteDAO.getClienteNaturalByDni(dni);
+            return clienteNatural || null; // Si no hay resultados, devuelve null en lugar de lanzar error
+        }catch(error){
+            throw error.status ? error : {status:500, message:"Error al obtener cliente natural por dni en servicio"};
+        }
     },
 
     async getClienteJuridicoByRuc(ruc) {
-        if (!ruc) return null;
-        const clienteJuridico = await ClienteDAO.getClienteJuridicoByRuc(ruc);
-        return clienteJuridico || null;
+        try{
+            if (!ruc) return null;
+            const clienteJuridico = await ClienteDAO.getClienteJuridicoByRuc(ruc);
+            return clienteJuridico || null;
+        }catch(error){
+            throw error.status ? error : {status:500, message:"Error al obtener cliente juridico por ruc en servicio"};
+        }
     },
 
     async getClienteJuridicoByRazonSocial(razonSocial) {
-        if (!razonSocial) return null;
-        const clienteJuridico = await ClienteDAO.getClienteJuridicoByRazonSocial(razonSocial);
-        return clienteJuridico || null;
+        try{
+            if (!razonSocial) return null;
+            const clienteJuridico = await ClienteDAO.getClienteJuridicoByRazonSocial(razonSocial);
+            return clienteJuridico || null;
+        }catch(error){
+            throw error.status ? error : {status:500, message:"Error al obtener cliente juridico por razon social en servicio"};
+        }
     },
 
     async getCliente(value){

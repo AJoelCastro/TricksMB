@@ -8,8 +8,8 @@ class ClienteDAO {
             const [result] = await db.execute(query, [tipoCliente]);
             return { idCliente: result.insertId, tipoCliente };
         } catch (error) {
-            console.error("Error al crear cliente:", error);
-            throw error;
+            console.log("aqui");
+            throw {status:500, message:"Error al crear cliente en DAO"};
         }
     }
 
@@ -45,15 +45,10 @@ class ClienteDAO {
                 FROM Cliente_natural cn
                 INNER JOIN Cliente c ON cn.Cliente_idCliente = c.idCliente
                 WHERE cn.Dni = ?`;
-            const [rows] = await db.execute(query, [dni]);
-            if(rows.length === 0){
-                const errorRows = new Error("Cliente no encontrado");
-                errorRows.status = 404;
-                throw errorRows;
-            };
-            return rows[0];
+            const [rows] = await db.execute(query, [dni])
+            return rows.length ? rows[0] : null;
         } catch (error) {
-            throw error.status ? error : {status:500, message:"Error interno al buscar cliente natural por DNI"};
+            throw {status:500, message:"Error interno al buscar cliente natural por DNI"};
         }
     }
 
@@ -66,12 +61,7 @@ class ClienteDAO {
                 INNER JOIN Cliente c ON cj.Cliente_idCliente = c.idCliente
                 WHERE cj.Ruc = ?`;
             const [rows] = await db.execute(query, [ruc]);
-            if(rows.length === 0){
-                const errorRows = new Error("Cliente no encontrado");
-                errorRows.status = 404;
-                throw errorRows;
-            };
-            return rows[0] ;
+            return rows.length ? rows[0] : null;
         } catch (error) {
             throw error.status ? error : {status:500, message:"Error interno al buscar cliente jurídico por RUC"};
         }

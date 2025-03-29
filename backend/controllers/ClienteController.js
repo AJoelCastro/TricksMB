@@ -4,7 +4,6 @@ const ClienteController = {
     async registrarCliente(req, res, next) {
         try {
             const { tipoCliente, nombre, dni, razonSocial, ruc, representanteLegal, telefono } = req.body;
-
             const clienteNatural = dni ? await ClienteService.getClienteNaturalByDni(dni) : null;
             const clienteJuridicoRuc = ruc ? await ClienteService.getClienteJuridicoByRuc(ruc) : null;
             const clienteJuridicoRazonSocial = razonSocial ? await ClienteService.getClienteJuridicoByRazonSocial(razonSocial) : null;
