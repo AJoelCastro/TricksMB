@@ -285,16 +285,9 @@ const Armado = () => {
                 if (actualizar === true){
                     let nomArea= "Alistado"
                     const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido);
-                    console.log("updateAreaTrabajo",updateAreaTrabajo);
-                    if (updateAreaTrabajo.status !== 200) {
-                        throw new Error("Error al crear el detalle del area de trabajo");
-                    }
+
                     try {
                         const dataCaja = await CajaService.createCaja(codigoPedido);
-                        
-                        if (dataCaja.status !== 200) {
-                            throw new Error("No se pudo crear la caja.");
-                        }
         
                         Alert.alert("Éxito", dataCaja.message, [{ text: "OK" }]);
                     } catch (error) {

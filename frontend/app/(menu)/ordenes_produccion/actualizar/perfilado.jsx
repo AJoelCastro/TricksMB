@@ -284,10 +284,6 @@ const Perfilado = () => {
                 if (actualizar === true){
                     let nomArea= "Armado"
                     const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido)
-                    console.log("updateAreaTrabajo",updateAreaTrabajo);
-                    if (updateAreaTrabajo.status !== 200) {
-                        throw new Error("Error al crear el detalle del area de trabajo");
-                    }
                     alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`);
                 }
             }catch (error) {

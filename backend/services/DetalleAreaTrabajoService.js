@@ -7,15 +7,14 @@ const DetalleAreaTrabajoService = {
     async createDetalleAreaTrabajo(nomArea,codigoPedido) {
         try {
             if (!codigoPedido) {
-                throw { status: 400, message: "Codigo del pedido es requerido" };
+                const errorCodigoPedido = new Error("Codigo del pedido es requerido");
+                errorCodigoPedido.status = 400;
+                throw errorCodigoPedido;
             }   
             const data = await AreaTrabajoService.getAreaTrabajoByNombre(nomArea);
             let idAreaTrabajo = data.idArea_trabajo;
             const {idDetalle_pedido} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
             const caracteristicas = await CaracteristicasService.getCaracteristicasByIdDetallePedido(idDetalle_pedido);
-            if (!caracteristicas.length) {
-                throw { status: 404, message: "No se encontraron características para este detalle de pedido" };
-            }
             const detallesCreados = await Promise.all(
                 caracteristicas.map(caracteristica =>
                     DetalleAreaTrabajoDAO.crearDetalleAreaTrabajo(
@@ -29,7 +28,7 @@ const DetalleAreaTrabajoService = {
             );
             return {message: "El siguiente proceso esta listo",detallesCreados, status: 200};
         } catch (error) {
-            throw { status: 500, message: "Error en Detalle Area Trabajo"};
+            throw error.status ? error : {status:500, message:"Error en Detalle Area Trabajo"};
         }
     },
 
