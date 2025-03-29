@@ -4,7 +4,7 @@
     "slug": "TricksMB",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/tricks.gif",
+    "icon": "./assets/images/tricksStatic.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -40,7 +40,13 @@
         {
           "image": "./assets/images/tricks.gif",
           "resizeMode": "cover",
-          "backgroundColor": "#000000"
+          "backgroundColor": "#000000",
+          "dark": {
+            "image": "./assets/images/tricks.gif",
+            "backgroundColor": "#000000"
+          },
+          "imageWidth": 1000,
+          "imageHeight": 1000
         }
       ],
       [

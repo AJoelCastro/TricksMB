@@ -2,15 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { SafeAreaView, Text, View, Alert, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
+import { TextInput } from 'react-native-paper';
+import * as SplashScreen from 'expo-splash-screen';
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomButtom from '../components/customButtom'
 import AuthService from '@/services/AuthService'; // Importar servicio de autenticación
 
-import "../global.css"
-import { TextInput } from 'react-native-paper';
-
+SplashScreen.preventAutoHideAsync(); // Asegura que la pantalla de carga no desaparezca antes de tiempo
 const Home = () => {
     const router = useRouter();
+    useEffect(() => {
+        async function hideSplash() {
+          await new Promise(resolve => setTimeout(resolve, 2000)); // Simula un tiempo de carga
+          await SplashScreen.hideAsync(); // Oculta la pantalla de splash
+        }
+        hideSplash();
+      }, []);
     const [correo, setCorreo] = useState(""); // Estado para el email
     const [contrasenia, setContrasenia] = useState(""); // Estado para la contraseña
     const [loading, setLoading] = useState(true); // Estado para indicar si está cargando

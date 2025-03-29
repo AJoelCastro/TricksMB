@@ -188,9 +188,9 @@ const Perfilado = () => {
                         setModelo(dataImagenes);
                 }
                 const dataPedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
-                setSelectSerieInicio(dataPedido.Serie_inicio);
-                setSelectSerieFin(dataPedido.Serie_final);
-                setFechaEntrega(new Date(dataPedido.Fecha_entrega));
+                setSelectSerieInicio(dataPedido.pedido.Serie_inicio);
+                setSelectSerieFin(dataPedido.pedido.Serie_final);
+                setFechaEntrega(new Date(dataPedido.pedido.Fecha_entrega));
                 const dataCliente = await ClienteService.getClienteByCodigoPedido(codigoPedido);
                 setTipoCliente(dataCliente.cliente.Tipo_cliente);
                 setCliente(dataCliente.cliente);

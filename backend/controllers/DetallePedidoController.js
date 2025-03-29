@@ -26,7 +26,7 @@ const DetallePedidoController = {
             const { idPedido } = await PedidoService.createPedido(idCliente, fechaEntrega, serieInicio, serieFinal);
 
             const fecha = new Date();
-            const fechaStr = fecha.toISOString().split("T")[0].replace(/-/g, ""); // "YYYYMMDD"
+            const fechaStr = fecha.toISOString().split("T")[0];
             const codigoPedido = `COD${fechaStr}${idPedido}`;
 
             const detallePedido = await DetallePedidoService.createDetallePedido(
