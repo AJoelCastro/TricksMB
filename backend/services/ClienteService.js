@@ -6,19 +6,34 @@ const ClienteService = {
             if (!tipoCliente) throw new Error('Tipo de cliente es requerido');
             return await ClienteDAO.createCliente(tipoCliente);
         }catch(error){
-            console.log("aqui2");
             throw error.status ? error : {status:500, message:"Error al crear cliente en servicio"};
         }
     },
 
     async createClienteNatural(idCliente, nombre, dni, telefono) {
-        if (!idCliente || !nombre || !dni || !telefono) throw new Error('Todos los campos son requeridos');
-        return await ClienteDAO.createClienteNatural(idCliente, nombre, dni, telefono);
+        try{
+            if (!idCliente || !nombre || !dni || !telefono) {
+                const errorCrearClienteNatural = new Error('Todos los campos son requeridos');
+                errorCrearClienteNatural.status = 400;
+                throw errorCrearClienteNatural;
+            }
+            return await ClienteDAO.createClienteNatural(idCliente, nombre, dni, telefono);
+        }catch(error){
+            throw error.status ? error : {status:500, message:"Error al crear cliente natural en servicio"};
+        }
     },
 
     async createClienteJuridico(idCliente, razonSocial, ruc, representanteLegal, telefono) {
-        if (!idCliente || !razonSocial || !ruc || !representanteLegal || !telefono) throw new Error('Todos los campos son requeridos');
-        return await ClienteDAO.createClienteJuridico(idCliente, razonSocial, ruc, representanteLegal, telefono);
+        try{
+            if (!idCliente || !razonSocial || !ruc || !representanteLegal || !telefono){
+                const errorCrearClienteJuridico = new Error('Todos los campos son requeridos');
+                errorCrearClienteJuridico.status = 400;
+                throw errorCrearClienteJuridico;
+            }
+            return await ClienteDAO.createClienteJuridico(idCliente, razonSocial, ruc, representanteLegal, telefono);
+        }catch(error){
+            throw error.status ? error : {status:500, message:"Error al crear cliente juridico en servicio"};
+        }
     },
 
     async getClienteNaturalByDni(dni) {
