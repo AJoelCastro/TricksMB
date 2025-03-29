@@ -22,8 +22,7 @@ class DetallePedidoDAO {
             };
 
         } catch (error) {
-            console.error("Error al crear detalle de pedido:", error);
-            throw error;
+            throw { status: 500, message: "Error interno al crear detalle de pedido" };
         }
     }
 

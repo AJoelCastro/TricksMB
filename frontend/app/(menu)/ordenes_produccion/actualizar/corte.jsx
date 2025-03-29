@@ -42,10 +42,8 @@ const Corte = () => {
     
     const getFechaActualizacion= () => {
                 const date = new Date();
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses van de 0 a 11
-                const day = String(date.getDate()).padStart(2, '0');
-                return `${year}-${month}-${day}`; // Formato: YYYY-MM-DD
+                
+                return date.toISOString().split("T")[0];
             };
     const [fechaActualizacion] = useState(getFechaActualizacion());
     const lockOrientation = async () => {
@@ -75,7 +73,7 @@ const Corte = () => {
         return date.toISOString().split("T")[0]; // Formato: YYYY-MM-DD
     };
 
-    const [currentDate, setCurrentDate] = useState(getCurrentDate()); // Estado para almacenar la fecha formateada
+    const [currentDate, setCurrentDate] = useState(null); // Estado para almacenar la fecha formateada
 
     const [filas, setFilas] = useState([]);
 
@@ -189,9 +187,9 @@ const Corte = () => {
                         setModelo(dataImagenes);
                 }
                 const dataPedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
-                setSelectSerieInicio(dataPedido.Serie_inicio);
-                setSelectSerieFin(dataPedido.Serie_final);
-                setFechaEntrega(new Date(dataPedido.Fecha_entrega));
+                setSelectSerieInicio(dataPedido.pedido.Serie_inicio);
+                setSelectSerieFin(dataPedido.pedido.Serie_final);
+                setFechaEntrega(new Date(dataPedido.pedido.Fecha_entrega));
                 const dataCliente = await ClienteService.getClienteByCodigoPedido(codigoPedido);
                 setTipoCliente(dataCliente.cliente.Tipo_cliente);
                 setCliente(dataCliente.cliente);
@@ -284,10 +282,6 @@ const Corte = () => {
                 if (actualizar === true){
                     let nomArea= "Perfilado"
                     const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido)
-                    console.log("updateAreaTrabajo",updateAreaTrabajo);
-                    if (updateAreaTrabajo.status !== 200) {
-                        throw new Error("Error al crear el detalle del area de trabajo");
-                    }
                     alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`);
                 }
             }catch (error) {

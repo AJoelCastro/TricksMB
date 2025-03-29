@@ -24,10 +24,14 @@ const ModeloService = {
 
     async getModeloByNombre(nombre){
         try{
-            if(!nombre) throw{status: 400 , message: "nombre requerido"};
+            if(!nombre) {
+                const errorNombre = new Error("Nombre requerido");
+                errorNombre.status = 400;
+                throw errorNombre;
+            };
             return await ModeloDAO.getModeloByNombre(nombre);
         }catch(error){
-            throw error;
+            throw error.status ? error : {status:500, message:"Error interno al buscar modelo por nombre"};
         }
     },
 

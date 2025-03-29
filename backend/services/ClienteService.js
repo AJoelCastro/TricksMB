@@ -35,13 +35,15 @@ const ClienteService = {
     },
 
     async getCliente(value){
-        if(value.length === 8){
-            const cliente =await ClienteDAO.getClienteNaturalByDni(value);
-            return cliente;
-        }else if(value.length == 11){
-            return await ClienteDAO.getClienteJuridicoByRuc(value);
+        try{
+            if(value.length === 8){
+                return await ClienteDAO.getClienteNaturalByDni(value); 
+            }else if(value.length == 11){
+                return await ClienteDAO.getClienteJuridicoByRuc(value);
+            }
+        }catch(error){
+            throw error.status ? error : {status:500, message:`Error en el servicio al buscar cliente`};
         }
-        throw{status:500, message:`Cliente encontrado`};
     },
 
     async getClienteByCodigoPedido(codigoPedido){

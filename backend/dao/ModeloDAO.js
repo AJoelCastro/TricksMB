@@ -27,9 +27,14 @@ class ModeloDAO{
         try{
             const query = 'SELECT * FROM Modelo WHERE Nombre = ?';
             const [rows] = await db.execute(query, [nombre]);
+            if(rows.length === 0){
+                const errorRows = new Error("Modelo no encontrado");
+                errorRows.status = 404;
+                throw errorRows;
+            };
             return rows[0];
         }catch(error){
-            throw error;
+            throw error.status ? error : {status:500, message:"Error interno al buscar modelo por nombre"};
         }
     }
     static async getAllModeloById(id){

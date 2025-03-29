@@ -190,9 +190,9 @@ const Armado = () => {
                         setModelo(dataImagenes);
                 }
                 const dataPedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
-                setSelectSerieInicio(dataPedido.Serie_inicio);
-                setSelectSerieFin(dataPedido.Serie_final);
-                setFechaEntrega(new Date(dataPedido.Fecha_entrega));
+                setSelectSerieInicio(dataPedido.pedido.Serie_inicio);
+                setSelectSerieFin(dataPedido.pedido.Serie_final);
+                setFechaEntrega(new Date(dataPedido.pedido.Fecha_entrega));
                 const dataCliente = await ClienteService.getClienteByCodigoPedido(codigoPedido);
                 setTipoCliente(dataCliente.cliente.Tipo_cliente);
                 setCliente(dataCliente.cliente);
@@ -285,16 +285,9 @@ const Armado = () => {
                 if (actualizar === true){
                     let nomArea= "Alistado"
                     const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido);
-                    console.log("updateAreaTrabajo",updateAreaTrabajo);
-                    if (updateAreaTrabajo.status !== 200) {
-                        throw new Error("Error al crear el detalle del area de trabajo");
-                    }
+
                     try {
                         const dataCaja = await CajaService.createCaja(codigoPedido);
-                        
-                        if (dataCaja.status !== 200) {
-                            throw new Error("No se pudo crear la caja.");
-                        }
         
                         Alert.alert("Éxito", dataCaja.message, [{ text: "OK" }]);
                     } catch (error) {

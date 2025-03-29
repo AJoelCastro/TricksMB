@@ -188,9 +188,9 @@ const Perfilado = () => {
                         setModelo(dataImagenes);
                 }
                 const dataPedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
-                setSelectSerieInicio(dataPedido.Serie_inicio);
-                setSelectSerieFin(dataPedido.Serie_final);
-                setFechaEntrega(new Date(dataPedido.Fecha_entrega));
+                setSelectSerieInicio(dataPedido.pedido.Serie_inicio);
+                setSelectSerieFin(dataPedido.pedido.Serie_final);
+                setFechaEntrega(new Date(dataPedido.pedido.Fecha_entrega));
                 const dataCliente = await ClienteService.getClienteByCodigoPedido(codigoPedido);
                 setTipoCliente(dataCliente.cliente.Tipo_cliente);
                 setCliente(dataCliente.cliente);
@@ -284,10 +284,6 @@ const Perfilado = () => {
                 if (actualizar === true){
                     let nomArea= "Armado"
                     const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido)
-                    console.log("updateAreaTrabajo",updateAreaTrabajo);
-                    if (updateAreaTrabajo.status !== 200) {
-                        throw new Error("Error al crear el detalle del area de trabajo");
-                    }
                     alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`);
                 }
             }catch (error) {

@@ -46,10 +46,14 @@ class ClienteDAO {
                 INNER JOIN Cliente c ON cn.Cliente_idCliente = c.idCliente
                 WHERE cn.Dni = ?`;
             const [rows] = await db.execute(query, [dni]);
-            return rows.length ? rows[0] : null;
+            if(rows.length === 0){
+                const errorRows = new Error("Cliente no encontrado");
+                errorRows.status = 404;
+                throw errorRows;
+            };
+            return rows[0];
         } catch (error) {
-            console.error("Error al buscar cliente natural por DNI:", error);
-            throw error;
+            throw error.status ? error : {status:500, message:"Error interno al buscar cliente natural por DNI"};
         }
     }
 
@@ -62,10 +66,14 @@ class ClienteDAO {
                 INNER JOIN Cliente c ON cj.Cliente_idCliente = c.idCliente
                 WHERE cj.Ruc = ?`;
             const [rows] = await db.execute(query, [ruc]);
-            return rows.length ? rows[0] : null;
+            if(rows.length === 0){
+                const errorRows = new Error("Cliente no encontrado");
+                errorRows.status = 404;
+                throw errorRows;
+            };
+            return rows[0] ;
         } catch (error) {
-            console.error("Error al buscar cliente jurídico por RUC:", error);
-            throw error;
+            throw error.status ? error : {status:500, message:"Error interno al buscar cliente jurídico por RUC"};
         }
     }
 
