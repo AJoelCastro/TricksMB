@@ -46,6 +46,10 @@ const Inventario=() =>{
             data={images}
             scrollAnimationDuration={2000}
             mode="parallax"
+            // modeConfig={{
+            //   snapDirection: "left", // Dirección del stack (izquierda o derecha)
+            //   showLength: 1, // Número de elementos visibles en el stack
+            // }}
             renderItem={({ item }) => (
               <View >
                 <Image
@@ -55,6 +59,9 @@ const Inventario=() =>{
               </View>
             )}
           />
+        </View>
+        <View >
+          <Text>Inventario</Text>
         </View>
       </View>
     </GestureHandlerRootView>
