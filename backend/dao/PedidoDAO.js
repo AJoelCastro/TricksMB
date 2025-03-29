@@ -6,10 +6,14 @@ class PedidoDAO {
     try {
         const query = 'INSERT INTO Pedido (Cliente_idCliente, Fecha_entrega, Serie_inicio, Serie_final ) VALUES (?, ?, ?, ?)';
         const [result] = await db.execute(query, [idCliente, fechaEntrega, serieInicio, serieFin]);
+        if(result.length === 0){
+            const errorRows = new Error("Pedido no creado");
+            errorRows.status = 404;
+            throw errorRows;
+        };
         return { idPedido: result.insertId, idCliente, fechaEntrega, serieInicio, serieFin };
-    } catch (error) {
-        console.error("Error al crear cliente:", error);
-        throw error;
+        } catch (error) {
+            throw error.status ? error : {status:500, message:"Error interno al crear pedido"};
         }
     }
 

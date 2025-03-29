@@ -42,7 +42,7 @@ const ClienteService = {
                 return await ClienteDAO.getClienteJuridicoByRuc(value);
             }
         }catch(error){
-            throw error.status ? error : {status:500, message:`Cliente encontrado`};
+            throw error.status ? error : {status:500, message:`Error en el servicio al buscar cliente`};
         }
     },
 

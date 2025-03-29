@@ -3,14 +3,16 @@ const PedidoDAO = require('../dao/PedidoDAO')
 const PedidoService = {
     async createPedido(idCliente, FechaEntrega,SerieInicio, SerieFinal){
         try{
-            if(!idCliente || !FechaEntrega || !SerieInicio || !SerieFinal) 
-                throw {status: 401,message:"Campos requeridos"};
+            if(!idCliente || !FechaEntrega || !SerieInicio || !SerieFinal) {
+                const errorCampos = new Error("Campos requeridos");
+                errorCampos.status = 401;
+                throw errorCampos;
+            }
             const pedido = await PedidoDAO.createPedido(idCliente, FechaEntrega, SerieInicio, SerieFinal);
-            if(!pedido)
-                throw {status: 500, message: "Registro de pedido no exitos"};
+
             return pedido;
         } catch(error){
-            throw error;
+            throw error.status ? error : {status:500, message:"Error en el servicio al crear pedido"};
         }
     },
 
