@@ -60,7 +60,7 @@ class ClienteDAO {
             const [rows] = await db.execute(query, [ruc]);
             return rows.length ? rows[0] : null;
         } catch (error) {
-            throw error.status ? error : {status:500, message:"Error interno al buscar cliente jurídico por RUC"};
+            throw {status:500, message:"Error interno al buscar cliente jurídico por RUC"};
         }
     }
 
@@ -74,8 +74,7 @@ class ClienteDAO {
             const [rows] = await db.execute(query, [razonSocial]);
             return rows.length ? rows[0] : null;
         } catch (error) {
-            console.error("Error al buscar cliente jurídico por Razon Social:", error);
-            throw error;
+            throw {status:500, message:"Error interno al buscar cliente jurídico por Razon Social"};
         }
     }
 
@@ -95,8 +94,7 @@ class ClienteDAO {
             const [rows] = await db.execute(query);
             return rows;
         } catch (error) {
-            console.error("Error al obtener todos los clientes:", error);
-            throw error;
+            throw {status:500, message:"Error al obtener todos los clientes en DAO"};
         }
     }
 
@@ -112,7 +110,9 @@ class ClienteDAO {
             const [rows] = await db.execute(query, [codigoPedido]);
 
             if (rows.length === 0 || !rows[0].Cliente_idCliente) {
-                throw new Error("No se encontró un cliente asociado al pedido.");
+                const errorNoCliente = new Error("No se encontró un cliente asociado al pedido.");
+                errorNoCliente.status = 404;
+                throw errorNoCliente;
             }
 
             const idCliente = rows[0].Cliente_idCliente;
@@ -133,14 +133,15 @@ class ClienteDAO {
             const [cliente] = await db.execute(queryGetCliente, [idCliente]);
 
             if (cliente.length === 0) {
-                throw new Error("No se encontró información del cliente.");
+                const errorNoCliente2 = new Error("No se encontró información del cliente.");
+                errorNoCliente2.status = 404;
+                throw errorNoCliente2;
             }
 
             return cliente[0];
 
         } catch (error) {
-            console.error("Error al obtener cliente por código de pedido:", error);
-            throw error;
+            throw error.status ? error : {status:500, message:"Error al obtener cliente por código de pedido en DAO"};
         }
     }
 
@@ -160,9 +161,7 @@ class ClienteDAO {
             const [rows] = await db.execute(query);
             return rows;
         }catch(error){
-            const errorClientes = new Error("Error interno del servidor");
-            errorClientes.status = 500;
-            throw errorClientes;
+            throw {status:500, message:"Error al obtener clientes por ID en DAO"};
         }
     }
 

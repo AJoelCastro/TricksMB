@@ -90,10 +90,14 @@ const ClienteService = {
     async getAllClientes(){
         try{
             const clientes = await ClienteDAO.getAllClientes();
-            if(!clientes) throw {status: 404, message: "No se encontraron clientes"};
+            if(clientes.length === 0) {
+                const errorNoClientes = new Error("No se encontraron clientes");
+                errorNoClientes.status = 404;
+                throw errorNoClientes;
+            }
             return clientes;
         }catch(error){
-            throw error;
+            throw error.status ? error : {status:500, message:"Error al obtener todos los clientes en servicio"};
         }
     },
 
