@@ -16,8 +16,17 @@ const DetalleAreaTrabajoService= {
 
             return response.data;
         }catch(error){
-            console.error("Error al crear detalle de área de trabajo: ", error.response?.data || error.message);
-            throw error;
+            if (error.response) {
+                // El servidor respondió con un código de error
+                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+            } else if (error.request) {
+                console.log("error.request",error.request);
+                // No hubo respuesta del servidor
+                throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
+            } else {
+                // Otro tipo de error
+                throw new Error("Ocurrió un error inesperado al crear la caja.");
+            }
         }
     },
     obtenerTodos : async (codigoPedido) =>{
