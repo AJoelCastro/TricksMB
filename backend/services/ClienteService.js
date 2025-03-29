@@ -105,7 +105,7 @@ const ClienteService = {
         try{
             const clientes = await ClienteDAO.getClientesById();
             if(clientes.length === 0) {
-                const errorClientes = new Error("No se encontró el cliente");
+                const errorClientes = new Error("No hay clientes registrados");
                 errorClientes.status = 404;
                 throw errorClientes;
             }
