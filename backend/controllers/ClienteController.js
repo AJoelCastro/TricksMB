@@ -6,26 +6,36 @@ const ClienteController = {
             const { tipoCliente, nombre, dni, razonSocial, ruc, representanteLegal, telefono } = req.body;
 
             if (!["natural", "juridico"].includes(tipoCliente)) {
-                return res.status(400).json({ error: "Tipo de cliente inválido" });
+                const errorTipoCliente = new Error('Tipo de cliente inválido');
+                errorTipoCliente.status = 400;
+                throw errorTipoCliente;
             }
 
             if (tipoCliente === "natural" && (!nombre || !dni || !telefono)) {
-                return res.status(400).json({ error: "Faltan datos para cliente natural" });
+                const errorFaltanDatosNatural = new Error('Faltan datos para cliente natural');
+                errorFaltanDatosNatural.status = 400;
+                throw errorFaltanDatosNatural;
             }
             if (tipoCliente === "juridico" && (!razonSocial || !ruc || !telefono)) {
-                return res.status(400).json({ error: "Faltan datos para cliente jurídico" });
+                const errorFaltanDatosJuridico = new Error('Faltan datos para cliente jurídico');
+                errorFaltanDatosJuridico.status = 400;
+                throw errorFaltanDatosJuridico;
             }
 
             if (tipoCliente === "natural") {
                 const clienteNatural = await ClienteService.getClienteNaturalByDni(dni);
                 if (clienteNatural) {
-                    return res.status(409).json({ error: "El DNI ya está registrado" });
+                    const errorDniRegistrado = new Error('El DNI ya está registrado');
+                    errorDniRegistrado.status = 409;
+                    throw errorDniRegistrado;
                 }
             } else if (tipoCliente === "juridico") {
                 const clienteJuridicoRuc = await ClienteService.getClienteJuridicoByRuc(ruc);
                 const clienteJuridicoRazonSocial = await ClienteService.getClienteJuridicoByRazonSocial(razonSocial);
                 if (clienteJuridicoRuc || clienteJuridicoRazonSocial) {
-                    return res.status(409).json({ error: "El RUC o la Razón Social ya están registrados" });
+                    const errorRucRazonSocialRegistrado = new Error('El RUC o la Razón Social ya están registrados');
+                    errorRucRazonSocialRegistrado.status = 409;
+                    throw errorRucRazonSocialRegistrado;
                 }
             }
 

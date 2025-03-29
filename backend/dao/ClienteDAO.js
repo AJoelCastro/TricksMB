@@ -8,7 +8,6 @@ class ClienteDAO {
             const [result] = await db.execute(query, [tipoCliente]);
             return { idCliente: result.insertId, tipoCliente };
         } catch (error) {
-            console.log("aqui");
             throw {status:500, message:"Error al crear cliente en DAO"};
         }
     }
@@ -20,8 +19,7 @@ class ClienteDAO {
             await db.execute(query, [idCliente, nombre, dni, telefono]);
             return { idCliente, nombre, dni, telefono };
         } catch (error) {
-            console.error("Error al crear cliente natural:", error);
-            throw error;
+            throw {status:500, message:"Error al crear cliente natural en DAO"};
         }
     }
 
@@ -32,8 +30,7 @@ class ClienteDAO {
             await db.execute(query, [idCliente, razonSocial, ruc, representanteLegal, telefono]);
             return { idCliente, razonSocial, ruc, representanteLegal, telefono };
         } catch (error) {
-            console.error("Error al crear cliente jurídico:", error);
-            throw error;
+            throw {status:500, message:"Error al crear cliente juridico en DAO"};
         }
     }
 
