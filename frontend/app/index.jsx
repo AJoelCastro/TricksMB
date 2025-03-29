@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { TextInput } from 'react-native-paper';
 import * as SplashScreen from 'expo-splash-screen';
-
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CustomButtom from '../components/customButtom'
 import AuthService from '@/services/AuthService'; // Importar servicio de autenticación
@@ -58,55 +58,57 @@ const Home = () => {
 
     
     return (
-        <SafeAreaView className="h-full bg-white flex">
-            
+        <GestureHandlerRootView>
+            <SafeAreaView className="h-full bg-white flex">
+                
 
-            {/* Logo */}
-            <View className='flex items-center justify-center mt-16 '>
-                <Image source={require('@/assets/images/namiTest.jpg')} style={{ width: 168, height: 168, borderRadius: 84 }} />
-            </View>
-
-            {/* Inputs */}
-            <View>
-                <View className='p-4 gap-2'>
-                    <TextInput
-                        label={"Correo"}
-                        placeholder='Ingrese su correo'
-                        mode='outlined'
-                        value={correo}
-                        onChangeText={setCorreo}
-                    />
-                    <TextInput
-                        label={"Contraseña"}
-                        placeholder='Ingrese su contraseña'
-                        mode='outlined'
-                        secureTextEntry={!showPassword}
-                        value={contrasenia}
-                        onChangeText={setContrasenia}
-                        right={<TextInput.Icon icon={showPassword ? "eye-off" : "eye"} onPress={() => setShowPassword(!showPassword)}/>}
-                    />
-                </View>
-                <View className='flex-row items-center gap-4 mt-6 ml-16'>
-                    <Icon name="check" size={16} color="black" />
-                    <Text>Recordar Contraseña</Text>
+                {/* Logo */}
+                <View className='flex items-center justify-center mt-16 '>
+                    <Image source={require('@/assets/images/namiTest.jpg')} style={{ width: 168, height: 168, borderRadius: 84 }} />
                 </View>
 
-                {/* Botón de Iniciar Sesión */}
-                <View className='mx-16 mt-2'>
-                    {loading ? (
-                        <ActivityIndicator size="small" color="#151718" />
-                    ) : (
-                        <CustomButtom 
-                            title="Iniciar Sesión"
-                            touch={() => {
-                                handleLogin();
-                            }}
-                            disabled={!isFormValid} 
+                {/* Inputs */}
+                <View>
+                    <View className='p-4 gap-2'>
+                        <TextInput
+                            label={"Correo"}
+                            placeholder='Ingrese su correo'
+                            mode='outlined'
+                            value={correo}
+                            onChangeText={setCorreo}
                         />
-                    )}
+                        <TextInput
+                            label={"Contraseña"}
+                            placeholder='Ingrese su contraseña'
+                            mode='outlined'
+                            secureTextEntry={!showPassword}
+                            value={contrasenia}
+                            onChangeText={setContrasenia}
+                            right={<TextInput.Icon icon={showPassword ? "eye-off" : "eye"} onPress={() => setShowPassword(!showPassword)}/>}
+                        />
+                    </View>
+                    <View className='flex-row items-center gap-4 mt-6 ml-16'>
+                        <Icon name="check" size={16} color="black" />
+                        <Text>Recordar Contraseña</Text>
+                    </View>
+
+                    {/* Botón de Iniciar Sesión */}
+                    <View className='mx-16 mt-2'>
+                        {loading ? (
+                            <ActivityIndicator size="small" color="#151718" />
+                        ) : (
+                            <CustomButtom 
+                                title="Iniciar Sesión"
+                                touch={() => {
+                                    handleLogin();
+                                }}
+                                disabled={!isFormValid} 
+                            />
+                        )}
+                    </View>
                 </View>
-            </View>
-        </SafeAreaView>
+            </SafeAreaView>
+        </GestureHandlerRootView>
     );
 }
 
