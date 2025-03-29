@@ -1,10 +1,14 @@
+import React, { useEffect } from 'react';
 import { Stack, useRouter } from 'expo-router';
 import { Text, TouchableOpacity } from 'react-native';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Colors } from '@/constants/Colors';
+import {useFonts} from "expo-font";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SplashScreen from 'expo-splash-screen';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-import "../../global.css";
+
+SplashScreen.preventAutoHideAsync();
 export default function MenuLayout() {
 
   const backgroundColor = useThemeColor({ light: Colors.light.background, dark: Colors.dark.background }, 'background');
@@ -15,6 +19,20 @@ export default function MenuLayout() {
     await AsyncStorage.removeItem('token');
     router.replace('/'); // Redirigir al login
   };
+
+  const [loaded, error] = useFonts({
+    'Inter-Black': require('../../assets/fonts/DMSans-Regular.ttf'),
+  });
+
+  useEffect(() => {
+      if (loaded || error) {
+          SplashScreen.hideAsync();
+      }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+  return null;
+  }
 
   return (
     
@@ -29,7 +47,7 @@ export default function MenuLayout() {
             headerTintColor:textColor,
             headerRight: () => (
                 <TouchableOpacity onPress={handleLogout}>
-                  <Text className='font-bold 'style={{ color:textColor}}>Cerrar sesion</Text>
+                  <Text className='font-bold 'style={{ fontFamily:'Inter-Black', color:textColor, fontSize:15 }}>Cerrar sesion</Text>
                 </TouchableOpacity>
               ),
           }} 
