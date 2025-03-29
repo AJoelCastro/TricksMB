@@ -5,30 +5,31 @@ const DetallePedidoService = {
         accesorios, forro) {
         try {
             if (!idPedido || !idModelo) {
-                throw { status: 400, message: "idPedido e idModelo son obligatorios" };
+                const errorId = new Error("idPedido e idModelo son obligatorios");
+                errorId.status = 400;
+                throw errorId;
             }
             
             alturaTaco = Number(alturaTaco);
 
             if (alturaTaco <= 0) {
-                throw { status: 400, message: "Cantidad, talla o altura deben ser mayores a 0" };
+                const errorAltura = new Error("Cantidad, talla o altura deben ser mayores a 0");
+                errorAltura.status = 400;
+                throw errorAltura;
             }
 
             if ( !Number.isInteger(alturaTaco)) {
-                throw { status: 400, message: "altura de taco deben ser números enteros válidos" };
+                const errorAlturaTaco = new Error("Altura de taco debe ser números enteros válidos");
+                errorAlturaTaco.status = 400;
+                throw errorAlturaTaco;
             }
 
             const detallePedido = await DetallePedidoDAO.createDetallePedido(
                 idPedido, idModelo,codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorios, forro
             );
-            if (!detallePedido) {
-                throw { status: 500, message: "No se pudo registrar el detalle del pedido" };
-            }
-
             return detallePedido;
         } catch (error) {
-            if (error.status) throw error; // Si ya tiene status, lo relanzamos
-            throw { status: 500, message: "Error en DetallePedido Service", detalle: error.message };
+            throw error.status? error: { status: 500, message: "Error en DetallePedido Service", detalle: error.message };
         }
     },
 
