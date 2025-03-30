@@ -2,9 +2,9 @@ const DetalleAlmacenController = require('../controllers/DetalleAlmacenControlle
 
 const express = require('express');
 const router = express.Router();
-const outMiddleware = require('../middlewares/authMiddleware');
+const authMiddleware = require('../middlewares/authMiddleware');
 
-router.post('/crear',outMiddleware, DetalleAlmacenController.createDetalleAlmacen);
-router.get('/obtener/:codigoPedido',outMiddleware, DetalleAlmacenController.getDetalleAlmacen);
+router.post('/crear',authMiddleware, DetalleAlmacenController.createDetalleAlmacen);
+router.get('/obtener/:codigoPedido',authMiddleware, DetalleAlmacenController.getDetalleAlmacen);
 
 module.exports = router;
