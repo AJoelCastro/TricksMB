@@ -175,12 +175,9 @@ export default function Crear() {
 
 
     const cargarClienteNatural = async () => {
-        console.log("dni", dni, typeof dni);
-        console.log("tipoCliente", tipoCliente);
         try {
             let identificador = dni;
             const cliente = await ClienteService.buscarCliente(tipoCliente, identificador);
-            console.log("cliente", cliente);
             if (cliente.status === 404) {
                 setTipoCliente("");
                 Alert.alert("Error al buscar cliente", cliente.error, [{ text: "OK" }]);
@@ -220,9 +217,7 @@ export default function Crear() {
                 modelos.modelo.map(async (modelo) => {
                     let idModelo = modelo.idModelo;
                     const imagen = await ModeloService.getImagenById(idModelo);
-                    console.log("imagen", imagen);
                     if (!imagen) {
-                        console.error("No se encontraron las imagenes");
                         return {...modelo, imagenes:[]};
                     }
                     return {...modelo, imagenes: imagen.imagen.map(img => img.Url)};
