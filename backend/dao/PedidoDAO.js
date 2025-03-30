@@ -17,21 +17,18 @@ class PedidoDAO {
         }
     }
 
-    static async getPedidoByCodigoPedido(codigoPedido){
+    static async getPedidoByCodigoPedido(codigoPedido) {
         try {
-            const queryGetidPedido = 'SELECT Pedido_idPedido FROM Detalle_pedido WHERE Codigo_pedido = ?';
-            const [rows] = await db.execute(queryGetidPedido, [codigoPedido]);
+            const query = `
+                SELECT p.* 
+                FROM Pedido p
+                INNER JOIN Detalle_pedido dp ON p.idPedido = dp.Pedido_idPedido
+                WHERE dp.Codigo_pedido = ?`;
             
-            if (rows.length === 0) {
-                throw new Error("No se encontró el pedido con el código proporcionado.");
-            }
-            const idPedido = rows[0].Pedido_idPedido;
-
-            const query = 'SELECT * FROM Pedido WHERE idPedido = ?';
-            const [result] = await db.execute(query, [idPedido]);
+            const [result] = await db.execute(query, [codigoPedido]);
 
             if (result.length === 0) {
-                throw new Error("No se encontró un pedido con el código proporcionado.");
+                throw new Error("No se encontró el pedido con el código proporcionado.");
             }
 
             return result[0];
@@ -40,6 +37,7 @@ class PedidoDAO {
             throw error;
         }
     }
+
 
     static async updatePedido(codigoPedido,fechaEntrega, serieInicio, serieFinal){
         try {
