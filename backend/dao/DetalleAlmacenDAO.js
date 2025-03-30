@@ -5,17 +5,18 @@ class DetalleAlmacenDAO{
         try {
             const [result] = await db.execute(
                 `INSERT INTO Detalle_almacen (Almacen_idAlmacen, Detalle_pedido_idDetalle_pedido,) VALUES (?, ?)`, 
-                [idTipoAlmacen, idInventario]
+                [idAlmacen, idDetallePedido]
             );
             
             if (result.affectedRows === 0) {
-                throw new Error("No se pudo crear el Detalle del Almacén.");
+                const errorDetalleAlmacen = new Error("No se pudo crear el Detalle del Almacén.");
+                errorDetalleAlmacen.status = 404;
+                throw errorDetalleAlmacen;
             }
 
             return { message: "Detalle almacén creado exitosamente", insertId: result.insertId };
         } catch (error) {
-            console.error("Error en crear el detalle almacén:", error);
-            throw error;
+            throw error.status ? error : {status: 500, message: "Error interno del servidor al crear el detalle almacén"};
         }
     }
 

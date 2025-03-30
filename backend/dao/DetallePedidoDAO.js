@@ -32,11 +32,13 @@ class DetallePedidoDAO {
             const [rows] = await db.execute(query, [codigoPedido]);
 
             if (rows.length === 0) {
-                throw new Error("No se encontró un detalle de pedido con el código proporcionado.");
+                const errorDetallePedido = new Error("No se encontró un detalle de pedido con el código proporcionado.");
+                errorDetallePedido.status = 404;
+                throw errorDetallePedido;
             }
             return rows[0];
         } catch (error) {
-            throw error;
+            throw error.status ? error : {status: 500, message: "Error interno del servidor al obtener el detalle de pedido"};
         }
     }
 
