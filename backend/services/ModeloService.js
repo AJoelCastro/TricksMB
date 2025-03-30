@@ -4,12 +4,19 @@ const ModeloService = {
 
     async createModelo(idTipo, nombre){
         try{
-            if (!idTipo) throw { status: 400, message: "idTipo requerido" };
-            if(!nombre) throw {status: 400, message: "nombre requerido"};
+            if (!idTipo) {
+                const errorIdTipo = new Error("idTipo requerido");
+                errorIdTipo.status = 400;
+                throw errorIdTipo;
+            };
+            if(!nombre) {
+                const errorNombre = new Error("Nombre requerido");
+                errorNombre.status = 400;
+                throw errorNombre;
+            };
             return await ModeloDAO.createModelo(idTipo, nombre);
         }catch(error){
-            if(error.status) throw error;
-            throw {status: 500, message: "Error en ModeloService", detalle: error.message};
+            throw error.status ? error : {status: 500, message: "Error en el servicio Modelo"};
         }
     },
 
@@ -37,10 +44,14 @@ const ModeloService = {
 
     async getAllModeloById(idTipo){
         try{
-            if(!idTipo) throw{status: 400 , message: "id requerido"};
+            if(!idTipo) {
+                const errorIdTipo = new Error("idTipo requerido");
+                errorIdTipo.status = 400;
+                throw errorIdTipo;
+            };
             return await ModeloDAO.getAllModeloById(idTipo);
         }catch(error){
-            throw error;
+            throw error.status ? error : {status:500, message:"Error interno al buscar modelo por id"};
         }
     },
 

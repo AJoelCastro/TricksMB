@@ -12,8 +12,17 @@ const ModeloService = {
             });
             return response.data;
         } catch (error) {
-            console.error("Error al obtener los modelos:", error.response?.data || error.message);
-            throw error;
+            if (error.response) {
+                // El servidor respondió con un código de error
+                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+            } else if (error.request) {
+                console.log("error.request",error.request);
+                // No hubo respuesta del servidor
+                throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
+            } else {
+                // Otro tipo de error
+                throw new Error("Ocurrió un error inesperado al crear la caja.");
+            }
         }
     },
     getAllModeloById: async (id) => {
@@ -25,9 +34,19 @@ const ModeloService = {
             });
             return response.data;
         } catch (error) {
-            console.error("Error al obtener los modelos por id:", error.response?.data || error.message);
-            throw error;
+            if (error.response) {
+                // El servidor respondió con un código de error
+                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+            } else if (error.request) {
+                console.log("error.request",error.request);
+                // No hubo respuesta del servidor
+                throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
+            } else {
+                // Otro tipo de error
+                throw new Error("Ocurrió un error inesperado al crear la caja.");
+            }
         }
+        
     },
     getModeloByCodigoPedido: async (codigoPedido) => {
         try {
@@ -37,8 +56,17 @@ const ModeloService = {
             });
             return response.data;
         } catch (error) {
-            console.error("Error al obtener el modelo por código de pedido:", error.response?.data || error.message);
-            throw error;
+            if (error.response) {
+                // El servidor respondió con un código de error
+                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+            } else if (error.request) {
+                console.log("error.request",error.request);
+                // No hubo respuesta del servidor
+                throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
+            } else {
+                // Otro tipo de error
+                throw new Error("Ocurrió un error inesperado al crear la caja.");
+            }
         }
     },
     getImagenById: async (idModelo) => {
@@ -49,8 +77,17 @@ const ModeloService = {
             });
             return response.data;
         } catch (error) {
-            console.error("Error al obtener imagenes por idModelo:", error.response?.data || error.message);
-            throw error;
+            if (error.response) {
+                // El servidor respondió con un código de error
+                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+            } else if (error.request) {
+                console.log("error.request",error.request);
+                // No hubo respuesta del servidor
+                throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
+            } else {
+                // Otro tipo de error
+                throw new Error("Ocurrió un error inesperado al crear la caja.");
+            }
         }
     },
 };

@@ -8,8 +8,7 @@ class ModeloDAO{
             const [rows] = await db.execute(query,[idTipo, nombre])
             return {idModelo: rows.insertId, idTipo, nombre};
         }catch(error){
-                console.error("Error al crear el modelo",error);
-                throw error;
+            throw {status: 500, message: "Error al crear el modelo"};
         }
     }
 
@@ -41,9 +40,14 @@ class ModeloDAO{
         try{
             const query = 'SELECT * FROM Modelo WHERE Tipo_idTipo = ?';
             const [rows] = await db.execute(query, [id]);
+            if(rows.length === 0){
+                const errorRows = new Error("No hay modelos registrados para el id proporcionado");
+                errorRows.status = 404;
+                throw errorRows;
+            };
             return rows;
         }catch(error){
-            throw error;
+            throw error.status ? error : {status:500, message:"Error interno al buscar modelo por id"};
         }
     }
 

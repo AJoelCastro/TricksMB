@@ -103,7 +103,7 @@ const Modal = () => {
   return (
     <KeyboardAvoidingView 
       behavior='padding' 
-      className='p-2 bg-white'
+      className='p-2 bg-white h-full'
     >
         <Text 
           style={{ fontFamily:'Inter-Black', fontSize:20 }}
