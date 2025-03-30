@@ -7,11 +7,9 @@ class CajaDAO{
         try{
             const query = `INSERT INTO Caja (Caracteristicas_idCaracteristicas, CodigoQR) VALUES (?, ?)`;
             const [result] = await db.execute(query, [idCaracteristica, "tempQR"]);
-
             const idCaja = result.insertId;
             const URL = `http://tricks.com/caja/${idCaja}`;
             const qrImage = await CodQR.toDataURL(URL);
-
             await db.query(`UPDATE Caja SET CodigoQR = ? WHERE idCaja = ?`, [qrImage, idCaja]);
 
             return {idCaja, idCaracteristica, qrImage};
