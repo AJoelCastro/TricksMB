@@ -12,10 +12,14 @@ const AlmacenService = {
 
     async getAlmacen(nombre){
         try{
-            if(!nombre) throw {status: 400, message: "Parametros incorrectos"};
+            if(!nombre) {
+                const errorNombre = new Error("nombre de almacen requerido para obtener el almacen");
+                errorNombre.status = 400;
+                throw errorNombre;
+            };
             return await AlmacenDAO.getAlmacen(nombre);
         }catch(error){
-            throw error;
+            throw error.status ? error : {status: 500, message: "Error en AlmacenService"};
         }
     },
 

@@ -16,12 +16,12 @@ const DetalleAlmacenService = {
                 throw errorCodigoPedido;
             };
 
-            const {idAlmacen} = await AlmacenService.getAlmacenByNombre(nombreAlmacen);
+            const {idAlmacen} = await AlmacenService.getAlmacen(nombreAlmacen);
             const {idDetalle_pedido} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
             const result = await DetalleAlmacenDAO.createDetalleAlmacen(idAlmacen, idDetalle_pedido);
             return result;
         } catch (error) {
-            throw error;
+            throw error.status ? error : {status: 500, message: "Error en DetalleAlmacenService"};
         }
     },
 
