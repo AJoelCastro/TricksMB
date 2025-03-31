@@ -21,15 +21,6 @@ const CajaController = {
         }
     },
 
-    async updateCaja(req, res, next) {
-        try {
-            const { id } = req.params;
-            const caja = await CajaService.updateCaja(id);
-            res.json({ caja, status: 200 });
-        } catch (error) {
-            next(error);
-        }
-    },
 
     async getCajaById(req, res, next) {
         try {

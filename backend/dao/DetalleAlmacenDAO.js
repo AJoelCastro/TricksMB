@@ -4,10 +4,9 @@ class DetalleAlmacenDAO{
     static async createDetalleAlmacen(idAlmacen, idDetallePedido, ) {
         try {
             const [result] = await db.execute(
-                `INSERT INTO Detalle_almacen (Almacen_idAlmacen, Detalle_pedido_idDetalle_pedido,) VALUES (?, ?)`, 
+                `INSERT INTO Detalle_almacen (Almacen_idAlmacen, Detalle_pedido_idDetalle_pedido) VALUES (?, ?)`, 
                 [idAlmacen, idDetallePedido]
             );
-            
             if (result.affectedRows === 0) {
                 const errorDetalleAlmacen = new Error("No se pudo crear el Detalle del Almacén.");
                 errorDetalleAlmacen.status = 404;
