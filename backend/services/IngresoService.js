@@ -36,6 +36,14 @@ const IngresoService = {
         }catch(error){
             throw error.status? error: { status: 500, message: "Error interno en el servicio." };
         }
+    },
+
+    async getAllIngresosByDetalleAlmacen(idDetalleAlmacen){
+        try{
+            return await IngresoDAO.getAllIngresosByDetalleAlmacen(idDetalleAlmacen);
+        }catch(error){
+            throw error.status? error: { status: 500, message: "Error interno en el servicio." };
+        }
     }
 }
 
