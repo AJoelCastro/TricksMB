@@ -16,7 +16,6 @@ const IngresoService = {
                 erroridCaja.status = 404;
                 throw erroridCaja;
             }
-            console.log("getDetalleAlmacen", await DetalleAlmacenService.getDetalleAlmacen(codigoPedido));
             const {idDetalle_almacen} = await DetalleAlmacenService.getDetalleAlmacen(codigoPedido);
             return await IngresoDAO.createIngreso(idCaja, idDetalle_almacen);
         }catch(error){
