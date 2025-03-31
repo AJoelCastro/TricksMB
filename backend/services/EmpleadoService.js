@@ -32,17 +32,24 @@ const EmpleadoService = {
 
     async getEmpleados(nomArea){
         try{
-            if(!nomArea) throw {status: 400, message: "nombre de area requerido para buscar empleados"};
+            if(!nomArea) {
+                const errorNomArea = new Error("nombre de area requerido para buscar empleados");
+                errorNomArea.status = 400;
+                throw errorNomArea;
+            };
 
             const AreaTrabajoService = require('./AreaTrabajoService');
             const {idArea_trabajo} = await AreaTrabajoService.getAreaTrabajoByNombre(nomArea);
 
-            if(!idArea_trabajo) throw {status: 404, message: "No se encontró el area de trabajo"};
+            if(!idArea_trabajo) {
+                const errorIdArea = new Error("No se encontró el area de trabajo");
+                errorIdArea.status = 404;
+                throw errorIdArea;
+            }
 
             return await EmpleadoDAO.getEmpleados(idArea_trabajo);
         } catch(error){
-            console.error("Error al obtener empleados", error);
-            throw error;
+            throw error.status? error: { status: 500, message: "Error interno en el servicio." };
         }
     }
 }

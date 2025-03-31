@@ -35,20 +35,6 @@ class CajaDAO{
         }
     }
 
-    static async updateCaja(idCaja){
-        try{
-            const query = `UPDATE Caja SET Estado = ? WHERE idCaja = ?`;
-            const [rows] = await db.execute(query, [1,idCaja]);
-            if(rows.affectedRows === 0){
-                const cajaDao = new Error("No se encontró la caja.");
-                cajaDao.status = 404;
-                throw cajaDao;
-            }
-            return rows[0];
-        }catch(error){
-            throw error.status? error: { status: 500, message: "Error interno en el DAO." };
-        }
-    }
 
     static async getCajaById(idCaja){
         try{

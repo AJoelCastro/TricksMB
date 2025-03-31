@@ -274,7 +274,7 @@ export default function Crear() {
             }
             return pedido;
         } catch (error) {
-            console.error("(index(crear))Error al crear pedido:", error);
+            mostrarError(error);
         }
     }
     const resetearCampos = () => {
@@ -323,7 +323,7 @@ export default function Crear() {
             return dataCaracteristicas;
             
         } catch (error) {
-            console.error("(index(crear))Error al crear caracteristicas:", error);
+            mostrarError(error);
         }
     }
     const handleCrearPedido = async () => {
@@ -340,8 +340,7 @@ export default function Crear() {
             alert(`Pedido ${pedido.detallePedido.codigoPedido} creado con exito `);
             resetearCampos();
         } catch (error) {
-            console.error("Error al crear el pedido:", error);
-            Alert.alert("Error", "Hubo un problema al crear el pedido.");
+            mostrarError(error);
         }
     }; 
 

@@ -102,15 +102,14 @@ export default function Almacen(){
   const actualizarCaja = async () => {
     try {
       let id = Number(scannedData);
-      const caja = await CajaService.updateCaja(id);
-      if(caja.status === 200){
+      
         Alert.alert("Caja actualizada", "La caja ha sido actualizada correctamente");
         setShowCamera(false);
         setShowRegisters(true);
         setQrLeido(false);
         setScannedData(null)
         setCaja(null)
-      }
+      
     } catch (error) {
       mostrarError(error);
       setShowCamera(false);
