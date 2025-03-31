@@ -65,6 +65,7 @@ const CaracteristicasService = {
             throw error.status?error:{status: 500, message: "Error interno en el servicio."};
         }
     },
+
 }
 
 module.exports = CaracteristicasService;

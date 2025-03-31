@@ -2,6 +2,7 @@ const PedidoService = require('../services/PedidoService');
 const DetallePedidoService = require('../services/DetallePedidoService');
 const ModeloService = require('../services/ModeloService');
 const ClienteService = require('../services/ClienteService');
+const { updateCantidad } = require('../dao/DetallePedidoDAO');
 
 const DetallePedidoController = {
     async createPedido(req, res, next) {
@@ -89,6 +90,16 @@ const DetallePedidoController = {
             const historialPedidos = await DetallePedidoService.getHistorialPedidos();
             res.json({historialPedidos, status: 200});
         }catch(error){
+            next(error);
+        }
+    },
+
+    async updateCantidad(req, res, next) {
+        try {
+            const { codigoPedido } = req.params;
+            const detallePedido = await DetallePedidoService.updateCantidad(codigoPedido);
+            res.json({ detallePedido, status: 200 });
+        } catch (error) {
             next(error);
         }
     }

@@ -97,6 +97,26 @@ class DetalleAlmacenDAO{
             throw error;
         }
     }
+
+    static async updateIdAlmacen(idAlmacen, idDetallePedido) {
+        try {
+            const query = `
+                UPDATE Detalle_almacen 
+                SET Almacen_idAlmacen = ? 
+                WHERE Detalle_pedido_idDetalle_pedido = ?
+            `;
+            const [result] = await db.execute(query, [idAlmacen, idDetallePedido]);
+            if (result.affectedRows === 0) {
+                throw new Error("No se pudo actualizar el id del almacen.");
+            }
+            return { message: "Id del almacen actualizado exitosamente" };
+        } catch (error) {
+            console.error("Error al actualizar el id del almacen:", error);
+            throw error;
+        }
+    }
+
+    
 }
 
 module.exports = DetalleAlmacenDAO;

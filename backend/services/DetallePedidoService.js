@@ -148,6 +148,25 @@ const DetallePedidoService = {
             if(error.status) throw error;
             throw {status: 500, message: "Error en el DetallePedidoService: historial", detalle: error.message}
         }
+    },
+
+    async updateCantidad(codigoPedido) {
+        const CaracteristicasService = require("../services/CaracteristicasService");
+        try {
+            if (!cantidad || !codigoPedido) {
+                throw { status: 400, message: "Los parámetros son requeridos" };
+            }
+
+            const {idDetalle_pedido} = await this.getDetallePedidoByCodigoPedido(codigoPedido);
+            const caracteristicas = await CaracteristicasService.getCaracteristicasByIdDetallePedido(idDetalle_pedido);
+
+            const cantidadTotal = caracteristicas.reduce((total, caracteristica) => total + caracteristica.Cantidad, 0);
+            
+            const obj = await DetallePedidoDAO.updateCantidad(cantidadTotal, idDetalle_pedido);
+        } catch (error) {
+            if (error.status) throw error;
+            throw { status: 500, message: "Error en DetallePedido Service", detalle: error.message };
+        }
     }
 };
 

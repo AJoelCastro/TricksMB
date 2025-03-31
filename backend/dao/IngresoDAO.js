@@ -16,6 +16,29 @@ class IngresoDAO{
         }
     }
 
+    static async getIngresoByCaja(idCaja){
+        try{
+            const [rows] = await db.execute(`SELECT * FROM Ingreso WHERE Caja_idCaja = ?`, [idCaja]);
+            return rows[0];
+        }catch(error){
+            console.log("Error al obtener la caja", error);
+            throw error;
+        }
+    } 
+
+    static async getAllIngresosByDetalleAlmacen(idDetalleAlmacen){
+        try{
+            const [rows] = await db.execute(`SELECT * FROM Ingreso WHERE Detalle_almacen_idDetalle_almacen = ?`, [idDetalleAlmacen]);
+            if(rows.affectedRows === 0){
+                throw new Error("No se encontraron Ingresos con el Detalle de Almacen proporcionado");
+            }
+            return rows;
+        }catch(error){
+            console.log("Error al obtener la caja", error);
+            throw error;
+        }
+    }
+
 }
 
 module.exports = IngresoDAO

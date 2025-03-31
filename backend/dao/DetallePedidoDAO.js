@@ -116,6 +116,18 @@ class DetallePedidoDAO {
             throw error;
         }
     }
+
+    static async updateCantidad(idDetallePedido, cantidad){
+        
+        try{
+            const query = `UPDATE Detalle_pedido SET Cantidad = ? WHERE idDetalle_pedido = ?`;
+            const [rows] = await db.execute(query,[cantidad, idDetallePedido]);
+            return rows;
+        }catch(error){
+            console.error("Error al actualizar la cantidad del detalle de pedido", error);
+            throw error;
+        }
+    }
 }
 
 module.exports = DetallePedidoDAO;
