@@ -3,6 +3,7 @@ const DetallePedidoDAO = require('../dao/DetallePedidoDAO');;
 const DetallePedidoService = {
     async createDetallePedido(idPedido, idModelo, codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela,
         accesorios, forro) {
+            const DetalleAlmacenService = require('./DetalleAlmacenService');
         try {
             if (!idPedido || !idModelo) {
                 const errorId = new Error("idPedido e idModelo son obligatorios");
@@ -27,6 +28,9 @@ const DetallePedidoService = {
             const detallePedido = await DetallePedidoDAO.createDetallePedido(
                 idPedido, idModelo,codigoPedido, nombreTaco, alturaTaco, material, tipoMaterial, suela, accesorios, forro
             );
+
+            await DetalleAlmacenService.createDetalleAlmacen("Fabrica", codigoPedido);
+
             return detallePedido;
         } catch (error) {
             throw error.status? error: { status: 500, message: "Error en DetallePedido Service", detalle: error.message };
