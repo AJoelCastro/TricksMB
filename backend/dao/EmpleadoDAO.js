@@ -27,7 +27,7 @@ class EmpleadoDAO{
             const [rows] = await db.execute(query,[idArea]);
             return rows;
         }catch(error){
-            throw error;
+            throw { status: 500, message: "Error interno en el DAO." };
         }
     }
 }

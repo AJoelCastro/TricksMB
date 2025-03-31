@@ -6,15 +6,18 @@ const IngresoService = {
         const DetalleAlmacenService = require("./DetalleAlmacenService");
         const CajaService = require("./CajaService");
         try{
-            if(!idCaja || !codigoPedido) throw new Error("Parametros incorrectos");
+            if(!idCaja || !codigoPedido){
+                const erroridCajaCodigo = new Error("Parametros incorrectos");
+                erroridCajaCodigo.status = 400;
+                throw erroridCajaCodigo;
+            }
             
-            const caja = await CajaService.getCajaById(idCaja);
-            if(!caja) throw new Error("Caja no encontrada");
+            await CajaService.getCajaById(idCaja);
 
             const {idDetalle_almacen} = await DetalleAlmacenService.getDetalleAlmacen(codigoPedido);
             return await IngresoDAO.createIngreso(idCaja, idDetalle_almacen);
         }catch(error){
-            throw error
+            throw error.status? error: { status: 500, message: "Error interno en el servicio." };
         }
     }
 }
