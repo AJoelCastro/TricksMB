@@ -25,13 +25,14 @@ class DetalleAlmacenDAO{
                 WHERE Detalle_pedido_idDetalle_pedido = ?`, [idDetallePedido]);
 
             if (result.affectedRows === 0) {
-                throw new Error("No se a encontrado el detalle almacen.");
+                const errorDetalleAlmacen = new Error("No se a encontrado el detalle almacen.");
+                errorDetalleAlmacen.status = 404;
+                throw errorDetalleAlmacen;
             }
 
             return result[0];
         }catch(error){
-            console.error("Error al obtner el detalle almacén:", error);
-            throw error;
+            throw error.status? error: {status: 500, message: "Error interno del servidor al obtener el detalle almacén"};
         }
     }
 

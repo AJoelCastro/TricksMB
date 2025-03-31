@@ -11,8 +11,8 @@ const IngresoService = {
                 throw erroridCajaCodigo;
             }
             const ingreso = await this.getIngresosByCaja(idCaja)
-            
-            if(ingreso){
+            console.log("ingreso", ingreso);
+            if(ingreso !== null ){
                 const erroridCaja = new Error("Caja ya ingresada");
                 erroridCaja.status = 404;
                 throw erroridCaja;
@@ -25,7 +25,7 @@ const IngresoService = {
         }
     },
 
-    async getIngresosBy(idCaja)  {
+    async getIngresosByCaja(idCaja)  {
         try{
             if(!idCaja) {
                 const erroridCaja = new Error("idCaja requerido");

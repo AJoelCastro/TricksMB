@@ -337,7 +337,9 @@ export default function Crear() {
             if (!caracteristicas) {
                 return;
             }
-            alert(`Pedido ${pedido.detallePedido.codigoPedido} creado con exito `);
+            let codigoPedido = pedido.detallePedido.codigoPedido;
+            await DetallePedidoService.updateCantidadPedido(codigoPedido);
+            alert(`Pedido ${pedido.detallePedido.codigoPedido} creado con exito y cantidad actualizada`);
             resetearCampos();
         } catch (error) {
             mostrarError(error);
