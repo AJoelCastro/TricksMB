@@ -63,19 +63,6 @@ const CajaService = {
         }
     },
 
-    async updateCaja(idCaja){
-        try{
-            if(!idCaja) {
-                const erroridCaja = new Error("Falta el id de la caja");
-                erroridCaja.status = 400;
-                throw erroridCaja;
-            }
-            return await CajaDAO.updateCaja(idCaja);
-        }catch(error){
-            throw error.status? error: { status: 500, message: "Error interno en el servicio." };
-        }
-    },
-
     async getCajaById(idCaja) {
         
         const CaracteristicasService = require("./CaracteristicasService");
