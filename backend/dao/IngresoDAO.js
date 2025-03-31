@@ -16,6 +16,16 @@ class IngresoDAO{
         }
     }
 
+    static async getIngresoByCaja(idCaja){
+        try{
+            const [rows] = await db.execute(`SELECT * FROM Ingreso WHERE Caja_idCaja = ?`, [idCaja]);
+            return rows[0];
+        }catch(error){
+            console.log("Error al obtener la caja", error);
+            throw error;
+        }
+    } 
+
 }
 
 module.exports = IngresoDAO

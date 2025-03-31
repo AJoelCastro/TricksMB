@@ -34,6 +34,20 @@ const DetalleAlmacenService = {
         }catch(error){
             throw error;
         }
+    },
+
+    async updateIdAlmacen(nombreAlmacen, codigoPedido){
+        const AlmacenService = require('./AlmacenService');
+        const DetallePedidoService = require('./DetallePedidoService');
+        try{
+            if(!nombreAlmacen) throw new Error("nombre de almacen requerido para obtener detalle almacen");
+            if(!codigoPedido) throw new Error("codigo de pedido requerido para obtener detalle almacen");
+            const {idDetalle_pedido} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
+            const {idAlmacen} = await AlmacenService.getAlmacen(nombreAlmacen);
+            return await DetalleAlmacenDAO.updateIdAlmacen(idAlmacen, idDetalle_pedido);
+        } catch(error){
+            throw error;
+        }
     }
 }
 

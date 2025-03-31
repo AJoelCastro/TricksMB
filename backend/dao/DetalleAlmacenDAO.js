@@ -115,6 +115,8 @@ class DetalleAlmacenDAO{
             throw error;
         }
     }
+
+    
 }
 
 module.exports = DetalleAlmacenDAO;

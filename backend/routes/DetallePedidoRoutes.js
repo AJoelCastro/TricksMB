@@ -12,5 +12,6 @@ router.get('/todos', authMiddleware,DetallePedidoController.getAllCodigosPedidos
 router.put('/actualizar/:codigoPedido', authMiddleware, DetallePedidoController.updateDetallePedido);
 router.put('/actualizarEstado/:codigoPedido', authMiddleware, DetallePedidoController.updateEstado);
 router.get('/historial', DetallePedidoController.getHistorialPedidos);
+router.put('/actualizarCantidad/:codigoPedido', authMiddleware, DetallePedidoController.updateCantidad);
 
 module.exports = router;
