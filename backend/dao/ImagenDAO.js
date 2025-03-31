@@ -8,7 +8,7 @@ class ImagenDAO {
             const [rows] = await db.execute(query,[idModelo]);
             return rows;
         } catch(error){
-            throw error
+            throw {status: 500, message: "Error interno del servidor al obtener las imagenes"};
         }
     }
 }

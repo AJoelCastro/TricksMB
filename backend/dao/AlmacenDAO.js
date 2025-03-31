@@ -20,12 +20,13 @@ class AlmacenDAO {
         try{
             const [result] = await db.execute(`SELECT * FROM Almacen WHERE Nombre = ?`,[nombre])
             if(result.affectedRows === 0){
-                throw new Error("No se pudo obtner el almacen");
+                const errorAlmacen = new Error("No se pudo obtener el almacen");
+                errorAlmacen.status = 404;
+                throw errorAlmacen;
             }
             return result[0];
         }catch(error){
-            console.error("Error al obtner el tipo de almacen", error);
-            throw error;
+            throw error.status ? error : {status: 500, message: "Error interno del servidor al obtener el almacen"};
         }
     }
 

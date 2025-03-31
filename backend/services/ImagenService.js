@@ -4,15 +4,17 @@ const ImagenService = {
 
     async getImagen(idModelo){
         try{
-            if(!idModelo) throw {status: 400, message: "campos obligatorios"};
+            if(!idModelo) {
+                const errorIdModelo = new Error("idModelo requerido");
+                errorIdModelo.status = 400;
+                throw errorIdModelo;
+            };
             
             const imagen = await ImagenDAO.getImagen(idModelo);
-            if(!imagen) throw {status:400, message: "La imagen no existe"}
 
             return imagen;
         } catch(error){
-            if(error.status) throw error;
-            throw {status: 500, message: "Error en ModeloService", detalle: error.message};
+            throw error.status ? error : {status: 500, message: "Error en Modelo Service"};
         }
     }
 }

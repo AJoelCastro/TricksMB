@@ -5,15 +5,23 @@ const DetalleAlmacenService = {
         const AlmacenService = require('./AlmacenService');
         const DetallePedidoService = require('./DetallePedidoService');
         try {
-            if(!nombreAlmacen) throw new Error("nombre de almacen requerido para crear detalle almacen");
-            if(!codigoPedido) throw new Error("codigo de pedido requerido para crear detalle almacen");
+            if(!nombreAlmacen) {
+                const errorNombreAlmacen = new Error("nombre de almacen requerido para crear detalle almacen");
+                errorNombreAlmacen.status = 400;
+                throw errorNombreAlmacen;
+            };
+            if(!codigoPedido) {
+                const errorCodigoPedido = new Error("codigo de pedido requerido para crear detalle almacen");
+                errorCodigoPedido.status = 400;
+                throw errorCodigoPedido;
+            };
 
-            const {idAlmacen} = await AlmacenService.getAlmacenByNombre(nombreAlmacen);
+            const {idAlmacen} = await AlmacenService.getAlmacen(nombreAlmacen);
             const {idDetalle_pedido} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
             const result = await DetalleAlmacenDAO.createDetalleAlmacen(idAlmacen, idDetalle_pedido);
             return result;
         } catch (error) {
-            throw error;
+            throw error.status ? error : {status: 500, message: "Error en DetalleAlmacenService"};
         }
     },
 

@@ -9,6 +9,7 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import CajaService from '@/services/CajaService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome5';
+import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Image } from 'expo-image';
 
 SplashScreen.preventAutoHideAsync();
@@ -69,9 +70,19 @@ export default function Almacen(){
 
   if (!permission.granted) {
     return (
-      <View>
-        <Text>We need your permission to show the camera</Text>
-        <Button onPress={requestPermission} title="grant permission" />
+      <View className='bg-white h-full p-2'>
+        <View className='mx-2 mt-6'>
+          <Text style={{fontFamily:'Inter-Black', fontSize:26 }}>Permisos a Camara</Text>
+        </View>
+        <View className='items-center mt-8'>
+          <Icon3 name="camera-off-outline" size={80} color="#634AFF" />
+        </View>
+        <View className='mx-4 mt-8'>
+          <Text style={{fontFamily:'Inter-Light', fontSize:16}}>Se requiere permisos para acceder a la camara</Text>
+        </View>
+        <Pressable onPress={requestPermission} className='bg-gray-100 p-4 rounded-md w-[45%] mx-auto'>
+          <Text style={{fontFamily:'Inter-Light', fontSize:16 , color:'#634AFF'}}>Grant permission</Text>
+        </Pressable>
       </View>
     );
   }
