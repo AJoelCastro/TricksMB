@@ -17,8 +17,6 @@ const IngresoService = {
             throw error
         }
     }
-
-
 }
 
 module.exports = IngresoService
