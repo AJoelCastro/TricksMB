@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, Pressable,Alert } from 'react-native'
+import { Text, View, Pressable,Alert, FlatList } from 'react-native'
 import { useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { Switch, Card, Divider } from 'react-native-paper';
@@ -23,7 +23,7 @@ export default function Almacen(){
   const [qrLeido, setQrLeido] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [showRegisters, setShowRegisters] = useState(true);
-  const [scannedData, setScannedData] = useState(null);
+  const [idCaja, setIdCaja] = useState(null);
   const [almacenSeleccionado, setAlmacenSeleccionado] = useState("");
   const [caja, setCaja] = useState(null);
   const [loaded, error] = useFonts({
@@ -39,10 +39,10 @@ export default function Almacen(){
     );
 };
   useEffect(() => {
-    if(scannedData !== null){
+    if(idCaja !== null){
       const cargarCajaPorId = async () => {
         try {
-          let id = Number(scannedData);
+          let id = Number(idCaja);
           const caja = await CajaService.getCajaById(id);
           console.log("caja", caja);
           setCaja(caja.caja);
@@ -52,7 +52,7 @@ export default function Almacen(){
       }
       cargarCajaPorId();
     }
-  }, [scannedData])
+  }, [idCaja])
 
   useEffect(() => {
       if (loaded || error) {
@@ -96,14 +96,13 @@ export default function Almacen(){
   const handleBarcodeScanned = async ({ data }) => {
     const numeroCaja = await data.split('/').pop();
 
-    setScannedData(numeroCaja);
+    setIdCaja(numeroCaja);
     setQrLeido(true);
     // Aquí puedes agregar cualquier lógica adicional que necesites después de escanear el código QR
   };
 
   const actualizarCaja = async () => {
     try {
-      let idCaja = Number(scannedData);
       let codigoPedido = caja?.codigoPedido;
       console.log("codigoPedido", codigoPedido);
       const ingreso = await IngresoService.createIngreso(idCaja, codigoPedido);
@@ -112,7 +111,7 @@ export default function Almacen(){
         setShowCamera(false);
         setShowRegisters(true);
         setQrLeido(false);
-        setScannedData(null)
+        setIdCaja(null)
         setCaja(null)
       
     } catch (error) {
@@ -120,7 +119,7 @@ export default function Almacen(){
       setShowCamera(false);
       setShowRegisters(true);
       setQrLeido(false);
-      setScannedData(null)
+      setIdCaja(null)
       setCaja(null)
     }
   }
@@ -184,24 +183,30 @@ export default function Almacen(){
                       </Pressable>
                     </View>
                   </CameraView> 
-                  {scannedData && (
+                  {idCaja && (
                     <View className='mt-4'>
                       <Card style={{ borderRadius: 10, elevation: 5, backgroundColor: 'white' }}>
                           <View className='p-2 '>
                               <View className='items-center'>
-                                <Text style={{fontFamily:'Inter-Black', fontSize:18}} >N° QR: {scannedData}</Text>
+                                <Text style={{fontFamily:'Inter-Black', fontSize:18}} >N° QR: {idCaja}</Text>
                               </View>
                               {
                                 caja!==null?(
-                                  <Card.Content className='flex-row gap-4 justify-between'>
-                                    <View>
-                                      <Text style={{fontFamily:'Inter-Black', fontSize:18}}>{caja.tipoCalzado} {caja.modelo}</Text>
-                                      <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Talla: {caja.talla}</Text>
-                                      <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Color: {caja.color}</Text>
-                                      <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Creada: {caja.fechaCreacion}</Text>
-                                    </View>
-                                    <Image source={caja.imagenUrl} style={{width: 100, height: 100}}/>
-                                  </Card.Content>
+                                  <FlatList
+                                    data={caja}
+                                    keyExtractor={(item) => item.idCaja}
+                                    renderItem={({item}) => (
+                                      <Card.Content className='flex-row gap-4 justify-between'>
+                                        <View>
+                                          <Text style={{fontFamily:'Inter-Black', fontSize:18}}>{item.tipoCalzado} {item.modelo}</Text>
+                                          <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Talla: {item.talla}</Text>
+                                          <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Color: {item.color}</Text>
+                                          <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Creada: {item.fechaCreacion}</Text>
+                                        </View>
+                                        <Image source={item.imagenUrl} style={{width: 100, height: 100}}/>
+                                      </Card.Content>
+                                    )}
+                                  />
                                 ):null
                               }
                           </View>
@@ -224,7 +229,7 @@ export default function Almacen(){
                           setShowCamera(false);
                           setShowRegisters(true);
                           setQrLeido(false);
-                          setScannedData(null);
+                          setIdCaja(null);
                           setCaja(null)
                         }}
                       >
