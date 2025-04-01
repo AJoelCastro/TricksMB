@@ -153,19 +153,20 @@ const DetallePedidoService = {
     async updateCantidad(codigoPedido) {
         const CaracteristicasService = require("../services/CaracteristicasService");
         try {
-            if (!cantidad || !codigoPedido) {
-                throw { status: 400, message: "Los parámetros son requeridos" };
+            if (!codigoPedido) {
+                const errorCodigoPedido = new Error("El código de pedido es requerido");
+                errorCodigoPedido.status = 400;
+                throw errorCodigoPedido;    
             }
 
             const {idDetalle_pedido} = await this.getDetallePedidoByCodigoPedido(codigoPedido);
             const caracteristicas = await CaracteristicasService.getCaracteristicasByIdDetallePedido(idDetalle_pedido);
-
+            console.log("caracteristicas",caracteristicas);
             const cantidadTotal = caracteristicas.reduce((total, caracteristica) => total + caracteristica.Cantidad, 0);
             
-            const obj = await DetallePedidoDAO.updateCantidad(cantidadTotal, idDetalle_pedido);
+            return await DetallePedidoDAO.updateCantidad(idDetalle_pedido, cantidadTotal);
         } catch (error) {
-            if (error.status) throw error;
-            throw { status: 500, message: "Error en DetallePedido Service", detalle: error.message };
+            throw error.status? error: { status: 500, message: "Error en DetallePedido Service", detalle: error.message };
         }
     }
 };

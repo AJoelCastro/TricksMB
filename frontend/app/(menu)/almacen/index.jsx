@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome5';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Image } from 'expo-image';
+import IngresoService from '@/services/IngresoService';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -43,6 +44,7 @@ export default function Almacen(){
         try {
           let id = Number(scannedData);
           const caja = await CajaService.getCajaById(id);
+          console.log("caja", caja);
           setCaja(caja.caja);
         } catch (error) {
           mostrarError(error);
@@ -101,9 +103,12 @@ export default function Almacen(){
 
   const actualizarCaja = async () => {
     try {
-      let id = Number(scannedData);
-      
-        Alert.alert("Caja actualizada", "La caja ha sido actualizada correctamente");
+      let idCaja = Number(scannedData);
+      let codigoPedido = caja?.codigoPedido;
+      console.log("codigoPedido", codigoPedido);
+      const ingreso = await IngresoService.createIngreso(idCaja, codigoPedido);
+      console.log("ingreso", ingreso);
+        Alert.alert("Caja actualizada", "La caja ha sido ingresada al almacén correctamente");
         setShowCamera(false);
         setShowRegisters(true);
         setQrLeido(false);

@@ -28,11 +28,15 @@ const DetalleAlmacenService = {
     async getDetalleAlmacen(codigoPedido){
         const DetallePedidoService = require('./DetallePedidoService');
         try{
-            if(!codigoPedido) throw new Error("codigo de pedido requerido para obtener detalle almacen");
-            const {idDetalle_pedido} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
-            return await DetalleAlmacenDAO.getDetalleAlmacen(idDetalle_pedido);
+            if(!codigoPedido) {
+                const error = new Error("codigo de pedido requerido para obtener detalle almacen");
+                error.status = 400;
+                throw error;
+            }
+            const data = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
+            return await DetalleAlmacenDAO.getDetalleAlmacen(data.idDetalle_pedido);
         }catch(error){
-            throw error;
+            throw error.status? error: {status: 500, message: "Error en DetalleAlmacenService"};
         }
     },
 

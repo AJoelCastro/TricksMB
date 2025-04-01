@@ -11,13 +11,11 @@ const IngresoService = {
                 throw erroridCajaCodigo;
             }
             const ingreso = await this.getIngresosByCaja(idCaja)
-            
-            if(ingreso){
-                const erroridCaja = new Error("Caja ya ingresada");
+            if(ingreso !== null ){
+                const erroridCaja = new Error(`La caja ${ingreso.Caja_idCaja} ya ha sido ingresada al almacén anteriormente`);
                 erroridCaja.status = 404;
                 throw erroridCaja;
             }
-
             const {idDetalle_almacen} = await DetalleAlmacenService.getDetalleAlmacen(codigoPedido);
             return await IngresoDAO.createIngreso(idCaja, idDetalle_almacen);
         }catch(error){
@@ -25,7 +23,7 @@ const IngresoService = {
         }
     },
 
-    async getIngresosBy(idCaja)  {
+    async getIngresosByCaja(idCaja)  {
         try{
             if(!idCaja) {
                 const erroridCaja = new Error("idCaja requerido");

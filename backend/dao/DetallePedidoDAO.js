@@ -124,8 +124,7 @@ class DetallePedidoDAO {
             const [rows] = await db.execute(query,[cantidad, idDetallePedido]);
             return rows;
         }catch(error){
-            console.error("Error al actualizar la cantidad del detalle de pedido", error);
-            throw error;
+            throw {status: 500, message: "Error interno del servidor al actualizar la cantidad del pedido"};
         }
     }
 }
