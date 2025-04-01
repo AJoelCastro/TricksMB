@@ -5,7 +5,7 @@ const UsuarioController = require('../controllers/UsuarioController');
 
 // Rutas públicas
 router.post('/register', UsuarioController.register);
-router.post('/login', UsuarioController.login);
+router.post('/login',UsuarioController.login);
 
 // Rutas protegidas (solo accesibles con token)
 router.get('/perfil', authMiddleware, (req, res) => {

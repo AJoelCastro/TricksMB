@@ -18,10 +18,10 @@ class UsuarioDAO {
             const [rows] = await db.execute(query, [correo]);
             
             // Corrección: Verificar si `rows` está vacío
-            if (!rows.length) {
-                console.log("No se encontró ningún usuario con el correo proporcionado.");
-                return null;
-            }
+           // if (!rows.length) {
+               // console.log("No se encontró ningún usuario con el correo proporcionado.");
+                //return null;
+            //}
 
             return rows[0];
         } catch (error) {
