@@ -14,8 +14,14 @@ const UserService = {
             });
             return response.data;
         } catch (error) {
-            console.error("Error obteniendo perfil:", error.response?.data || error.message);
-            throw error;
+            if(error.response){
+                throw new Error(error.response.data.error || `Error al obtener el perfil: ${error.response.status}`);
+            }else if(error.request){
+                console.log("error.request", error.request);
+                throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
+            }else{
+                throw new Error("Ocurrió un error inesperado al obtener el perfil.");
+            }
         }
     }
 };

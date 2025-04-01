@@ -8,12 +8,15 @@ const AuthService = {
     login: async (correo, contrasenia) => {
         try {
             const response = await axios.post(`${API_URL}/usuario/login`, { correo, contrasenia });
-            const { token } = response.data;
-            if (token) {
-                await AsyncStorage.setItem('token', token);
-                console.log("Token guardado:", token);
+            const token = response.data?.token;
+            if (!token) {
+                throw new Error("⚠️ No se recibió un token en la respuesta del servidor.");
             }
+            
+            await AsyncStorage.setItem('token', token);
+            console.log("Token guardado:", token);
             return response.data;
+
         } catch (error) {
             console.error("Error en el login:", error.response?.data || error.message);
             throw error;
@@ -32,12 +35,23 @@ const AuthService = {
             console.log("Recuperando token:", token);
 
             if (!token) return null;
-            const decoded = jwtDecode(token);
             
-            if (decoded.exp * 1000 < Date.now()) {
+            let decoded;
+            try {
+                decoded = jwtDecode(token);
+            } catch (error) {
+                console.error("❌ Token inválido:", error);
                 await AuthService.logout();
                 return null;
             }
+
+            // Verificar si el token ha expirado
+            if (decoded.exp * 1000 < Date.now()) {
+                console.warn("⚠️ Token expirado. Cerrando sesión...");
+                await AuthService.logout();
+                return null;
+            }
+
             return token;
         } catch (error) {
             console.error("Error obteniendo token:", error);

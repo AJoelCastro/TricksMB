@@ -19,16 +19,16 @@ const UsuarioController = {
         
         try {
             const user = await UsuarioService.findUser(correo, contrasenia);
-            if (user) {
-                const token = jwt.sign(
+            console.log(user);
+            if (!user) {
+                return res.json({ error: "Correo o contraseña incorrectos", status: 400 });
+            }
+            const token = jwt.sign(
                     { userId: user.idUsuario, correo: user.Correo },
-                    process.env.JWT_SECRET || 'secreto_super_seguro',
+                    process.env.JWT_SECRET,
                     { expiresIn: '16h' }
                 );
                 res.json({ token, status: 200 });
-            } else {
-                res.json({ error: "Correo o contraseña incorrectos", status: 400 });
-            }
         } catch (error) {
             next(error);
         }
