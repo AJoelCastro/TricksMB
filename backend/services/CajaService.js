@@ -7,6 +7,10 @@ const CajaService = {
     async createCaja(codigoPedido) {
         const DetallePedido = require("./DetallePedidoService");
         const Caracteristica = require("./CaracteristicasService");
+        const CaracteristicasService = require("./CaracteristicasService");
+        const DetallPedidoService = require("./DetallePedidoService");
+        const ModeloService = require("./ModeloService");
+        const TipoCalzadoService = require("./TipoCalzadoService");
         try {
 
             // Obtener detalle del pedido
@@ -16,6 +20,11 @@ const CajaService = {
 
             const cajas = [];
             for (const caracteristica of caracteristicas) {
+                console.log(caracteristica);
+                const detallePedido= await DetallPedidoService.getDetallePedidoByidDetallePedido(caracteristica.Detalle_pedido_idDetalle_pedido);
+                console.log(detallePedido);
+                const modelo= await ModeloService.getModeloById(detallePedido.Modelo_idModelo);
+                const tipoCalzado= await TipoCalzadoService.getTipoCalzadoByCodigoPedido(detallePedido.Codigo_pedido);
                 for (let i = 0; i < caracteristica.Cantidad; i++) {
                     const caja = await CajaDAO.createCaja(caracteristica.idCaracteristicas);
                     if(!caja){
@@ -23,9 +32,15 @@ const CajaService = {
                         error.status = 400;
                         throw error;
                     }
+                    caja.talla=caracteristica.Talla;
+                    caja.color=caracteristica.Color;
+                    caja.codigoPedido=detallePedido.Codigo_pedido;
+                    caja.modelo=modelo.Nombre;
+                    caja.tipoCalzado=tipoCalzado.Nombre;
                     cajas.push(caja);
                 }
             }
+            // const caracteristica= await CaracteristicasService.getCaracteristicaByIdCaracteristicas(caja.idCaracteristica);
 
             const pdfBuffer = await PdfService.generatePDF(cajas);
             await PdfService.sendPDFToTelegram(pdfBuffer, `Cajas_Pedido_${codigoPedido}.pdf`);
