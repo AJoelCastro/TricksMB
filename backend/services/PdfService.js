@@ -12,14 +12,14 @@ const PdfService = {
     async generatePDF(cajas) {
 
         return new Promise((resolve, reject) => {
-            const doc = new PDFDocument({ margin: 50, size: 'A3'});
+            const doc = new PDFDocument({ margin: 50, layout: 'landscape'});
             const buffers = [];
             doc.on('data', buffers.push.bind(buffers));
             doc.on('end', () => resolve(Buffer.concat(buffers)));
 
             let x = 50; // Coordenada X inicial
             let y = 50; // Coordenada Y inicial
-            const colWidth = 210; // Ancho de la columna
+            const colWidth = 230; // Ancho de la columna
             const rowHeight = 120; // Espacio entre filas
             const maxHeight = doc.page.height - 50; // Altura máxima de la página antes de cambiar
             
@@ -48,7 +48,7 @@ const PdfService = {
                     doc.text(`Color: ${caja.color}`, x, y + 45);
                     doc.text(`${caja.tipoCalzado} ${caja.modelo}`, x, y + 60);
                     // Agrega el código QR debajo del texto
-                    doc.image(imageBuffer, x +100, y-20, { width: 120, height: 120 });
+                    doc.image(imageBuffer, x +110, y-20, { width: 120, height: 120 });
 
                     // Ajusta la posición para la siguiente caja
                     y += rowHeight;
