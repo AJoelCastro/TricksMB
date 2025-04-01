@@ -34,7 +34,7 @@ const PdfService = {
 
                     const caracteristica = await CaracteristicasService.getCaracteristicaByIdCaracteristicas(caja.idCaracteristicas);
                     const detallePedido = await DetallPedidoService.getDetallePedidoByidDetallePedido(caracteristica.Detalle_pedido_idDetalle_pedido);
-                    const modelo = await ModeloService.getModeloByIdModelo(detallePedido.Modelo_idModelo);
+                    const modelo = await ModeloService.getModeloById(detallePedido.Modelo_idModelo);
                     const tipoCalzado = await TipoCalzadoService.getTipoCalzadoByCodigoPedido(modelo.Tipo_calzado_idTipo_calzado);
 
                     if (y + rowHeight > maxHeight) {
