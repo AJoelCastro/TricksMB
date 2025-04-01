@@ -9,6 +9,7 @@ const CaracteristicasService = require("./CaracteristicasService");
 const DetallPedidoService = require("./DetallePedidoService");
 const ModeloService = require("./ModeloService");
 const ImagenService = require("./ImagenService");
+const TipoCalzadoService = require("./TipoCalzadoService");
 
 
 const PdfService = {
@@ -36,7 +37,7 @@ const PdfService = {
                             const caracteristica= await CaracteristicasService.getCaracteristicaByIdCaracteristicas(caja.idCaracteristica);
                             const detallePedido= await DetallPedidoService.getDetallePedidoByidDetallePedido(caracteristica.Detalle_pedido_idDetalle_pedido);
                             const modelo= await ModeloService.getModeloById(detallePedido.Modelo_idModelo);
-                            const tipoCalzado= await TipoCalzadoService.getTipoCalzadoByCodigoPedido(modelo.Tipo_calzado_idTipo_calzado);
+                            const tipoCalzado= await TipoCalzadoService.getTipoCalzadoByCodigoPedido(detallePedido.Codigo_pedido);
                             if (y + rowHeight > maxHeight) {
                                 x += colWidth;
                                 y = 50;
