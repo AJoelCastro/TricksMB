@@ -149,7 +149,7 @@ export default function Almacen(){
   }
 
   return (
-    <View className='bg-white h-full'>
+    <ScrollView className='bg-white h-full'>
       {/* SELECCIONAR ALMACEN */}
       { almacenSeleccionado===""?(
         <>
@@ -199,7 +199,7 @@ export default function Almacen(){
                   <CameraView 
                     facing={facing}
                     onBarcodeScanned={qrLeido?handleBarcodeScanned:null}
-                    style={{flex:1, height: [300], width: [300] }}
+                    style={{flex:1, height: 300, width: 300, alignSelf: 'center' }}
                     
                   >
                     <View style={{ position: 'absolute', bottom: 20, alignSelf: 'center' }}>
@@ -241,25 +241,23 @@ export default function Almacen(){
                             </View>
                             {
                               caja.length>0?(
-                                <FlatList
-                                  data={caja}
-                                  keyExtractor={(item) => item.idCaja}
-                                  renderItem={({item}) => (
-                                    <View>
+                                caja.map((item)=>(
+                                  <View key={item.idCaja}>
+                                    <View className='m-2'>
                                       <Card.Content className='flex-row gap-4 justify-between'>
                                         <View>
-                                          <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Caja: {item.idCaja}</Text>
                                           <Text style={{fontFamily:'Inter-Black', fontSize:18}}>{item.tipoCalzado} {item.modelo}</Text>
+                                          <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Caja: {item.idCaja}</Text>
                                           <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Talla: {item.talla}</Text>
                                           <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Color: {item.color}</Text>
                                           <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Creada: {item.fechaCreacion}</Text>
                                         </View>
-                                      <Image source={item.imagenUrl} style={{width: 100, height: 100}}/>
+                                        <Image source={item.imagenUrl} style={{width: 100, height: 100}}/>
                                       </Card.Content>
                                       <Divider/>
                                     </View>
-                                  )}
-                                />
+                                  </View>
+                                ))
                               ):null
                             }
                         </View>
@@ -303,7 +301,7 @@ export default function Almacen(){
         </View>
       )}
       
-    </View>
+    </ScrollView>
     
   )
 }
