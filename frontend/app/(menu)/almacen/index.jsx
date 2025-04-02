@@ -36,11 +36,10 @@ export default function Almacen(){
       const handleVerificarIngreso = async () => {
         try {
           const verificarIngreso = await IngresoService.obtenerIngreso(idCaja);
-          console.log("verificarIngreso", verificarIngreso);
           if(verificarIngreso.ingreso===null){
             const Datacaja = await cargarCajaPorId(idCaja);
-            console.log("Datacaja", Datacaja);
-            const exists = caja.find(item => item.idCaja === Datacaja.caja.idCaja);
+            const exists = caja.some(item => item.idCaja === Datacaja.caja.idCaja || item.codigoPedido !== Datacaja.caja.codigoPedido);
+            console.log("exists", exists);
             if(!exists){
               caja.push(Datacaja.caja);
             }
@@ -135,16 +134,16 @@ export default function Almacen(){
         setShowCamera(false);
         setShowRegisters(true);
         setQrLeido(false);
-        setIdCaja(null)
-        setCaja(null)
+        setIdCaja(null);
+        setCaja([]);
       
     } catch (error) {
       mostrarError(error);
       setShowCamera(false);
       setShowRegisters(true);
       setQrLeido(false);
-      setIdCaja(null)
-      setCaja(null)
+      setIdCaja(null);
+      setCaja([]);
     }
   }
 
@@ -225,7 +224,7 @@ export default function Almacen(){
                         <Card style={{ borderRadius: 10, elevation: 5, backgroundColor: 'white' }}>
                             <View className='p-2 '>
                                 <View className='items-center'>
-                                  <Text style={{fontFamily:'Inter-Black', fontSize:18}} >Ultimo QR leidos</Text>
+                                  <Text style={{fontFamily:'Inter-Black', fontSize:18}} >Ultimos QR leidos</Text>
                                 </View>
                                 {
                                   caja.map((item)=>(
