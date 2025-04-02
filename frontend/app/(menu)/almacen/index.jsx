@@ -251,17 +251,17 @@ export default function Almacen(){
                         </Card>
                         <View className='flex-row justify-center gap-4 my-6'>
                           <Pressable 
-                            className='bg-[#634AFF] p-4 rounded-lg w-[45%] gap-1' 
+                            className='bg-[#634AFF] p-4 rounded-lg w-[45%] justify-center' 
                             onPress={actualizarCaja}>
                             <Text 
                               className='text-white text-center' 
                               style={{fontFamily:'Inter-Light', fontSize:16}}
                             >
-                              Actualizar Caja
+                              Ingresar
                             </Text>
                           </Pressable>
                           <Pressable
-                            className='bg-[#f62e2a] p-4 rounded-lg w-[45%]' 
+                            className='bg-[#f62e2a] p-4 rounded-lg w-[45%] justify-center' 
                             onPress={()=>{
                               setShowCamera(false);
                               setShowRegisters(true);
@@ -270,7 +270,7 @@ export default function Almacen(){
                               setCaja([]);
                             }}
                           >
-                            <Text className='text-white text-center' style={{fontFamily:'Inter-Light', fontSize:16}}>
+                            <Text className='text-white text-center ' style={{fontFamily:'Inter-Light', fontSize:16}}>
                               Cancelar
                             </Text>
                           </Pressable>
