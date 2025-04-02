@@ -44,11 +44,11 @@ export default function Almacen(){
               caja.push(Datacaja.caja);
             }
             else{
-              Alert.alert("Caja existente", "La caja ya ha sido leida anteriormente");
+              Alert.alert("Error", "La caja ya ha sido leida anteriormente");
             }
           }
           else{
-            Alert.alert("Caja ya ingresada", "La caja ya ha sido ingresada al almacén");
+            Alert.alert("Error", "La caja ya ha sido ingresada al almacén");
           }
           setIdCaja(null);
         } catch (error) {
@@ -132,7 +132,7 @@ export default function Almacen(){
         const ingreso = await IngresoService.createIngreso(idCaja, codigoPedido);
         console.log("ingreso", ingreso);
       }
-      Alert.alert("Cajas ingresadas", "Las cajas han sido ingresadas al almacén correctamente");
+      Alert.alert("Ingreso exitoso", "Las cajas han sido ingresadas al almacén correctamente");
       setShowCamera(false);
       setShowRegisters(true);
       setQrLeido(false);
