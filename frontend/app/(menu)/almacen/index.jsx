@@ -236,8 +236,7 @@ export default function Almacen(){
                     <Card style={{ borderRadius: 10, elevation: 5, backgroundColor: 'white' }}>
                         <View className='p-2 '>
                             <View className='items-center'>
-                              <Text style={{fontFamily:'Inter-Black', fontSize:18}} >Ultimo QR leidos:</Text>
-                              <Divider/>
+                              <Text style={{fontFamily:'Inter-Black', fontSize:18}} >Ultimo QR leidos</Text>
                             </View>
                             {
                               caja.length>0?(
