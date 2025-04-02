@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, Pressable,Alert, FlatList } from 'react-native'
+import { ScrollView, Text, View, Pressable,Alert, FlatList } from 'react-native'
 import { useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { Switch, Card, Divider } from 'react-native-paper';
@@ -45,7 +45,6 @@ export default function Almacen(){
           else{
             Alert.alert("Caja ya ingresada", "La caja ya ha sido ingresada al almacén");
           }
-          // setQrLeido(false);
           setIdCaja(null);
         } catch (error) {
           mostrarError(error);
@@ -112,12 +111,10 @@ export default function Almacen(){
   }
 
   const handleBarcodeScanned = async ({ data }) => {
-    try {
+    if(qrLeido===true){
       const numeroCaja = await data.split('/').pop();
       setIdCaja(numeroCaja);
-      setQrLeido(true);
-    } catch (error) {
-      mostrarError(error);
+      setQrLeido(false);
     }
   };
   
@@ -175,7 +172,7 @@ export default function Almacen(){
       )
       :
       (
-        <View className='h-full'>
+        <View className='flex-1'>
           <View>
           {
             !showCamera?(
@@ -192,11 +189,12 @@ export default function Almacen(){
           {/* CAMARA */}
             {
               showCamera&&(
-                <View className='p-4 h-[70%]'>
+                <View className='p-4'>
                   <CameraView 
                     facing={facing}
-                    onBarcodeScanned={qrLeido?null:handleBarcodeScanned}
-                    style={{flex:1 }}
+                    onBarcodeScanned={qrLeido?handleBarcodeScanned:null}
+                    style={{flex:1, height: [300], width: [300] }}
+                    
                   >
                     <View style={{ position: 'absolute', bottom: 20, alignSelf: 'center' }}>
                       <Pressable onPress={toggleCameraFacing}>
@@ -204,44 +202,13 @@ export default function Almacen(){
                       </Pressable>
                     </View>
                   </CameraView> 
-                  {idCaja && (
-                    <View className='mt-4'>
-                      <Card style={{ borderRadius: 10, elevation: 5, backgroundColor: 'white' }}>
-                          <View className='p-2 '>
-                              <View className='items-center'>
-                                <Text style={{fontFamily:'Inter-Black', fontSize:18}} >N° QR: {idCaja}</Text>
-                              </View>
-                              {
-                                caja.length>0?(
-                                  <FlatList
-                                    data={caja}
-                                    keyExtractor={(item, index) => index}
-                                    renderItem={({item}) => (
-                                      <Card.Content className='flex-row gap-4 justify-between'>
-                                        <View>
-                                          <Text style={{fontFamily:'Inter-Black', fontSize:18}}>{item.tipoCalzado} {item.modelo}</Text>
-                                          <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Talla: {item.talla}</Text>
-                                          <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Color: {item.color}</Text>
-                                          <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Creada: {item.fechaCreacion}</Text>
-                                        </View>
-                                        <Image source={item.imagenUrl} style={{width: 100, height: 100}}/>
-                                      </Card.Content>
-                                    )}
-                                  />
-                                ):null
-                              }
-                          </View>
-                          
-                      </Card>
-                    </View>
-                  )}
                   <View className='flex-row justify-center gap-4 mt-8'>
                       <Pressable
                         className='bg-[#3f76f5] p-4 rounded-lg'
-                        onPress={actualizarCaja}
+                        onPress={()=>setQrLeido(!qrLeido)}
                       >
                         <Text className='text-white'>
-                          Ingresar
+                          Scanear QR
                         </Text>
                       </Pressable>
                       <Pressable
@@ -258,6 +225,35 @@ export default function Almacen(){
                           Cancelar
                         </Text>
                       </Pressable>
+                  </View>
+                  <View className='mt-4'>
+                    <Card style={{ borderRadius: 10, elevation: 5, backgroundColor: 'white' }}>
+                        <View className='p-2 '>
+                            <View className='items-center'>
+                              <Text style={{fontFamily:'Inter-Black', fontSize:18}} >Ultimo QR leido: {idCaja}</Text>
+                            </View>
+                            {
+                              caja.length>0?(
+                                <FlatList
+                                  data={caja}
+                                  keyExtractor={(item, index) => index}
+                                  renderItem={({item}) => (
+                                    <Card.Content className='flex-row gap-4 justify-between'>
+                                      <View>
+                                        <Text style={{fontFamily:'Inter-Black', fontSize:18}}>{item.tipoCalzado} {item.modelo}</Text>
+                                        <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Talla: {item.talla}</Text>
+                                        <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Color: {item.color}</Text>
+                                        <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Creada: {item.fechaCreacion}</Text>
+                                      </View>
+                                      <Image source={item.imagenUrl} style={{width: 100, height: 100}}/>
+                                    </Card.Content>
+                                  )}
+                                />
+                              ):null
+                            }
+                        </View>
+                        
+                    </Card>
                   </View>
                   
                 </View>
