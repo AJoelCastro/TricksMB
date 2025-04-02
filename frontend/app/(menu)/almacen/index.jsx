@@ -25,11 +25,41 @@ export default function Almacen(){
   const [showRegisters, setShowRegisters] = useState(true);
   const [idCaja, setIdCaja] = useState(null);
   const [almacenSeleccionado, setAlmacenSeleccionado] = useState("");
-  const [caja, setCaja] = useState(null);
+  const [caja, setCaja] = useState([]);
   const [loaded, error] = useFonts({
       'Inter-Black': require('../../../assets/fonts/DMSans-Regular.ttf'),
       'Inter-Light': require('../../../assets/fonts/DMSans-Light.ttf'),
   });
+
+  useEffect(() => {
+    if(idCaja!==null){
+      const handleVerificarIngreso = async () => {
+        try {
+          const verificarIngreso = await IngresoService.obtenerIngreso(idCaja);
+          console.log("verificarIngreso", verificarIngreso);
+          if(verificarIngreso.ingreso===null){
+            const Datacaja = await cargarCajaPorId(idCaja);
+            console.log("Datacaja", Datacaja);
+            caja.push(Datacaja.caja);
+          }
+          else{
+            Alert.alert("Caja ya ingresada", "La caja ya ha sido ingresada al almacén");
+          }
+          // setQrLeido(false);
+          setIdCaja(null);
+        } catch (error) {
+          mostrarError(error);
+        }
+      }
+      handleVerificarIngreso();
+    }
+  }, [idCaja]);
+
+  useEffect(() => {
+      if (loaded || error) {
+          SplashScreen.hideAsync();
+      }
+  }, [loaded, error]);
 
   const mostrarError = (error) => {
     Alert.alert(
@@ -38,28 +68,16 @@ export default function Almacen(){
         [{ text: "OK" }] // Botón requerido
     );
 };
-  useEffect(() => {
-    if(idCaja !== null){
-      const cargarCajaPorId = async () => {
-        try {
-          let id = Number(idCaja);
-          const caja = await CajaService.getCajaById(id);
-          console.log("caja", caja);
-          setCaja(caja.caja);
-        } catch (error) {
-          mostrarError(error);
-        }
-      }
-      cargarCajaPorId();
-    }
-  }, [idCaja])
 
-  useEffect(() => {
-      if (loaded || error) {
-          SplashScreen.hideAsync();
-      }
-  }, [loaded, error]);
-  
+  const cargarCajaPorId = async (idCaja) => {
+    try {
+      let id = idCaja;
+      return await CajaService.getCajaById(id);
+    } catch (error) {
+      mostrarError(error);
+    }
+  }
+
   if (!loaded && !error) {
     return null;
   }
@@ -94,12 +112,15 @@ export default function Almacen(){
   }
 
   const handleBarcodeScanned = async ({ data }) => {
-    const numeroCaja = await data.split('/').pop();
-
-    setIdCaja(numeroCaja);
-    setQrLeido(true);
-    // Aquí puedes agregar cualquier lógica adicional que necesites después de escanear el código QR
+    try {
+      const numeroCaja = await data.split('/').pop();
+      setIdCaja(numeroCaja);
+      setQrLeido(true);
+    } catch (error) {
+      mostrarError(error);
+    }
   };
+  
 
   const actualizarCaja = async () => {
     try {
@@ -191,10 +212,10 @@ export default function Almacen(){
                                 <Text style={{fontFamily:'Inter-Black', fontSize:18}} >N° QR: {idCaja}</Text>
                               </View>
                               {
-                                caja!==null?(
+                                caja.length>0?(
                                   <FlatList
                                     data={caja}
-                                    keyExtractor={(item) => item.idCaja}
+                                    keyExtractor={(item, index) => index}
                                     renderItem={({item}) => (
                                       <Card.Content className='flex-row gap-4 justify-between'>
                                         <View>
@@ -230,7 +251,7 @@ export default function Almacen(){
                           setShowRegisters(true);
                           setQrLeido(false);
                           setIdCaja(null);
-                          setCaja(null)
+                          setCaja([]);
                         }}
                       >
                         <Text className='text-white'>

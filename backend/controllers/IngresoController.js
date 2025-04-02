@@ -14,12 +14,8 @@ const IngresoController = {
         try {
             const { idCaja } = req.params;
             const ingreso = await IngresoService.getIngresosByCaja(idCaja);
-            if(ingreso !== null ){
-                const erroridCaja = new Error(`La caja ${ingreso.Caja_idCaja} ya ha sido ingresada al almacén anteriormente`);
-                erroridCaja.status = 404;
-                throw erroridCaja;
-            }
-            res.json({ ingreso, status: 201 });
+            //Aqui retorna NULL o el OBJETO para que el frontend pueda saber que la caja ha sido o no ingresada al almacén
+            return res.json({ ingreso, status: 201 });
         } catch (error) {
             next(error);
         }

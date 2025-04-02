@@ -34,7 +34,7 @@ const IngresoService = {
             const token = await AuthService.getToken();
             if (!token) throw new Error("No hay token disponible");
             
-            const response = await axios.get(`${API_URL}/ingreso/${idCaja}`, {
+            const response = await axios.get(`${API_URL}/ingreso/obtener/${idCaja}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             return response.data;
