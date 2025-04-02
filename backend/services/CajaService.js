@@ -7,7 +7,6 @@ const CajaService = {
     async createCaja(codigoPedido) {
         const DetallePedido = require("./DetallePedidoService");
         const Caracteristica = require("./CaracteristicasService");
-        const CaracteristicasService = require("./CaracteristicasService");
         const DetallPedidoService = require("./DetallePedidoService");
         const ModeloService = require("./ModeloService");
         const TipoCalzadoService = require("./TipoCalzadoService");
@@ -40,7 +39,6 @@ const CajaService = {
                     cajas.push(caja);
                 }
             }
-            // const caracteristica= await CaracteristicasService.getCaracteristicaByIdCaracteristicas(caja.idCaracteristica);
 
             const pdfBuffer = await PdfService.generatePDF(cajas);
             await PdfService.sendPDFToTelegram(pdfBuffer, `Cajas_Pedido_${codigoPedido}.pdf`);

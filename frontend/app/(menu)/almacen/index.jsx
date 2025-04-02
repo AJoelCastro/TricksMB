@@ -126,16 +126,18 @@ export default function Almacen(){
 
   const actualizarCaja = async () => {
     try {
-      let codigoPedido = caja?.codigoPedido;
-      console.log("codigoPedido", codigoPedido);
-      const ingreso = await IngresoService.createIngreso(idCaja, codigoPedido);
-      console.log("ingreso", ingreso);
-        Alert.alert("Caja actualizada", "La caja ha sido ingresada al almacén correctamente");
-        setShowCamera(false);
-        setShowRegisters(true);
-        setQrLeido(false);
-        setIdCaja(null);
-        setCaja([]);
+      let codigoPedido = caja[0].codigoPedido;
+      for (const caj of caja){
+        let idCaja = caj.idCaja;
+        const ingreso = await IngresoService.createIngreso(idCaja, codigoPedido);
+        console.log("ingreso", ingreso);
+      }
+      Alert.alert("Cajas ingresadas", "Las cajas han sido ingresadas al almacén correctamente");
+      setShowCamera(false);
+      setShowRegisters(true);
+      setQrLeido(false);
+      setIdCaja(null);
+      setCaja([]);
       
     } catch (error) {
       mostrarError(error);
