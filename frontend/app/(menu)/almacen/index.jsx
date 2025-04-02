@@ -40,7 +40,13 @@ export default function Almacen(){
           if(verificarIngreso.ingreso===null){
             const Datacaja = await cargarCajaPorId(idCaja);
             console.log("Datacaja", Datacaja);
-            caja.push(Datacaja.caja);
+            const exists = caja.find(item => item.idCaja === Datacaja.caja.idCaja);
+            if(!exists){
+              caja.push(Datacaja.caja);
+            }
+            else{
+              Alert.alert("Caja existente", "La caja ya ha sido leida anteriormente");
+            }
           }
           else{
             Alert.alert("Caja ya ingresada", "La caja ya ha sido ingresada al almacén");
@@ -230,23 +236,28 @@ export default function Almacen(){
                     <Card style={{ borderRadius: 10, elevation: 5, backgroundColor: 'white' }}>
                         <View className='p-2 '>
                             <View className='items-center'>
-                              <Text style={{fontFamily:'Inter-Black', fontSize:18}} >Ultimo QR leido: {idCaja}</Text>
+                              <Text style={{fontFamily:'Inter-Black', fontSize:18}} >Ultimo QR leidos:</Text>
+                              <Divider/>
                             </View>
                             {
                               caja.length>0?(
                                 <FlatList
                                   data={caja}
-                                  keyExtractor={(item, index) => index}
+                                  keyExtractor={(item) => item.idCaja}
                                   renderItem={({item}) => (
-                                    <Card.Content className='flex-row gap-4 justify-between'>
-                                      <View>
-                                        <Text style={{fontFamily:'Inter-Black', fontSize:18}}>{item.tipoCalzado} {item.modelo}</Text>
-                                        <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Talla: {item.talla}</Text>
-                                        <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Color: {item.color}</Text>
-                                        <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Creada: {item.fechaCreacion}</Text>
-                                      </View>
+                                    <View>
+                                      <Card.Content className='flex-row gap-4 justify-between'>
+                                        <View>
+                                          <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Caja: {item.idCaja}</Text>
+                                          <Text style={{fontFamily:'Inter-Black', fontSize:18}}>{item.tipoCalzado} {item.modelo}</Text>
+                                          <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Talla: {item.talla}</Text>
+                                          <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Color: {item.color}</Text>
+                                          <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Creada: {item.fechaCreacion}</Text>
+                                        </View>
                                       <Image source={item.imagenUrl} style={{width: 100, height: 100}}/>
-                                    </Card.Content>
+                                      </Card.Content>
+                                      <Divider/>
+                                    </View>
                                   )}
                                 />
                               ):null

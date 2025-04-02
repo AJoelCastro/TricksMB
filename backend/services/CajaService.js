@@ -110,6 +110,7 @@ const CajaService = {
             const tipoCalzado = await TipoCalzadoService.getTipoCalzadoByCodigoPedido(detallePedido.Codigo_pedido);
 
             return {
+                idCaja: caja.idCaja,
                 codigoPedido: detallePedido.Codigo_pedido,
                 modelo: modelo.Nombre,
                 tipoCalzado: tipoCalzado.Nombre,
