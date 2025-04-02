@@ -210,60 +210,74 @@ export default function Almacen(){
                   </CameraView> 
                   <View className='flex-row justify-center gap-4 mt-8'>
                       <Pressable
-                        className='bg-[#3f76f5] p-4 rounded-lg'
+                        className='bg-[#634AFF] p-4 rounded-lg w-[45%]'
                         onPress={()=>setQrLeido(!qrLeido)}
                       >
-                        <Text className='text-white'>
+                        <Text className='text-white text-center' style={{fontFamily:'Inter-Light', fontSize:16}}>
                           Scanear QR
                         </Text>
                       </Pressable>
-                      <Pressable
-                        className='bg-[#f62e2a] p-4 rounded-lg' 
-                        onPress={()=>{
-                          setShowCamera(false);
-                          setShowRegisters(true);
-                          setQrLeido(false);
-                          setIdCaja(null);
-                          setCaja([]);
-                        }}
-                      >
-                        <Text className='text-white'>
-                          Cancelar
-                        </Text>
-                      </Pressable>
+                      
                   </View>
-                  <View className='mt-4'>
-                    <Card style={{ borderRadius: 10, elevation: 5, backgroundColor: 'white' }}>
-                        <View className='p-2 '>
-                            <View className='items-center'>
-                              <Text style={{fontFamily:'Inter-Black', fontSize:18}} >Ultimo QR leidos</Text>
-                            </View>
-                            {
-                              caja.length>0?(
-                                caja.map((item)=>(
-                                  <View key={item.idCaja}>
-                                    <View className='m-2'>
-                                      <Card.Content className='flex-row gap-4 justify-between'>
-                                        <View>
-                                          <Text style={{fontFamily:'Inter-Black', fontSize:18}}>{item.tipoCalzado} {item.modelo}</Text>
-                                          <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Caja: {item.idCaja}</Text>
-                                          <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Talla: {item.talla}</Text>
-                                          <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Color: {item.color}</Text>
-                                          <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Creada: {item.fechaCreacion}</Text>
-                                        </View>
-                                        <Image source={item.imagenUrl} style={{width: 100, height: 100}}/>
-                                      </Card.Content>
-                                      <Divider/>
+                  {
+                    caja.length>0?(
+                      <View className='mt-4'>
+                        <Card style={{ borderRadius: 10, elevation: 5, backgroundColor: 'white' }}>
+                            <View className='p-2 '>
+                                <View className='items-center'>
+                                  <Text style={{fontFamily:'Inter-Black', fontSize:18}} >Ultimo QR leidos</Text>
+                                </View>
+                                {
+                                  caja.map((item)=>(
+                                    <View key={item.idCaja}>
+                                      <View className='m-2'>
+                                        <Card.Content className='flex-row gap-4 justify-between'>
+                                          <View>
+                                            <Text style={{fontFamily:'Inter-Black', fontSize:18}}>{item.tipoCalzado} {item.modelo}</Text>
+                                            <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Caja: {item.idCaja}</Text>
+                                            <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Talla: {item.talla}</Text>
+                                            <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Color: {item.color}</Text>
+                                            <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Creada: {item.fechaCreacion}</Text>
+                                          </View>
+                                          <Image source={item.imagenUrl} style={{width: 100, height: 100}}/>
+                                        </Card.Content>
+                                        <Divider/>
+                                      </View>
                                     </View>
-                                  </View>
-                                ))
-                              ):null
-                            }
+                                    ))
+                                }
+                            </View>
+                            
+                        </Card>
+                        <View className='flex-row justify-center gap-4 my-6'>
+                          <Pressable 
+                            className='bg-[#634AFF] p-4 rounded-lg w-[45%] gap-1' 
+                            onPress={actualizarCaja}>
+                            <Text 
+                              className='text-white text-center' 
+                              style={{fontFamily:'Inter-Light', fontSize:16}}
+                            >
+                              Actualizar Caja
+                            </Text>
+                          </Pressable>
+                          <Pressable
+                            className='bg-[#f62e2a] p-4 rounded-lg w-[45%]' 
+                            onPress={()=>{
+                              setShowCamera(false);
+                              setShowRegisters(true);
+                              setQrLeido(false);
+                              setIdCaja(null);
+                              setCaja([]);
+                            }}
+                          >
+                            <Text className='text-white text-center' style={{fontFamily:'Inter-Light', fontSize:16}}>
+                              Cancelar
+                            </Text>
+                          </Pressable>
                         </View>
-                        
-                    </Card>
-                  </View>
-                  
+                      </View>
+                    ):null
+                  }
                 </View>
                 
               )
