@@ -45,17 +45,20 @@ class AlmacenDAO {
                 [cantidad, idAlmacen])
 
             if (result.affectedRows === 0) {
-                throw new Error("No se encontró el almacén o el stock ya tenía el mismo valor.");
+                const errorAlmacen = new Error("No se encontró el almacén");
+                errorAlmacen.status = 404;
+                throw errorAlmacen;
             }
 
             if (result.changedRows === 0) {
-                throw new Error("El stock ya tenía el mismo valor. No se realizaron cambios.");
+                const errorStock = new Error("El stock ya tenía el mismo valor. No se realizaron cambios.");
+                errorStock.status = 400;
+                throw errorStock;
             }
 
             return {message:"Se actualizo el stock del almacen"}
         }catch(error){
-            console.error("Error al actualiza el stock", error);
-            throw error;
+            throw error.status ? error : {status: 500, message: "Error interno del servidor al actualizar el stock"};
         }
     }
 }
