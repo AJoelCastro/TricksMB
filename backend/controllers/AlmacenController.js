@@ -22,15 +22,15 @@ const AlmacenController = {
         }
     },
 
-    async updateStock(req, res, next) {
+    async getAllAlmacen(req, res, next) {
         try {
-            const { codigoPedido, cantidad } = req.body;
-            const stock = await AlmacenService.updateStock(codigoPedido, cantidad);
-            res.json({ stock, status: 200 });
+            const almacen = await AlmacenService.getAllAlmacen();
+            res.json({ almacen, status: 200 });
         } catch (error) {
             next(error);
         }
     },
+
 }
 
 module.exports = AlmacenController

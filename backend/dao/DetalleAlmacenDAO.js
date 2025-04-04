@@ -117,6 +117,14 @@ class DetalleAlmacenDAO{
         }
     }
 
+    static async  getAllDetalleAlmacen(){
+        try{
+            const [result] = await db.execute(`SELECT * FROM Detalle_almacen`);
+            return result;
+        }catch(error){
+            throw error.status? error: {status: 500, message: "Error interno del servidor al obtener el detalle almacén"};
+        }
+    }
     
 }
 

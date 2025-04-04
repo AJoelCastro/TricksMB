@@ -23,16 +23,47 @@ const AlmacenService = {
         }
     },
 
-    async updateStock(CodigoPedido, cantidad){
-        const DetallePedidoService = require('./DetallePedidoService');
+    async getAllAlmacen(){
         try{
-            if(!CodigoPedido || !cantidad) throw {status: 400, message: "Parametros incorrectos"};
-            const {idDetalle_pedido} = await DetallePedidoService.getDetallePedidoByCodigoPedido(CodigoPedido);
-            return await AlmacenDAO.updateStock(idDetalle_pedido, cantidad);
+            const result = await AlmacenDAO.getAllAlmacen();
+            
+            if(result.length === 0){
+                const errorAlmacen = new Error("No se encontraron almacenes");
+                errorAlmacen.status = 404;
+                throw errorAlmacen;
+            }
+
+            const datos = await Promise.all(result.map(async (almacen) => {
+                return {
+                    nombre: almacen.Nombre,
+                    imagen: almacen.Imagen,
+                    direccion: almacen.Direccion,
+                    stock: almacen.Stock
+                };
+            }));
+            
+            return datos;
+        }catch(error){
+            throw error.status ? error : {status: 500, message: "Error en AlmacenService"};
+        }
+    },
+
+    async updateStock(idAlmacen, cantidad){
+        try{
+            if(!idAlmacen || !cantidad) throw {status: 400, message: "Parametros incorrectos"};
+            
+            const almacen = await AlmacenDAO.getAlmacen(idAlmacen);
+            if(!almacen) throw {status: 404, message: "Almacen no encontrado"};
+            if(cantidad <= 0) throw {status: 400, message: "Cantidad no valida"};
+
+            const stockActual = almacen.Stock;
+            const nuevoStock = stockActual + cantidad;
+            
+            return await AlmacenDAO.updateStock(idAlmacen, nuevoStock);
         }catch(error){
             throw error;
         }
-    }
+    },
 }
 
 module.exports = AlmacenService
