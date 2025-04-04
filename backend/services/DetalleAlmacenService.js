@@ -40,6 +40,14 @@ const DetalleAlmacenService = {
         }
     },
 
+    async getAllDetalleAlmacen(){
+        try{
+            return await DetalleAlmacenDAO.getAllDetalleAlmacen();
+        }catch(error){
+            throw error.status? error: {status: 500, message: "Error en DetalleAlmacenService"};
+        }
+    },
+
     async updateIdAlmacen(nombreAlmacen, codigoPedido){
         const AlmacenService = require('./AlmacenService');
         const DetallePedidoService = require('./DetallePedidoService');
@@ -54,15 +62,27 @@ const DetalleAlmacenService = {
         }
     }, 
 
-    async updateCantidad(codigoPedido){
-        const IngresoService = require('./IngresoService') 
+    async updateCantidadIngreso(codigoPedido, cantidad){
+        const DetallePedidoService = require('./DetallePedidoService');
+        const AlmacenService = require('./AlmacenService');
         try{
             if(!codigoPedido) throw new Error("codigo de pedido requerido para obtener detalle almacen");
-            const {idDetalle_almacen} = await this.getDetalleAlmacen(codigoPedido);
-            const ingresos = await IngresoService.getAllIngresosByDetalleAlmacen(idDetalle_almacen);
+            const detalleAlmacen = await this.getDetalleAlmacen(codigoPedido);
+            const {Cantidad} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
 
-            const cantidad = ingresos.reduce((total, ingreso) => total + ingreso.Cantidad, 0);
-            return await DetalleAlmacenDAO.updateCantidadIngreso(idDetalle_almacen, cantidad);
+            const cantidadIngreso = detalleAlmacen.Cantidad_ingreso + cantidad;
+
+            if(cantidadIngreso === Cantidad) {
+                await DetalleAlmacenDAO.updateEstado(detalleAlmacen.idDetalle_almacen, "Terminado");
+            }
+
+            if(cantidadIngreso>Cantidad){
+                throw new Error("Ingresos mayor a la cantidad total del pedido");
+            }
+
+            await AlmacenService.updateStock(detalleAlmacen.Almacen_idAlmacen, cantidadIngreso);
+
+            return await DetalleAlmacenDAO.updateCantidadIngreso(detalleAlmacen.idDetalle_almacen, cantidadIngreso);
         } catch(error){
             throw error
         }

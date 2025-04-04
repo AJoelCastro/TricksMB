@@ -24,11 +24,11 @@ const DetalleAlmacenController = {
         }
     },
 
-    async updateCantidad(req, res, next) {
+    async updateCantidadIngreso(req, res, next) {
         try{
-            const { codigoPedido } = req.params;       
-            const detalleAlmacen = await DetalleAlmacenService.updateCantidad(codigoPedido);
-            res.json({ detalleAlmacen, status: 200 });
+            const { codigoPedido } = req.params; 
+            const { cantidad } = req.body;      
+            const detalleAlmacen = await DetalleAlmacenService.updateCantidadIngreso(codigoPedido, cantidad);
         } catch (error) {
             next(error);
         }

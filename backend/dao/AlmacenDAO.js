@@ -30,6 +30,15 @@ class AlmacenDAO {
         }
     }
 
+    static async getAllAlmacen(){
+        try{
+            const [result] = await db.execute(`SELECT * FROM Almacen`);
+            return result;
+        }catch(error){
+            throw error.status ? error : {status: 500, message: "Error interno del servidor al obtener los almacenes"};
+        }
+    }
+
     static async updateStock(idAlmacen, cantidad){
         try{
             const [result] = await db.execute(`UPDATE Almacen SET Stock = ? WHERE idAlmacen = ?`,

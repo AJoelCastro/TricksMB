@@ -6,6 +6,6 @@ const authMiddleware = require('../middlewares/authMiddleware');
 
 router.get('/obtener/:codigoPedido',authMiddleware, DetalleAlmacenController.getDetalleAlmacen);
 router.put('/actualizar/:codigoPedido',authMiddleware, DetalleAlmacenController.updateIdAlmacen);
-router.put('/actualizarCantidad/:codigoPedido',authMiddleware, DetalleAlmacenController.updateCantidad);
+router.put('/actualizarCantidad/:codigoPedido',authMiddleware, DetalleAlmacenController.updateCantidadIngreso);
 
 module.exports = router;
