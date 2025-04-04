@@ -29,6 +29,7 @@ const DetalleAlmacenController = {
             const { codigoPedido } = req.params; 
             const { cantidad } = req.body;      
             const detalleAlmacen = await DetalleAlmacenService.updateCantidadIngreso(codigoPedido, cantidad);
+            res.json({ detalleAlmacen, status: 200 });
         } catch (error) {
             next(error);
         }

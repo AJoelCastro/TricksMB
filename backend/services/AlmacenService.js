@@ -50,18 +50,30 @@ const AlmacenService = {
 
     async updateStock(idAlmacen, cantidad){
         try{
-            if(!idAlmacen || !cantidad) throw {status: 400, message: "Parametros incorrectos"};
+            if(!idAlmacen || !cantidad) {
+                const errorParametros = new Error("Parametros incorrectos");
+                errorParametros.status = 400;
+                throw errorParametros;
+            };
             
             const almacen = await AlmacenDAO.getAlmacen(idAlmacen);
-            if(!almacen) throw {status: 404, message: "Almacen no encontrado"};
-            if(cantidad <= 0) throw {status: 400, message: "Cantidad no valida"};
+            if(!almacen) {
+                const errorAlmacen = new Error("Almacen no encontrado");
+                errorAlmacen.status = 404;
+                throw errorAlmacen;
+            };
+            if(cantidad <= 0) {
+                const errorCantidad = new Error("Cantidad no valida");
+                errorCantidad.status = 400;
+                throw errorCantidad;
+            };
 
             const stockActual = almacen.Stock;
             const nuevoStock = stockActual + cantidad;
             
             return await AlmacenDAO.updateStock(idAlmacen, nuevoStock);
         }catch(error){
-            throw error;
+            throw error.status ? error : {status: 500, message: "Error en AlmacenService"};
         }
     },
 }
