@@ -86,7 +86,9 @@ const DetalleAlmacenService = {
             }
 
             if(cantidadIngreso>Cantidad){
-                throw new Error("Ingresos mayor a la cantidad total del pedido");
+                const errorCantidadIngreso = new Error("Ingresos mayor a la cantidad total del pedido");
+                errorCantidadIngreso.status = 400;
+                throw errorCantidadIngreso;
             }
 
             await AlmacenService.updateStock(detalleAlmacen.Almacen_idAlmacen, cantidadIngreso);
