@@ -45,7 +45,6 @@ class DetalleAlmacenDAO{
             `;
 
             const [result] = await db.execute(query, [cantidad, idDetallePedido]);
-
             if (result.affectedRows === 0) {
                 const errorCantidadIngreso = new Error("No se pudo actualizar la cantidad de ingreso.");
                 errorCantidadIngreso.status = 404;

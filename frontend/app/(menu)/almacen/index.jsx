@@ -12,6 +12,7 @@ import Icon2 from 'react-native-vector-icons/FontAwesome5';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Image } from 'expo-image';
 import IngresoService from '@/services/IngresoService';
+import DetalleAlmacenService from '@/services/DetalleAlmacenService';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -39,7 +40,6 @@ export default function Almacen(){
           if(verificarIngreso.ingreso===null){
             const Datacaja = await cargarCajaPorId(idCaja);
             const exists = caja.some(item => item.idCaja === Datacaja.caja.idCaja || item.codigoPedido !== Datacaja.caja.codigoPedido);
-            console.log("exists", exists);
             if(!exists){
               caja.push(Datacaja.caja);
             }
@@ -132,6 +132,10 @@ export default function Almacen(){
         const ingreso = await IngresoService.createIngreso(idCaja, codigoPedido);
         console.log("ingreso", ingreso);
       }
+      let cantidad = caja.length;
+      console.log("cantidad", cantidad);
+      const updateCantidadIngreso = await DetalleAlmacenService.updateCantidad(codigoPedido, cantidad)
+      console.log("updateCantidadIngreso", updateCantidadIngreso);
       Alert.alert("Ingreso exitoso", "Las cajas han sido ingresadas al almacén correctamente");
       setShowCamera(false);
       setShowRegisters(true);
