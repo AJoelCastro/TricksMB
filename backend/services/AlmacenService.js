@@ -3,10 +3,14 @@ const AlmacenDAO = require('../dao/AlmacenDAO');
 const AlmacenService = {
     async createAlmacen(nombre, imagen, Direccion){
         try{
-            if(!nombre || !imagen || !Direccion) throw {status: 400, message: "Campos obligatorios"};
+            if(!nombre || !imagen || !Direccion) {
+                const errorParametros = new Error("Campos obligatorios");
+                errorParametros.status = 400;
+                throw errorParametros;
+            }
             return await AlmacenDAO.createAlmacen(nombre, imagen, Direccion);
         }catch(error){
-            throw error
+            throw error.status ? error : {status: 500, message: "Error en AlmacenService"};
         }
     },
 
