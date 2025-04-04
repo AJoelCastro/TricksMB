@@ -46,13 +46,14 @@ class TipoCalzadoDAO{
             const [rows] = await db.execute(query, [codigoPedido]);
 
             if (rows.length === 0) {
-                throw new Error("No se encontró el tipo de calzado con el código proporcionado.");
+                const errorRows = new Error("No se encontró el tipo de calzado con el código proporcionado.");
+                errorRows.status = 404;
+                throw errorRows;
             }
 
             return rows[0]; // Devuelve el objeto con el nombre del tipo de calzado
         } catch (error) {
-            console.error("Error al obtener tipo de calzado por código de pedido:", error);
-            throw error;
+            throw error.status? error: { status: 500, message: "Error internoal obtener el tipo de calzado" };
         }
     }
     

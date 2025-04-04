@@ -9,7 +9,17 @@ const IngresoController = {
         } catch (error) {
             next(error);
         }
-    }
+    },
+    async getIngresosByCaja(req, res, next) {
+        try {
+            const { idCaja } = req.params;
+            const ingreso = await IngresoService.getIngresosByCaja(idCaja);
+            //Aqui retorna NULL o el OBJETO para que el frontend pueda saber que la caja ha sido o no ingresada al almacén
+            return res.json({ ingreso, status: 201 });
+        } catch (error) {
+            next(error);
+        }
+    },
 
 }
 

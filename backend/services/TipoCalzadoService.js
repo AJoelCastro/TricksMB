@@ -34,14 +34,9 @@ const TipoCalzadoService = {
 
     async getTipoCalzadoByCodigoPedido(codigoPedido){
         try{
-            const calzado = await TipoCalzadoDAO.getTipoCalzadoByCodigoPedido(codigoPedido);
-            if(!calzado){
-                return res.status(404).json({ error: "Tipo de calzado no encontrado" });
-            }else{
-                return calzado;
-            }
+            return await TipoCalzadoDAO.getTipoCalzadoByCodigoPedido(codigoPedido);
         }catch(error){
-            throw error;
+            throw error.status? error: { status: 500, message: "Error al obtener el tipo de calzado" };
         }
     }
 

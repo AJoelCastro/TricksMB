@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, Pressable,Alert } from 'react-native'
+import { ScrollView, Text, View, Pressable,Alert, FlatList } from 'react-native'
 import { useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { Switch, Card, Divider } from 'react-native-paper';
@@ -23,13 +23,47 @@ export default function Almacen(){
   const [qrLeido, setQrLeido] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [showRegisters, setShowRegisters] = useState(true);
-  const [scannedData, setScannedData] = useState(null);
+  const [idCaja, setIdCaja] = useState(null);
   const [almacenSeleccionado, setAlmacenSeleccionado] = useState("");
-  const [caja, setCaja] = useState(null);
+  const [caja, setCaja] = useState([]);
   const [loaded, error] = useFonts({
       'Inter-Black': require('../../../assets/fonts/DMSans-Regular.ttf'),
       'Inter-Light': require('../../../assets/fonts/DMSans-Light.ttf'),
   });
+
+  useEffect(() => {
+    if(idCaja!==null){
+      const handleVerificarIngreso = async () => {
+        try {
+          const verificarIngreso = await IngresoService.obtenerIngreso(idCaja);
+          if(verificarIngreso.ingreso===null){
+            const Datacaja = await cargarCajaPorId(idCaja);
+            const exists = caja.some(item => item.idCaja === Datacaja.caja.idCaja || item.codigoPedido !== Datacaja.caja.codigoPedido);
+            console.log("exists", exists);
+            if(!exists){
+              caja.push(Datacaja.caja);
+            }
+            else{
+              Alert.alert("Error", "La caja ya ha sido leida anteriormente");
+            }
+          }
+          else{
+            Alert.alert("Error", "La caja ya ha sido ingresada al almacén");
+          }
+          setIdCaja(null);
+        } catch (error) {
+          mostrarError(error);
+        }
+      }
+      handleVerificarIngreso();
+    }
+  }, [idCaja]);
+
+  useEffect(() => {
+      if (loaded || error) {
+          SplashScreen.hideAsync();
+      }
+  }, [loaded, error]);
 
   const mostrarError = (error) => {
     Alert.alert(
@@ -38,28 +72,16 @@ export default function Almacen(){
         [{ text: "OK" }] // Botón requerido
     );
 };
-  useEffect(() => {
-    if(scannedData !== null){
-      const cargarCajaPorId = async () => {
-        try {
-          let id = Number(scannedData);
-          const caja = await CajaService.getCajaById(id);
-          console.log("caja", caja);
-          setCaja(caja.caja);
-        } catch (error) {
-          mostrarError(error);
-        }
-      }
-      cargarCajaPorId();
-    }
-  }, [scannedData])
 
-  useEffect(() => {
-      if (loaded || error) {
-          SplashScreen.hideAsync();
-      }
-  }, [loaded, error]);
-  
+  const cargarCajaPorId = async (idCaja) => {
+    try {
+      let id = idCaja;
+      return await CajaService.getCajaById(id);
+    } catch (error) {
+      mostrarError(error);
+    }
+  }
+
   if (!loaded && !error) {
     return null;
   }
@@ -94,39 +116,41 @@ export default function Almacen(){
   }
 
   const handleBarcodeScanned = async ({ data }) => {
-    const numeroCaja = await data.split('/').pop();
-
-    setScannedData(numeroCaja);
-    setQrLeido(true);
-    // Aquí puedes agregar cualquier lógica adicional que necesites después de escanear el código QR
+    if(qrLeido===true){
+      const numeroCaja = await data.split('/').pop();
+      setIdCaja(numeroCaja);
+      setQrLeido(false);
+    }
   };
+  
 
   const actualizarCaja = async () => {
     try {
-      let idCaja = Number(scannedData);
-      let codigoPedido = caja?.codigoPedido;
-      console.log("codigoPedido", codigoPedido);
-      const ingreso = await IngresoService.createIngreso(idCaja, codigoPedido);
-      console.log("ingreso", ingreso);
-        Alert.alert("Caja actualizada", "La caja ha sido ingresada al almacén correctamente");
-        setShowCamera(false);
-        setShowRegisters(true);
-        setQrLeido(false);
-        setScannedData(null)
-        setCaja(null)
+      let codigoPedido = caja[0].codigoPedido;
+      for (const caj of caja){
+        let idCaja = caj.idCaja;
+        const ingreso = await IngresoService.createIngreso(idCaja, codigoPedido);
+        console.log("ingreso", ingreso);
+      }
+      Alert.alert("Ingreso exitoso", "Las cajas han sido ingresadas al almacén correctamente");
+      setShowCamera(false);
+      setShowRegisters(true);
+      setQrLeido(false);
+      setIdCaja(null);
+      setCaja([]);
       
     } catch (error) {
       mostrarError(error);
       setShowCamera(false);
       setShowRegisters(true);
       setQrLeido(false);
-      setScannedData(null)
-      setCaja(null)
+      setIdCaja(null);
+      setCaja([]);
     }
   }
 
   return (
-    <View className='bg-white h-full'>
+    <ScrollView className='bg-white h-full'>
       {/* SELECCIONAR ALMACEN */}
       { almacenSeleccionado===""?(
         <>
@@ -155,7 +179,7 @@ export default function Almacen(){
       )
       :
       (
-        <View className='h-full'>
+        <View className='flex-1'>
           <View>
           {
             !showCamera?(
@@ -172,11 +196,12 @@ export default function Almacen(){
           {/* CAMARA */}
             {
               showCamera&&(
-                <View className='p-4 h-[70%]'>
+                <View className='p-4'>
                   <CameraView 
                     facing={facing}
-                    onBarcodeScanned={qrLeido?null:handleBarcodeScanned}
-                    style={{flex:1 }}
+                    onBarcodeScanned={qrLeido?handleBarcodeScanned:null}
+                    style={{flex:1, height: 300, width: 300, alignSelf: 'center' }}
+                    
                   >
                     <View style={{ position: 'absolute', bottom: 20, alignSelf: 'center' }}>
                       <Pressable onPress={toggleCameraFacing}>
@@ -184,56 +209,76 @@ export default function Almacen(){
                       </Pressable>
                     </View>
                   </CameraView> 
-                  {scannedData && (
-                    <View className='mt-4'>
-                      <Card style={{ borderRadius: 10, elevation: 5, backgroundColor: 'white' }}>
-                          <View className='p-2 '>
-                              <View className='items-center'>
-                                <Text style={{fontFamily:'Inter-Black', fontSize:18}} >N° QR: {scannedData}</Text>
-                              </View>
-                              {
-                                caja!==null?(
-                                  <Card.Content className='flex-row gap-4 justify-between'>
-                                    <View>
-                                      <Text style={{fontFamily:'Inter-Black', fontSize:18}}>{caja.tipoCalzado} {caja.modelo}</Text>
-                                      <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Talla: {caja.talla}</Text>
-                                      <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Color: {caja.color}</Text>
-                                      <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Creada: {caja.fechaCreacion}</Text>
-                                    </View>
-                                    <Image source={caja.imagenUrl} style={{width: 100, height: 100}}/>
-                                  </Card.Content>
-                                ):null
-                              }
-                          </View>
-                          
-                      </Card>
-                    </View>
-                  )}
                   <View className='flex-row justify-center gap-4 mt-8'>
                       <Pressable
-                        className='bg-[#3f76f5] p-4 rounded-lg'
-                        onPress={actualizarCaja}
+                        className='bg-[#634AFF] p-4 rounded-lg w-[45%]'
+                        onPress={()=>setQrLeido(!qrLeido)}
                       >
-                        <Text className='text-white'>
-                          Ingresar
+                        <Text className='text-white text-center' style={{fontFamily:'Inter-Light', fontSize:16}}>
+                          Scanear QR
                         </Text>
                       </Pressable>
-                      <Pressable
-                        className='bg-[#f62e2a] p-4 rounded-lg' 
-                        onPress={()=>{
-                          setShowCamera(false);
-                          setShowRegisters(true);
-                          setQrLeido(false);
-                          setScannedData(null);
-                          setCaja(null)
-                        }}
-                      >
-                        <Text className='text-white'>
-                          Cancelar
-                        </Text>
-                      </Pressable>
+                      
                   </View>
-                  
+                  {
+                    caja.length>0?(
+                      <View className='mt-4'>
+                        <Card style={{ borderRadius: 10, elevation: 5, backgroundColor: 'white' }}>
+                            <View className='p-2 '>
+                                <View className='items-center'>
+                                  <Text style={{fontFamily:'Inter-Black', fontSize:18}} >Ultimos QR leidos</Text>
+                                </View>
+                                {
+                                  caja.map((item)=>(
+                                    <View key={item.idCaja}>
+                                      <View className='m-2'>
+                                        <Card.Content className='flex-row gap-4 justify-between'>
+                                          <View>
+                                            <Text style={{fontFamily:'Inter-Black', fontSize:18}}>{item.tipoCalzado} {item.modelo}</Text>
+                                            <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Caja: {item.idCaja}</Text>
+                                            <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Talla: {item.talla}</Text>
+                                            <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Color: {item.color}</Text>
+                                            <Text style={{fontFamily:'Inter-Light', fontSize:15}}>Creada: {item.fechaCreacion}</Text>
+                                          </View>
+                                          <Image source={item.imagenUrl} style={{width: 100, height: 100}}/>
+                                        </Card.Content>
+                                        <Divider/>
+                                      </View>
+                                    </View>
+                                    ))
+                                }
+                            </View>
+                            
+                        </Card>
+                        <View className='flex-row justify-center gap-4 my-6'>
+                          <Pressable 
+                            className='bg-[#634AFF] p-4 rounded-lg w-[45%] justify-center' 
+                            onPress={actualizarCaja}>
+                            <Text 
+                              className='text-white text-center' 
+                              style={{fontFamily:'Inter-Light', fontSize:16}}
+                            >
+                              Ingresar
+                            </Text>
+                          </Pressable>
+                          <Pressable
+                            className='bg-[#f62e2a] p-4 rounded-lg w-[45%] justify-center' 
+                            onPress={()=>{
+                              setShowCamera(false);
+                              setShowRegisters(true);
+                              setQrLeido(false);
+                              setIdCaja(null);
+                              setCaja([]);
+                            }}
+                          >
+                            <Text className='text-white text-center ' style={{fontFamily:'Inter-Light', fontSize:16}}>
+                              Cancelar
+                            </Text>
+                          </Pressable>
+                        </View>
+                      </View>
+                    ):null
+                  }
                 </View>
                 
               )
@@ -270,7 +315,7 @@ export default function Almacen(){
         </View>
       )}
       
-    </View>
+    </ScrollView>
     
   )
 }
