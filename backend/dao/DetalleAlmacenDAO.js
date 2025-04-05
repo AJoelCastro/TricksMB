@@ -45,15 +45,15 @@ class DetalleAlmacenDAO{
             `;
 
             const [result] = await db.execute(query, [cantidad, idDetallePedido]);
-
             if (result.affectedRows === 0) {
-                throw new Error("No se pudo actualizar la cantidad de ingreso.");
+                const errorCantidadIngreso = new Error("No se pudo actualizar la cantidad de ingreso.");
+                errorCantidadIngreso.status = 404;
+                throw errorCantidadIngreso;
             }
 
             return { message: "Cantidad de ingreso actualizada exitosamente" };
         } catch (error) {
-            console.error("Error al actualizar la cantidad de ingreso:", error);
-            throw error;
+            throw error.status ? error : {status: 500, message: "Error interno del servidor al actualizar la cantidad de ingreso"};
         }
     }
 

@@ -21,7 +21,7 @@ const DetalleAlmacenService = {
             const result = await DetalleAlmacenDAO.createDetalleAlmacen(idAlmacen, idDetalle_pedido);
             return result;
         } catch (error) {
-            throw error.status ? error : {status: 500, message: "Error en DetalleAlmacenService"};
+            throw error.status ? error : {status: 500, message: "Error en Detalle Almacen Service"};
         }
     },
 
@@ -66,25 +66,36 @@ const DetalleAlmacenService = {
         const DetallePedidoService = require('./DetallePedidoService');
         const AlmacenService = require('./AlmacenService');
         try{
-            if(!codigoPedido) throw new Error("codigo de pedido requerido para obtener detalle almacen");
+            if(!codigoPedido){
+                const errorCodigoPedido = new Error("codigo de pedido requerido para obtener detalle almacen");
+                errorCodigoPedido.status = 400;
+                throw errorCodigoPedido;
+            };
+            if(!cantidad){ 
+                const errorCantidad = new Error("cantidad requerida para actualizar cantidad ingreso");
+                errorCantidad.status = 400;
+                throw errorCantidad;
+            };
             const detalleAlmacen = await this.getDetalleAlmacen(codigoPedido);
             const {Cantidad} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
 
-            const cantidadIngreso = detalleAlmacen.Cantidad_ingreso + cantidad;
+            const cantidadIngreso = detalleAlmacen.Cantidad_Ingreso + cantidad;
 
             if(cantidadIngreso === Cantidad) {
-                await DetalleAlmacenDAO.updateEstado(detalleAlmacen.idDetalle_almacen, "Terminado");
+                await DetalleAlmacenDAO.updateEstado(detalleAlmacen.Detalle_pedido_idDetalle_pedido, "Terminado");
             }
 
             if(cantidadIngreso>Cantidad){
-                throw new Error("Ingresos mayor a la cantidad total del pedido");
+                const errorCantidadIngreso = new Error("Ingresos mayor a la cantidad total del pedido");
+                errorCantidadIngreso.status = 400;
+                throw errorCantidadIngreso;
             }
 
             await AlmacenService.updateStock(detalleAlmacen.Almacen_idAlmacen, cantidadIngreso);
 
-            return await DetalleAlmacenDAO.updateCantidadIngreso(detalleAlmacen.idDetalle_almacen, cantidadIngreso);
+            return await DetalleAlmacenDAO.updateCantidadIngreso(detalleAlmacen.Detalle_pedido_idDetalle_pedido, cantidadIngreso);
         } catch(error){
-            throw error
+            throw error.status ? error : {status: 500, message: "Error en Detalle Almacen Service"};
         }
     },
 
