@@ -32,13 +32,17 @@ class AlmacenDAO {
 
     static async getAlmacenById(idAlmacen){
         try{
+
             const [result] = await db.execute(`SELECT * FROM Almacen WHERE idAlmacen = ?`, [idAlmacen]);
+
             if(result.affectedRows === 0){
                 const errorAlmacen = new Error("No se pudo obtener el almacen");
                 errorAlmacen.status = 404;
                 throw errorAlmacen;
             }
+
             return result[0];
+
         }catch(error){
             throw error.status ? error : {status: 500, message: "Error interno del servidor al obtener el almacen"};
         }

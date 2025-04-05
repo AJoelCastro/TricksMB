@@ -41,9 +41,9 @@ const ModeloController = {
         }
     },
 
-    async getStockForModelo(req, res, next){
+    async inventarioPorAlmacen(req, res, next){
         try{
-            const stock = await ModeloService.getStockForModelo();
+            const stock = await ModeloService.inventarioPorAlmacen();
             res.json({stock, status: 200});
         }catch(error){
             next(error);

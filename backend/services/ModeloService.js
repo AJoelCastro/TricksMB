@@ -73,28 +73,61 @@ const ModeloService = {
         }
     },
 
-    async getStockForModelo(){
-        const CaracteristicasService = require("./CaracteristicasService");
-        const DetallePedidoDAO = require("../dao/DetallePedidoDAO");
-        try{
-            let detallesPedidos = await DetallePedidoDAO.getAllDetallesPedidos();
-            const stockModelos = await Promise.all(detallesPedidos.map(async (pedidos) =>{
-                const caracteristicas = await CaracteristicasService.getCaracteristicasByIdDetallePedido(pedidos.idDetalle_pedido);
-                const modelo = await this.getModeloByCodigoPedido(pedidos.Codigo_pedido)
+    async inventarioPorAlmacen() {
+        const DetalleAlmacenService = require("./DetalleAlmacenService");
+        const AlmacenService = require("./AlmacenService");
+        try {
+            const modelos = await this.getAllModelo();
+            const inventario = [];
 
-                return caracteristicas.map(caracteristica => ({
-                    CodigoPedido: pedidos.Codigo_pedido,
-                    Modelo: modelo.Nombre,
-                    Talla: caracteristica.Talla,
-                    Cantidad: caracteristica.Cantidad,
-                    Color: caracteristica.Color
-                }));
-            }))
+            await Promise.all(modelos.map(async (modelo) => {
+                const detallesPedidos = await ModeloDAO.getAllDetallesPedidosByModelo(modelo.idModelo);
+                
+                for (const detallePedido of detallesPedidos) {
+                    const detallesAlmacen = await DetalleAlmacenService.getDetalleAlmacen(detallePedido.Codigo_pedido);
+        
+                    for (const detalleAlm of detallesAlmacen) {
+                        const idAlmacen = detalleAlm.Almacen_idAlmacen;
 
-            return stockModelos;
-        }catch(error){
-            if(error.status) throw error;
-            throw{status: 500, message:  "Error en el DetalleService: Stock por modelo", detalle:error.message}
+                        // Buscar si ya existe en el inventario un registro para este modelo y almacén
+                        let registro = inventario.find(item =>
+                            item.idModelo === modelo.idModelo && item.idAlmacen === idAlmacen
+                        );
+
+                        if (!registro) {
+                            // Si no existe, lo creamos
+                            const almacen = await AlmacenService.getAlmacenById(idAlmacen);
+                            registro = {
+                                idModelo: modelo.idModelo,
+                                nombreModelo: modelo.Nombre,
+                                idAlmacen: almacen.Nombre,
+                                cantidadIngreso: 0,
+                                cantidadSalida: 0
+                            };
+                            inventario.push(registro);
+                        }
+
+                        // Acumulamos las cantidades
+                        registro.cantidadIngreso += detalleAlm.Cantidad_Ingreso;
+                        registro.cantidadSalida += detalleAlm.Cantidad_Salida;
+                    }
+                }
+            }));
+
+            // Puedes agregar stock disponible si gustas
+            inventario.forEach(item => {
+                item.stockDisponible = item.cantidadIngreso - item.cantidadSalida;
+            });
+
+            return inventario;
+
+        } catch (error) {
+            if (error.status) throw error;
+            throw {
+                status: 500,
+                message: "Error al generar el inventario por almacén",
+                detalle: error.message
+            };
         }
     }
 
