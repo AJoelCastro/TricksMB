@@ -74,50 +74,50 @@ const ModeloService = {
     },
 
     async inventarioPorAlmacen() {
-    const DetalleAlmacenService = require("./DetalleAlmacenService");
-    const AlmacenService = require("./AlmacenService");
+        const DetalleAlmacenService = require("./DetalleAlmacenService");
+        const AlmacenService = require("./AlmacenService");
 
-    try {
-        const modelos = await this.getAllModelo();
-        const inventario = [];
+        try {
+            const modelos = await this.getAllModelo();
+            const inventarioMap = new Map();
 
-        await Promise.all(modelos.map(async (modelo) => {
-            const detallesAlmacen = await DetalleAlmacenService.getDetallesAlmacenByModelo(modelo.idModelo);
+            await Promise.all(modelos.map(async (modelo) => {
+                const detallesAlmacen = await DetalleAlmacenService.getDetallesAlmacenByModelo(modelo.idModelo);
 
-            for (const detalleAlm of detallesAlmacen) {
-                const idAlmacen = detalleAlm.Almacen_idAlmacen;
+                for (const detalleAlm of detallesAlmacen) {
+                    const idAlmacen = detalleAlm.Almacen_idAlmacen;
+                    const clave = `${modelo.idModelo}-${idAlmacen}`;
 
-                let registro = inventario.find(item =>
-                    item.idModelo === modelo.idModelo && item.idAlmacen === idAlmacen
-                );
+                    if (!inventarioMap.has(clave)) {
+                        const almacen = await AlmacenService.getAlmacenById(idAlmacen);
+                        inventarioMap.set(clave, {
+                            idModelo: modelo.idModelo,
+                            nombreModelo: modelo.Nombre,
+                            idAlmacen: almacen.Nombre,
+                            cantidadIngreso: 0,
+                            cantidadSalida: 0
+                        });
+                    }
 
-                if (!registro) {
-                    const almacen = await AlmacenService.getAlmacenById(idAlmacen);
-                    registro = {
-                        idModelo: modelo.idModelo,
-                        nombreModelo: modelo.Nombre,
-                        idAlmacen: almacen.Nombre,
-                        cantidadIngreso: 0,
-                        cantidadSalida: 0
-                    };
-                    inventario.push(registro);
+                    const registro = inventarioMap.get(clave);
+                    registro.cantidadIngreso += detalleAlm.Cantidad_Ingreso;
+                    registro.cantidadSalida += detalleAlm.Cantidad_Salida;
                 }
+            }));
 
-                registro.cantidadIngreso += detalleAlm.Cantidad_Ingreso;
-                registro.cantidadSalida += detalleAlm.Cantidad_Salida;
-            }
-        }));
+            // Convertimos el Map a un array y calculamos stockDisponible
+            const inventario = Array.from(inventarioMap.values()).map(item => ({
+                ...item,
+                stockDisponible: item.cantidadIngreso - item.cantidadSalida
+            }));
 
-        inventario.forEach(item => {
-            item.stockDisponible = item.cantidadIngreso - item.cantidadSalida;
-        });
+            return inventario;
 
-        return inventario;
-
-    } catch (error) {
-        throw error.status ? error : {status: 500, message: "Error en inventarioPorAlmacen", detalle: error.message};
+        } catch (error) {
+            throw error.status ? error : {status: 500, message: "Error en inventarioPorAlmacen", detalle: error.message};
+        }
     }
-}
+
 
 
 }
