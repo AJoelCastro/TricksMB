@@ -86,8 +86,18 @@ const DetalleAlmacenService = {
         } catch(error){
             throw error
         }
-    }
+    },
 
+
+    async getDetallesAlmacenByModelo(idModelo) {
+        try {
+            if (!idModelo) throw { status: 400, message: "idModelo requerido" };
+            return await DetalleAlmacenDAO.getDetallesAlmacenByModelo(idModelo);
+        } catch (error) {
+            throw error;
+        }
+    }
+    
 
 }
 
