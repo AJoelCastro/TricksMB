@@ -95,7 +95,7 @@ export default function Menu() {
                     </Pressable>
                     <Pressable 
                         className='bg-gray-50 rounded-md p-4 w-[45%] gap-4' 
-                        onPress={()=>route.push("/")}
+                        onPress={()=>route.push("/historial")}
                     >
                         <View>
                             <Icon 

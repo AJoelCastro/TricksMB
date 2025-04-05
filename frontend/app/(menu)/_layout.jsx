@@ -78,6 +78,16 @@ export default function MenuLayout() {
               headerTintColor:textColor,
             }}
         />
+        <Stack.Screen
+            name='historial/index'
+            options={{ 
+              headerTitle:"Historial de pedidos",
+              headerStyle:{
+                backgroundColor:backgroundColor,
+              },
+              headerTintColor:textColor,
+            }}
+        />
       </Stack>
     
     
