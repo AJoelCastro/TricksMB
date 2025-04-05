@@ -97,8 +97,18 @@ const DetalleAlmacenService = {
         } catch(error){
             throw error.status ? error : {status: 500, message: "Error en Detalle Almacen Service"};
         }
-    }
+    },
 
+
+    async getDetallesAlmacenByModelo(idModelo) {
+        try {
+            if (!idModelo) throw { status: 400, message: "idModelo requerido" };
+            return await DetalleAlmacenDAO.getDetallesAlmacenByModelo(idModelo);
+        } catch (error) {
+            throw error;
+        }
+    }
+    
 
 }
 

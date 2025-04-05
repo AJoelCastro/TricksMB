@@ -74,62 +74,51 @@ const ModeloService = {
     },
 
     async inventarioPorAlmacen() {
-        const DetalleAlmacenService = require("./DetalleAlmacenService");
-        const AlmacenService = require("./AlmacenService");
-        try {
-            const modelos = await this.getAllModelo();
-            const inventario = [];
+    const DetalleAlmacenService = require("./DetalleAlmacenService");
+    const AlmacenService = require("./AlmacenService");
 
-            await Promise.all(modelos.map(async (modelo) => {
-                const detallesPedidos = await ModeloDAO.getAllDetallesPedidosByModelo(modelo.idModelo);
-                
-                for (const detallePedido of detallesPedidos) {
-                    const detallesAlmacen = await DetalleAlmacenService.getDetalleAlmacen(detallePedido.Codigo_pedido);
-        
-                    for (const detalleAlm of detallesAlmacen) {
-                        const idAlmacen = detalleAlm.Almacen_idAlmacen;
+    try {
+        const modelos = await this.getAllModelo();
+        const inventario = [];
 
-                        // Buscar si ya existe en el inventario un registro para este modelo y almacén
-                        let registro = inventario.find(item =>
-                            item.idModelo === modelo.idModelo && item.idAlmacen === idAlmacen
-                        );
+        await Promise.all(modelos.map(async (modelo) => {
+            const detallesAlmacen = await DetalleAlmacenService.getDetallesAlmacenByModelo(modelo.idModelo);
 
-                        if (!registro) {
-                            // Si no existe, lo creamos
-                            const almacen = await AlmacenService.getAlmacenById(idAlmacen);
-                            registro = {
-                                idModelo: modelo.idModelo,
-                                nombreModelo: modelo.Nombre,
-                                idAlmacen: almacen.Nombre,
-                                cantidadIngreso: 0,
-                                cantidadSalida: 0
-                            };
-                            inventario.push(registro);
-                        }
+            for (const detalleAlm of detallesAlmacen) {
+                const idAlmacen = detalleAlm.Almacen_idAlmacen;
 
-                        // Acumulamos las cantidades
-                        registro.cantidadIngreso += detalleAlm.Cantidad_Ingreso;
-                        registro.cantidadSalida += detalleAlm.Cantidad_Salida;
-                    }
+                let registro = inventario.find(item =>
+                    item.idModelo === modelo.idModelo && item.idAlmacen === idAlmacen
+                );
+
+                if (!registro) {
+                    const almacen = await AlmacenService.getAlmacenById(idAlmacen);
+                    registro = {
+                        idModelo: modelo.idModelo,
+                        nombreModelo: modelo.Nombre,
+                        idAlmacen: almacen.Nombre,
+                        cantidadIngreso: 0,
+                        cantidadSalida: 0
+                    };
+                    inventario.push(registro);
                 }
-            }));
 
-            // Puedes agregar stock disponible si gustas
-            inventario.forEach(item => {
-                item.stockDisponible = item.cantidadIngreso - item.cantidadSalida;
-            });
+                registro.cantidadIngreso += detalleAlm.Cantidad_Ingreso;
+                registro.cantidadSalida += detalleAlm.Cantidad_Salida;
+            }
+        }));
 
-            return inventario;
+        inventario.forEach(item => {
+            item.stockDisponible = item.cantidadIngreso - item.cantidadSalida;
+        });
 
-        } catch (error) {
-            if (error.status) throw error;
-            throw {
-                status: 500,
-                message: "Error al generar el inventario por almacén",
-                detalle: error.message
-            };
-        }
+        return inventario;
+
+    } catch (error) {
+        throw error.status ? error : {status: 500, message: "Error en inventarioPorAlmacen", detalle: error.message};
     }
+}
+
 
 }
 

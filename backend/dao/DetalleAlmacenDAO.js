@@ -125,6 +125,26 @@ class DetalleAlmacenDAO{
             throw error.status? error: {status: 500, message: "Error interno del servidor al obtener el detalle almacén"};
         }
     }
+
+    static async getDetallesAlmacenByModelo(idModelo) {
+        try {
+            const [result] = await db.execute(`
+                SELECT 
+                    da.*, dp.idDetalle_pedido, dp.Modelo_idModelo
+                FROM 
+                    Detalle_almacen da
+                JOIN 
+                    Detalle_pedido dp ON da.Detalle_pedido_idDetalle_pedido = dp.idDetalle_pedido
+                WHERE 
+                    dp.Modelo_idModelo = ?`, 
+                [idModelo]);
+
+            return result;
+        } catch (error) {
+            throw {status: 500, message: "Error al obtener detalles del almacén por modelo", detalle: error.message};
+        }
+    }
+
     
 }
 
