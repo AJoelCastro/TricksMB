@@ -84,6 +84,16 @@ class ModeloDAO{
             throw error;
         }
     }
+
+    static async getAllDetallesPedidosByModelo(idModelo){
+        try{
+            const query = 'SELECT * FROM Detalle_pedido WHERE Modelo_idModelo = ?';
+            const [rows] = await db.execute(query, [idModelo]);
+            return rows;
+        }catch(error){
+            throw error;
+        }
+    }
 }
 
 module.exports = ModeloDAO;

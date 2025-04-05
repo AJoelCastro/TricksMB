@@ -23,6 +23,15 @@ const AlmacenService = {
         }
     },
 
+    async getAlmacenById(idAlmacen){
+        try{
+            if(!idAlmacen) throw {status: 400, message: "id de almacen requerido para obtener el almacen"};
+            return await AlmacenDAO.getAlmacenById(idAlmacen);
+        }catch(error){
+            throw error.status ? error : {status: 500, message: "Error en AlmacenService"};
+        }
+    },
+
     async getAllAlmacen(){
         try{
             const result = await AlmacenDAO.getAllAlmacen();
@@ -64,6 +73,8 @@ const AlmacenService = {
             throw error;
         }
     },
+
+
 }
 
 module.exports = AlmacenService

@@ -72,6 +72,16 @@ class CaracteristicasDAO {
             throw error.status?error:{status: 500, message: "Error interno al obtener la caracteristica del servidor."};
         }
     }
+
+    static async getAllCaracteristicas(){
+        try{
+            const query = 'SELECT * FROM Caracteristicas';
+            const [result] = await db.execute(query);
+            return result;
+        }catch(error){
+            throw error.status?error:{status: 500, message: "Error interno al obtener las caracteristicas del servidor."};
+        }
+    }
 }
 
 module.exports = CaracteristicasDAO;

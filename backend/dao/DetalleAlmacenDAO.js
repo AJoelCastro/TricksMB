@@ -30,7 +30,7 @@ class DetalleAlmacenDAO{
                 throw errorDetalleAlmacen;
             }
 
-            return result[0];
+            return result;
         }catch(error){
             throw error.status? error: {status: 500, message: "Error interno del servidor al obtener el detalle almacén"};
         }

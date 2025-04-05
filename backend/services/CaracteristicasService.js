@@ -66,6 +66,14 @@ const CaracteristicasService = {
         }
     },
 
+    async getAllCaracteristicas(){
+        try{
+            return await CaracteristicasDAO.getAllCaracteristicas();
+        }catch(error){
+            throw error.status?error:{status: 500, message: "Error interno en el servicio."};
+        }
+    }
+
 }
 
 module.exports = CaracteristicasService;
