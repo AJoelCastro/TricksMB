@@ -91,11 +91,11 @@ const ModeloService = {
                     if (!inventarioMap.has(clave)) {
                         const almacen = await AlmacenService.getAlmacenById(idAlmacen);
                         inventarioMap.set(clave, {
-                            idModelo: modelo.idModelo,
                             nombreModelo: modelo.Nombre,
-                            idAlmacen: almacen.Nombre,
+                            imagen: modelo.Imagen,
+                            nombreAlmacen: almacen.Nombre,
                             cantidadIngreso: 0,
-                            cantidadSalida: 0
+                            cantidadSalida: 0,
                         });
                     }
 
