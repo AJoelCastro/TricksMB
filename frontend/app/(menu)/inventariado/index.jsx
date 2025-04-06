@@ -1,5 +1,5 @@
 import "react-native-reanimated";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Pressable, Text, View, Dimensions, KeyboardAvoidingView, Platform } from 'react-native';
 import {useFonts} from "expo-font";
 import Carousel from 'react-native-reanimated-carousel';
@@ -7,6 +7,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { FlatList, GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { Image } from "expo-image";
 import { TextInput } from "react-native-paper";
+import { useFocusEffect } from "expo-router";
+import ModeloService from "@/services/ModeloService";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -14,6 +16,7 @@ const {width, height} = Dimensions.get('window');
 
 const Inventario=() =>{
 
+  const [inventario, setInventario] = useState([]);
   const [loaded, error] = useFonts({
     'Inter-Black': require('../../../assets/fonts/DMSans-Regular.ttf'),
   });
@@ -23,17 +26,27 @@ const Inventario=() =>{
     { id: "2", url: "https://r-charts.com/es/miscelanea/procesamiento-imagenes-magick_files/figure-html/color-fondo-imagen-r.png" },
     { id: "3", url: "https://r-charts.com/es/miscelanea/procesamiento-imagenes-magick_files/figure-html/color-fondo-imagen-r.png" },
   ];
-
-  useEffect(() => {
-      if (loaded || error) {
-          SplashScreen.hideAsync();
+  
+  useFocusEffect(
+    useCallback(() => {
+      const obtenerInventario = async () => {
+        const inventario = await ModeloService.getInventario();
+        console.log(inventario);
+        setInventario(inventario);
       }
+      obtenerInventario();
+    }, [])
+  )
+  
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
   }, [loaded, error]);
-
+  
   if (!loaded && !error) {
-  return null;
+    return null;
   }
-
 
   return (
     <GestureHandlerRootView >
