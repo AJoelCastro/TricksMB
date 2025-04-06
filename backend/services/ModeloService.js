@@ -91,7 +91,7 @@ const ModeloService = {
 
                     if (!inventarioMap.has(clave)) {
                         const almacen = await AlmacenService.getAlmacenById(idAlmacen);
-                        const imagen = await ImagenService.getImagenByIdModelo(modelo.idModelo);
+                        const imagen = await ImagenService.getImagen(modelo.idModelo);
 
                         inventarioMap.set(clave, {
                             nombreModelo: modelo.Nombre,
