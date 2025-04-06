@@ -30,8 +30,12 @@ const Inventario=() =>{
   useFocusEffect(
     useCallback(() => {
       const obtenerInventario = async () => {
-        const inventario = await ModeloService.getInventario();
-        setInventario(inventario.stock);
+        try {
+          const inventario = await ModeloService.getInventario();
+          setInventario(inventario.stock);
+        } catch (error) {
+          mostrarError(error);
+        }
       }
       obtenerInventario();
     }, [])
