@@ -31,7 +31,6 @@ const Inventario=() =>{
     useCallback(() => {
       const obtenerInventario = async () => {
         const inventario = await ModeloService.getInventario();
-        console.log(inventario.stock);
         setInventario(inventario.stock);
       }
       obtenerInventario();
