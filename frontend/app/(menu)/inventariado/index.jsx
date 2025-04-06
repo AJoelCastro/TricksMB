@@ -31,13 +31,13 @@ const Inventario=() =>{
     useCallback(() => {
       const obtenerInventario = async () => {
         const inventario = await ModeloService.getInventario();
-        console.log(inventario);
-        setInventario(inventario);
+        console.log(inventario.stock);
+        setInventario(inventario.stock);
       }
       obtenerInventario();
     }, [])
   )
-  
+
   useEffect(() => {
     if (loaded || error) {
       SplashScreen.hideAsync();
@@ -73,7 +73,7 @@ const Inventario=() =>{
               width={width * 0.9}
               height={300}
               autoPlay
-              data={images}
+              data={inventario}
               scrollAnimationDuration={2000}
               mode="parallax"
               // modeConfig={{
@@ -81,9 +81,9 @@ const Inventario=() =>{
               //   showLength: 1, // Número de elementos visibles en el stack
               // }}
               renderItem={({ item }) => (
-                <View >
+                <View key={item.idModelo}>
                   <Image
-                    source={item.url}
+                    source={item.imagen}
                     style={{width: '100%', height: '100%'}}
                   />
                 </View>
@@ -102,16 +102,16 @@ const Inventario=() =>{
           </View>
           <View className=" h-full flex-1 mb-10 mt-4">
             <FlatList
-              data={images}
+              data={inventario}
               renderItem={({ item }) => (
-                <View className="gap-2 mt-2">
+                <View key={item.idModelo} className="gap-2 mt-2">
                   <View >
                     <Image
-                      source={item.url}
+                      source={item.imagen}
                       style={{width: '50%', height: 200}}
                     />
                   </View>
-                  <Text>{item.name}</Text>
+                  <Text>{item.nombreModelo}</Text>
                 </View>
               )}
             />

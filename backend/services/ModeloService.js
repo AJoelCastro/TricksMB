@@ -94,6 +94,7 @@ const ModeloService = {
                         const imagen = await ImagenService.getImagen(modelo.idModelo);
 
                         inventarioMap.set(clave, {
+                            idModelo: modelo.idModelo,
                             nombreModelo: modelo.Nombre,
                             imagen: imagen[0].Url,
                             nombreAlmacen: almacen.Nombre,
