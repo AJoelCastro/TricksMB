@@ -267,6 +267,82 @@ const Actualizar = () => {
         { id: 4, title: 'alistado', icon: 'check-circle', color: estado==='Editable' ? 'bg-gray-700' : 'bg-green-600' },
     ];
 
+    const renderEmpleadosSection = () => {
+        if (showEmpleadosAsignados) {
+            return (
+                <View className='gap-1 mt-2'>
+                    <View className=' p-2 bg-white border-b border-gray-300 items-center'>
+                        <Text className='text-lg font-bold text-black'>Empleados Asignados</Text>
+                    </View>
+                    <View className="bg-white p-4 rounded-lg w-[100%]">
+                        <FlatList 
+                            data={empleadosAsignados}
+                            keyExtractor={(item) => item.Empleado_idEmpleado}
+                            renderItem={({ item }) => (
+                                <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
+                                    <View className='flex-row p-2'>
+                                        <Card.Content>
+                                            <View className='gap-1'>
+                                                <Text variant="titleMedium">Nombres: {item.Nombres}</Text>
+                                                <Text variant="titleMedium">DNI: {item.DNI}</Text>
+                                            </View>
+                                        </Card.Content>
+                                    </View>
+                                </Card>
+                            )}
+                        />
+                    </View>
+                </View>
+            );
+        }
+
+        if (empleados.length > 0) {
+            return (
+                <View className='gap-1 mt-2'>
+                    <View className=' p-2 bg-white border-b border-gray-300 items-center'>
+                        <Text className='text-lg font-bold text-black'>Empleados Asignados</Text>
+                    </View>
+                    <View className="bg-white p-4 rounded-lg w-[100%]">
+                        <FlatList 
+                            data={empleados}
+                            keyExtractor={(item) => item.idEmpleado}
+                            renderItem={({ item }) => (
+                                <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
+                                    <View className='flex-row p-2'>
+                                        <Card.Content>
+                                            <View className='gap-1'>
+                                                <Text variant="titleMedium">Nombres: {item.Nombres}</Text>
+                                                <Text variant="titleMedium">DNI: {item.Dni}</Text>
+                                            </View>
+                                        </Card.Content>
+                                    </View>
+                                </Card>
+                            )}
+                        />
+                    </View>
+                    <View className='flex-row gap-4 justify-center'>
+                        <Pressable onPress={() => setShowModal(!showModal)}>
+                            <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#15a1ff] rounded-xl p-2 mx-auto'>
+                                <Text className='text-xl font-bold text-white'>Agregar</Text>
+                                <Icon1 name="plus" size={20} color="#fff" />
+                            </View>
+                        </Pressable>
+                        <Pressable onPress={asignarEmpleados}>
+                            <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#13bf1e] px-6 rounded-xl p-2 mx-auto'>
+                                <Text className='text-xl font-bold text-white'>Asignar</Text>
+                            </View>
+                        </Pressable>
+                    </View>
+                </View>
+            );
+        }
+
+        return (
+            <Pressable onPress={() => setShowModal(!showModal)} className='rounded-xl p-3 bg-gray-700 mt-3'>
+                <Text className='text-white mx-auto text-lg font-semibold'>Asignar Empleados</Text>
+            </Pressable>
+        );
+    };
 
     return (
         <KeyboardAvoidingView
@@ -338,7 +414,7 @@ const Actualizar = () => {
                 }
                 { estado === "Proceso" &&
                     (
-                        <View className=' mt-4 gap-2 ' >
+                        <View className='mt-4 gap-2'>
                             <View className='gap-4'>
                                 {options.filter((option) => option.title === areaTrabajo).map((option) => (
                                     <TouchableOpacity
@@ -347,103 +423,15 @@ const Actualizar = () => {
                                         activeOpacity={0.8}
                                         disabled={estado === "Editable"}
                                     >
-                                        <View
-                                            className={`justify-center items-center rounded-2xl p-2 ${option.color}`}
-                                        >
+                                        <View className={`justify-center items-center rounded-2xl p-2 ${option.color}`}>
                                             <Icon name={option.icon} size={40} color="#FFF" />
                                             <Text className="mt-2 text-white text-lg font-bold">{option.title}</Text>
                                         </View>
                                     </TouchableOpacity>
                                 ))}
                             </View>
-                            {
-                                showEmpleadosAsignados ===true? (
-                                    <View className='gap-1 mt-2'>
-                                    <View className=' p-2 bg-white border-b border-gray-300 items-center'>
-                                        <Text  className='text-lg font-bold text-black '>Empleados Asignados</Text>
-                                    </View>
-                                    <View className="bg-white p-4 rounded-lg w-[100%]">
-                                        <FlatList 
-                                            data={empleadosAsignados}
-                                            keyExtractor={(item) => item.Empleado_idEmpleado}
-                                            renderItem={({ item }) => (
-                                                <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
-                                                    <View className='flex-row p-2'>
-                                                        <Card.Content>
-                                                            <View className='gap-1'>
-                                                                <Text variant="titleMedium">Nombres: {item.Nombres}</Text>
-                                                                <Text variant="titleMedium">DNI: {item.DNI}</Text>
-                                                            </View>
-                                                        </Card.Content>
-                                                    </View>
-                                                    
-                                                </Card>
-                                                
-                                            )}
-                                        />
-                                        
-                                    </View>
-                                </View>
-                                )
-                                :
-                                (
-                                    empleados.length > 0 ?(
-                                        <View className='gap-1 mt-2'>
-                                            <View className=' p-2 bg-white border-b border-gray-300 items-center'>
-                                                <Text  className='text-lg font-bold text-black '>Empleados Asignados</Text>
-                                            </View>
-                                            <View className="bg-white p-4 rounded-lg w-[100%]">
-                                                <FlatList 
-                                                    data={empleados}
-                                                    keyExtractor={(item) => item.idEmpleado}
-                                                    renderItem={({ item }) => (
-                                                        <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
-                                                            <View className='flex-row p-2'>
-                                                                <Card.Content>
-                                                                    <View className='gap-1'>
-                                                                        <Text variant="titleMedium">Nombres: {item.Nombres}</Text>
-                                                                        <Text variant="titleMedium">DNI: {item.Dni}</Text>
-                                                                    </View>
-                                                                </Card.Content>
-                                                            </View>
-                                                            
-                                                        </Card>
-                                                        
-                                                    )}
-                                                />
-                                                
-                                            </View>
-                                            <View className='flex-row gap-4 justify-center'>
-                                                <Pressable onPress={() => {
-                                                    setShowModal(!showModal);
-                                                    }
-                                                }>
-                                                    <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#15a1ff] rounded-xl p-2 mx-auto'>
-                                                        <Text className='text-xl font-bold text-white '>Agregar</Text>
-                                                        <Icon1 name="plus" size={20} color="#fff" />
-                                                    </View>
-                                                </Pressable>
-                                                
-                                                <Pressable onPress={asignarEmpleados}>
-                                                    <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#13bf1e] px-6 rounded-xl p-2 mx-auto'>
-                                                        <Text className='text-xl font-bold text-white '>Asignar</Text>
-                                                    </View>
-                                                </Pressable>
-                                                    
-                                            </View>
-                                        </View>
-                                    )
-                                    :
-                                    (
-                                        <Pressable onPress={() => setShowModal(!showModal)} className='rounded-xl p-3 bg-gray-700 mt-3'>
-                                            <Text className='text-white mx-auto text-lg font-semibold'>Asignar Empleados</Text>
-                                        </Pressable>
-                                    )
-                                )
-                            }
-                            
+                            {renderEmpleadosSection()}
                         </View>
-                        
                     )
                 }
                     <Modal
