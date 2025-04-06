@@ -76,6 +76,7 @@ const ModeloService = {
     async inventarioPorAlmacen() {
         const DetalleAlmacenService = require("./DetalleAlmacenService");
         const AlmacenService = require("./AlmacenService");
+        const ImagenService = require("./ImagenService");
 
         try {
             const modelos = await this.getAllModelo();
@@ -90,9 +91,11 @@ const ModeloService = {
 
                     if (!inventarioMap.has(clave)) {
                         const almacen = await AlmacenService.getAlmacenById(idAlmacen);
+                        const imagen = await ImagenService.getImagen(modelo.idModelo);
+
                         inventarioMap.set(clave, {
                             nombreModelo: modelo.Nombre,
-                            imagen: modelo.Imagen,
+                            imagen: imagen[0].Url,
                             nombreAlmacen: almacen.Nombre,
                             cantidadIngreso: 0,
                             cantidadSalida: 0,
