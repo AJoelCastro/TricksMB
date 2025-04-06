@@ -11,7 +11,9 @@ import { TextInput } from "react-native-paper";
 SplashScreen.preventAutoHideAsync();
 
 const {width, height} = Dimensions.get('window');
+
 const Inventario=() =>{
+
   const [loaded, error] = useFonts({
     'Inter-Black': require('../../../assets/fonts/DMSans-Regular.ttf'),
   });
