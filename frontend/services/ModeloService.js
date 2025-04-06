@@ -15,14 +15,14 @@ const ModeloService = {
         } catch (error) {
             if (error.response) {
                 // El servidor respondió con un código de error
-                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+                throw new Error(error.response.data.error || `Error en obtener todos los modelos: ${error.response.status}`);
             } else if (error.request) {
                 console.log("error.request",error.request);
                 // No hubo respuesta del servidor
                 throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
             } else {
                 // Otro tipo de error
-                throw new Error("Ocurrió un error inesperado al crear la caja.");
+                throw new Error("Ocurrió un error inesperado al obtener todos los modelos.");
             }
         }
     },
@@ -38,14 +38,14 @@ const ModeloService = {
         } catch (error) {
             if (error.response) {
                 // El servidor respondió con un código de error
-                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+                throw new Error(error.response.data.error || `Error en obtener modelo por id: ${error.response.status}`);
             } else if (error.request) {
                 console.log("error.request",error.request);
                 // No hubo respuesta del servidor
                 throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
             } else {
                 // Otro tipo de error
-                throw new Error("Ocurrió un error inesperado al crear la caja.");
+                throw new Error("Ocurrió un error inesperado al obtener modelo por id.");
             }
         }
         
@@ -61,14 +61,14 @@ const ModeloService = {
         } catch (error) {
             if (error.response) {
                 // El servidor respondió con un código de error
-                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+                throw new Error(error.response.data.error || `Error en obtener modelo por codigo de pedido: ${error.response.status}`);
             } else if (error.request) {
                 console.log("error.request",error.request);
                 // No hubo respuesta del servidor
                 throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
             } else {
                 // Otro tipo de error
-                throw new Error("Ocurrió un error inesperado al crear la caja.");
+                throw new Error("Ocurrió un error inesperado al obtener modelo por codigo de pedido.");
             }
         }
     },
@@ -83,14 +83,14 @@ const ModeloService = {
         } catch (error) {
             if (error.response) {
                 // El servidor respondió con un código de error
-                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+                throw new Error(error.response.data.error || `Error en obtener imagen: ${error.response.status}`);
             } else if (error.request) {
                 console.log("error.request",error.request);
                 // No hubo respuesta del servidor
                 throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
             } else {
                 // Otro tipo de error
-                throw new Error("Ocurrió un error inesperado al crear la caja.");
+                throw new Error("Ocurrió un error inesperado al obtener imagen.");
             }
         }
     },
@@ -105,14 +105,14 @@ const ModeloService = {
         } catch (error) {
             if (error.response) {
                 // El servidor respondió con un código de error
-                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+                throw new Error(error.response.data.error || `Error en obtener inventario: ${error.response.status}`);
             } else if (error.request) {
                 console.log("error.request",error.request);
                 // No hubo respuesta del servidor
                 throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
             } else {
                 // Otro tipo de error
-                throw new Error("Ocurrió un error inesperado al crear la caja.");
+                throw new Error("Ocurrió un error inesperado al obtener inventario.");
             }
         }
     }
