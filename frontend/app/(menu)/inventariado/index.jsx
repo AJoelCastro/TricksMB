@@ -113,7 +113,8 @@ const Inventario=() =>{
                   <View className="shadow-md shadow-gray-200 rounded-md">
                     <Image
                       source={item.imagen}
-                      style={{width: 150, height: 150, borderRadius: 10, resizeMode: 'contain'}}
+                      style={{width: 150, height: 150, borderRadius: 10}}
+                      contentFit="contain"
                     />
                   </View>
                   <View className="flex-1 gap-2 justify-center">
