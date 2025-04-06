@@ -67,62 +67,83 @@ export default function Historial(){
                     Historial de pedidos
                 </Text>
             <View 
-                className='flex-1 flex-row gap-2 justify-between'
+                className='flex-1 flex-col gap-2 '
             >
-                <View className='items-center gap-2'>
-                    <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("pendiente")}>
-                        <Icon 
-                            name='square-o' 
-                            size={20} 
-                            color='#634AFF' 
-                        />
-                    </Pressable>
-                    <View>
-                        <Text style={{fontFamily:'Inter-Light', fontSize:15 }} className='text-gray-800'>
-                            Pendiente
-                        </Text>
+                
+                <View className='flex-row  justify-between'>
+                    <View className='items-center gap-2'>
+                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("pendiente")}>
+                            <Icon 
+                                name='square-o' 
+                                size={20} 
+                                color='#634AFF' 
+                            />
+                        </Pressable>
+                        <View>
+                            <Text style={{fontFamily:'Inter-Light', fontSize:15 }} className='text-gray-800'>
+                                Pendientes
+                            </Text>
+                        </View>
+                    </View>
+                    
+                    <View className='items-center gap-2'>
+                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("completado")}>
+                            <Icon 
+                                name='check' 
+                                size={20} 
+                                color='#634AFF' 
+                            />
+                        </Pressable>
+                        <View>
+                            <Text style={{fontFamily:'Inter-Light', fontSize:15 }} className='text-gray-800'>
+                                Completadas
+                            </Text>
+                        </View>
+                    </View>
+                    <View className='items-center gap-2'>
+                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("cancelado")}>
+                            <Icon 
+                                name='exclamation-circle' 
+                                size={20} 
+                                color='#634AFF' 
+                            />
+                        </Pressable>
+                        <View>
+                            <Text style={{fontFamily:'Inter-Light', fontSize:15 }} className='text-gray-800'>
+                                Vencidas
+                            </Text>
+                        </View>
                     </View>
                 </View>
-                <View className='items-center gap-2'>
-                    <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("procesando")}>
-                        <Icon2 
-                            name='check-square' 
-                            size={20} 
-                            color='#634AFF' 
-                        />
-                    </Pressable>
-                    <View>
-                        <Text style={{fontFamily:'Inter-Light', fontSize:15 }} className='text-gray-800'>
-                            Procesando
-                        </Text>
+                <Divider style={{marginVertical:5, backgroundColor:'#634AFF'}}/>
+                <View className='flex-row  justify-center gap-[15%]'>
+                    <View className='items-center gap-2'>
+                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("procesando")}>
+                            <Icon2 
+                                name='check-square' 
+                                size={20} 
+                                color='#634AFF' 
+                            />
+                        </Pressable>
+                        <View>
+                            <Text style={{fontFamily:'Inter-Light', fontSize:15 }} className='text-gray-800'>
+                                En Proceso
+                            </Text>
+                        </View>
                     </View>
-                </View>
-                <View className='items-center gap-2'>
-                    <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("completado")}>
-                        <Icon 
-                            name='check' 
-                            size={20} 
-                            color='#634AFF' 
-                        />
-                    </Pressable>
-                    <View>
-                        <Text style={{fontFamily:'Inter-Light', fontSize:15 }} className='text-gray-800'>
-                            Completado
-                        </Text>
-                    </View>
-                </View>
-                <View className='items-center gap-2'>
-                    <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("cancelado")}>
-                        <Icon 
-                            name='times' 
-                            size={20} 
-                            color='#634AFF' 
-                        />
-                    </Pressable>
-                    <View>
-                        <Text style={{fontFamily:'Inter-Light', fontSize:15 }} className='text-gray-800'>
-                            Cancelado
-                        </Text>
+                    <View className='items-center gap-2'>
+                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("cancelado")}>
+                            <Icon 
+                                name='times' 
+                                size={20} 
+                                color='red' 
+                            />
+                        </Pressable>
+                        <View>
+                            <Text style={{fontFamily:'Inter-Light', fontSize:15 }} className='text-gray-800'>
+                                Canceladas
+                            </Text>
+                        </View>
                     </View>
                 </View>
             </View>
