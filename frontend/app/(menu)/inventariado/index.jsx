@@ -85,7 +85,8 @@ const Inventario=() =>{
                   <Card className="w-full h-full ">
                     <Image
                       source={{ uri: item.imagen }}
-                      style={{ height: '100%', width: '100%', borderRadius: 10, resizeMode: 'contain', backgroundColor: 'white'}}
+                      style={{ height: '100%', width: '100%', borderRadius: 10, backgroundColor: 'white'}}
+                      contentFit="contain"
                     />
                     <View className="items-center ">
                       <Text style={{fontSize: 20, fontFamily: 'Inter-Black'}}>Modelo: {item.nombreModelo}</Text>

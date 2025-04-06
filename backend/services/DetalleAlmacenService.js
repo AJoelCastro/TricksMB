@@ -79,10 +79,10 @@ const DetalleAlmacenService = {
             const detalleAlmacen = await this.getDetalleAlmacen(codigoPedido);
             const {Cantidad} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
 
-            const cantidadIngreso = detalleAlmacen.Cantidad_Ingreso + cantidad;
+            const cantidadIngreso = detalleAlmacen[0].Cantidad_Ingreso + cantidad;
 
             if(cantidadIngreso === Cantidad) {
-                await DetalleAlmacenDAO.updateEstado(detalleAlmacen.Detalle_pedido_idDetalle_pedido, "Terminado");
+                await DetalleAlmacenDAO.updateEstado(detalleAlmacen[0].Detalle_pedido_idDetalle_pedido, "Terminado");
             }
 
             if(cantidadIngreso>Cantidad){
@@ -91,9 +91,9 @@ const DetalleAlmacenService = {
                 throw errorCantidadIngreso;
             }
 
-            await AlmacenService.updateStock(detalleAlmacen.Almacen_idAlmacen, cantidadIngreso);
+            await AlmacenService.updateStock(detalleAlmacen[0].Almacen_idAlmacen, cantidadIngreso);
 
-            return await DetalleAlmacenDAO.updateCantidadIngreso(detalleAlmacen.Detalle_pedido_idDetalle_pedido, cantidadIngreso);
+            return await DetalleAlmacenDAO.updateCantidadIngreso(detalleAlmacen[0].Detalle_pedido_idDetalle_pedido, cantidadIngreso);
         } catch(error){
             throw error.status ? error : {status: 500, message: "Error en Detalle Almacen Service"};
         }
