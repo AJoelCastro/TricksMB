@@ -84,7 +84,7 @@ const ModeloService = {
 
             await Promise.all(modelos.map(async (modelo) => {
                 const detallesAlmacen = await DetalleAlmacenService.getDetallesAlmacenByModelo(modelo.idModelo);
-
+                let contador = 0;
                 for (const detalleAlm of detallesAlmacen) {
                     const idAlmacen = detalleAlm.Almacen_idAlmacen;
                     const clave = `${modelo.idModelo}-${idAlmacen}`;
@@ -94,6 +94,7 @@ const ModeloService = {
                         const imagen = await ImagenService.getImagen(modelo.idModelo);
 
                         inventarioMap.set(clave, {
+                            idModelo: contador,
                             nombreModelo: modelo.Nombre,
                             imagen: imagen[0].Url,
                             nombreAlmacen: almacen.Nombre,
@@ -105,6 +106,7 @@ const ModeloService = {
                     const registro = inventarioMap.get(clave);
                     registro.cantidadIngreso += detalleAlm.Cantidad_Ingreso;
                     registro.cantidadSalida += detalleAlm.Cantidad_Salida;
+                    contador++;
                 }
             }));
 

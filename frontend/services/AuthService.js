@@ -32,7 +32,6 @@ const AuthService = {
     getToken: async () => {
         try {
             const token = await AsyncStorage.getItem("token");
-            console.log("Recuperando token:", token);
 
             if (!token) return null;
             

@@ -17,14 +17,14 @@ const DetallePedidoService = {
         } catch(error){
             if (error.response) { 
                 // El servidor respondió con un código de error
-                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+                throw new Error(error.response.data.error || `Error al crear el pedido: ${error.response.status}`);
             } else if (error.request) {
                 console.log("error.request",error.request);
                 // No hubo respuesta del servidor
                 throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
             } else {
                 // Otro tipo de error
-                throw new Error("Ocurrió un error inesperado al crear la caja.");
+                throw new Error("Ocurrió un error inesperado al crear el pedido.");
             }
         }
     },
@@ -37,8 +37,17 @@ const DetallePedidoService = {
             });
             return response.data;
         } catch (error) {
-            console.error("(pedidoService) Error al obtener detalle del pedido: ", error.response?.data || error.message);
-            throw error;
+            if (error.response) {
+                // El servidor respondió con un código de error
+                throw new Error(error.response.data.error || `Error al obtener el detalle del pedido: ${error.response.status}`);
+            } else if (error.request) {
+                console.log("error.request",error.request);
+                // No hubo respuesta del servidor
+                throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
+            } else {
+                // Otro tipo de error
+                throw new Error("Ocurrió un error inesperado al obtener el detalle del pedido.");
+            }
         }
     },
     updateDetallePedido: async (codigoPedido, datosPedido) => {
@@ -51,8 +60,17 @@ const DetallePedidoService = {
             return response.data;
 
         } catch(error){
-            console.error("(pedidoService)Error al actualizar pedido: ", error.response?.data || error.message);
-            throw error;
+            if (error.response) {
+                // El servidor respondió con un código de error
+                throw new Error(error.response.data.error || `Error al actualizar el pedido: ${error.response.status}`);
+            } else if (error.request) {
+                console.log("error.request",error.request);
+                // No hubo respuesta del servidor
+                throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
+            } else {
+                // Otro tipo de error
+                throw new Error("Ocurrió un error inesperado al actualizar el pedido.");
+            }
         }
     },
     updateEstado: async (codigoPedido, estado) => {
@@ -65,8 +83,17 @@ const DetallePedidoService = {
             return response.data;
 
         } catch(error){
-            console.error("(pedidoService)Error al actualizar pedido: ", error.response?.data || error.message);
-            throw error;
+            if (error.response) {
+                // El servidor respondió con un código de error
+                throw new Error(error.response.data.error || `Error al actualizar el estado del pedido: ${error.response.status}`);
+            } else if (error.request) {
+                console.log("error.request",error.request);
+                // No hubo respuesta del servidor
+                throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
+            } else {
+                // Otro tipo de error
+                throw new Error("Ocurrió un error inesperado al actualizar el estado del pedido.");
+            }
         }
     }, 
     obtenerTodosLosPedidos: async () => {
@@ -80,14 +107,14 @@ const DetallePedidoService = {
         } catch (error) {
             if (error.response) {
                 // El servidor respondió con un código de error
-                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+                throw new Error(error.response.data.error || `Error al obtener todos los pedidos: ${error.response.status}`);
             } else if (error.request) {
                 console.log("error.request",error.request);
                 // No hubo respuesta del servidor
                 throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
             } else {
                 // Otro tipo de error
-                throw new Error("Ocurrió un error inesperado al crear la caja.");
+                throw new Error("Ocurrió un error inesperado al obtener todos los pedidos.");
             }
         }
     },
@@ -103,14 +130,14 @@ const DetallePedidoService = {
         } catch(error){
             if (error.response) {
                 // El servidor respondió con un código de error
-                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+                throw new Error(error.response.data.error || `Error al actualizar la cantidad del pedido: ${error.response.status}`);
             } else if (error.request) {
                 console.log("error.request",error.request);
                 // No hubo respuesta del servidor
                 throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
             } else {
                 // Otro tipo de error
-                throw new Error("Ocurrió un error inesperado al crear la caja.");
+                throw new Error("Ocurrió un error inesperado al actualizar la cantidad del pedido.");
             }
         }
     },
@@ -125,14 +152,14 @@ const DetallePedidoService = {
         } catch(error){
             if (error.response) {
                 // El servidor respondió con un código de error
-                throw new Error(error.response.data.error || `Error en la creación de la caja: ${error.response.status}`);
+                throw new Error(error.response.data.error || `Error al obtener el historial de pedidos: ${error.response.status}`);
             } else if (error.request) {
                 console.log("error.request",error.request);
                 // No hubo respuesta del servidor
                 throw new Error("No se recibió respuesta del servidor. Verifique su conexión.");
             } else {
                 // Otro tipo de error
-                throw new Error("Ocurrió un error inesperado al crear la caja.");
+                throw new Error("Ocurrió un error inesperado al obtener el historial de pedidos.");
             }
         }
     }

@@ -16,8 +16,8 @@ const IngresoService = {
                 erroridCaja.status = 404;
                 throw erroridCaja;
             }
-            const {idDetalle_almacen} = await DetalleAlmacenService.getDetalleAlmacen(codigoPedido);
-            return await IngresoDAO.createIngreso(idCaja, idDetalle_almacen);
+            const data = await DetalleAlmacenService.getDetalleAlmacen(codigoPedido);
+            return await IngresoDAO.createIngreso(idCaja, data[0].idDetalle_almacen);
         }catch(error){
             throw error.status? error: { status: 500, message: "Error interno en el servicio." };
         }
