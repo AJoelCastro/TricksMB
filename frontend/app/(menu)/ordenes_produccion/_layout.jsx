@@ -4,12 +4,18 @@ import { Platform, TouchableOpacity, Text } from 'react-native';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Colors } from '@/constants/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import "../../../global.css";
+import '../../../global.css';
 
 export default function OrdenesLayout() {
   const router = useRouter();
-  const backgroundColor = useThemeColor({ light: Colors.light.background, dark: Colors.dark.background }, 'background');
-  const textColor = useThemeColor({ light: Colors.light.text, dark: Colors.dark.text }, 'text');
+  const backgroundColor = useThemeColor(
+    { light: Colors.light.background, dark: Colors.dark.background },
+    'background'
+  );
+  const textColor = useThemeColor(
+    { light: Colors.light.text, dark: Colors.dark.text },
+    'text'
+  );
 
   return (
     <Tabs
@@ -24,32 +30,33 @@ export default function OrdenesLayout() {
             backgroundColor: backgroundColor,
           },
         }),
-
-      }}>
+      }}
+    >
       <Tabs.Screen
-        name="(tabs)/crear/index"
+        name='(tabs)/crear/index'
         options={{
           title: 'Crear',
-          tabBarIcon: () => <Icon name="plus" size={22} color={textColor}/>,
+          tabBarIcon: () => <Icon name='plus' size={22} color={textColor} />,
           headerStyle: {
             backgroundColor: backgroundColor, // Cambia el color de fondo del header
           },
           headerTintColor: textColor,
-          headerRight:() => (
-            <TouchableOpacity onPress={()=>router.push("/modalCliente")} className='flex-row gap-2 mr-2 items-center'>
-              <Text style={{color:textColor}}>
-                Cliente Nuevo
-              </Text>
-              <Icon name="user" size={20} color={textColor}/>
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => router.push('/modalCliente')}
+              className='flex-row gap-2 mr-2 items-center'
+            >
+              <Text style={{ color: textColor }}>Cliente Nuevo</Text>
+              <Icon name='user' size={20} color={textColor} />
             </TouchableOpacity>
-          )
+          ),
         }}
       />
       <Tabs.Screen
-        name="(tabs)/editar/index"
+        name='(tabs)/editar/index'
         options={{
           title: 'Editar',
-          tabBarIcon: () => <Icon name="edit" size={22} color={textColor}/>,
+          tabBarIcon: () => <Icon name='edit' size={22} color={textColor} />,
           headerStyle: {
             backgroundColor: backgroundColor, // Cambia el color de fondo del header
           },
@@ -57,10 +64,12 @@ export default function OrdenesLayout() {
         }}
       />
       <Tabs.Screen
-        name="(tabs)/cancelar/index"
+        name='(tabs)/cancelar/index'
         options={{
           title: 'Cancelar',
-          tabBarIcon: () => <Icon name="times-circle" size={22} color={textColor}/>,
+          tabBarIcon: () => (
+            <Icon name='times-circle' size={22} color={textColor} />
+          ),
           headerStyle: {
             backgroundColor: backgroundColor, // Cambia el color de fondo del header
           },
@@ -68,14 +77,13 @@ export default function OrdenesLayout() {
         }}
       />
       <Tabs.Screen
-        name="actualizar"
+        name='actualizar'
         options={{
           title: 'Actualizar',
-          tabBarIcon: () => <Icon name="refresh" size={22} color={textColor}/>,
-          headerShown: false
+          tabBarIcon: () => <Icon name='refresh' size={22} color={textColor} />,
+          headerShown: false,
         }}
       />
-      
     </Tabs>
   );
 }

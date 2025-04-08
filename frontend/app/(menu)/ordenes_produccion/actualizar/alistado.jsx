@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text } from 'react-native';
 import React, { useEffect } from 'react';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useFocusEffect } from '@react-navigation/native';
@@ -6,31 +6,31 @@ import { useFocusEffect } from '@react-navigation/native';
 const alistado = () => {
   const lockOrientation = async () => {
     await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
+      ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
     );
-};
+  };
 
   // Función para restablecer la orientación al salir
-const resetOrientation = async () => {
+  const resetOrientation = async () => {
     await ScreenOrientation.unlockAsync();
-};
+  };
 
   // Efecto al enfocar la pestaña
-useFocusEffect(
+  useFocusEffect(
     React.useCallback(() => {
-        lockOrientation();
+      lockOrientation();
 
-        // Resetear al salir de la pestaña
-        return () => {
+      // Resetear al salir de la pestaña
+      return () => {
         resetOrientation();
-        };
+      };
     }, [])
-);
+  );
   return (
     <View>
       <Text>alistado</Text>
     </View>
-  )
-}
+  );
+};
 
-export default alistado
+export default alistado;

@@ -25,7 +25,7 @@ function Post() {
     }
   }
 
-  return <Button onPress={onPress} title="Post" />;
+  return <Button onPress={onPress} title='Post' />;
 }
 
 export default Post;
