@@ -60,17 +60,20 @@ const DetallePedidoService = {
         accesorios, forro) {
         try {
             if (!codigoPedido) {
-                throw { status: 400, message: "El código de pedido es requerido" };
+                const errorCodigoPedido = new Error("El código de pedido es requerido");
+                errorCodigoPedido.status = 400;
+                throw errorCodigoPedido;
             }
             const obj = await DetallePedidoDAO.updateDetallePedido(codigoPedido, nombreTaco, alturaTaco, material, 
                 tipoMaterial, suela, accesorios, forro);
             if (!obj) {
-                throw { status: 500, message: "No se pudo actualizar el detalle del pedido" };
+                const errorObj = new Error("No se encontró el detalle de pedido");
+                errorObj.status = 404;
+                throw errorObj;
             }
             return obj;
         } catch (error) {
-            if (error.status) throw error;
-            throw { status: 500, message: "Error en DetallePedido Service", detalle: error.message }
+            throw error.status?error:{ status: 500, message: "Error en Detalle Pedido Service"}
         }
     },
 
