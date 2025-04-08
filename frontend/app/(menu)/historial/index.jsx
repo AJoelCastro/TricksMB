@@ -72,7 +72,7 @@ export default function Historial(){
                 
                 <View className='flex-row  justify-between'>
                     <View className='items-center gap-2'>
-                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("pendiente")}>
+                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("Editable")}>
                             <Icon 
                                 name='square-o' 
                                 size={20} 
@@ -87,7 +87,7 @@ export default function Historial(){
                     </View>
                     
                     <View className='items-center gap-2'>
-                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("completado")}>
+                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("Finalizado")}>
                             <Icon 
                                 name='check' 
                                 size={20} 
@@ -101,7 +101,7 @@ export default function Historial(){
                         </View>
                     </View>
                     <View className='items-center gap-2'>
-                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("cancelado")}>
+                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("Vencido")}>
                             <Icon 
                                 name='exclamation-circle' 
                                 size={20} 
@@ -118,7 +118,7 @@ export default function Historial(){
                 <Divider style={{marginVertical:5, backgroundColor:'#634AFF'}}/>
                 <View className='flex-row  justify-center gap-[15%]'>
                     <View className='items-center gap-2'>
-                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("procesando")}>
+                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("Proceso")}>
                             <Icon2 
                                 name='check-square' 
                                 size={20} 
@@ -132,7 +132,7 @@ export default function Historial(){
                         </View>
                     </View>
                     <View className='items-center gap-2'>
-                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("cancelado")}>
+                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("Cancelado")}>
                             <Icon 
                                 name='times' 
                                 size={20} 
