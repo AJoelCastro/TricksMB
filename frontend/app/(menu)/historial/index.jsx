@@ -16,7 +16,7 @@ import DetallePedidoService from '@/services/DetallePedidoService';
 
 SplashScreen.preventAutoHideAsync();
 
-export default function Historial(){
+const Historial = () =>{
 
     const router = useRouter();
     const [estado, setEstado] = useState(null);
@@ -233,3 +233,4 @@ export default function Historial(){
         
     )
 }
+export default Historial;
