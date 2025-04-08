@@ -81,7 +81,9 @@ const DetallePedidoService = {
         const DetalleAreaTrabajoService = require('./DetalleAreaTrabajoService');
         try {
             if (!codigoPedido) {
-                throw { status: 400, message: "El código de pedido es requerido" };
+                const errorCodigoPedido = new Error("El código de pedido es requerido");
+                errorCodigoPedido.status = 400;
+                throw errorCodigoPedido;
             }
 
             const obj = await DetallePedidoDAO.updateEstado(codigoPedido, estado);
@@ -93,8 +95,7 @@ const DetallePedidoService = {
 
             return obj;
         } catch (error) {
-            if (error.status) throw error;
-            throw { status: 500, message: "Error en DetallePedido Service", detalle: error.message };
+            throw error.status?error:{ status: 500, message: "Error en DetallePedido Service"};
         }
     },
 
