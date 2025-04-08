@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { ScrollView, Text, View, Pressable,Alert, FlatList } from 'react-native'
-import { useFocusEffect, useRouter } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
+import { ScrollView, Text, View, Pressable,Alert, FlatList, SafeAreaView } from 'react-native'
 import { Switch, Card, Divider } from 'react-native-paper';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { Image } from 'expo-image';
 import {useFonts} from "expo-font";
+
+import * as SplashScreen from 'expo-splash-screen';
 
 
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -18,6 +20,9 @@ export default function Historial(){
 
     const router = useRouter();
     const [estado, setEstado] = useState(null);
+    const [mostrarPedidos, setMostrarPedidos] = useState(false);
+    const [data, setData] = useState(null);
+    const [historial, setHistorial] = useState(null);
     const [loaded, error] = useFonts({
         'Inter-Black': require('../../../assets/fonts/DMSans-Regular.ttf'),
         'Inter-Light': require('../../../assets/fonts/DMSans-Light.ttf'),
@@ -28,7 +33,7 @@ export default function Historial(){
             const obtenerHistorial = async () => {
                 try {
                     const historial = await DetallePedidoService.getHistorialPedidos();
-                    console.log(historial.historialPedidos);
+                    setHistorial(historial.historialPedidos);
                 } catch (error) {
                     mostrarError(error);
                 }
@@ -42,7 +47,24 @@ export default function Historial(){
             SplashScreen.hideAsync();
         }
     }, [loaded, error]);
-
+    
+    useEffect(() => {
+        if(historial === null) return;
+        const dataHistorial = historial.filter((item) => item.Estado === estado);
+        console.log(dataHistorial);
+        setData(dataHistorial);
+        if(dataHistorial.length === 0){
+            Alert.alert(
+                "Error",
+                `No hay pedidos para este estado`,
+                [{ text: "OK" }] // Botón requerido
+            );
+            setMostrarPedidos(false);  
+        }
+        else{
+            setMostrarPedidos(true); 
+        }
+    }, [estado])
     
     if (!loaded && !error) {
         return null;
@@ -56,6 +78,7 @@ export default function Historial(){
             [{ text: "OK" }] // Botón requerido
         );
     };
+    
 
     return (
         <View 
@@ -63,16 +86,17 @@ export default function Historial(){
         >
             <Text 
                 style={{fontFamily:'Inter-Light', fontSize:28 }} 
-                className='text-gray-600 my-4'>
-                    Historial de pedidos
-                </Text>
+                className='text-gray-600 my-4'
+            >
+                Historial de pedidos
+            </Text>
             <View 
-                className='flex-1 flex-col gap-2 '
+                className='flex-col gap-2 '
             >
                 
                 <View className='flex-row  justify-between'>
                     <View className='items-center gap-2'>
-                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("pendiente")}>
+                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("Editable")}>
                             <Icon 
                                 name='square-o' 
                                 size={20} 
@@ -87,11 +111,11 @@ export default function Historial(){
                     </View>
                     
                     <View className='items-center gap-2'>
-                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("completado")}>
+                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("Finalizado")}>
                             <Icon 
                                 name='check' 
                                 size={20} 
-                                color='#634AFF' 
+                                color='green' 
                             />
                         </Pressable>
                         <View>
@@ -101,11 +125,11 @@ export default function Historial(){
                         </View>
                     </View>
                     <View className='items-center gap-2'>
-                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("cancelado")}>
+                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("Vencido")}>
                             <Icon 
                                 name='exclamation-circle' 
                                 size={20} 
-                                color='#634AFF' 
+                                color='yellow' 
                             />
                         </Pressable>
                         <View>
@@ -118,11 +142,11 @@ export default function Historial(){
                 <Divider style={{marginVertical:5, backgroundColor:'#634AFF'}}/>
                 <View className='flex-row  justify-center gap-[15%]'>
                     <View className='items-center gap-2'>
-                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("procesando")}>
+                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("Proceso")}>
                             <Icon2 
                                 name='check-square' 
                                 size={20} 
-                                color='#634AFF' 
+                                color='blue' 
                             />
                         </Pressable>
                         <View>
@@ -132,7 +156,7 @@ export default function Historial(){
                         </View>
                     </View>
                     <View className='items-center gap-2'>
-                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("cancelado")}>
+                        <Pressable className='bg-gray-100 rounded-full p-4' onPress={()=>setEstado("Cancelado")}>
                             <Icon 
                                 name='times' 
                                 size={20} 
@@ -147,6 +171,45 @@ export default function Historial(){
                     </View>
                 </View>
             </View>
+            {
+                mostrarPedidos?(
+                    <SafeAreaView className='flex-1 mt-4 bg-white'>
+                        <FlatList
+                            data={data}
+                            keyExtractor={(item) => item.Codigo_pedido}
+                            renderItem={({ item }) => (
+                                <Card className='p-2 gap-4 my-2' style={{ backgroundColor:'white'}} >
+                                    <View className='flex-row gap-2 justify-between items-center'>
+                                        <View className='bg-gray-100 rounded-full p-4'>
+                                            <Icon
+                                                name='shopping-cart'
+                                                size={20}
+                                                color='#634AFF'
+                                            />
+                                        </View>
+                                        <View>
+                                            <Text style={{fontFamily:'Inter-Light', fontSize:15 }} className='text-gray-800'>
+                                                {item.Codigo_pedido}
+                                            </Text>
+                                            <Text style={{fontFamily:'Inter-Light', fontSize:15 }} className='text-gray-800'>
+                                                {item.Fecha_entrega}
+                                            </Text>
+                                        </View>
+                                        <View>
+                                            <Image
+                                                source={{uri: item.Imagenes[0]}}
+                                                style={{ width: 100, height: 100 }}
+                                                contentFit="cover"
+                                                className="rounded-lg"
+                                            />
+                                        </View>
+                                    </View>
+                                </Card>     
+                            )}
+                        />
+                    </SafeAreaView>
+                ):null
+            }
         </View>
         
     )

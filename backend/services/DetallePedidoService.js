@@ -60,17 +60,20 @@ const DetallePedidoService = {
         accesorios, forro) {
         try {
             if (!codigoPedido) {
-                throw { status: 400, message: "El código de pedido es requerido" };
+                const errorCodigoPedido = new Error("El código de pedido es requerido");
+                errorCodigoPedido.status = 400;
+                throw errorCodigoPedido;
             }
             const obj = await DetallePedidoDAO.updateDetallePedido(codigoPedido, nombreTaco, alturaTaco, material, 
                 tipoMaterial, suela, accesorios, forro);
             if (!obj) {
-                throw { status: 500, message: "No se pudo actualizar el detalle del pedido" };
+                const errorObj = new Error("No se encontró el detalle de pedido");
+                errorObj.status = 404;
+                throw errorObj;
             }
             return obj;
         } catch (error) {
-            if (error.status) throw error;
-            throw { status: 500, message: "Error en DetallePedido Service", detalle: error.message }
+            throw error.status?error:{ status: 500, message: "Error en Detalle Pedido Service"}
         }
     },
 
@@ -78,7 +81,9 @@ const DetallePedidoService = {
         const DetalleAreaTrabajoService = require('./DetalleAreaTrabajoService');
         try {
             if (!codigoPedido) {
-                throw { status: 400, message: "El código de pedido es requerido" };
+                const errorCodigoPedido = new Error("El código de pedido es requerido");
+                errorCodigoPedido.status = 400;
+                throw errorCodigoPedido;
             }
 
             const obj = await DetallePedidoDAO.updateEstado(codigoPedido, estado);
@@ -90,8 +95,7 @@ const DetallePedidoService = {
 
             return obj;
         } catch (error) {
-            if (error.status) throw error;
-            throw { status: 500, message: "Error en DetallePedido Service", detalle: error.message };
+            throw error.status?error:{ status: 500, message: "Error en DetallePedido Service"};
         }
     },
 
@@ -147,14 +151,13 @@ const DetallePedidoService = {
                         Imagenes: urls,
                         Codigo_pedido: pedido.Codigo_pedido,
                         Fecha_creacion: new Date(pedido.Fecha_creacion).toLocaleDateString('es-ES'),
-                        Fecha_entraga: new Date(Fecha_entrega).toLocaleDateString('es-ES'),
+                        Fecha_entrega: new Date(Fecha_entrega).toLocaleDateString('es-ES'),
                         Estado: pedido.Estado
                     };
             }));
             return historialPedidos;
         }catch(error){
-            if(error.status) throw error;
-            throw {status: 500, message: "Error en el DetallePedidoService: historial", detalle: error.message}
+            throw error.status?error:{status: 500, message: "Error en el DetallePedido Service: historial"}
         }
     },
 
