@@ -17,8 +17,9 @@ const DetalleAlmacenService = {
             };
 
             const {idAlmacen} = await AlmacenService.getAlmacen(nombreAlmacen);
-            const {idDetalle_pedido} = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
-            const result = await DetalleAlmacenDAO.createDetalleAlmacen(idAlmacen, idDetalle_pedido);
+            const detallePedido = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
+
+            const result = await DetalleAlmacenDAO.createDetalleAlmacen(idAlmacen, detallePedido.idDetalle_pedido);
             return result;
         } catch (error) {
             throw error.status ? error : {status: 500, message: "Error en Detalle Almacen Service"};
@@ -82,7 +83,7 @@ const DetalleAlmacenService = {
             const cantidadIngreso = detalleAlmacen[0].Cantidad_Ingreso + cantidad;
 
             if(cantidadIngreso === Cantidad) {
-                await DetalleAlmacenDAO.updateEstado(detalleAlmacen[0].Detalle_pedido_idDetalle_pedido, "Terminado");
+                await DetalleAlmacenDAO.updateEstado(detalleAlmacen[0].Detalle_pedido_idDetalle_pedido, "Listo");
             }
 
             if(cantidadIngreso>Cantidad){
@@ -97,6 +98,43 @@ const DetalleAlmacenService = {
         } catch(error){
             throw error.status ? error : {status: 500, message: "Error en Detalle Almacen Service"};
         }
+    },
+
+    async updateCantidadSalida(codigoPedido, cantidadSalida){
+        const AlmacenService = require('./AlmacenService');
+        const DetallePedidoService = require('./DetallePedidoService');
+        const GuiaSalidaService = require('./GuiaSalidaService');
+        const PedidoService = require('./PedidoService');
+        try{
+            if(!codigoPedido || !cantidadSalida) {
+                const errorCampos = new Error("Campos requeridos");
+                errorCampos.status = 401;
+                throw errorCampos;
+            }
+
+            const detalleAlmacen = await this.getDetalleAlmacen(codigoPedido);
+            const detallePedido = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
+            const alamacen = await AlmacenService.getAlmacenById(detalleAlmacen[0].Almacen_idAlmacen);
+            const pedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
+            const GuiaSalida = await GuiaSalidaService.getGuiaSalidaByIdCliente(pedido.Cliente_idCliente);
+
+            if(cantidadSalida>detallePedido.Cantidad){
+                const errorCantidadSalida = new Error("Salida mayor a la cantidad total del pedido");
+                errorCantidadSalida.status = 400;
+                throw errorCantidadSalida;
+            }
+            const cantidadSalidaAlmacen = detalleAlmacen[0].Cantidad_Salida + cantidadSalida;
+            const updateStock = alamacen.Cantidad - cantidadSalida;
+            const updateCantidadSalida = GuiaSalida[0].Cantidad + cantidadSalida;
+
+            await AlmacenService.updateStock(detalleAlmacen[0].Almacen_idAlmacen, updateStock);
+            await GuiaSalidaService.updateCantidad(pedido.Cliente_idCliente, updateCantidadSalida);
+            
+            return await DetalleAlmacenDAO.updateCantidadSalida(detalleAlmacen[0].Detalle_pedido_idDetalle_pedido, cantidadSalidaAlmacen);
+        }catch(error){
+            throw error.status ? error : {status: 500, message: "Error en Detalle Almacen Service"};
+        }
+
     },
 
 
