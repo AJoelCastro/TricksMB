@@ -157,8 +157,7 @@ const DetallePedidoService = {
             }));
             return historialPedidos;
         }catch(error){
-            if(error.status) throw error;
-            throw {status: 500, message: "Error en el DetallePedidoService: historial", detalle: error.message}
+            throw error.status?error:{status: 500, message: "Error en el DetallePedido Service: historial"}
         }
     },
 
