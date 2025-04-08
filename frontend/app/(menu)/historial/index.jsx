@@ -179,7 +179,7 @@ const Historial = () =>{
                             keyExtractor={(item) => item.Codigo_pedido}
                             renderItem={({ item }) => (
                                 <Card className='p-2 gap-4 my-2' style={{ backgroundColor:'white'}} >
-                                    <Pressable className='flex-row gap-2 justify-between items-center' onPress={setShowCardDetail(true)}>
+                                    <Pressable className='flex-row gap-2 justify-between items-center' onPress={()=>setShowCardDetail(!showCardDetail)}>
                                         <View className='bg-gray-100 rounded-full p-4'>
                                             <Icon
                                                 name='shopping-cart'
@@ -210,25 +210,21 @@ const Historial = () =>{
                     </SafeAreaView>
                 ):null
             }
-            { 
-                showCardDetail?(
-                    <Modal 
-                        visible={showCardDetail} 
-                        className=' items-center'
-                        onRequestClose={() => setShowCardDetail(false)}
-                        transparent={true}
-                        animationType="fade"
-                    >
-                        <View className='bg-gray-100 rounded-full p-4 w-400'>
-                            <Icon
-                                name='shopping-cart'
-                                size={20}
-                                color='#634AFF'
-                            />
-                        </View>
-                    </Modal>
-                ):null
-            } 
+            <Modal 
+                visible={showCardDetail} 
+                className=' items-center'
+                onRequestClose={() => setShowCardDetail(false)}
+                transparent={true}
+                animationType="fade"
+            >
+                <View className='bg-gray-100 rounded-full p-4 w-400'>
+                    <Icon
+                        name='shopping-cart'
+                        size={20}
+                        color='#634AFF'
+                    />
+                </View>
+            </Modal>
         </View>
         
     )
