@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { ScrollView, Text, View, Pressable,Alert, FlatList, SafeAreaView } from 'react-native'
-import { Switch, Card, Divider } from 'react-native-paper';
+import { ScrollView, Text, View, Pressable, Alert, FlatList, SafeAreaView, Modal } from 'react-native'
+import { Card, Divider } from 'react-native-paper';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import {useFonts} from "expo-font";
@@ -23,6 +23,7 @@ export default function Historial(){
     const [mostrarPedidos, setMostrarPedidos] = useState(false);
     const [data, setData] = useState(null);
     const [historial, setHistorial] = useState(null);
+    const [showCardDetail, setShowCardDetail] = useState(false);
     const [loaded, error] = useFonts({
         'Inter-Black': require('../../../assets/fonts/DMSans-Regular.ttf'),
         'Inter-Light': require('../../../assets/fonts/DMSans-Light.ttf'),
@@ -51,7 +52,6 @@ export default function Historial(){
     useEffect(() => {
         if(historial === null) return;
         const dataHistorial = historial.filter((item) => item.Estado === estado);
-        console.log(dataHistorial);
         setData(dataHistorial);
         if(dataHistorial.length === 0){
             Alert.alert(
@@ -179,7 +179,7 @@ export default function Historial(){
                             keyExtractor={(item) => item.Codigo_pedido}
                             renderItem={({ item }) => (
                                 <Card className='p-2 gap-4 my-2' style={{ backgroundColor:'white'}} >
-                                    <View className='flex-row gap-2 justify-between items-center'>
+                                    <Pressable className='flex-row gap-2 justify-between items-center' onPress={setShowCardDetail(true)}>
                                         <View className='bg-gray-100 rounded-full p-4'>
                                             <Icon
                                                 name='shopping-cart'
@@ -203,13 +203,32 @@ export default function Historial(){
                                                 className="rounded-lg"
                                             />
                                         </View>
-                                    </View>
+                                    </Pressable>
                                 </Card>     
                             )}
                         />
                     </SafeAreaView>
                 ):null
             }
+            { 
+                showCardDetail?(
+                    <Modal 
+                        visible={showCardDetail} 
+                        className=' items-center'
+                        onRequestClose={() => setShowCardDetail(false)}
+                        transparent={true}
+                        animationType="fade"
+                    >
+                        <View className='bg-gray-100 rounded-full p-4 w-400'>
+                            <Icon
+                                name='shopping-cart'
+                                size={20}
+                                color='#634AFF'
+                            />
+                        </View>
+                    </Modal>
+                ):null
+            } 
         </View>
         
     )
