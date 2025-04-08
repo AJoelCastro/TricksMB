@@ -14,6 +14,7 @@ const CajaRoutes = require('./routes/CajaRoutes');
 const AlmacenRoutes= require('./routes/AlmacenRoutes');
 const DetalleAlmacenRoutes = require('./routes/DetalleAlmacenRoutes');
 const IngresoRoutes = require("./routes/IngresoRoutes");
+const SalidaRoutes = require("./routes/SalidaRoutes");
 const errorHandler = require('./utils/errorHandler'); // Importamos errorHandler
 
 require('dotenv').config();
@@ -56,6 +57,7 @@ app.use('/caja', CajaRoutes);
 app.use('/almacen', AlmacenRoutes);
 app.use('/detalleAlmacen', DetalleAlmacenRoutes);
 app.use('/ingreso', IngresoRoutes);
+app.use('/salida', SalidaRoutes);
 
 // Manejo de rutas no encontradas
 app.use((req, res, next) => {
