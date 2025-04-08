@@ -178,8 +178,8 @@ export default function Historial(){
                             data={data}
                             keyExtractor={(item) => item.Codigo_pedido}
                             renderItem={({ item }) => (
-                                <Card className='p-2 flex-row justify-between gap-4 my-2'>
-                                    <View className='flex-row gap-2 bg-white '>
+                                <Card className='p-2 gap-4 my-2' style={{ backgroundColor:'white'}} >
+                                    <View className='flex-row gap-2 justify-between items-center'>
                                         <View className='bg-gray-100 rounded-full p-4'>
                                             <Icon
                                                 name='shopping-cart'
