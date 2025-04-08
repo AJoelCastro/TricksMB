@@ -86,9 +86,10 @@ export default function Historial(){
         >
             <Text 
                 style={{fontFamily:'Inter-Light', fontSize:28 }} 
-                className='text-gray-600 my-4'>
-                    Historial de pedidos
-                </Text>
+                className='text-gray-600 my-4'
+            >
+                Historial de pedidos
+            </Text>
             <View 
                 className='flex-1 flex-col gap-2 '
             >
@@ -172,7 +173,7 @@ export default function Historial(){
             </View>
             {
                 mostrarPedidos?(
-                    <View>
+                    <View className='flex-1'>
                         <FlatList
                             data={data}
                             keyExtractor={(item) => item.Codigo_pedido}
