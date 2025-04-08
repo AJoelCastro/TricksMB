@@ -131,15 +131,23 @@ const DetallePedidoService = {
 
     async getHistorialPedidos(){
         const ImagenService = require('./ImagenService')
+        const PedidoService = require('./PedidoService')
         try{
             const detallePedidos = await DetallePedidoDAO.getAllDetallesPedidos();
+            if(detallePedidos.length === 0){
+                const errorGetAllDetallePedido = new Error("No se encontraron pedidos");
+                errorGetAllDetallePedido.status = 404;
+                throw errorGetAllDetallePedido;
+            }
             const historialPedidos = await Promise.all(detallePedidos.map(async (pedido) => {
                 const imagenes = await ImagenService.getImagen(pedido.Modelo_idModelo);
                 const urls = imagenes.map(img => img.Url);
+                const {Fecha_entrega} = await PedidoService.getPedidoByCodigoPedido(detallePedidos[0].Codigo_pedido);
                 return {
                         Imagenes: urls,
                         Codigo_pedido: pedido.Codigo_pedido,
                         Fecha_creacion: new Date(pedido.Fecha_creacion).toLocaleDateString('es-ES'),
+                        Fecha_entraga: new Date(Fecha_entrega).toLocaleDateString('es-ES'),
                         Estado: pedido.Estado
                     };
             }));
