@@ -50,8 +50,6 @@ const Home = () => {
   useEffect(() => {
     const checkAuth = async () => {
       const token = await AuthService.getToken();
-      console.log('Token en Home.js:', token);
-
       if (token) {
         router.replace('/menu');
       } else {

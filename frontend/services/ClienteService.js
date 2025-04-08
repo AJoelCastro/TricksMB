@@ -87,7 +87,7 @@ const ClienteService = {
         // El servidor respondió con un código de error
         throw new Error(
           error.response.data.error ||
-            `Error en la creación de la caja: ${error.response.status}`
+            `Error al buscar el cliente: ${error.response.status}`
         );
       } else if (error.request) {
         console.log('error.request', error.request);
@@ -97,7 +97,7 @@ const ClienteService = {
         );
       } else {
         // Otro tipo de error
-        throw new Error('Ocurrió un error inesperado al crear la caja.');
+        throw new Error('Ocurrió un error inesperado al buscar el cliente.');
       }
     }
   },

@@ -16,6 +16,7 @@ import { useFonts } from 'expo-font';
 
 import * as SplashScreen from 'expo-splash-screen';
 
+// Cargar la fuente (Font Awesome 5 y Material Community Icons)
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome5';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -30,6 +31,8 @@ const Historial = () => {
   const [data, setData] = useState(null);
   const [historial, setHistorial] = useState(null);
   const [showCardDetail, setShowCardDetail] = useState(false);
+  const [codigoPedido, setCodigoPedido] = useState(null);
+  const [dataModelo, setdataModelo] = useState(null);
   const [loaded, error] = useFonts({
     'Inter-Black': require('../../../assets/fonts/DMSans-Regular.ttf'),
     'Inter-Light': require('../../../assets/fonts/DMSans-Light.ttf'),
@@ -70,6 +73,22 @@ const Historial = () => {
       setMostrarPedidos(true);
     }
   }, [estado]);
+  useEffect(() => {
+    if(data===null) return;
+    if (codigoPedido === null) return;
+    const obtenerDetallePedido = async () => {
+      try {
+        const dataPedido = await DetallePedidoService.obtenerDetallePedido(codigoPedido);
+        console.log(dataPedido);
+        // Actualizar el estado con los datos del detalle del pedido
+        setdataModelo(dataPedido.detallePedido);
+      } catch (error) {
+        mostrarError(error);
+      }
+    };
+    obtenerDetallePedido();
+  }, [codigoPedido])
+  
 
   if (!loaded && !error) {
     return null;
@@ -193,6 +212,8 @@ const Historial = () => {
                   className='flex-row gap-2 justify-between items-center'
                   onPress={() => {
                     setShowCardDetail(!showCardDetail);
+                    setCodigoPedido(item.Codigo_pedido);
+                    
                   }}
                 >
                   <View className='bg-gray-100 rounded-full p-4'>
