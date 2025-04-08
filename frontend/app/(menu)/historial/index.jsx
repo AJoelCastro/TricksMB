@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { ScrollView, Text, View, Pressable,Alert, FlatList } from 'react-native'
-import { useFocusEffect, useRouter } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
 import { Switch, Card, Divider } from 'react-native-paper';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { Image } from 'expo-image';
 import {useFonts} from "expo-font";
+
+import * as SplashScreen from 'expo-splash-screen';
 
 
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -18,6 +20,9 @@ export default function Historial(){
 
     const router = useRouter();
     const [estado, setEstado] = useState(null);
+    const [mostrarPedidos, setMostrarPedidos] = useState(false);
+    const [data, setData] = useState(null);
+    const [historial, setHistorial] = useState(null);
     const [loaded, error] = useFonts({
         'Inter-Black': require('../../../assets/fonts/DMSans-Regular.ttf'),
         'Inter-Light': require('../../../assets/fonts/DMSans-Light.ttf'),
@@ -28,7 +33,7 @@ export default function Historial(){
             const obtenerHistorial = async () => {
                 try {
                     const historial = await DetallePedidoService.getHistorialPedidos();
-                    console.log(historial.historialPedidos);
+                    setHistorial(historial.historialPedidos);
                 } catch (error) {
                     mostrarError(error);
                 }
@@ -42,7 +47,24 @@ export default function Historial(){
             SplashScreen.hideAsync();
         }
     }, [loaded, error]);
-
+    
+    useEffect(() => {
+        if(historial === null) return;
+        const dataHistorial = historial.filter((item) => item.Estado === estado);
+        console.log(dataHistorial);
+        setData(dataHistorial);
+        if(dataHistorial.length === 0){
+            Alert.alert(
+                "Error",
+                `No hay pedidos para este estado`,
+                [{ text: "OK" }] // Botón requerido
+            );
+            setMostrarPedidos(false);  
+        }
+        else{
+            setMostrarPedidos(true); 
+        }
+    }, [estado])
     
     if (!loaded && !error) {
         return null;
@@ -56,6 +78,7 @@ export default function Historial(){
             [{ text: "OK" }] // Botón requerido
         );
     };
+    
 
     return (
         <View 
@@ -147,6 +170,40 @@ export default function Historial(){
                     </View>
                 </View>
             </View>
+            {
+                mostrarPedidos?(
+                    <View>
+                        <FlatList
+                            data={data}
+                            keyExtractor={(item) => item.Codigo_pedido}
+                            renderItem={({ item }) => (
+                                <Card className='bg-white p-2 flex-row justify-between gap-4'>
+                                    <View className='flex-row gap-2'>
+                                        <View className='bg-gray-100 rounded-full p-4'>
+                                            <Icon
+                                                name='shopping-cart'
+                                                size={20}
+                                                color='#634AFF'
+                                            />
+                                        </View>
+                                        <View>
+                                            <Text style={{fontFamily:'Inter-Light', fontSize:15 }} className='text-gray-800'>
+                                                {item.Codigo_pedido}
+                                            </Text>
+                                            <Text style={{fontFamily:'Inter-Light', fontSize:15 }} className='text-gray-800'>
+                                                {item.Fecha_entrega}
+                                            </Text>
+                                            <Image
+                                                source={{uri: item.Imagenes[0]}}
+                                            />
+                                        </View>
+                                    </View>
+                                </Card>     
+                            )}
+                        />
+                    </View>
+                ):null
+            }
         </View>
         
     )
