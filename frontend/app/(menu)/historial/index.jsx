@@ -91,7 +91,7 @@ export default function Historial(){
                             <Icon 
                                 name='check' 
                                 size={20} 
-                                color='#634AFF' 
+                                color='green' 
                             />
                         </Pressable>
                         <View>
@@ -105,7 +105,7 @@ export default function Historial(){
                             <Icon 
                                 name='exclamation-circle' 
                                 size={20} 
-                                color='#634AFF' 
+                                color='yellow' 
                             />
                         </Pressable>
                         <View>
@@ -122,7 +122,7 @@ export default function Historial(){
                             <Icon2 
                                 name='check-square' 
                                 size={20} 
-                                color='#634AFF' 
+                                color='blue' 
                             />
                         </Pressable>
                         <View>
