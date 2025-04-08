@@ -38,7 +38,7 @@ const DetalleAlmacenService = {
             if (!token){
                 throw new Error("No hay token disponible");
             }
-            const response = await axios.put(`${API_URL}/detalleAlmacen/actualizarCantidad/${codigoPedido}`, {
+            const response = await axios.put(`${API_URL}/detalleAlmacen/actualizarCantidadIngreso/${codigoPedido}`, {
                 cantidad
             }, {
                 headers: { Authorization: `Bearer ${token}` }
