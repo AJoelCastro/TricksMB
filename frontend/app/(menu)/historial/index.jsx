@@ -173,13 +173,13 @@ export default function Historial(){
             </View>
             {
                 mostrarPedidos?(
-                    <SafeAreaView className='flex-1 mt-4 '>
+                    <SafeAreaView className='flex-1 mt-4 bg-white'>
                         <FlatList
                             data={data}
                             keyExtractor={(item) => item.Codigo_pedido}
                             renderItem={({ item }) => (
-                                <Card className='bg-white p-2 flex-row justify-between gap-4 my-2'>
-                                    <View className='flex-row gap-2'>
+                                <Card className='p-2 flex-row justify-between gap-4 my-2'>
+                                    <View className='flex-row gap-2 bg-white '>
                                         <View className='bg-gray-100 rounded-full p-4'>
                                             <Icon
                                                 name='shopping-cart'
@@ -194,8 +194,13 @@ export default function Historial(){
                                             <Text style={{fontFamily:'Inter-Light', fontSize:15 }} className='text-gray-800'>
                                                 {item.Fecha_entrega}
                                             </Text>
+                                        </View>
+                                        <View>
                                             <Image
                                                 source={{uri: item.Imagenes[0]}}
+                                                style={{ width: 100, height: 100 }}
+                                                contentFit="cover"
+                                                className="rounded-lg"
                                             />
                                         </View>
                                     </View>
