@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { ScrollView, Text, View, Pressable,Alert, FlatList } from 'react-native'
+import { ScrollView, Text, View, Pressable,Alert, FlatList, SafeAreaView } from 'react-native'
 import { Switch, Card, Divider } from 'react-native-paper';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
@@ -91,7 +91,7 @@ export default function Historial(){
                 Historial de pedidos
             </Text>
             <View 
-                className='flex-1 flex-col gap-2 '
+                className='flex-col gap-2 '
             >
                 
                 <View className='flex-row  justify-between'>
@@ -173,12 +173,12 @@ export default function Historial(){
             </View>
             {
                 mostrarPedidos?(
-                    <View className='flex-1'>
+                    <SafeAreaView className='flex-1 mt-4 '>
                         <FlatList
                             data={data}
                             keyExtractor={(item) => item.Codigo_pedido}
                             renderItem={({ item }) => (
-                                <Card className='bg-white p-2 flex-row justify-between gap-4'>
+                                <Card className='bg-white p-2 flex-row justify-between gap-4 my-2'>
                                     <View className='flex-row gap-2'>
                                         <View className='bg-gray-100 rounded-full p-4'>
                                             <Icon
@@ -202,7 +202,7 @@ export default function Historial(){
                                 </Card>     
                             )}
                         />
-                    </View>
+                    </SafeAreaView>
                 ):null
             }
         </View>
