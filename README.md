@@ -58,7 +58,6 @@ Desde el menú principal, el usuario puede navegar entre las siguientes seccione
 |-------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|
 | ![Login](./frontend/assets/readme/login.jpeg) | ![Menú](/frontend/assets/readme/menu.jpeg)  | ![Inventario](./frontend/assets/readme/Inventario.jpeg) | ![Historial](./frontend/assets/readme/historial.jpeg) | ![Cliente](./frontend/assets/readme/crearCliente.jpeg) |
 | Almacen                          | Crear Orden                             | Actualizar Orden Buscador                      | Actualizar Orden             |
-|-------------------------------|----------------------------------|----------------------------------|----------------------------------|
 | ![Almacen](./frontend/assets/readme/almacen.jpeg) | ![CrearOrden](/frontend/assets/readme/opCrear.jpeg)  | ![Actualizar1](./frontend/assets/readme/opActualizar.jpeg) | ![Actualizar2](./frontend/assets/readme/opActualizar2.jpeg) |
 
 ---
