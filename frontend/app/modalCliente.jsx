@@ -240,10 +240,10 @@ const Modal = () => {
       {/* Botón para registrar el cliente */}
       {tipoCliente !== '' && (
         <Pressable
-          className='bg-blue-500 p-4 rounded-lg mt-4'
+          className='bg-gray-100 p-4 rounded-lg mt-4'
           onPress={handleCrearCliente}
         >
-          <Text className='text-white text-center font-bold'>
+          <Text className='text-[#634AFF] text-center font-bold'>
             Registrar Cliente
           </Text>
         </Pressable>
