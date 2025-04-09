@@ -54,9 +54,9 @@ Desde el menú principal, el usuario puede navegar entre las siguientes seccione
 
 ## 📱 Capturas de Pantalla
 
-| Login                          | Inventario                      | Historial de Pedidos             |
-|-------------------------------|----------------------------------|----------------------------------|
-| ![Login](./frontend/assets/readme/login.jpeg)  | ![Inventario](./frontend/assets/readme/Inventario.jpeg) | ![Historial](./frontend/assets/readme/historial.jpeg) |
+| Login                          | Menú                             | Inventario                      | Historial de Pedidos             |
+|-------------------------------|----------------------------------|----------------------------------|----------------------------------|
+| ![Login](./frontend/assets/readme/login.jpeg) | ![Menú](/frontend/assets/readme/menu.jpeg)  | ![Inventario](./frontend/assets/readme/Inventario.jpeg) | ![Historial](./frontend/assets/readme/historial.jpeg) |
 
 ---
 
