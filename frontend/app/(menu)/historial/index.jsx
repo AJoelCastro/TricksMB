@@ -66,18 +66,41 @@ const Historial = () => {
     setModelImage(null);
     setNameModel(null);
     if (historial === null) return;
-    const dataHistorial = historial.filter(item => item.Estado === estado);
-    setData(dataHistorial);
-    if (dataHistorial.length === 0) {
-      Alert.alert(
-        'Error',
-        `No hay pedidos para este estado`,
-        [{ text: 'OK' }] // Botón requerido
-      );
-      setMostrarPedidos(false);
-    } else {
-      setMostrarPedidos(true);
+    if (estado == 'Vencido') {
+      let dataVencidos = []
+      const hoy = new Date(); // fecha actual
+      historial.forEach(item => {
+        const [dia, mes, anio] = item.Fecha_entrega.split('/');
+        const fechaEntrega = new Date(anio, mes - 1, dia); // mes - 1 porque enero = 0
+        if (fechaEntrega <= hoy) {
+          dataVencidos.push(item);
+        } 
+      })
+      if (dataVencidos.length === 0) {
+        Alert.alert(
+          'Error',
+          `No hay pedidos vencidos`,
+          [{ text: 'OK' }] // Botón requerido
+        );
+        setMostrarPedidos(false);
+      }
+      setData(dataVencidos);
     }
+    else
+    {
+      let dataHistorial = historial.filter(item => item.Estado === estado);
+      if (dataHistorial.length === 0) {
+        Alert.alert(
+          'Error',
+          `No hay pedidos para este estado`,
+          [{ text: 'OK' }] // Botón requerido
+        );
+        setMostrarPedidos(false);
+      } 
+      setData(dataHistorial);
+    }
+    setMostrarPedidos(true);
+    
   }, [estado]);
   useEffect(() => {
     if(data===null) return;
@@ -85,11 +108,9 @@ const Historial = () => {
     const obtenerDetallePedido = async () => {
       try {
         const dataPedido = await DetallePedidoService.obtenerDetallePedido(codigoPedido);
-        console.log(dataPedido);
         // Actualizar el estado con los datos del detalle del pedido
         setdataModelo(dataPedido.detallePedido);
         const model = await ModeloService.getModeloByCodigoPedido(codigoPedido);
-        console.log(model);
         setNameModel(model.modelo.Nombre);
         let idModelo = dataPedido.detallePedido.Modelo_idModelo;
         const imagenModelo = await ModeloService.getImagenById(idModelo);
