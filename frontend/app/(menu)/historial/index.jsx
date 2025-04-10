@@ -310,7 +310,12 @@ const Historial = () => {
                 className='bg-gray-100 items-center rounded-full p-4'
                 onPress={() => setShowCardDetail(!showCardDetail)}
               >
-                <Text>Cerrar</Text>
+                <Text 
+                  style={{ fontFamily: 'Inter-Regular', fontSize: 16 }}
+                  className='text-[#634AFF]'
+                >
+                  Cerrar
+                </Text>
               </Pressable>
             </View>
           </View>
