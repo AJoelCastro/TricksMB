@@ -11,7 +11,7 @@ const AlmacenService = {
                 throw new Error('No hay token disponible');
             }
             const response = await axios.get(
-                `${API_URL}/Almacen/actualizarCantidad/${codigoPedido}`,
+                `${API_URL}/almacen/obtenerTodos`,
                 {
                 headers: { Authorization: `Bearer ${token}` },
                 }
