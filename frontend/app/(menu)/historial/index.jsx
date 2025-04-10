@@ -120,7 +120,7 @@ const Historial = () => {
         style={{ fontFamily: 'Inter-Light', fontSize: 28 }}
         className='text-gray-600 my-4'
       >
-        Historial de pedidos
+        HISTORIAL DE PEDIDOS
       </Text>
       <View className='flex-col gap-2 '>
         <View className='flex-row  justify-between'>
@@ -212,6 +212,12 @@ const Historial = () => {
       </View>
       {mostrarPedidos ? (
         <SafeAreaView className='flex-1 mt-4 bg-white'>
+          <Text
+            style={{ fontFamily: 'Inter-Regular', fontSize: 20, textAlign: 'center'  }}
+            className='text-gray-600 my-2 '
+          >
+            PEDIDOS
+          </Text>
           <FlatList
             data={data}
             keyExtractor={item => item.Codigo_pedido}
