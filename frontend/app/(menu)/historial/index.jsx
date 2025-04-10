@@ -65,6 +65,7 @@ const Historial = () => {
     setdataModelo(null);
     setModelImage(null);
     setNameModel(null);
+    setData(null);
     if (historial === null) return;
     if (estado == 'Vencido') {
       let dataVencidos = []
