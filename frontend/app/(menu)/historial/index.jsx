@@ -34,6 +34,7 @@ const Historial = () => {
   const [showCardDetail, setShowCardDetail] = useState(false);
   const [codigoPedido, setCodigoPedido] = useState(null);
   const [dataModelo, setdataModelo] = useState(null);
+  const [modelImage, setModelImage] = useState(null);
   const [loaded, error] = useFonts({
     'Inter-Black': require('../../../assets/fonts/DMSans-Regular.ttf'),
     'Inter-Light': require('../../../assets/fonts/DMSans-Light.ttf'),
@@ -60,6 +61,8 @@ const Historial = () => {
   }, [loaded, error]);
 
   useEffect(() => {
+    setdataModelo(null);
+    setModelImage(null);
     if (historial === null) return;
     const dataHistorial = historial.filter(item => item.Estado === estado);
     setData(dataHistorial);
