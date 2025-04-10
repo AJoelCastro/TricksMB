@@ -73,8 +73,8 @@ export default function Almacen() {
     useCallback(() => {
       const obtenerAlmacenes = async () => {
         try {
-          const almacenes = await AlmacenService.getAllAlmacenes();
-          console.log(almacenes.almacen);
+          const dataAlmacenes = await AlmacenService.getAllAlmacenes();
+          setAlmacenes(dataAlmacenes.almacen);
         } catch (error) {
           mostrarError(error);
         }
@@ -197,46 +197,42 @@ export default function Almacen() {
         <>
           <View className='mx-4 mt-8'>
             <Text
-              style={{ fontFamily: 'Inter-Light', fontSize: 28 }}
+              style={{ fontFamily: 'Inter-Light', fontSize: 24 }}
               className='text-black'
             >
-              Selecciona un almacen
+              SELECCIONA UN ALMACEN
             </Text>
           </View>
-          <View className='w-full m-4 mt-4 flex flex-row gap-4'>
-            <Pressable
-              className='bg-gray-50 rounded-md p-4 w-[45%] gap-4'
-              onPress={() => setAlmacenSeleccionado('fabrica')}
-            >
-              <View>
-                <Icon2 name='warehouse' size={24} color='#634AFF' />
-              </View>
-              <View>
-                <Text
-                  style={{ fontFamily: 'Inter-Black', fontSize: 16 }}
-                  className='text-[#000111]'
-                >
-                  Almacén Fábrica
-                </Text>
-              </View>
-            </Pressable>
-            <Pressable
-              className='bg-gray-50 rounded-md p-4 w-[45%] gap-4'
-              onPress={() => setAlmacenSeleccionado('trujillo')}
-            >
-              <View>
-                <Icon2 name='warehouse' size={24} color='#634AFF' />
-              </View>
-              <View>
-                <Text
-                  style={{ fontFamily: 'Inter-Black', fontSize: 16 }}
-                  className='text-[#000111]'
-                >
-                  Almacén Trujillo
-                </Text>
-              </View>
-            </Pressable>
-          </View>
+          <ScrollView className=' w-full mt-4 gap-4'>
+            {
+              almacenes?.map((almacen, index) => (
+                <Card key={index} style={{ padding:4, marginTop:4, backgroundColor:'white' }}>
+                  <Pressable
+                    className=' p-4 rounded-lg '
+                    onPress={() => setAlmacenSeleccionado(almacen.nombre)}
+                  >
+                    <Image
+                      source={{ uri: almacen.imagen }}
+                      style={{ width: 200, height: 200, borderRadius: 10  }}
+                    />
+                    <Text
+                      className='text-black mt-2'
+                      style={{ fontFamily: 'Inter-Regular', fontSize: 16 }}
+                    >
+                      Nombre: {almacen.nombre}
+                    </Text>
+                    <Text
+                      className='text-black mt-2'
+                      style={{ fontFamily: 'Inter-Regular', fontSize: 16 }}
+                    >
+                      Stock total: {almacen.stock}
+                    </Text>
+                  
+                  </Pressable>
+                </Card>
+              ))
+            }
+          </ScrollView>
         </>
       ) : (
         <View className='flex-1'>
