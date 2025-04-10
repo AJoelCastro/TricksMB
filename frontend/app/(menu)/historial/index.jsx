@@ -35,6 +35,7 @@ const Historial = () => {
   const [codigoPedido, setCodigoPedido] = useState(null);
   const [dataModelo, setdataModelo] = useState(null);
   const [modelImage, setModelImage] = useState(null);
+  const [nameModel, setNameModel] = useState(null);
   const [loaded, error] = useFonts({
     'Inter-Black': require('../../../assets/fonts/DMSans-Regular.ttf'),
     'Inter-Light': require('../../../assets/fonts/DMSans-Light.ttf'),
@@ -63,6 +64,7 @@ const Historial = () => {
   useEffect(() => {
     setdataModelo(null);
     setModelImage(null);
+    setNameModel(null);
     if (historial === null) return;
     const dataHistorial = historial.filter(item => item.Estado === estado);
     setData(dataHistorial);
@@ -86,9 +88,12 @@ const Historial = () => {
         console.log(dataPedido);
         // Actualizar el estado con los datos del detalle del pedido
         setdataModelo(dataPedido.detallePedido);
+        const model = await ModeloService.getModeloByCodigoPedido(codigoPedido);
+        console.log(model);
+        setNameModel(model.modelo.Nombre);
         let idModelo = dataPedido.detallePedido.Modelo_idModelo;
         const imagenModelo = await ModeloService.getImagenById(idModelo);
-        console.log(imagenModelo);
+        setModelImage(imagenModelo.imagen[0].Url);
       } catch (error) {
         mostrarError(error);
       }
@@ -235,9 +240,9 @@ const Historial = () => {
                     </Text>
                     <Text
                       style={{ fontFamily: 'Inter-Light', fontSize: 15 }}
-                      className='text-gray-800'
+                      className='text-gray-800 '
                     >
-                      {item.Fecha_entrega}
+                      Entrega: {item.Fecha_entrega}
                     </Text>
                   </View>
                   <View>
@@ -260,12 +265,46 @@ const Historial = () => {
             className='p-2 gap-4 my-2  w-full h-full'
             style={{ backgroundColor: 'white' }}
           >
-            <Pressable
-              className='flex-row gap-2 justify-between items-center'
-              onPress={() => setShowCardDetail(!showCardDetail)}
-            >
-              <Icon name='shopping-cart' size={20} color='#634AFF' />
-            </Pressable>
+            <Card>
+              <Card.Content style={{ alignItems: 'center', backgroundColor: 'white' }}>
+                <Text
+                  style={{ fontFamily: 'Inter-Light', fontSize: 18 }}
+                  className='text-gray-800'
+                >
+                  Modelo: {nameModel}
+                </Text>
+              </Card.Content>
+            </Card>
+            <View className='items-center my-2'>
+              <Image
+                source={{ uri: modelImage }}
+                style={{ width: 300, height: 300 }}
+                contentFit='cover'
+                className='rounded-lg'
+              />
+            </View>
+            <Card>
+              <Card.Content>
+                <Text
+                  style={{ fontFamily: 'Inter-Light', fontSize: 16 }}
+                  className='text-gray-800'
+                >
+                  Codigo: {codigoPedido}
+                </Text>
+                <Text
+                  style={{ fontFamily: 'Inter-Light', fontSize: 16 }}
+                  className='text-gray-800'
+                >
+                  Estado: {estado}
+                </Text>
+                <Text
+                  style={{ fontFamily: 'Inter-Light', fontSize: 16 }}
+                  className='text-gray-800'
+                >
+                  Fecha de creacion: {dataModelo?.Fecha_creacion.slice(0, 10)}
+                </Text>
+              </Card.Content>
+            </Card>
             <View>
               <Pressable
                 className='bg-gray-100 items-center rounded-full p-4'
