@@ -21,6 +21,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome5';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import DetallePedidoService from '@/services/DetallePedidoService';
+import ModeloService from '@/services/ModeloService';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -82,6 +83,9 @@ const Historial = () => {
         console.log(dataPedido);
         // Actualizar el estado con los datos del detalle del pedido
         setdataModelo(dataPedido.detallePedido);
+        let idModelo = dataPedido.detallePedido.Modelo_idModelo;
+        const imagenModelo = await ModeloService.getImagenById(idModelo);
+        console.log(imagenModelo);
       } catch (error) {
         mostrarError(error);
       }
