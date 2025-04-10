@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ScrollView,
   Text,
@@ -7,7 +7,7 @@ import {
   Alert,
   FlatList,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { Switch, Card, Divider } from 'react-native-paper';
 import { useFonts } from 'expo-font';
@@ -20,6 +20,7 @@ import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Image } from 'expo-image';
 import IngresoService from '@/services/IngresoService';
 import DetalleAlmacenService from '@/services/DetalleAlmacenService';
+import AlmacenService from '@/services/AlmacenService';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,6 +32,7 @@ export default function Almacen() {
   const [showCamera, setShowCamera] = useState(false);
   const [showRegisters, setShowRegisters] = useState(true);
   const [idCaja, setIdCaja] = useState(null);
+  const [almacenes, setAlmacenes] = useState(null);
   const [almacenSeleccionado, setAlmacenSeleccionado] = useState('');
   const [caja, setCaja] = useState([]);
   const [loaded, error] = useFonts({
@@ -66,6 +68,22 @@ export default function Almacen() {
       handleVerificarIngreso();
     }
   }, [idCaja]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const obtenerAlmacenes = async () => {
+        try {
+          const almacenes = await AlmacenService.getAllAlmacenes();
+          console.log(almacenes.almacen);
+        } catch (error) {
+          mostrarError(error);
+        }
+      };
+      obtenerAlmacenes();
+    },[])
+    
+  )
+  
 
   useEffect(() => {
     if (loaded || error) {
