@@ -165,6 +165,9 @@ export default function Almacen() {
   const actualizarCaja = async () => {
     try {
       let codigoPedido = caja[0].codigoPedido;
+      let nombreAlmacen = almacenSeleccionado;
+      const actualizarAlmacen = await DetalleAlmacenService.updateAlmacen(codigoPedido, nombreAlmacen);
+      console.log(actualizarAlmacen);
       for (const caj of caja) {
         let idCaja = caj.idCaja;
         await IngresoService.createIngreso(idCaja, codigoPedido);
@@ -208,26 +211,29 @@ export default function Almacen() {
               almacenes?.map((almacen, index) => (
                 <Card key={index} style={{ padding:4, marginTop:4, backgroundColor:'white' }}>
                   <Pressable
-                    className=' p-4 rounded-lg '
+                    className=' p-4 rounded-lg flex-row gap-4 justify-between'
                     onPress={() => setAlmacenSeleccionado(almacen.nombre)}
                   >
-                    <Image
-                      source={{ uri: almacen.imagen }}
-                      style={{ width: 200, height: 200, borderRadius: 10  }}
-                    />
-                    <Text
-                      className='text-black mt-2'
-                      style={{ fontFamily: 'Inter-Regular', fontSize: 16 }}
-                    >
-                      Nombre: {almacen.nombre}
-                    </Text>
-                    <Text
-                      className='text-black mt-2'
-                      style={{ fontFamily: 'Inter-Regular', fontSize: 16 }}
-                    >
-                      Stock total: {almacen.stock}
-                    </Text>
-                  
+                    <View className='flex-1 justify-center'>
+                      <Text
+                        className='text-black mt-2'
+                        style={{ fontFamily: 'Inter-SemiBold', fontSize: 16 }}
+                      >
+                        Nombre: {almacen.nombre}
+                      </Text>
+                      <Text
+                        className='text-black mt-2'
+                        style={{ fontFamily: 'Inter-Regular', fontSize: 16 }}
+                      >
+                        Stock total: {almacen.stock}
+                      </Text>
+                    </View>
+                    <View>
+                      <Image
+                        source={{ uri: almacen.imagen }}
+                        style={{ width: 180, height: 180, borderRadius: 10  }}
+                      />
+                    </View>
                   </Pressable>
                 </Card>
               ))
