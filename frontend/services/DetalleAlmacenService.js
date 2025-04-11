@@ -42,14 +42,14 @@ const DetalleAlmacenService = {
       }
     }
   },
-  updateCantidad: async (codigoPedido, cantidad) => {
+  updateCantidadIngreso: async (codigoPedido, cantidad) => {
     try {
       const token = await AuthService.getToken();
       if (!token) {
         throw new Error('No hay token disponible');
       }
       const response = await axios.put(
-        `${API_URL}/detalleAlmacen/actualizarCantidad/${codigoPedido}`,
+        `${API_URL}/detalleAlmacen/actualizarCantidadIngreso/${codigoPedido}`,
         {
           cantidad,
         },
