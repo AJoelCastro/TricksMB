@@ -21,6 +21,7 @@ import { Image } from 'expo-image';
 import IngresoService from '@/services/IngresoService';
 import DetalleAlmacenService from '@/services/DetalleAlmacenService';
 import AlmacenService from '@/services/AlmacenService';
+import SalidaService from '@/services/SalidaService';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -35,6 +36,7 @@ export default function Almacen() {
   const [almacenes, setAlmacenes] = useState(null);
   const [almacenSeleccionado, setAlmacenSeleccionado] = useState('');
   const [caja, setCaja] = useState([]);
+  const [tipoFlujo, setTipoFlujo] = useState(null);
   const [loaded, error] = useFonts({
     'Inter-Black': require('../../../assets/fonts/DMSans-Regular.ttf'),
     'Inter-Light': require('../../../assets/fonts/DMSans-Light.ttf'),
@@ -161,8 +163,7 @@ export default function Almacen() {
       setQrLeido(false);
     }
   };
-
-  const actualizarCaja = async () => {
+  const actualizarCajaIngreso = async () => {
     try {
       let codigoPedido = caja[0].codigoPedido;
       let nombreAlmacen = almacenSeleccionado;
@@ -189,6 +190,46 @@ export default function Almacen() {
       setQrLeido(false);
       setIdCaja(null);
       setCaja([]);
+    }
+  };
+  const actualizarCajaSalida = async () => {
+    try {
+      let codigoPedido = caja[0].codigoPedido;
+      let nombreAlmacen = almacenSeleccionado;
+      await DetalleAlmacenService.updateAlmacen(codigoPedido, nombreAlmacen);
+      for (const caj of caja) {
+        let idCaja = caj.idCaja;
+        await SalidaService.createSalida(idCaja, codigoPedido);
+      }
+      let cantidad = caja.length;
+      await DetalleAlmacenService.updateCantidadIngreso(codigoPedido, cantidad);
+      Alert.alert(
+        'Ingreso exitoso',
+        'Las cajas han sido retiradas del almacén correctamente'
+      );
+      setShowCamera(false);
+      setShowRegisters(true);
+      setQrLeido(false);
+      setIdCaja(null);
+      setCaja([]);
+    } catch (error) {
+      mostrarError(error);
+      setShowCamera(false);
+      setShowRegisters(true);
+      setQrLeido(false);
+      setIdCaja(null);
+      setCaja([]);
+    }
+  }
+  const actualizarCaja = async () => {
+    try {
+      if (tipoFlujo == 'Ingreso') {
+        await actualizarCajaIngreso();
+      } else if (tipoFlujo == 'Salida') {
+        await actualizarCajaSalida();
+      }
+    }catch(error){
+      mostrarError(error);
     }
   };
 
@@ -411,6 +452,7 @@ export default function Almacen() {
                 onPress={() => {
                   setShowRegisters(false);
                   setShowCamera(true);
+                  setTipoFlujo('Ingreso');
                 }}
               >
                 <Icon2 name='plus' size={24} color='white' />
@@ -426,6 +468,7 @@ export default function Almacen() {
                 onPress={() => {
                   setShowRegisters(false);
                   setShowCamera(true);
+                  setTipoFlujo('Salida');
                 }}
               >
                 <Icon2 name='minus' size={24} color='#634AFF' />
