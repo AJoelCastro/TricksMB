@@ -166,15 +166,13 @@ export default function Almacen() {
     try {
       let codigoPedido = caja[0].codigoPedido;
       let nombreAlmacen = almacenSeleccionado;
-      const actualizarAlmacen = await DetalleAlmacenService.updateAlmacen(codigoPedido, nombreAlmacen);
-      console.log(actualizarAlmacen);
+      await DetalleAlmacenService.updateAlmacen(codigoPedido, nombreAlmacen);
       for (const caj of caja) {
         let idCaja = caj.idCaja;
         await IngresoService.createIngreso(idCaja, codigoPedido);
       }
       let cantidad = caja.length;
-      const actualizar = await DetalleAlmacenService.updateCantidadIngreso(codigoPedido, cantidad);
-      console.log(actualizar);
+      await DetalleAlmacenService.updateCantidadIngreso(codigoPedido, cantidad);
       Alert.alert(
         'Ingreso exitoso',
         'Las cajas han sido ingresadas al almacén correctamente'
