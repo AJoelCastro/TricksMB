@@ -35,7 +35,9 @@ const DetalleAreaTrabajoService = {
     async getDetalleAreaTrabajo(codigoPedido) {
         try {
             if (!codigoPedido) {
-                throw { status: 400, message: "Codigo de pedido es requerido" };
+                const errorCodigoPedido = new Error("Codigo del pedido es requerido");
+                errorCodigoPedido.status = 400;
+                throw errorCodigoPedido;
             }
             const DetallePedidoService = require('./DetallePedidoService');
 
@@ -48,8 +50,7 @@ const DetalleAreaTrabajoService = {
             );
             return detallesAreaTrabajo.flat();
         } catch (error) {
-            if (error.status) throw error;
-            throw { status: 500, message: "Error en DetalleAreaTrabajo", detalle: error.message };
+            throw error.status?error:{ status: 500, message: "Error en Detalle Area Trabajo"};
         }
     },
 
@@ -75,7 +76,7 @@ const DetalleAreaTrabajoService = {
             }
             return obj;
         } catch (error) {
-            throw error.status?error:{ status: 500, message: "Error en Detalle Area Trabajo", detalle: error.message };
+            throw error.status?error:{ status: 500, message: "Error en Detalle Area Trabajo" };
         }
     },
 
