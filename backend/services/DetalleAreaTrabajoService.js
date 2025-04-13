@@ -2,6 +2,8 @@ const DetalleAreaTrabajoDAO = require('../dao/DetalleAreaTrabajoDAO');
 const CaracteristicasService = require('./CaracteristicasService');
 const DetallePedidoService = require('./DetallePedidoService');
 const AreaTrabajoService = require('./AreaTrabajoService');
+const GuiaSalidaService = require('./GuiaSalidaService');
+
 const DetalleAreaTrabajoService = {
 
     async createDetalleAreaTrabajo(nomArea,codigoPedido) {
@@ -10,6 +12,14 @@ const DetalleAreaTrabajoService = {
                 const errorCodigoPedido = new Error("Codigo del pedido es requerido");
                 errorCodigoPedido.status = 400;
                 throw errorCodigoPedido;
+            }
+            if(nomArea=="Alistado"){
+                const guiSalida = await GuiaSalidaService.createGuiaSalida(codigoPedido, 0);
+                if(!guiSalida) {
+                    const errorGuiSalida = new Error("Guia de salida no creada");
+                    errorGuiSalida.status = 404;
+                    throw errorGuiSalida;
+                };
             }   
             const data = await AreaTrabajoService.getAreaTrabajoByNombre(nomArea);
             let idAreaTrabajo = data.idArea_trabajo;
@@ -18,7 +28,7 @@ const DetalleAreaTrabajoService = {
             const detallesCreados = await Promise.all(
                 caracteristicas.map(caracteristica =>
                     DetalleAreaTrabajoDAO.crearDetalleAreaTrabajo(
-                        idAreaTrabajo,
+                        idAreaTrabajo, 
                         caracteristica.idCaracteristicas,
                         0,
                         "",
