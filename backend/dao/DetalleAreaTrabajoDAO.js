@@ -44,12 +44,14 @@ class DetalleAreaTrabajoDAO{
             `;
             const [result] = await db.execute(query, [cantidadAvance, comentario, estado, idCaracteristicas]);
             if(result.affectedRows === 0){
-                throw new Error("No se encontró el detalle de área de trabajo con el id de caracteristicas proporcionado");
+                const errorResult = new Error("No se encontró el detalle de área de trabajo con el id de caracteristicas proporcionado");
+                errorResult.status = 404;
+                throw errorResult;
             }
             return result;
         }
         catch(error){
-            throw error;
+            throw error.status? error: { status: 500, message: "Error en DetalleAreaTrabajo Service", detalle: error.message };
         }
     }
 
