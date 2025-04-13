@@ -56,21 +56,26 @@ const DetalleAreaTrabajoService = {
     async updateDetalleAreaTrabajo(idCaracteristicas, cantidadAvance, comentario, estado) {
         try {
             if (!idCaracteristicas) {
-                throw { status: 400, message: "idCaracteristicas de pedido es requerido" };
+                const errorIdCaracteristicas = new Error("Id de caracteristicas es requerido");
+                errorIdCaracteristicas.status = 400;
+                throw errorIdCaracteristicas;
             }
 
             if (cantidadAvance < 0) {
-                throw { status: 400, message: "Cantidad de avance debe ser mayor o igual a 0" };
+                const errorCantidadAvance = new Error("La cantidad de avance no puede ser negativa");
+                errorCantidadAvance.status = 400;
+                throw errorCantidadAvance;
             }
 
             const obj = await DetalleAreaTrabajoDAO.updateDetalleAreaTrabajo(idCaracteristicas, cantidadAvance, comentario, estado);
             if (!obj) {
-                throw { status: 500, message: "No se pudo actualizar el detalle de área de trabajo" };
+                const errorObj = new Error("No se encontró el detalle de area de trabajo");
+                errorObj.status = 404;
+                throw errorObj;
             }
             return obj;
         } catch (error) {
-            if (error.status) throw error;
-            throw { status: 500, message: "Error en DetalleAreaTrabajo", detalle: error.message };
+            throw error.status?error:{ status: 500, message: "Error en Detalle Area Trabajo", detalle: error.message };
         }
     },
 
