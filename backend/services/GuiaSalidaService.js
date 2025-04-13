@@ -4,14 +4,8 @@ const GuiaSalidaService = {
     createGuiaSalida: async (codigoPedido, cantidad) => {
         const PedidoService = require('./PedidoService');
         try{
-            if(!codigoPedido || !cantidad){
-                const errorCampos = new Error("Campos requeridos");
-                errorCampos.status = 401;
-                throw errorCampos;
-            }
             const pedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
-            console.log(pedido);
-            const guiaSalida = await GuiaSalida.createGuiaSalida(pedido[0].Clienete_idCliente, cantidad);
+            const guiaSalida = await GuiaSalida.createGuiaSalida(pedido.Cliente_idCliente, cantidad);
             return guiaSalida;
         }catch(error){
             throw error.status ? error : {status: 500, message: "Error en GuiaSalida Service al crear"};

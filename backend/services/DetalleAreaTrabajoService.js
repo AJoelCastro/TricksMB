@@ -14,12 +14,9 @@ const DetalleAreaTrabajoService = {
                 throw errorCodigoPedido;
             }
             if(nomArea=="Alistado"){
-                const guiSalida = await GuiaSalidaService.createGuiaSalida(codigoPedido, 0);
-                if(!guiSalida) {
-                    const errorGuiSalida = new Error("Guia de salida no creada");
-                    errorGuiSalida.status = 404;
-                    throw errorGuiSalida;
-                };
+                let cantidad = 0;
+                const guiSalida = await GuiaSalidaService.createGuiaSalida(codigoPedido, cantidad);
+                console.log("guia salida",guiSalida);
             }   
             const data = await AreaTrabajoService.getAreaTrabajoByNombre(nomArea);
             let idAreaTrabajo = data.idArea_trabajo;

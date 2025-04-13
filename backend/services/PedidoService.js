@@ -19,7 +19,7 @@ const PedidoService = {
     async getPedidoByCodigoPedido(codigoPedido){
         try{
             if(!codigoPedido){
-                const errorCampos = new Error("Campos requeridos");
+                const errorCampos = new Error("Campos requeridos 2");
                 errorCampos.status = 401;
                 throw errorCampos;
             }
