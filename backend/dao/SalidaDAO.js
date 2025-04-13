@@ -18,6 +18,14 @@ class SalidaDAO {
         : { status: 500, message: "Error interno al crear salida" };
     }
   }
+  static async getSalidaByCaja(idCaja){
+    try{
+        const [rows] = await db.execute(`SELECT * FROM Salida WHERE Caja_idCaja = ?`, [idCaja]);
+        return rows.length > 0 ? rows[0] : null;
+    }catch(error){
+        throw  {status: 500, message: "Error interno del servidor al obtener la salida por caja"};
+    }
+  }
 }
 
 module.exports = SalidaDAO;

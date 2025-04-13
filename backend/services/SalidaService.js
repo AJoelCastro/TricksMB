@@ -36,7 +36,19 @@ const SalidaService = {
         }catch(error){
             throw error.status ? error : {status: 500, message: "Error en Salida Service"}
         }
-    }
+    },
+    async getSalidasByCaja(idCaja)  {
+        try{
+            if(!idCaja) {
+                const erroridCaja = new Error("idCaja requerido");
+                erroridCaja.status = 400;
+                throw erroridCaja;
+            }
+            return await SalidaDAO.getSalidaByCaja(idCaja);
+        }catch(error){
+            throw error.status? error: { status: 500, message: "Error interno en el servicio." };
+        }
+    },
 }
 
 module.exports = SalidaService;
