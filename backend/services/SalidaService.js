@@ -11,8 +11,6 @@ const SalidaService = {
                 errorCampos.status = 401;
                 throw errorCampos;
             }
-            console.log(codigoPedido);
-            console.log(idCaja);
             const pedido = await pedidoService.getPedidoByCodigoPedido(codigoPedido);
             
             if(!pedido){
@@ -20,7 +18,6 @@ const SalidaService = {
                 errorPedido.status = 404;
                 throw errorPedido;
             }
-            console.log(pedido);
             const detalleAlmacen = await DetalleAlmacenService.getDetalleAlmacen(codigoPedido);
             
             if(!detalleAlmacen){
@@ -28,7 +25,6 @@ const SalidaService = {
                 errorDetalleAlmacen.status = 404;
                 throw errorDetalleAlmacen;
             }
-            console.log(detalleAlmacen);
             const guiaSalida = await GuiaSalidaService.getGuiaSalidaByIdCliente(pedido.Cliente_idCliente);
 
             const salida = await SalidaDAO.createSalida(detalleAlmacen[0].idDetalle_almacen, idCaja, guiaSalida[0].idGuia_salida);

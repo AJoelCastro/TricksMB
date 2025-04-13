@@ -46,7 +46,6 @@ export default function Almacen() {
     if (idCaja !== null) {
       const handleVerificarIngreso = async () => {
         try {
-          setCaja([]);
           if(tipoFlujo == 'Ingreso'){
             const verificarIngreso = await IngresoService.obtenerIngreso(idCaja);
             if (verificarIngreso.ingreso === null) {
@@ -440,7 +439,7 @@ export default function Almacen() {
                         className='text-white text-center'
                         style={{ fontFamily: 'Inter-Light', fontSize: 16 }}
                       >
-                        Ingresar
+                        {tipoFlujo == 'Ingreso'? 'Ingresar' : 'Retirar'}
                       </Text>
                     </Pressable>
                     <Pressable

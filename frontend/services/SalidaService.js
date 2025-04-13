@@ -11,8 +11,8 @@ const SalidaService = {
         }
         try {
         const response = await axios.post(
-            `${API_URL}/salida/crear`,
-            { idCaja, codigoPedido },
+            `${API_URL}/salida/crear/${idCaja}`,
+            { codigoPedido },
             {
             headers: { Authorization: `Bearer ${token}` },
             }

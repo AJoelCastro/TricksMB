@@ -24,11 +24,10 @@ const GuiaSalidaService = {
                 errorCampos.status = 401;
                 throw errorCampos;
             }
-
             const guiaSalida = await GuiaSalida.getGuiaSalidaByIdCliente(idCliente);
             return guiaSalida;
         }catch(error){
-            throw error.status ? error : {status: 500, message: "Error en GuiaSalida Service cliente"};
+            throw error.status ? error : {status: 500, message: "Error en Guia Salida Service cliente"};
         }
     },
 
