@@ -46,21 +46,41 @@ export default function Almacen() {
     if (idCaja !== null) {
       const handleVerificarIngreso = async () => {
         try {
-          const verificarIngreso = await IngresoService.obtenerIngreso(idCaja);
-          if (verificarIngreso.ingreso === null) {
-            const Datacaja = await cargarCajaPorId(idCaja);
-            const exists = caja.some(
-              item =>
-                item.idCaja === Datacaja.caja.idCaja ||
-                item.codigoPedido !== Datacaja.caja.codigoPedido
-            );
-            if (!exists) {
-              caja.push(Datacaja.caja);
+          setCaja([]);
+          if(tipoFlujo == 'Ingreso'){
+            const verificarIngreso = await IngresoService.obtenerIngreso(idCaja);
+            if (verificarIngreso.ingreso === null) {
+              const Datacaja = await cargarCajaPorId(idCaja);
+              const exists = caja.some(
+                item =>
+                  item.idCaja === Datacaja.caja.idCaja ||
+                  item.codigoPedido !== Datacaja.caja.codigoPedido
+              );
+              if (!exists) {
+                caja.push(Datacaja.caja);
+              } else {
+                Alert.alert('Error', 'La caja ya ha sido leida anteriormente');
+              }
             } else {
-              Alert.alert('Error', 'La caja ya ha sido leida anteriormente');
+              Alert.alert('Error', 'La caja ya ha sido ingresada al almacén');
             }
-          } else {
-            Alert.alert('Error', 'La caja ya ha sido ingresada al almacén');
+          }else if(tipoFlujo == 'Salida'){
+            const verificarSalida = await IngresoService.obtenerIngreso(idCaja);
+            if (verificarSalida.ingreso === null) {
+              const Datacaja = await cargarCajaPorId(idCaja);
+              const exists = caja.some(
+                item =>
+                  item.idCaja === Datacaja.caja.idCaja ||
+                  item.codigoPedido !== Datacaja.caja.codigoPedido
+              );
+              if (!exists) {
+                caja.push(Datacaja.caja);
+              } else {
+                Alert.alert('Error', 'La caja ya ha sido leida anteriormente');
+              }
+            } else {
+              Alert.alert('Error', 'La caja ya ha sido ingresada al almacén');
+            }
           }
           setIdCaja(null);
         } catch (error) {
@@ -202,7 +222,7 @@ export default function Almacen() {
         await SalidaService.createSalida(idCaja, codigoPedido);
       }
       let cantidad = caja.length;
-      await DetalleAlmacenService.updateCantidadIngreso(codigoPedido, cantidad);
+      await DetalleAlmacenService.updateCantidadSalida(codigoPedido, cantidad);
       Alert.alert(
         'Ingreso exitoso',
         'Las cajas han sido retiradas del almacén correctamente'
