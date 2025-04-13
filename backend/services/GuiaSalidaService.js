@@ -5,7 +5,9 @@ const GuiaSalidaService = {
         const PedidoService = require('./PedidoService');
         try{
             const pedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
+            console.log("pedido",pedido);
             const guiaSalida = await GuiaSalida.createGuiaSalida(pedido.Cliente_idCliente, cantidad);
+            console.log("guia salida",guiaSalida);
             return guiaSalida;
         }catch(error){
             throw error.status ? error : {status: 500, message: "Error en GuiaSalida Service al crear"};
