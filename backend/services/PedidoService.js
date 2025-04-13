@@ -18,14 +18,15 @@ const PedidoService = {
 
     async getPedidoByCodigoPedido(codigoPedido){
         try{
-            if(!codigoPedido)
-                throw {status: 401, message: "Código de pedido requerido"};
+            if(!codigoPedido){
+                const errorCampos = new Error("Campos requeridos");
+                errorCampos.status = 401;
+                throw errorCampos;
+            }
             const pedido = await PedidoDAO.getPedidoByCodigoPedido(codigoPedido);
-            if(!pedido)
-                throw {status: 404, message: "Pedido no encontrado"};
             return pedido;
         } catch(error){
-            throw error;
+            throw error.status? error : {status:500, message:"Error en el servicio al obtener pedido"};
         }
     },
 

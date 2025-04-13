@@ -10,6 +10,7 @@ const GuiaSalidaService = {
                 throw errorCampos;
             }
             const pedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
+            console.log(pedido);
             const guiaSalida = await GuiaSalida.createGuiaSalida(pedido[0].Clienete_idCliente, cantidad);
             return guiaSalida;
         }catch(error){
