@@ -65,8 +65,8 @@ export default function Almacen() {
               Alert.alert('Error', 'La caja ya ha sido ingresada al almacén');
             }
           }else if(tipoFlujo == 'Salida'){
-            const verificarSalida = await IngresoService.obtenerIngreso(idCaja);
-            if (verificarSalida.ingreso === null) {
+            const verificarSalida = await SalidaService.obtenerSalida(idCaja);
+            if (verificarSalida.salida === null) {
               const Datacaja = await cargarCajaPorId(idCaja);
               const exists = caja.some(
                 item =>
@@ -79,7 +79,7 @@ export default function Almacen() {
                 Alert.alert('Error', 'La caja ya ha sido leida anteriormente');
               }
             } else {
-              Alert.alert('Error', 'La caja ya ha sido ingresada al almacén');
+              Alert.alert('Error', 'La caja ya ha sido retirada del almacén');
             }
           }
           setIdCaja(null);
