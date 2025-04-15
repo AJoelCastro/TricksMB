@@ -4,6 +4,6 @@ const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleware');
 
-router.post('/crear/:idCaja', SalidaController.createSalida);
-router.get("/obtener/:idCaja", SalidaController.getSalidasByCaja);
+router.post('/crear/:idCaja', authMiddleware, SalidaController.createSalida);
+router.get("/obtener/:idCaja", authMiddleware, SalidaController.getSalidasByCaja);
 module.exports = router;
