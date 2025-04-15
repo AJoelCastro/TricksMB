@@ -7,24 +7,14 @@ const SalidaService = {
         const GuiaSalidaService = require('./GuiaSalidaService');
         try{
             if(!codigoPedido || !idCaja){
-                const errorCampos = new Error("Campos requeridos");
+                const errorCampos = new Error("Campos requeridos (Codigo Pedido, idCaja)");
                 errorCampos.status = 401;
                 throw errorCampos;
             }
             const pedido = await pedidoService.getPedidoByCodigoPedido(codigoPedido);
-            
-            if(!pedido){
-                const errorPedido = new Error("Pedido no encontrado");
-                errorPedido.status = 404;
-                throw errorPedido;
-            }
+
             const detalleAlmacen = await DetalleAlmacenService.getDetalleAlmacen(codigoPedido);
-            
-            if(!detalleAlmacen){
-                const errorDetalleAlmacen = new Error("Detalle Almacen no encontrado");
-                errorDetalleAlmacen.status = 404;
-                throw errorDetalleAlmacen;
-            }
+
             const guiaSalida = await GuiaSalidaService.getGuiaSalidaByIdCliente(pedido.Cliente_idCliente);
 
             const salida = await SalidaDAO.createSalida(detalleAlmacen[0].idDetalle_almacen, idCaja, guiaSalida[0].idGuia_salida);
