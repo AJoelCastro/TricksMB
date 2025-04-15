@@ -15,8 +15,7 @@ const DetalleAreaTrabajoService = {
             }
             if(nomArea=="Alistado"){
                 let cantidad = 0;
-                const guiSalida = await GuiaSalidaService.createGuiaSalida(codigoPedido, cantidad);
-                console.log("guia salida",guiSalida);
+                await GuiaSalidaService.createGuiaSalida(codigoPedido, cantidad);
             }   
             const data = await AreaTrabajoService.getAreaTrabajoByNombre(nomArea);
             let idAreaTrabajo = data.idArea_trabajo;
