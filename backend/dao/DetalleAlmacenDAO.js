@@ -108,12 +108,13 @@ class DetalleAlmacenDAO{
             `;
             const [result] = await db.execute(query, [idAlmacen, idDetallePedido]);
             if (result.affectedRows === 0) {
-                throw new Error("No se pudo actualizar el id del almacen.");
+                const errorIdAlmacen = new Error("No se pudo actualizar el id del almacen.");
+                errorIdAlmacen.status = 404;
+                throw errorIdAlmacen;
             }
             return { message: "Id del almacen actualizado exitosamente" };
         } catch (error) {
-            console.error("Error al actualizar el id del almacen:", error);
-            throw error;
+            throw error.status? error : {status: 500, message: "Error interno del servidor al actualizar el id del almacen"};
         }
     }
 
