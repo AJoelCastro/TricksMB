@@ -6,15 +6,13 @@ class GuiaSalida {
       const query =
         "INSERT INTO Guia_salida (Cliente_idCliente, Cantidad) VALUES (?, ?)";
       const [result] = await db.execute(query, [idCliente,cantidad]);
-      console.log("result",result);
-      if (result.length === 0) {
+      if (result.affectedRows === 0) {
         const errorRows = new Error("Guia de salida no creada");
         errorRows.status = 404;
         throw errorRows;
       }
       return result;
     } catch (error) {
-      console.log(error);
       throw error.status
         ? error
         : { status: 500, message: "Error interno al crear guia de salida" };
