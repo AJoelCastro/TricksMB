@@ -107,7 +107,7 @@ const DetalleAlmacenService = {
         const PedidoService = require('./PedidoService');
         try{
             if(!codigoPedido || !cantidadSalida) {
-                const errorCampos = new Error("Campos requeridos");
+                const errorCampos = new Error("Campos requeridos para actualizar cantidad salida");
                 errorCampos.status = 401;
                 throw errorCampos;
             }
