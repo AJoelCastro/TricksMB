@@ -92,7 +92,7 @@ const DetalleAlmacenService = {
                 throw errorCantidadIngreso;
             }
 
-            await AlmacenService.updateStockIngreso(detalleAlmacen[0].Almacen_idAlmacen, cantidadIngreso);
+            await AlmacenService.updateStockIngreso(detalleAlmacen[0].Almacen_idAlmacen, cantidad);
 
             return await DetalleAlmacenDAO.updateCantidadIngreso(detalleAlmacen[0].Detalle_pedido_idDetalle_pedido, cantidadIngreso);
         } catch(error){
@@ -114,7 +114,6 @@ const DetalleAlmacenService = {
 
             const detalleAlmacen = await this.getDetalleAlmacen(codigoPedido);
             const detallePedido = await DetallePedidoService.getDetallePedidoByCodigoPedido(codigoPedido);
-            const alamacen = await AlmacenService.getAlmacenById(detalleAlmacen[0].Almacen_idAlmacen);
             const pedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
             const GuiaSalida = await GuiaSalidaService.getGuiaSalidaByIdCliente(pedido.Cliente_idCliente);
 
@@ -124,10 +123,8 @@ const DetalleAlmacenService = {
                 throw errorCantidadSalida;
             }
             const cantidadSalidaAlmacen = detalleAlmacen[0].Cantidad_Salida + cantidadSalida;
-            const updateStock = alamacen.Stock - cantidadSalida;
-            console.log("update stock",updateStock);
             const updateCantidadSalida = GuiaSalida[0].Cantidad + cantidadSalida;
-            await AlmacenService.updateStockSalida(detalleAlmacen[0].Almacen_idAlmacen, updateStock);
+            await AlmacenService.updateStockSalida(detalleAlmacen[0].Almacen_idAlmacen, cantidadSalida);
             await GuiaSalidaService.updateCantidad(pedido.Cliente_idCliente, updateCantidadSalida);
             
             return await DetalleAlmacenDAO.updateCantidadSalida(detalleAlmacen[0].Detalle_pedido_idDetalle_pedido, cantidadSalidaAlmacen);
