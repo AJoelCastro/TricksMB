@@ -61,7 +61,7 @@ const AlmacenService = {
         }
     },
 
-    async updateStock(idAlmacen, cantidad){
+    async updateStockIngreso(idAlmacen, cantidad){
         try{
             if(!idAlmacen || !cantidad) {
                 const errorParametros = new Error("Parametros incorrectos");
@@ -84,8 +84,36 @@ const AlmacenService = {
             throw error.status ? error : {status: 500, message: "Error en Almacen Service"};
         }
     },
+    
+    async updateStockSalida(idAlmacen, cantidad){
+        try{
+            if(!idAlmacen || !cantidad) {
+                const errorParametros = new Error("Parametros incorrectos");
+                errorParametros.status = 400;
+                throw errorParametros;
+            };
+            
+            const almacen = await AlmacenDAO.getAlmacenById(idAlmacen);
+            if(cantidad <= 0) {
+                const errorCantidad = new Error("Cantidad no valida");
+                errorCantidad.status = 400;
+                throw errorCantidad;
+            };
 
-
+            const stockActual = almacen.Stock;
+            if(stockActual - cantidad < 0) {
+                const errorStock = new Error("No hay suficiente stock en el almacen");
+                errorStock.status = 400;
+                throw errorStock;
+            };
+            
+            const nuevoStock = stockActual - cantidad;
+            
+            return await AlmacenDAO.updateStock(idAlmacen, nuevoStock);
+        }catch(error){
+            throw error.status ? error : {status: 500, message: "Error en Almacen Service"};
+        }
+    },
 }
 
 module.exports = AlmacenService
