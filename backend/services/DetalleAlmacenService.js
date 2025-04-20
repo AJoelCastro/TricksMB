@@ -124,9 +124,9 @@ const DetalleAlmacenService = {
                 throw errorCantidadSalida;
             }
             const cantidadSalidaAlmacen = detalleAlmacen[0].Cantidad_Salida + cantidadSalida;
-            const updateStock = alamacen.Cantidad - cantidadSalida;
+            const updateStock = alamacen.Stock - cantidadSalida;
+            console.log("update stock",updateStock);
             const updateCantidadSalida = GuiaSalida[0].Cantidad + cantidadSalida;
-
             await AlmacenService.updateStock(detalleAlmacen[0].Almacen_idAlmacen, updateStock);
             await GuiaSalidaService.updateCantidad(pedido.Cliente_idCliente, updateCantidadSalida);
             
