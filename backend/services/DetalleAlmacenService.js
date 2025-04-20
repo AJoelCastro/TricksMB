@@ -92,7 +92,7 @@ const DetalleAlmacenService = {
                 throw errorCantidadIngreso;
             }
 
-            await AlmacenService.updateStock(detalleAlmacen[0].Almacen_idAlmacen, cantidadIngreso);
+            await AlmacenService.updateStockIngreso(detalleAlmacen[0].Almacen_idAlmacen, cantidadIngreso);
 
             return await DetalleAlmacenDAO.updateCantidadIngreso(detalleAlmacen[0].Detalle_pedido_idDetalle_pedido, cantidadIngreso);
         } catch(error){
@@ -127,7 +127,7 @@ const DetalleAlmacenService = {
             const updateStock = alamacen.Stock - cantidadSalida;
             console.log("update stock",updateStock);
             const updateCantidadSalida = GuiaSalida[0].Cantidad + cantidadSalida;
-            await AlmacenService.updateStock(detalleAlmacen[0].Almacen_idAlmacen, updateStock);
+            await AlmacenService.updateStockSalida(detalleAlmacen[0].Almacen_idAlmacen, updateStock);
             await GuiaSalidaService.updateCantidad(pedido.Cliente_idCliente, updateCantidadSalida);
             
             return await DetalleAlmacenDAO.updateCantidadSalida(detalleAlmacen[0].Detalle_pedido_idDetalle_pedido, cantidadSalidaAlmacen);
