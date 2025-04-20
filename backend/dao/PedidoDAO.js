@@ -24,17 +24,15 @@ class PedidoDAO {
                 FROM Pedido p
                 INNER JOIN Detalle_pedido dp ON p.idPedido = dp.Pedido_idPedido
                 WHERE dp.Codigo_pedido = ?`;
-            
             const [result] = await db.execute(query, [codigoPedido]);
-
             if (result.length === 0) {
-                throw new Error("No se encontró el pedido con el código proporcionado.");
+                const errorRows = new Error("Pedido no encontrado");
+                errorRows.status = 404;
+                throw errorRows;
             }
-
             return result[0];
         } catch (error) {
-            console.error("Error al obtener detalle de pedido por código de pedido:", error);
-            throw error;
+            throw error.status ? error : { status: 500, message: "Error interno al obtener pedido" };
         }
     }
 

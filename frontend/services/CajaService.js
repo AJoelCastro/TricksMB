@@ -65,10 +65,9 @@ const CajaService = {
     } catch (error) {
       if (error.response) {
         // El servidor respondió con un código de error
-        console.log('error.response.data.error', error.response.data.error);
         throw new Error(
           error.response.data.error ||
-            `Error en la creación de la caja: ${error.response.status}`
+            `Error en obtener la caja por ID: ${error.response.status}`
         );
       } else if (error.request) {
         console.log('error.request', error.request);
@@ -78,7 +77,7 @@ const CajaService = {
         );
       } else {
         // Otro tipo de error
-        throw new Error('Ocurrió un error inesperado al crear la caja.');
+        throw new Error('Ocurrió un error inesperado al obtener la caja.');
       }
     }
   },

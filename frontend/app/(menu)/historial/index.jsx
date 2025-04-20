@@ -16,10 +16,12 @@ import { useFonts } from 'expo-font';
 
 import * as SplashScreen from 'expo-splash-screen';
 
+// Cargar la fuente (Font Awesome 5 y Material Community Icons)
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/FontAwesome5';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import DetallePedidoService from '@/services/DetallePedidoService';
+import ModeloService from '@/services/ModeloService';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -30,6 +32,10 @@ const Historial = () => {
   const [data, setData] = useState(null);
   const [historial, setHistorial] = useState(null);
   const [showCardDetail, setShowCardDetail] = useState(false);
+  const [codigoPedido, setCodigoPedido] = useState(null);
+  const [dataModelo, setdataModelo] = useState(null);
+  const [modelImage, setModelImage] = useState(null);
+  const [nameModel, setNameModel] = useState(null);
   const [loaded, error] = useFonts({
     'Inter-Black': require('../../../assets/fonts/DMSans-Regular.ttf'),
     'Inter-Light': require('../../../assets/fonts/DMSans-Light.ttf'),
@@ -56,20 +62,67 @@ const Historial = () => {
   }, [loaded, error]);
 
   useEffect(() => {
+    setdataModelo(null);
+    setModelImage(null);
+    setNameModel(null);
+    setData(null);
     if (historial === null) return;
-    const dataHistorial = historial.filter(item => item.Estado === estado);
-    setData(dataHistorial);
-    if (dataHistorial.length === 0) {
-      Alert.alert(
-        'Error',
-        `No hay pedidos para este estado`,
-        [{ text: 'OK' }] // Botón requerido
-      );
-      setMostrarPedidos(false);
-    } else {
-      setMostrarPedidos(true);
+    if (estado == 'Vencido') {
+      let dataVencidos = []
+      const hoy = new Date(); // fecha actual
+      historial.forEach(item => {
+        const [dia, mes, anio] = item.Fecha_entrega.split('/');
+        const fechaEntrega = new Date(anio, mes - 1, dia); // mes - 1 porque enero = 0
+        if (fechaEntrega <= hoy) {
+          dataVencidos.push(item);
+        } 
+      })
+      if (dataVencidos.length === 0) {
+        Alert.alert(
+          'Error',
+          `No hay pedidos vencidos`,
+          [{ text: 'OK' }] // Botón requerido
+        );
+        setMostrarPedidos(false);
+      }
+      setData(dataVencidos);
     }
+    else
+    {
+      let dataHistorial = historial.filter(item => item.Estado === estado);
+      if (dataHistorial.length === 0) {
+        Alert.alert(
+          'Error',
+          `No hay pedidos para este estado`,
+          [{ text: 'OK' }] // Botón requerido
+        );
+        setMostrarPedidos(false);
+      } 
+      setData(dataHistorial);
+    }
+    setMostrarPedidos(true);
+    
   }, [estado]);
+  useEffect(() => {
+    if(data===null) return;
+    if (codigoPedido === null) return;
+    const obtenerDetallePedido = async () => {
+      try {
+        const dataPedido = await DetallePedidoService.obtenerDetallePedido(codigoPedido);
+        // Actualizar el estado con los datos del detalle del pedido
+        setdataModelo(dataPedido.detallePedido);
+        const model = await ModeloService.getModeloByCodigoPedido(codigoPedido);
+        setNameModel(model.modelo.Nombre);
+        let idModelo = dataPedido.detallePedido.Modelo_idModelo;
+        const imagenModelo = await ModeloService.getImagenById(idModelo);
+        setModelImage(imagenModelo.imagen[0].Url);
+      } catch (error) {
+        mostrarError(error);
+      }
+    };
+    obtenerDetallePedido();
+  }, [codigoPedido])
+  
 
   if (!loaded && !error) {
     return null;
@@ -89,7 +142,7 @@ const Historial = () => {
         style={{ fontFamily: 'Inter-Light', fontSize: 28 }}
         className='text-gray-600 my-4'
       >
-        Historial de pedidos
+        HISTORIAL DE PEDIDOS
       </Text>
       <View className='flex-col gap-2 '>
         <View className='flex-row  justify-between'>
@@ -181,6 +234,12 @@ const Historial = () => {
       </View>
       {mostrarPedidos ? (
         <SafeAreaView className='flex-1 mt-4 bg-white'>
+          <Text
+            style={{ fontFamily: 'Inter-Regular', fontSize: 20, textAlign: 'center'  }}
+            className='text-gray-600 my-2 '
+          >
+            PEDIDOS
+          </Text>
           <FlatList
             data={data}
             keyExtractor={item => item.Codigo_pedido}
@@ -193,6 +252,8 @@ const Historial = () => {
                   className='flex-row gap-2 justify-between items-center'
                   onPress={() => {
                     setShowCardDetail(!showCardDetail);
+                    setCodigoPedido(item.Codigo_pedido);
+                    
                   }}
                 >
                   <View className='bg-gray-100 rounded-full p-4'>
@@ -207,9 +268,9 @@ const Historial = () => {
                     </Text>
                     <Text
                       style={{ fontFamily: 'Inter-Light', fontSize: 15 }}
-                      className='text-gray-800'
+                      className='text-gray-800 '
                     >
-                      {item.Fecha_entrega}
+                      Entrega: {item.Fecha_entrega}
                     </Text>
                   </View>
                   <View>
@@ -232,18 +293,57 @@ const Historial = () => {
             className='p-2 gap-4 my-2  w-full h-full'
             style={{ backgroundColor: 'white' }}
           >
-            <Pressable
-              className='flex-row gap-2 justify-between items-center'
-              onPress={() => setShowCardDetail(!showCardDetail)}
-            >
-              <Icon name='shopping-cart' size={20} color='#634AFF' />
-            </Pressable>
+            <Card>
+              <Card.Content style={{ alignItems: 'center', backgroundColor: 'white' }}>
+                <Text
+                  style={{ fontFamily: 'Inter-Light', fontSize: 18 }}
+                  className='text-gray-800'
+                >
+                  Modelo: {nameModel}
+                </Text>
+              </Card.Content>
+            </Card>
+            <View className='items-center my-2'>
+              <Image
+                source={{ uri: modelImage }}
+                style={{ width: 300, height: 300 }}
+                contentFit='cover'
+                className='rounded-lg'
+              />
+            </View>
+            <Card>
+              <Card.Content>
+                <Text
+                  style={{ fontFamily: 'Inter-Light', fontSize: 16 }}
+                  className='text-gray-800'
+                >
+                  Codigo: {codigoPedido}
+                </Text>
+                <Text
+                  style={{ fontFamily: 'Inter-Light', fontSize: 16 }}
+                  className='text-gray-800'
+                >
+                  Estado: {estado}
+                </Text>
+                <Text
+                  style={{ fontFamily: 'Inter-Light', fontSize: 16 }}
+                  className='text-gray-800'
+                >
+                  Fecha de creacion: {dataModelo?.Fecha_creacion.slice(0, 10)}
+                </Text>
+              </Card.Content>
+            </Card>
             <View>
               <Pressable
                 className='bg-gray-100 items-center rounded-full p-4'
                 onPress={() => setShowCardDetail(!showCardDetail)}
               >
-                <Text>Cerrar</Text>
+                <Text 
+                  style={{ fontFamily: 'Inter-Regular', fontSize: 16 }}
+                  className='text-[#634AFF]'
+                >
+                  Cerrar
+                </Text>
               </Pressable>
             </View>
           </View>

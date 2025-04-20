@@ -263,8 +263,7 @@ const Corte = () => {
             idCaracteristicas
           );
         if (
-          Number(fila.avance) + Number(fila.terminado) ===
-          Number(data.caracteristica.Cantidad)
+          Number(fila.avance) + Number(fila.terminado) === Number(data.caracteristica.Cantidad)
         ) {
           state = 1;
         } else {
@@ -279,7 +278,6 @@ const Corte = () => {
           idCaracteristicas,
           datos
         );
-        console.log('editarDAT', editarDAT);
         if (editarDAT.status !== 200) {
           throw new Error('Error al actualizar el pedido');
         }

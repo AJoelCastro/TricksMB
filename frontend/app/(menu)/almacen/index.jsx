@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ScrollView,
   Text,
@@ -7,7 +7,7 @@ import {
   Alert,
   FlatList,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { Switch, Card, Divider } from 'react-native-paper';
 import { useFonts } from 'expo-font';
@@ -20,6 +20,8 @@ import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Image } from 'expo-image';
 import IngresoService from '@/services/IngresoService';
 import DetalleAlmacenService from '@/services/DetalleAlmacenService';
+import AlmacenService from '@/services/AlmacenService';
+import SalidaService from '@/services/SalidaService';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,8 +33,10 @@ export default function Almacen() {
   const [showCamera, setShowCamera] = useState(false);
   const [showRegisters, setShowRegisters] = useState(true);
   const [idCaja, setIdCaja] = useState(null);
+  const [almacenes, setAlmacenes] = useState(null);
   const [almacenSeleccionado, setAlmacenSeleccionado] = useState('');
   const [caja, setCaja] = useState([]);
+  const [tipoFlujo, setTipoFlujo] = useState(null);
   const [loaded, error] = useFonts({
     'Inter-Black': require('../../../assets/fonts/DMSans-Regular.ttf'),
     'Inter-Light': require('../../../assets/fonts/DMSans-Light.ttf'),
@@ -42,21 +46,40 @@ export default function Almacen() {
     if (idCaja !== null) {
       const handleVerificarIngreso = async () => {
         try {
-          const verificarIngreso = await IngresoService.obtenerIngreso(idCaja);
-          if (verificarIngreso.ingreso === null) {
-            const Datacaja = await cargarCajaPorId(idCaja);
-            const exists = caja.some(
-              item =>
-                item.idCaja === Datacaja.caja.idCaja ||
-                item.codigoPedido !== Datacaja.caja.codigoPedido
-            );
-            if (!exists) {
-              caja.push(Datacaja.caja);
+          if(tipoFlujo == 'Ingreso'){
+            const verificarIngreso = await IngresoService.obtenerIngreso(idCaja);
+            if (verificarIngreso.ingreso === null) {
+              const Datacaja = await cargarCajaPorId(idCaja);
+              const exists = caja.some(
+                item =>
+                  item.idCaja === Datacaja.caja.idCaja ||
+                  item.codigoPedido !== Datacaja.caja.codigoPedido
+              );
+              if (!exists) {
+                caja.push(Datacaja.caja);
+              } else {
+                Alert.alert('Error', 'La caja ya ha sido leida anteriormente');
+              }
             } else {
-              Alert.alert('Error', 'La caja ya ha sido leida anteriormente');
+              Alert.alert('Error', 'La caja ya ha sido ingresada al almacén');
             }
-          } else {
-            Alert.alert('Error', 'La caja ya ha sido ingresada al almacén');
+          }else if(tipoFlujo == 'Salida'){
+            const verificarSalida = await SalidaService.obtenerSalida(idCaja);
+            if (verificarSalida.salida === null) {
+              const Datacaja = await cargarCajaPorId(idCaja);
+              const exists = caja.some(
+                item =>
+                  item.idCaja === Datacaja.caja.idCaja ||
+                  item.codigoPedido !== Datacaja.caja.codigoPedido
+              );
+              if (!exists) {
+                caja.push(Datacaja.caja);
+              } else {
+                Alert.alert('Error', 'La caja ya ha sido leida anteriormente');
+              }
+            } else {
+              Alert.alert('Error', 'La caja ya ha sido retirada del almacén');
+            }
           }
           setIdCaja(null);
         } catch (error) {
@@ -66,6 +89,22 @@ export default function Almacen() {
       handleVerificarIngreso();
     }
   }, [idCaja]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const obtenerAlmacenes = async () => {
+        try {
+          const dataAlmacenes = await AlmacenService.getAllAlmacenes();
+          setAlmacenes(dataAlmacenes.almacen);
+        } catch (error) {
+          mostrarError(error);
+        }
+      };
+      obtenerAlmacenes();
+    },[])
+    
+  )
+  
 
   useEffect(() => {
     if (loaded || error) {
@@ -143,16 +182,17 @@ export default function Almacen() {
       setQrLeido(false);
     }
   };
-
-  const actualizarCaja = async () => {
+  const actualizarCajaIngreso = async () => {
     try {
       let codigoPedido = caja[0].codigoPedido;
+      let nombreAlmacen = almacenSeleccionado;
+      await DetalleAlmacenService.updateAlmacen(codigoPedido, nombreAlmacen);
       for (const caj of caja) {
         let idCaja = caj.idCaja;
         await IngresoService.createIngreso(idCaja, codigoPedido);
       }
       let cantidad = caja.length;
-      await DetalleAlmacenService.updateCantidad(codigoPedido, cantidad);
+      await DetalleAlmacenService.updateCantidadIngreso(codigoPedido, cantidad);
       Alert.alert(
         'Ingreso exitoso',
         'Las cajas han sido ingresadas al almacén correctamente'
@@ -171,6 +211,46 @@ export default function Almacen() {
       setCaja([]);
     }
   };
+  const actualizarCajaSalida = async () => {
+    try {
+      let codigoPedido = caja[0].codigoPedido;
+      let nombreAlmacen = almacenSeleccionado;
+      await DetalleAlmacenService.updateAlmacen(codigoPedido, nombreAlmacen);
+      for (const caj of caja) {
+        let idCaja = caj.idCaja;
+        await SalidaService.createSalida(idCaja, codigoPedido);
+      }
+      let cantidad = caja.length;
+      await DetalleAlmacenService.updateCantidadSalida(codigoPedido, cantidad);
+      Alert.alert(
+        'Ingreso exitoso',
+        'Las cajas han sido retiradas del almacén correctamente'
+      );
+      setShowCamera(false);
+      setShowRegisters(true);
+      setQrLeido(false);
+      setIdCaja(null);
+      setCaja([]);
+    } catch (error) {
+      mostrarError(error);
+      setShowCamera(false);
+      setShowRegisters(true);
+      setQrLeido(false);
+      setIdCaja(null);
+      setCaja([]);
+    }
+  }
+  const actualizarCaja = async () => {
+    try {
+      if (tipoFlujo == 'Ingreso') {
+        await actualizarCajaIngreso();
+      } else if (tipoFlujo == 'Salida') {
+        await actualizarCajaSalida();
+      }
+    }catch(error){
+      mostrarError(error);
+    }
+  };
 
   return (
     <ScrollView className='bg-white h-full'>
@@ -179,46 +259,45 @@ export default function Almacen() {
         <>
           <View className='mx-4 mt-8'>
             <Text
-              style={{ fontFamily: 'Inter-Light', fontSize: 28 }}
+              style={{ fontFamily: 'Inter-Light', fontSize: 24 }}
               className='text-black'
             >
-              Selecciona un almacen
+              SELECCIONA UN ALMACEN
             </Text>
           </View>
-          <View className='w-full m-4 mt-4 flex flex-row gap-4'>
-            <Pressable
-              className='bg-gray-50 rounded-md p-4 w-[45%] gap-4'
-              onPress={() => setAlmacenSeleccionado('fabrica')}
-            >
-              <View>
-                <Icon2 name='warehouse' size={24} color='#634AFF' />
-              </View>
-              <View>
-                <Text
-                  style={{ fontFamily: 'Inter-Black', fontSize: 16 }}
-                  className='text-[#000111]'
-                >
-                  Almacén Fábrica
-                </Text>
-              </View>
-            </Pressable>
-            <Pressable
-              className='bg-gray-50 rounded-md p-4 w-[45%] gap-4'
-              onPress={() => setAlmacenSeleccionado('trujillo')}
-            >
-              <View>
-                <Icon2 name='warehouse' size={24} color='#634AFF' />
-              </View>
-              <View>
-                <Text
-                  style={{ fontFamily: 'Inter-Black', fontSize: 16 }}
-                  className='text-[#000111]'
-                >
-                  Almacén Trujillo
-                </Text>
-              </View>
-            </Pressable>
-          </View>
+          <ScrollView className=' w-full mt-4 gap-4'>
+            {
+              almacenes?.map((almacen, index) => (
+                <Card key={index} style={{ padding:4, marginTop:4, backgroundColor:'white' }}>
+                  <Pressable
+                    className=' p-4 rounded-lg flex-row gap-4 justify-between'
+                    onPress={() => setAlmacenSeleccionado(almacen.nombre)}
+                  >
+                    <View className='flex-1 justify-center'>
+                      <Text
+                        className='text-black mt-2'
+                        style={{ fontFamily: 'Inter-SemiBold', fontSize: 16 }}
+                      >
+                        Nombre: {almacen.nombre}
+                      </Text>
+                      <Text
+                        className='text-black mt-2'
+                        style={{ fontFamily: 'Inter-Regular', fontSize: 16 }}
+                      >
+                        Stock total: {almacen.stock}
+                      </Text>
+                    </View>
+                    <View>
+                      <Image
+                        source={{ uri: almacen.imagen }}
+                        style={{ width: 180, height: 180, borderRadius: 10  }}
+                      />
+                    </View>
+                  </Pressable>
+                </Card>
+              ))
+            }
+          </ScrollView>
         </>
       ) : (
         <View className='flex-1'>
@@ -360,7 +439,7 @@ export default function Almacen() {
                         className='text-white text-center'
                         style={{ fontFamily: 'Inter-Light', fontSize: 16 }}
                       >
-                        Ingresar
+                        {tipoFlujo == 'Ingreso'? 'Ingresar' : 'Retirar'}
                       </Text>
                     </Pressable>
                     <Pressable
@@ -392,6 +471,7 @@ export default function Almacen() {
                 onPress={() => {
                   setShowRegisters(false);
                   setShowCamera(true);
+                  setTipoFlujo('Ingreso');
                 }}
               >
                 <Icon2 name='plus' size={24} color='white' />
@@ -407,6 +487,7 @@ export default function Almacen() {
                 onPress={() => {
                   setShowRegisters(false);
                   setShowCamera(true);
+                  setTipoFlujo('Salida');
                 }}
               >
                 <Icon2 name='minus' size={24} color='#634AFF' />

@@ -254,7 +254,6 @@ export default function Crear() {
     const cargarTipoCalzado = async () => {
       try {
         const tipos = await TipoCalzadoService.getAllTipoCalzado();
-        console.log('tipos', tipos);
         if (!tipos) {
           console.error('No se encontraron los tipos de calzado');
           return;

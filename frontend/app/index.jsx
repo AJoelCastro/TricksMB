@@ -5,6 +5,7 @@ import {
   View,
   Alert,
   ActivityIndicator,
+  Pressable,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
@@ -50,8 +51,6 @@ const Home = () => {
   useEffect(() => {
     const checkAuth = async () => {
       const token = await AuthService.getToken();
-      console.log('Token en Home.js:', token);
-
       if (token) {
         router.replace('/menu');
       } else {
@@ -63,19 +62,38 @@ const Home = () => {
   }, []);
 
   return (
-    <GestureHandlerRootView>
-      <SafeAreaView className='h-full bg-white flex'>
-        {/* Logo */}
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      
+      <SafeAreaView className='flex-1 h-full bg-[#151718]' style={{position:'relative'}}>
+        {/* Logo
         <View className='flex items-center justify-center mt-16 '>
           <Image
             source={require('@/assets/images/namiTest.jpg')}
             style={{ width: 168, height: 168, borderRadius: 84 }}
           />
+        </View> */}
+        <View  style={{ height: '20%', backgroundColor: '#151718' }} >
+          <Image
+          source={require('@/assets/images/tricksLogo.jpg')}
+          style={{
+            width: '100%',
+            height: '100%',
+            resizeMode: 'contain',
+          }}
+          />
         </View>
-
         {/* Inputs */}
-        <View>
-          <View className='p-4 gap-2'>
+        <View 
+          style={{
+            position: 'absolute',
+            top: '20%',
+            height: '100%',
+            width: '100%',
+            backgroundColor: 'white',
+            borderTopLeftRadius: 120,
+          }}
+        >
+          <View className='p-4 gap-2 mt-[15%]'>
             <TextInput
               label={'Correo'}
               placeholder='Ingrese su correo'
@@ -104,17 +122,27 @@ const Home = () => {
           </View>
 
           {/* Botón de Iniciar Sesión */}
-          <View className='mx-16 mt-2'>
+          <View className='mt-8 items-center'>
             {loading ? (
               <ActivityIndicator size='small' color='#151718' />
             ) : (
-              <CustomButtom
-                title='Iniciar Sesión'
-                touch={() => {
+              <Pressable
+                onPress={() => {
                   handleLogin();
                 }}
                 disabled={!isFormValid}
-              />
+                className={`bg-gray-100 rounded-md p-4 w-[90%] `}
+              >
+                <Text 
+                  className='text-[#634AFF] text-center'
+                  style={{
+                    fontFamily: 'Inter-regular',
+                    fontSize: 16,
+                  }}
+                >
+                  Iniciar Sesión
+                </Text>
+              </Pressable>
             )}
           </View>
         </View>

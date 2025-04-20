@@ -2,6 +2,8 @@ const DetalleAreaTrabajoDAO = require('../dao/DetalleAreaTrabajoDAO');
 const CaracteristicasService = require('./CaracteristicasService');
 const DetallePedidoService = require('./DetallePedidoService');
 const AreaTrabajoService = require('./AreaTrabajoService');
+const GuiaSalidaService = require('./GuiaSalidaService');
+
 const DetalleAreaTrabajoService = {
 
     async createDetalleAreaTrabajo(nomArea,codigoPedido) {
@@ -10,6 +12,10 @@ const DetalleAreaTrabajoService = {
                 const errorCodigoPedido = new Error("Codigo del pedido es requerido");
                 errorCodigoPedido.status = 400;
                 throw errorCodigoPedido;
+            }
+            if(nomArea=="Alistado"){
+                let cantidad = 0;
+                await GuiaSalidaService.createGuiaSalida(codigoPedido, cantidad);
             }   
             const data = await AreaTrabajoService.getAreaTrabajoByNombre(nomArea);
             let idAreaTrabajo = data.idArea_trabajo;
@@ -18,7 +24,7 @@ const DetalleAreaTrabajoService = {
             const detallesCreados = await Promise.all(
                 caracteristicas.map(caracteristica =>
                     DetalleAreaTrabajoDAO.crearDetalleAreaTrabajo(
-                        idAreaTrabajo,
+                        idAreaTrabajo, 
                         caracteristica.idCaracteristicas,
                         0,
                         "",
@@ -35,7 +41,9 @@ const DetalleAreaTrabajoService = {
     async getDetalleAreaTrabajo(codigoPedido) {
         try {
             if (!codigoPedido) {
-                throw { status: 400, message: "Codigo de pedido es requerido" };
+                const errorCodigoPedido = new Error("Codigo del pedido es requerido");
+                errorCodigoPedido.status = 400;
+                throw errorCodigoPedido;
             }
             const DetallePedidoService = require('./DetallePedidoService');
 
@@ -48,29 +56,33 @@ const DetalleAreaTrabajoService = {
             );
             return detallesAreaTrabajo.flat();
         } catch (error) {
-            if (error.status) throw error;
-            throw { status: 500, message: "Error en DetalleAreaTrabajo", detalle: error.message };
+            throw error.status?error:{ status: 500, message: "Error en Detalle Area Trabajo"};
         }
     },
 
     async updateDetalleAreaTrabajo(idCaracteristicas, cantidadAvance, comentario, estado) {
         try {
             if (!idCaracteristicas) {
-                throw { status: 400, message: "idCaracteristicas de pedido es requerido" };
+                const errorIdCaracteristicas = new Error("Id de caracteristicas es requerido");
+                errorIdCaracteristicas.status = 400;
+                throw errorIdCaracteristicas;
             }
 
             if (cantidadAvance < 0) {
-                throw { status: 400, message: "Cantidad de avance debe ser mayor o igual a 0" };
+                const errorCantidadAvance = new Error("La cantidad de avance no puede ser negativa");
+                errorCantidadAvance.status = 400;
+                throw errorCantidadAvance;
             }
 
             const obj = await DetalleAreaTrabajoDAO.updateDetalleAreaTrabajo(idCaracteristicas, cantidadAvance, comentario, estado);
             if (!obj) {
-                throw { status: 500, message: "No se pudo actualizar el detalle de área de trabajo" };
+                const errorObj = new Error("No se encontró el detalle de area de trabajo");
+                errorObj.status = 404;
+                throw errorObj;
             }
             return obj;
         } catch (error) {
-            if (error.status) throw error;
-            throw { status: 500, message: "Error en DetalleAreaTrabajo", detalle: error.message };
+            throw error.status?error:{ status: 500, message: "Error en Detalle Area Trabajo" };
         }
     },
 

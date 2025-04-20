@@ -79,7 +79,6 @@ const DetallePedidoService = {
 
     async updateEstado(codigoPedido, estado) {
         const DetalleAreaTrabajoService = require('./DetalleAreaTrabajoService');
-        const GuiaSalidaService = require('./GuiaSalidaService');
         try {
             if (!codigoPedido) {
                 const errorCodigoPedido = new Error("El código de pedido es requerido");
@@ -92,15 +91,6 @@ const DetallePedidoService = {
                 let nomArea = "Corte";
                 const detalleAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea,codigoPedido);
                 return { mensaje: "Pedido en proceso y detalle de área de trabajo creado", detalleAreaTrabajo };
-            }
-
-            if (obj.estado === "Alistado") {
-                const guiSalida = await GuiaSalidaService.createGuiaSalida(codigoPedido, 0);
-                if(!guiSalida) {
-                    const errorGuiSalida = new Error("Guia de salida no creada");
-                    errorGuiSalida.status = 404;
-                    throw errorGuiSalida;
-                };
             }
 
             return obj;

@@ -59,7 +59,7 @@ const DetalleAlmacenService = {
             const {idAlmacen} = await AlmacenService.getAlmacen(nombreAlmacen);
             return await DetalleAlmacenDAO.updateIdAlmacen(idAlmacen, idDetalle_pedido);
         } catch(error){
-            throw error;
+            throw error.status? error : {status: 500, message: "Error en Detalle Almacen Service"};
         }
     }, 
 
@@ -107,7 +107,7 @@ const DetalleAlmacenService = {
         const PedidoService = require('./PedidoService');
         try{
             if(!codigoPedido || !cantidadSalida) {
-                const errorCampos = new Error("Campos requeridos");
+                const errorCampos = new Error("Campos requeridos para actualizar cantidad salida");
                 errorCampos.status = 401;
                 throw errorCampos;
             }
