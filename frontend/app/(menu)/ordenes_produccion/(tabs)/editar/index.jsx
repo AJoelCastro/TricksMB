@@ -105,6 +105,7 @@ export default function Editar() {
   const [fechaEntrega, setFechaEntrega] = useState(new Date());
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [clientes, setClientes] = useState([]);
+  const [pedidos, setPedidos] = useState([]);
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [showTextInputCodigoPedido, setShowTextInputCodigoPedido] = useState(false);
@@ -377,7 +378,7 @@ export default function Editar() {
     }
   };
   const handleSearch = text => {
-    setCodigoOrden(text);
+    setCodigoPedido(text);
     if (text.length > 0) {
       const filteredPedidos = pedidos.filter(pedido =>
         pedido.Codigo_pedido.toLowerCase().includes(text.toLowerCase())
@@ -433,7 +434,7 @@ export default function Editar() {
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     onPress={() => {
-                      setCodigoOrden(item.Codigo_pedido);
+                      setCodigoPedido(item.Codigo_pedido);
                       setShowSuggestions(false);
                     }}
                   >
