@@ -82,6 +82,7 @@ export default function Editar() {
     { key: '40', label: 'Talla 40' },
   ];
   const router = useRouter();
+  const [codigoPedido, setCodigoPedido] = useState('');
   const [cliente, setCliente] = useState('');
   const [modelo, setModelo] = useState('');
   const [selectSerieInicio, setSelectSerieInicio] = useState('');
@@ -395,79 +396,53 @@ export default function Editar() {
       style={{ flex: 1 }}
     >
       <ScrollView className='mx-4 gap-2 '>
-        <Text className='font-bold mt-2 mb-3 text-lg'>
-          Buscar Cliente por Tipo
-        </Text>
-        <View className='relative '>
-          <TextInput
-            label='DNI O RUC'
-            placeholder='Ingrese un numero de DNI o RUC'
-            mode='outlined'
-            className='h-10 rounded-lg'
-            value={documento}
-            onChangeText={handleSearch}
-            keyboardType='numeric'
-            maxLength={11}
-            onPressIn={() => {
-              setShowTextInputDocumento(false);
-            }}
-            disabled={showTextInputDocumento}
-            right={
-              <TextInput.Icon
-                icon='magnify'
-                onPress={() => {
-                  verificarDocumento();
-                  setShowTextInputDocumento(true);
-                }}
-              />
-            }
-            onBlur={() => {
-              setTimeout(() => setshowFilteredClientes(false), 1200);
-            }}
-          />
-          {showFilteredClientes && filteredClientes.length > 0 && (
-            <View className='absolute z-10 top-16 w-full bg-white rounded-lg shadow-md max-h-80 right-0 left-0 shadow-black/20'>
-              {filteredClientes.map(item => (
-                <View key={item.identificador}>
-                  <Pressable
-                    onPress={() => {
-                      setDocumento(item.identificador);
-                      setshowFilteredClientes(false);
-                    }}
-                  >
-                    <Card.Content style={{ padding: 10 }}>
-                      <Text>{item.identificador}</Text>
-                    </Card.Content>
-                    <Divider></Divider>
-                  </Pressable>
-                </View>
-              ))}
-            </View>
-          )}
-          <Pressable
-            onPress={() => setshowFilteredClientes(false)}
-            className={
-              !showFilteredClientes
-                ? 'opacity-0 h-0'
-                : 'absolute inset-0 z-5 bg-transparent'
-            }
-          />
-        </View>
+      <TextInput
+          label={'Codigo de Pedido'}
+          value={codigoPedido}
+          onChangeText={setCodigoPedido}
+          right={
+            <TextInput.Icon
+              size={22}
+              icon={'magnify'}
+              // onPress={cargarDetallePedido}
+            />
+          }
+          placeholder='Ingrese el codigo de pedido'
+          mode='outlined'
+        ></TextInput>
         {tipoCliente === 'natural' && (
           <View className='gap-2 mb-2'>
             <View className='flex-col'>
-              <Text className='text-black text-lg font-bold'>
-                Nombre: {cliente.Nombre}
-              </Text>
+              <TextInput
+                value={cliente.nombre}
+                mode='outlined'
+                label={'Nombre'}
+                editable={false}
+              ></TextInput>
+              <TextInput
+                value={cliente.Dni}
+                mode='outlined'
+                label={'DNI'}
+                editable={false}
+              ></TextInput>
             </View>
           </View>
         )}
         {tipoCliente === 'juridico' && (
           <View className='gap-2 mb-2'>
-            <View className='flex-row gap-6'>
-              <Text className='text-black text-lg font-bold'>
-                Razon Social: {cliente.Razon_social}
-              </Text>
+            <View className='flex-col'>
+              <TextInput
+                value={cliente.nombre}
+                mode='outlined'
+                label={'Razon Social'}
+                editable={false}
+              ></TextInput>
+              <TextInput
+                value={cliente.Ruc}
+                mode='outlined'
+                label={'RUC'}
+                editable={false}
+              ></TextInput>
             </View>
           </View>
         )}
