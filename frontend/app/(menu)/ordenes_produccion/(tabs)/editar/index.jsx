@@ -128,19 +128,6 @@ export default function Editar() {
     obtenerClientes();
   }, []);
 
-  const handleSearch = text => {
-    setDocumento(text);
-    if (text.length > 0) {
-      const filteredClientes = clientes.filter(cliente =>
-        cliente.identificador.includes(text)
-      );
-      setFilteredClientes(filteredClientes);
-      setshowFilteredClientes(true);
-    } else {
-      setFilteredClientes([]);
-      setshowFilteredClientes(false);
-    }
-  };
 
   const getCurrentDate = () => {
     const date = new Date();
@@ -389,27 +376,85 @@ export default function Editar() {
       console.error('Error al actualizar pedido:', error);
     }
   };
-
+  const handleSearch = text => {
+    setCodigoOrden(text);
+    if (text.length > 0) {
+      const filteredPedidos = pedidos.filter(pedido =>
+        pedido.Codigo_pedido.toLowerCase().includes(text.toLowerCase())
+      );
+      setFilteredSuggestions(filteredPedidos);
+      setShowSuggestions(true);
+    } else {
+      setFilteredSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{ flex: 1 }}
     >
       <ScrollView className='mx-4 gap-2 '>
-      <TextInput
-          label={'Codigo de Pedido'}
-          value={codigoPedido}
-          onChangeText={setCodigoPedido}
-          right={
-            <TextInput.Icon
-              size={22}
-              icon={'magnify'}
-              // onPress={cargarDetallePedido}
-            />
-          }
-          placeholder='Ingrese el codigo de pedido'
-          mode='outlined'
-        ></TextInput>
+        <View className='relative mb-4'>
+          <TextInput
+            label={'Codigo de orden'}
+            mode='outlined'
+            placeholder='Ingresa el código'
+            value={codigoPedido}
+            onChangeText={handleSearch}
+            onPressIn={() => {
+              setShowTextInputCodigoPedido(false);
+            }}
+            disabled={showTextInputCodigoPedido}
+            onFocus={() => {
+              if (codigoPedido.length > 0) {
+                setShowSuggestions(true);
+              }
+            }}
+            onBlur={() => {
+              // Al tocar fuera
+              setTimeout(() => setShowSuggestions(false), 1200);
+            }}
+            right={
+              <TextInput.Icon
+                icon='magnify'
+                onPressIn={() => {
+                  verificarProceso();
+                  setShowTextInputCodigoPedido(true);
+                }}
+              />
+            }
+          />
+          {showSuggestions && filteredSuggestions.length > 0 && (
+            <View className='absolute z-10 top-16 w-full bg-white rounded-lg shadow-md max-h-80 right-0 left-0'>
+              <FlatList
+                data={filteredSuggestions}
+                keyExtractor={item => item.Codigo_pedido}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setCodigoOrden(item.Codigo_pedido);
+                      setShowSuggestions(false);
+                    }}
+                  >
+                    <Card.Content className='p-2'>
+                      <Text>{item.Codigo_pedido}</Text>
+                    </Card.Content>
+                    <Divider></Divider>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
+          )}
+          <Pressable
+            onPress={() => setShowSuggestions(false)}
+            className={
+              !showSuggestions
+                ? 'opacity-0 h-0'
+                : 'absolute inset-0 z-5 bg-transparent'
+            }
+          />
+        </View>
         {tipoCliente === 'natural' && (
           <View className='gap-2 mb-2'>
             <View className='flex-col'>

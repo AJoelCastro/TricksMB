@@ -33,8 +33,7 @@ const Actualizar = () => {
   const [pedidos, setPedidos] = useState([]);
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [showTextInputCodigoOrden, setShowTextInputCodigoOrden] =
-    useState(false);
+  const [showTextInputCodigoOrden, setShowTextInputCodigoOrden] = useState(false);
 
   useEffect(() => {
     const obtenerPedidos = async () => {
