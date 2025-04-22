@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import {
   View,
   ScrollView,
@@ -11,8 +10,10 @@ import {
   FlatList,
   Platform,
   KeyboardAvoidingView,
+  Pressable,
 } from 'react-native';
-import { Button, Card, TextInput } from 'react-native-paper';
+import { Button, Card, Divider, TextInput } from 'react-native-paper';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 
 import ModalSelector from 'react-native-modal-selector';
@@ -24,11 +25,10 @@ import DetallePedidoService from '../../../../../services/DetallePedidoService';
 
 import TipoCalzadoService from '@/services/TipoCalzadoService';
 import CaracteristicasService from '@/services/CaracteristicasService';
-import PedidoService from '@/services/PedidoService';
 
 const { width } = Dimensions.get('window');
 
-export default function editar() {
+export default function Editar() {
   const opcionesTaco = [
     { key: '3', label: 'Talla 3' },
     { key: '4', label: 'Talla 4' },
@@ -41,12 +41,12 @@ export default function editar() {
 
   const opcionesMaterial = [
     { key: '1', label: 'sintetico' },
-    { key: '2', label: 'sintetico1' },
-    { key: '3', label: 'sintetico2' },
-    { key: '4', label: 'sintetico3' },
-    { key: '5', label: 'sintetico4' },
-    { key: '6', label: 'sintetico5' },
-    { key: '7', label: 'sintetico6' },
+    { key: '2', label: 'sintetico' },
+    { key: '3', label: 'sintetico' },
+    { key: '4', label: 'sintetico' },
+    { key: '5', label: 'sintetico' },
+    { key: '6', label: 'sintetico' },
+    { key: '7', label: 'sintetico' },
   ];
 
   const opcionesTipoMaterial = [
@@ -81,6 +81,7 @@ export default function editar() {
     { key: '39', label: 'Talla 39' },
     { key: '40', label: 'Talla 40' },
   ];
+  const router = useRouter();
   const [cliente, setCliente] = useState('');
   const [modelo, setModelo] = useState('');
   const [selectSerieInicio, setSelectSerieInicio] = useState('');
@@ -90,6 +91,7 @@ export default function editar() {
   const [ruc, setRuc] = useState('');
   const [nombreTaco, setNombreTaco] = useState('');
   const [tallaTaco, setTallaTaco] = useState('');
+  const [documento, setDocumento] = useState('');
   const [modalModeloVisible, setModalModeloVisible] = useState(false);
   const [material, setMaterial] = useState('');
   const [tipoMaterial, setTipoMaterial] = useState('');
@@ -101,24 +103,58 @@ export default function editar() {
   const [tipoCalzado, setTipoCalzado] = useState('');
   const [fechaEntrega, setFechaEntrega] = useState(new Date());
   const [openDatePicker, setOpenDatePicker] = useState(false);
-  const [codigoPedido, setCodigoPedido] = useState('');
-  const [idDetallePedido, setIdDetallePedido] = useState();
+  const [clientes, setClientes] = useState([]);
+  const [showTextInputDocumento, setShowTextInputDocumento] = useState(false);
+  const [filteredClientes, setFilteredClientes] = useState([]);
+  const [showFilteredClientes, setshowFilteredClientes] = useState(false);
+  const mostrarError = error => {
+    Alert.alert(
+      'Error',
+      `${error.message}`,
+      [{ text: 'OK' }] // Botón requerido
+    );
+  };
+
+  useEffect(() => {
+    const obtenerClientes = async () => {
+      try {
+        const clientes = await ClienteService.getClientesById();
+        setClientes(clientes.cliente);
+      } catch (error) {
+        mostrarError(error);
+      }
+    };
+    obtenerClientes();
+  }, []);
+
+  const handleSearch = text => {
+    setDocumento(text);
+    if (text.length > 0) {
+      const filteredClientes = clientes.filter(cliente =>
+        cliente.identificador.includes(text)
+      );
+      setFilteredClientes(filteredClientes);
+      setshowFilteredClientes(true);
+    } else {
+      setFilteredClientes([]);
+      setshowFilteredClientes(false);
+    }
+  };
+
   const getCurrentDate = () => {
     const date = new Date();
     return date.toISOString().split('T')[0]; // Formato: YYYY-MM-DD
   };
 
-  const [currentDate, setCurrentDate] = useState(getCurrentDate()); // Estado para almacenar la fecha formateada
+  const [currentDate] = useState(getCurrentDate()); // Estado para almacenar la fecha formateada
 
   const [filas, setFilas] = useState([]);
-  const [filasEliminadas, setFilasEliminadas] = useState([]);
-  const [filasCreadas, setFilasCreadas] = useState([]);
   const handleAgregarFila = () => {
     // Agregar nueva fila con valores iniciales
-    setFilasCreadas([
-      ...filasCreadas,
+    setFilas([
+      ...filas,
       {
-        id: filasCreadas.length + 1,
+        id: filas.length + 1,
         talla: '',
         pares: '',
         color: '',
@@ -128,8 +164,30 @@ export default function editar() {
   const handleEliminarFila = id => {
     // Filtrar las filas para eliminar la seleccionada
     setFilas(filas.filter(fila => fila.id !== id));
-    const filaEliminada = filas.filter(fila => fila.id === id);
-    setFilasEliminadas([...filasEliminadas, ...filaEliminada]);
+  };
+
+  const verificarDocumento = () => {
+    setTipoCliente('');
+    setDni('');
+    setRuc('');
+    try {
+      if (documento.length === 8) {
+        setDni(documento);
+        setTipoCliente('natural');
+      } else if (documento.length === 11) {
+        setRuc(documento);
+        setTipoCliente('juridico');
+      } else {
+        Alert.alert(
+          'Ingrese un documento valido',
+          'Debe ser un numero de DNI o RUC',
+          [{ text: 'OK' }]
+        );
+      }
+    } catch (error) {
+      const errorMessage = new Error('Ingrese al validar documento');
+      mostrarError(errorMessage);
+    }
   };
 
   const cargarClienteNatural = async () => {
@@ -139,16 +197,18 @@ export default function editar() {
         tipoCliente,
         identificador
       );
-      if (!cliente) {
-        console.error('No se encontró el cliente');
-        return;
+      if (cliente.status === 404) {
+        setTipoCliente('');
+        Alert.alert('Error al buscar cliente', cliente.error, [{ text: 'OK' }]);
       }
-
-      setCliente(cliente);
+      if (cliente.status === 200) {
+        setCliente(cliente.cliente);
+      }
     } catch (error) {
-      console.error('Error cargando cliente:', error);
+      mostrarError(error.error);
     }
   };
+
   const cargarClienteJuridico = async () => {
     try {
       let identificador = ruc;
@@ -156,28 +216,36 @@ export default function editar() {
         tipoCliente,
         identificador
       );
-      if (!cliente) {
-        console.error('No se encontró el cliente');
-        return;
+      if (cliente.status === 404) {
+        setTipoCliente('');
+        Alert.alert('Error al buscar cliente', cliente.error, [{ text: 'OK' }]);
       }
-
-      setCliente(cliente);
+      if (cliente.status === 200) {
+        setCliente(cliente.cliente);
+      }
     } catch (error) {
-      console.error('Error cargando cliente:', error);
+      mostrarError(error.error);
     }
   };
 
   const cargarModelosPorId = async () => {
     try {
-      let id = tipoCalzado.idTipo;
+      setDataModelos([]);
+      let id = Number(tipoCalzado.idTipo);
       const modelos = await ModeloService.getAllModeloById(id);
-      if (!modelos) {
-        console.error('No se encontraron los modelos por ID');
-        return;
-      }
-      setDataModelos(modelos);
+      const obteniendoImagenes = await Promise.all(
+        modelos.modelo.map(async modelo => {
+          let idModelo = modelo.idModelo;
+          const imagen = await ModeloService.getImagenById(idModelo);
+          if (!imagen) {
+            return { ...modelo, imagenes: [] };
+          }
+          return { ...modelo, imagenes: imagen.imagen.map(img => img.Url) };
+        })
+      );
+      setDataModelos(obteniendoImagenes);
     } catch (error) {
-      console.error('Error cargando modelos por ID:', error);
+      mostrarError(error);
     }
   };
 
@@ -190,7 +258,7 @@ export default function editar() {
           return;
         }
 
-        setDataTipoCalzado(tipos);
+        setDataTipoCalzado(tipos.tipoCalzado);
       } catch (error) {
         console.error('Error cargando tipos de calzado:', error);
       }
@@ -206,6 +274,7 @@ export default function editar() {
     }
   }, [tipoCliente, dni, ruc]);
 
+ 
   const resetearCampos = () => {
     setCliente('');
     setModelo('');
@@ -216,6 +285,7 @@ export default function editar() {
     setRuc('');
     setNombreTaco('');
     setTallaTaco('');
+    setDocumento('');
     setMaterial('');
     setTipoMaterial('');
     setAccesorios('');
@@ -224,56 +294,6 @@ export default function editar() {
     setTipoCalzado('');
     setFechaEntrega(new Date());
     setFilas([]);
-    setFilasCreadas([]);
-    setFilasEliminadas([]);
-  };
-  const transformarDatos = data => {
-    return data.map(item => ({
-      id: item.idCaracteristicas, // Generar un ID único
-      talla: item.Talla.toString(), // Convertir a string
-      pares: item.Cantidad.toString(), // Convertir a string
-      color: item.Color,
-    }));
-  };
-  const cargarDetallePedido = async () => {
-    try {
-      const data =
-        await DetallePedidoService.obtenerDetallePedido(codigoPedido);
-      setIdDetallePedido(data.idDetalle_pedido);
-      setAccesorios(data.Accesorios);
-      setTallaTaco(data.Altura_taco);
-      let fecha = new Date(data.Fecha_creacion);
-      setCurrentDate(fecha.toISOString().split('T')[0]);
-      setForro(data.Forro);
-      setMaterial(data.Material);
-      setNombreTaco(data.Nombre_taco);
-      setSuela(data.Suela);
-      setTipoMaterial(data.Tipo_material);
-      const dataTipoCalzado =
-        await TipoCalzadoService.getTipoCalzadoByCodigoPedido(codigoPedido);
-      setTipoCalzado(dataTipoCalzado.Nombre);
-      const dataModelo =
-        await ModeloService.getModeloByCodigoPedido(codigoPedido);
-      setModelo(dataModelo.Nombre);
-      const dataPedido =
-        await PedidoService.getPedidoByCodigoPedido(codigoPedido);
-      setSelectSerieInicio(dataPedido.Serie_inicio);
-      setSelectSerieFin(dataPedido.Serie_final);
-      setFechaEntrega(new Date(dataPedido.Fecha_entrega));
-      const dataCliente =
-        await ClienteService.getClienteByCodigoPedido(codigoPedido);
-      setTipoCliente(dataCliente.Tipo_cliente);
-      setCliente(dataCliente);
-      let idDetallePedido = data.idDetalle_pedido;
-      const dataCaracteristicas =
-        await CaracteristicasService.getAllCaracteristicasById(idDetallePedido);
-      const filasTransformadas = transformarDatos(dataCaracteristicas);
-      setFilas(filasTransformadas);
-    } catch (error) {
-      console.error('Error al obtener el pedido:', error);
-      set;
-      Alert.alert('Error', 'Hubo un problema al obtener el pedido.');
-    }
   };
   const updatePedido = async () => {
     try {
@@ -332,7 +352,7 @@ export default function editar() {
           return;
         }
 
-        // ✅ Llamada a la API con `await`
+        // ✅ Llamada a la API con await
         const caracteristicas =
           await CaracteristicasService.crearCaracteristicas(
             datosCaracteristicas
@@ -374,54 +394,80 @@ export default function editar() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{ flex: 1 }}
     >
-      <ScrollView className='mx-4 gap-2'>
-        <TextInput
-          label={'Codigo de Pedido'}
-          value={codigoPedido}
-          onChangeText={setCodigoPedido}
-          right={
-            <TextInput.Icon
-              size={22}
-              icon={'magnify'}
-              onPress={cargarDetallePedido}
-            />
-          }
-          placeholder='Ingrese el codigo de pedido'
-          mode='outlined'
-        ></TextInput>
+      <ScrollView className='mx-4 gap-2 '>
+        <Text className='font-bold mt-2 mb-3 text-lg'>
+          Buscar Cliente por Tipo
+        </Text>
+        <View className='relative '>
+          <TextInput
+            label='DNI O RUC'
+            placeholder='Ingrese un numero de DNI o RUC'
+            mode='outlined'
+            className='h-10 rounded-lg'
+            value={documento}
+            onChangeText={handleSearch}
+            keyboardType='numeric'
+            maxLength={11}
+            onPressIn={() => {
+              setShowTextInputDocumento(false);
+            }}
+            disabled={showTextInputDocumento}
+            right={
+              <TextInput.Icon
+                icon='magnify'
+                onPress={() => {
+                  verificarDocumento();
+                  setShowTextInputDocumento(true);
+                }}
+              />
+            }
+            onBlur={() => {
+              setTimeout(() => setshowFilteredClientes(false), 1200);
+            }}
+          />
+          {showFilteredClientes && filteredClientes.length > 0 && (
+            <View className='absolute z-10 top-16 w-full bg-white rounded-lg shadow-md max-h-80 right-0 left-0 shadow-black/20'>
+              {filteredClientes.map(item => (
+                <View key={item.identificador}>
+                  <Pressable
+                    onPress={() => {
+                      setDocumento(item.identificador);
+                      setshowFilteredClientes(false);
+                    }}
+                  >
+                    <Card.Content style={{ padding: 10 }}>
+                      <Text>{item.identificador}</Text>
+                    </Card.Content>
+                    <Divider></Divider>
+                  </Pressable>
+                </View>
+              ))}
+            </View>
+          )}
+          <Pressable
+            onPress={() => setshowFilteredClientes(false)}
+            className={
+              !showFilteredClientes
+                ? 'opacity-0 h-0'
+                : 'absolute inset-0 z-5 bg-transparent'
+            }
+          />
+        </View>
         {tipoCliente === 'natural' && (
           <View className='gap-2 mb-2'>
             <View className='flex-col'>
-              <TextInput
-                value={cliente.nombre}
-                mode='outlined'
-                label={'Nombre'}
-                editable={false}
-              ></TextInput>
-              <TextInput
-                value={cliente.Dni}
-                mode='outlined'
-                label={'DNI'}
-                editable={false}
-              ></TextInput>
+              <Text className='text-black text-lg font-bold'>
+                Nombre: {cliente.Nombre}
+              </Text>
             </View>
           </View>
         )}
         {tipoCliente === 'juridico' && (
           <View className='gap-2 mb-2'>
-            <View className='flex-col'>
-              <TextInput
-                value={cliente.nombre}
-                mode='outlined'
-                label={'Razon Social'}
-                editable={false}
-              ></TextInput>
-              <TextInput
-                value={cliente.Ruc}
-                mode='outlined'
-                label={'RUC'}
-                editable={false}
-              ></TextInput>
+            <View className='flex-row gap-6'>
+              <Text className='text-black text-lg font-bold'>
+                Razon Social: {cliente.Razon_social}
+              </Text>
             </View>
           </View>
         )}
@@ -431,7 +477,7 @@ export default function editar() {
             keyExtractor={item => item.idTipo}
             labelExtractor={item => item.Nombre}
             accessible={true}
-            onChange={item => setTipoCalzado(item.Nombre)}
+            onChange={item => setTipoCalzado(item)}
             supportedOrientations={['landscape']}
             cancelText='Cancelar'
             cancelStyle={styles.cancelButton}
@@ -443,7 +489,7 @@ export default function editar() {
               label={'Tipo de calzado'}
               placeholder='Tipo de calzado'
               placeholderTextColor={'black'}
-              value={tipoCalzado}
+              value={tipoCalzado.Nombre}
             />
           </ModalSelector>
           <TouchableOpacity
@@ -479,7 +525,7 @@ export default function editar() {
                   >
                     <Card.Cover
                       style={{ height: 350, resizeMode: 'cover' }}
-                      source={{ uri: item.Imagen }}
+                      source={{ uri: item.imagenes[0] }}
                     />
                     <Card.Content>
                       <TouchableOpacity
@@ -548,11 +594,7 @@ export default function editar() {
                   style={{ height: 40 }}
                   placeholder='Talla'
                   placeholderTextColor={'black'}
-                  value={
-                    selectSerieInicio
-                      ? `${selectSerieInicio}`
-                      : selectSerieInicio
-                  }
+                  value={selectSerieInicio}
                   className='bg-gray-200 rounded-lg font-bold w-full'
                 />
               </ModalSelector>
@@ -575,7 +617,7 @@ export default function editar() {
                   style={{ height: 40 }}
                   placeholder='Talla'
                   placeholderTextColor={'black'}
-                  value={selectSerieFin ? `${selectSerieFin}` : selectSerieFin}
+                  value={selectSerieFin}
                   className='bg-gray-200 rounded-lg font-bold w-full'
                 />
               </ModalSelector>
@@ -585,7 +627,7 @@ export default function editar() {
         {filas.map((fila, index) => (
           <View
             key={fila.id}
-            className='flex-row justify-between items-center  mb-2 w-full'
+            className='flex-row justify-between items-center  mb-2'
           >
             <TextInput
               label='Talla'
@@ -628,60 +670,6 @@ export default function editar() {
                 const nuevasFilas = [...filas];
                 nuevasFilas[index].color = text;
                 setFilas(nuevasFilas);
-              }}
-            />
-
-            <TouchableOpacity onPress={() => handleEliminarFila(fila.id)}>
-              <Icon name='trash' size={20} color='red' />
-            </TouchableOpacity>
-          </View>
-        ))}
-        {filasCreadas.map((fila, index) => (
-          <View
-            key={fila.id}
-            className='flex-row justify-between items-center  mb-2 w-full'
-          >
-            <TextInput
-              label='Talla'
-              className='rounded flex-1'
-              keyboardType='numeric'
-              placeholder='Talla'
-              style={{ height: 40, width: width * 0.25 }}
-              mode='outlined'
-              value={fila.talla}
-              onChangeText={text => {
-                const nuevasFilas = [...filasCreadas];
-                nuevasFilas[index].talla = text;
-                setFilasCreadas(nuevasFilas);
-              }}
-            />
-
-            <TextInput
-              label='Pares'
-              className='rounded flex-1'
-              placeholder='Pares'
-              style={{ height: 40, width: width * 0.25 }}
-              mode='outlined'
-              keyboardType='numeric'
-              value={fila.pares}
-              onChangeText={text => {
-                const nuevasFilas = [...filasCreadas];
-                nuevasFilas[index].pares = text;
-                setFilasCreadas(nuevasFilas);
-              }}
-            />
-
-            <TextInput
-              label='Color'
-              className='rounded flex-1'
-              placeholder='Color'
-              style={{ height: 40, width: width * 0.25 }}
-              mode='outlined'
-              value={fila.color}
-              onChangeText={text => {
-                const nuevasFilas = [...filasCreadas];
-                nuevasFilas[index].color = text;
-                setFilasCreadas(nuevasFilas);
               }}
             />
 
@@ -725,9 +713,11 @@ export default function editar() {
           >
             <TextInput
               editable={false}
+              placeholder='Seleccione una talla'
+              placeholderTextColor={'black'}
               style={{ height: 40 }}
-              value={tallaTaco ? `Talla ${tallaTaco}` : 'Seleccione una talla'}
-              className='bg-gray-200 rounded-lg font-bold '
+              value={tallaTaco}
+              className='bg-gray-200 rounded-lg font-bold'
             />
           </ModalSelector>
         </View>
@@ -795,7 +785,7 @@ export default function editar() {
           textColor='#000'
           onPress={updatePedido}
         >
-          Editar Pedido
+          Actualizar Pedido
         </Button>
         <View className='mb-32'></View>
       </ScrollView>
