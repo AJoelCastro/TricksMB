@@ -21,10 +21,11 @@ import ClienteService from '@/services/ClienteService';
 import ModeloService from '@/services/ModeloService';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import DetallePedidoService from '../../../../../services/DetallePedidoService';
 
+import DetallePedidoService from '@/services/DetallePedidoService';
 import TipoCalzadoService from '@/services/TipoCalzadoService';
 import CaracteristicasService from '@/services/CaracteristicasService';
+import PedidoService from '@/services/PedidoService';
 
 const { width } = Dimensions.get('window');
 
@@ -109,6 +110,13 @@ export default function Editar() {
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [showTextInputCodigoPedido, setShowTextInputCodigoPedido] = useState(false);
+  const [idDetallePedido, setIdDetallePedido] = useState();
+  const getCurrentDate = () => {
+    const date = new Date();
+    return date.toISOString().split('T')[0]; // Formato: YYYY-MM-DD
+  };
+
+  const [currentDate, setCurrentDate] = useState(getCurrentDate()); // Estado para almacenar la fecha formateada
   const mostrarError = error => {
     Alert.alert(
       'Error',
@@ -140,13 +148,7 @@ export default function Editar() {
     };
     obtenerPedidos();
   }, []);
-  
-  const getCurrentDate = () => {
-    const date = new Date();
-    return date.toISOString().split('T')[0]; // Formato: YYYY-MM-DD
-  };
 
-  const [currentDate] = useState(getCurrentDate()); // Estado para almacenar la fecha formateada
 
   const [filas, setFilas] = useState([]);
   const handleAgregarFila = () => {
@@ -401,6 +403,47 @@ export default function Editar() {
       setShowSuggestions(false);
     }
   };
+
+  const cargarDetallePedido = async () => {
+    try {
+      const data =
+        await DetallePedidoService.obtenerDetallePedido(codigoPedido);
+      setIdDetallePedido(data.idDetalle_pedido);
+      setAccesorios(data.Accesorios);
+      setTallaTaco(data.Altura_taco);
+      // let fecha = new Date(data.Fecha_creacion);
+      // setCurrentDate(fecha.toISOString().split('T')[0]);
+      setForro(data.Forro);
+      setMaterial(data.Material);
+      setNombreTaco(data.Nombre_taco);
+      setSuela(data.Suela);
+      setTipoMaterial(data.Tipo_material);
+      const dataTipoCalzado =
+        await TipoCalzadoService.getTipoCalzadoByCodigoPedido(codigoPedido);
+      setTipoCalzado(dataTipoCalzado.Nombre);
+      const dataModelo =
+        await ModeloService.getModeloByCodigoPedido(codigoPedido);
+      setModelo(dataModelo.Nombre);
+      const dataPedido =
+        await PedidoService.getPedidoByCodigoPedido(codigoPedido);
+      setSelectSerieInicio(dataPedido.Serie_inicio);
+      setSelectSerieFin(dataPedido.Serie_final);
+      setFechaEntrega(new Date(dataPedido.Fecha_entrega));
+      const dataCliente =
+        await ClienteService.getClienteByCodigoPedido(codigoPedido);
+      setTipoCliente(dataCliente.Tipo_cliente);
+      setCliente(dataCliente);
+      let idDetallePedido = data.idDetalle_pedido;
+      const dataCaracteristicas =
+        await CaracteristicasService.getAllCaracteristicasById(idDetallePedido);
+      const filasTransformadas = transformarDatos(dataCaracteristicas);
+      setFilas(filasTransformadas);
+    } catch (error) {
+      console.error('Error al obtener el pedido:', error);
+      Alert.alert('Error', 'Hubo un problema al obtener el pedido.');
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -431,7 +474,7 @@ export default function Editar() {
               <TextInput.Icon
                 icon='magnify'
                 onPressIn={() => {
-                  verificarProceso();
+                  cargarDetallePedido();
                   setShowTextInputCodigoPedido(true);
                 }}
               />
