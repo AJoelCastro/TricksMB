@@ -129,7 +129,18 @@ export default function Editar() {
     obtenerClientes();
   }, []);
 
-
+  useEffect(() => {
+    const obtenerPedidos = async () => {
+      try {
+        const pedidos = await DetallePedidoService.obtenerTodosLosPedidos();
+        setPedidos(pedidos.detallesPedidos);
+      } catch (error) {
+        mostrarError(error);
+      }
+    };
+    obtenerPedidos();
+  }, []);
+  
   const getCurrentDate = () => {
     const date = new Date();
     return date.toISOString().split('T')[0]; // Formato: YYYY-MM-DD
