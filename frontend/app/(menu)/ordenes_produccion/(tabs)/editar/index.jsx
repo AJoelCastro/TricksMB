@@ -105,9 +105,9 @@ export default function Editar() {
   const [fechaEntrega, setFechaEntrega] = useState(new Date());
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [clientes, setClientes] = useState([]);
-  const [showTextInputDocumento, setShowTextInputDocumento] = useState(false);
-  const [filteredClientes, setFilteredClientes] = useState([]);
-  const [showFilteredClientes, setshowFilteredClientes] = useState(false);
+  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showTextInputCodigoPedido, setShowTextInputCodigoPedido] = useState(false);
   const mostrarError = error => {
     Alert.alert(
       'Error',
