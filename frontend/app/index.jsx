@@ -73,12 +73,12 @@ const Home = () => {
         </View> */}
         <View  style={{ height: '20%', backgroundColor: '#151718' }} >
           <Image
-          source={require('@/assets/images/tricksLogo.jpg')}
-          style={{
-            width: '100%',
-            height: '100%',
-            resizeMode: 'contain',
-          }}
+            source={require('@/assets/images/tricksLogo.jpg')}
+            style={{
+              width: '100%',
+              height: '100%',
+              resizeMode: 'contain',
+            }}
           />
         </View>
         {/* Inputs */}

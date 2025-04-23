@@ -31,9 +31,6 @@ export default function RootLayout() {
               backgroundColor: backgroundColor,
             },
             headerTintColor: textColor,
-            headerRight: () => (
-              <Text style={{ color: textColor }}>Registrarse</Text>
-            ),
           }}
         />
         <Stack.Screen
