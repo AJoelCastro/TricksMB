@@ -26,7 +26,7 @@ export default function RootLayout() {
         <Stack.Screen
           name='index'
           options={{
-            headerTitle: 'Tricks',
+            headerTitle: '',
             headerStyle: {
               backgroundColor: backgroundColor,
             },
