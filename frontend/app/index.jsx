@@ -13,7 +13,6 @@ import { TextInput } from 'react-native-paper';
 import * as SplashScreen from 'expo-splash-screen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import CustomButtom from '../components/customButtom';
 import AuthService from '@/services/AuthService'; // Importar servicio de autenticación
 
 SplashScreen.preventAutoHideAsync(); // Asegura que la pantalla de carga no desaparezca antes de tiempo
