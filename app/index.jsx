@@ -24,8 +24,8 @@ const Home = () => {
   const [contrasenia, setContrasenia] = useState(''); // Estado para la contraseña
   const [loading, setLoading] = useState(false); // Estado para indicar si está cargando
   const [showPassword, setShowPassword] = useState(false);
-  const authContext = useContext(AuthContext);
 
+  const authContext = useContext(AuthContext);
 
   useEffect(() => {
     async function hideSplash() {
@@ -46,8 +46,9 @@ const Home = () => {
       authContext.logIn({token: data.token, role: ''});
     } catch (error) {
       ShowError(error);
+      setLoading(true);
     }
-    setLoading(true);
+    setLoading(false);
   };
 
   return (
