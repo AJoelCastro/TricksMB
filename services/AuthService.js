@@ -71,7 +71,7 @@ const AuthService = {
         // El servidor respondió con un código de error
         throw new Error(
           error.response.data.error ||
-            `Error en la creación de la caja: ${error.response.status}`
+            `Error al obtener el token: ${error.response.status}`
         );
       } else if (error.request) {
         // No hubo respuesta del servidor
@@ -80,7 +80,7 @@ const AuthService = {
         );
       } else {
         // Otro tipo de error
-        throw new Error('Ocurrió un error inesperado al crear la caja.');
+        throw new Error('Ocurrió un error inesperado al obtener el token.');
       }
     }
   },
