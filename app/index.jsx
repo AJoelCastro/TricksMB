@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   SafeAreaView,
   Text,
@@ -14,10 +14,19 @@ import * as SplashScreen from 'expo-splash-screen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AuthService from '@/services/AuthService'; // Importar servicio de autenticación
+import ShowError from '@/components/ShowError';
+import { AuthContext } from '@/contexts/AuthContext';
 
 SplashScreen.preventAutoHideAsync(); // Asegura que la pantalla de carga no desaparezca antes de tiempo
 const Home = () => {
-  const router = useRouter();
+
+  const [correo, setCorreo] = useState(''); // Estado para el email
+  const [contrasenia, setContrasenia] = useState(''); // Estado para la contraseña
+  const [loading, setLoading] = useState(false); // Estado para indicar si está cargando
+  const [showPassword, setShowPassword] = useState(false);
+  const authContext = useContext(AuthContext);
+
+
   useEffect(() => {
     async function hideSplash() {
       await new Promise(resolve => setTimeout(resolve, 2000)); // Simula un tiempo de carga
@@ -25,40 +34,21 @@ const Home = () => {
     }
     hideSplash();
   }, []);
-  const [correo, setCorreo] = useState(''); // Estado para el email
-  const [contrasenia, setContrasenia] = useState(''); // Estado para la contraseña
-  const [loading, setLoading] = useState(true); // Estado para indicar si está cargando
-  const [showPassword, setShowPassword] = useState(false);
-
+  
   const isFormValid = correo.trim() !== '' && contrasenia.trim() !== ''; // Validación de campos llenos
-
   const handleLogin = async () => {
     if (!isFormValid) {
       Alert.alert('Error', 'Todos los campos son obligatorios.');
       return;
     }
-
-    setLoading(true);
     try {
-      await AuthService.login(correo, contrasenia);
-      router.replace('/menu'); // Redirigir después de actualizar el estado
+      const data = await AuthService.login(correo, contrasenia);
+      authContext.logIn({token: data.token, role: ''});
     } catch (error) {
-      Alert.alert('Error', 'Credenciales incorrectas');
+      ShowError(error);
     }
-    setLoading(false);
+    setLoading(true);
   };
-  useEffect(() => {
-    const checkAuth = async () => {
-      const token = await AuthService.getToken();
-      if (token) {
-        router.replace('/menu');
-      } else {
-        setLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, []);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
