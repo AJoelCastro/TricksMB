@@ -1,15 +1,21 @@
-import React, { useEffect } from 'react';
-import { Stack, useRouter } from 'expo-router';
+import React, { useContext, useEffect } from 'react';
+import { Redirect, Stack, useRouter } from 'expo-router';
 import { Text, TouchableOpacity } from 'react-native';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Colors } from '@/constants/Colors';
 import { useFonts } from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SplashScreen from 'expo-splash-screen';
+import { AuthContext } from '@/contexts/AuthContext';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 
 SplashScreen.preventAutoHideAsync();
 export default function MenuLayout() {
+  
+  const authContext = useContext(AuthContext);
+  if(!authContext.isReady){
+    return <Redirect href={'/'}/>
+  }
   const backgroundColor = useThemeColor(
     { light: Colors.light.background, dark: Colors.dark.background },
     'background'
@@ -21,8 +27,7 @@ export default function MenuLayout() {
   const router = useRouter();
 
   const handleLogout = async () => {
-    await AsyncStorage.removeItem('token');
-    router.replace('/'); // Redirigir al login
+    authContext.logOut();
   };
 
   const [loaded, error] = useFonts({
