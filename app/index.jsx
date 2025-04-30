@@ -16,6 +16,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import AuthService from '@/services/AuthService'; // Importar servicio de autenticación
 import ShowError from '@/components/ShowError';
 import { AuthContext } from '@/contexts/AuthContext';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { Colors } from '@/constants/Colors';
 
 SplashScreen.preventAutoHideAsync(); // Asegura que la pantalla de carga no desaparezca antes de tiempo
 const Home = () => {
@@ -50,6 +52,31 @@ const Home = () => {
     }
     setLoading(false);
   };
+
+  const backgroundColor = useThemeColor(
+    { light: Colors.light.background, dark: Colors.dark.background },
+    'background'
+  );
+  const textColor = useThemeColor(
+      { light: Colors.light.text, dark: Colors.dark.text },
+      'text'
+  );
+  const iconColor = useThemeColor(
+      { light: Colors.light.icon, dark: Colors.dark.icon },
+      'icon'
+  );
+  const tabColor = useThemeColor(
+      { light: Colors.light.tabIconSelected, dark: Colors.dark.tabIconSelected },
+      'tabIconSelected'
+  );
+  const backIconColor = useThemeColor(
+      { light: Colors.light.backIcon, dark: Colors.dark.backIcon },
+      'backIcon'
+  );
+  const contentColor = useThemeColor(
+      { light: Colors.light.content, dark: Colors.dark.content },
+      'content'
+  );
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
