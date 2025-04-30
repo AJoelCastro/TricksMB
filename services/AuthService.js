@@ -11,6 +11,7 @@ const AuthService = {
         correo,
         contrasenia,
       });
+      console.log('Respuesta del servidor:', response.data);
       const token = response.data?.token;
       if (!token) {
         throw new Error(
@@ -22,9 +23,9 @@ const AuthService = {
       console.log('Token guardado:', token);
       return response.data;
     } catch (error) {
-      if (error) {
+      if (error.message) {
         // El servidor respondió con un código de error
-          throw Error(error) || `Error al obtener el token de acceso: ${error.response.status}`
+          throw Error(error.message) || `Error al obtener el token de acceso: ${error.response.status}`
       } else if (error.request) {
         // No hubo respuesta del servidor
         throw new Error(
@@ -70,7 +71,7 @@ const AuthService = {
       if (error.response) {
         // El servidor respondió con un código de error
         throw new Error(
-          error.response.data.error ||
+          error.response||
             `Error al obtener el token: ${error.response.status}`
         );
       } else if (error.request) {

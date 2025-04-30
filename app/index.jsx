@@ -54,7 +54,7 @@ const Home = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       
-      <SafeAreaView className='flex-1 h-full bg-[#151718]' style={{position:'relative'}}>
+      <SafeAreaView className='flex-1 h-full' style={{position:'relative', backgroundColor:''}}>
         {/* Logo
         <View className='flex items-center justify-center mt-16 '>
           <Image
@@ -62,13 +62,13 @@ const Home = () => {
             style={{ width: 168, height: 168, borderRadius: 84 }}
           />
         </View> */}
-        <View  style={{ height: '20%', backgroundColor: '#151718' }} >
+        <View  style={{ height: '20%', backgroundColor: '' }} >
           <Image
-            source={require('@/assets/images/tricksLogo.jpg')}
+            source={require('@/assets/images/TricksLogo.png')}
             style={{
               width: '100%',
               height: '100%',
-              resizeMode: 'contain',
+              contentFit: 'contain',
             }}
           />
         </View>
