@@ -61,10 +61,6 @@ const Home = () => {
       { light: Colors.light.text, dark: Colors.dark.text },
       'text'
   );
-  const iconColor = useThemeColor(
-      { light: Colors.light.icon, dark: Colors.dark.icon },
-      'icon'
-  );
   const tabColor = useThemeColor(
       { light: Colors.light.tabIconSelected, dark: Colors.dark.tabIconSelected },
       'tabIconSelected'
@@ -81,7 +77,7 @@ const Home = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       
-      <SafeAreaView className='flex-1 h-full' style={{position:'relative', backgroundColor:''}}>
+      <SafeAreaView className='flex-1 h-full ' style={{position:'relative', backgroundColor: backgroundColor}}>
         {/* Logo
         <View className='flex items-center justify-center mt-16 '>
           <Image
@@ -89,7 +85,7 @@ const Home = () => {
             style={{ width: 168, height: 168, borderRadius: 84 }}
           />
         </View> */}
-        <View  style={{ height: '20%', backgroundColor: '' }} >
+        <View  style={{ height: '20%' }} >
           <Image
             source={require('@/assets/images/TricksLogo.png')}
             style={{
@@ -106,7 +102,7 @@ const Home = () => {
             top: '20%',
             height: '100%',
             width: '100%',
-            backgroundColor: 'white',
+            // backgroundColor: backIconColor,
             borderTopLeftRadius: 120,
           }}
         >
@@ -116,12 +112,22 @@ const Home = () => {
               placeholder='Ingrese su correo'
               mode='outlined'
               value={correo}
+              textColor= {textColor}
+              placeholderTextColor={textColor}
               onChangeText={setCorreo}
+              style={{
+                backgroundColor: contentColor,
+              }}
             />
             <TextInput
               label={'Contraseña'}
               placeholder='Ingrese su contraseña'
               mode='outlined'
+              style={{
+                backgroundColor: contentColor,
+              }}
+              textColor= {textColor}
+              placeholderTextColor={textColor}
               secureTextEntry={!showPassword}
               value={contrasenia}
               onChangeText={setContrasenia}
@@ -134,8 +140,8 @@ const Home = () => {
             />
           </View>
           <View className='flex-row items-center gap-4 mt-6 ml-16'>
-            <Icon name='check' size={16} color='black' />
-            <Text>Recordar Contraseña</Text>
+            <Icon name='check' size={16} color={textColor} />
+            <Text style={{color:textColor}}>Recordar Contraseña</Text>
           </View>
 
           {/* Botón de Iniciar Sesión */}
@@ -148,7 +154,12 @@ const Home = () => {
                   handleLogin();
                 }}
                 disabled={!isFormValid}
-                className={`bg-gray-100 rounded-md p-4 w-[90%] `}
+                className={`rounded-md p-4 w-[90%] `}
+                style={{
+                  backgroundColor: contentColor,
+                  borderWidth: 0.15,
+                  shadowOpacity: 0.10
+                }}
               >
                 <Text 
                   className='text-[#634AFF] text-center'
