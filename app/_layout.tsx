@@ -15,7 +15,7 @@ export default function RootLayout() {
     { light: Colors.light.text, dark: Colors.dark.text },
     'text'
   );
-  const router = useRouter();
+  const router = useRouter(); 
   const handleLogout = async () => {
     await AsyncStorage.removeItem('token');
     router.replace('/'); // Redirigir al login
