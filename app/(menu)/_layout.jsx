@@ -12,6 +12,7 @@ SplashScreen.preventAutoHideAsync();
 export default function MenuLayout() {
   
   const authContext = useContext(AuthContext);
+  
   if(!authContext.isReady){
     return <Redirect href={'/'}/>
   }
