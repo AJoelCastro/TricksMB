@@ -34,7 +34,6 @@ export const AuthProvider = ({ children } : PropsWithChildren) => {
             const name = await AsyncStorage.getItem('name');
             const email = await AsyncStorage.getItem('email');
             const role = await AsyncStorage.getItem('role');
-            console.log(token, name, email, role);
             if (token&& name && email && role) {
                 setUser({ token, role, name, email });
                 setisReady(true);
