@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Appbar, Avatar } from 'react-native-paper';
-import { ThemedView } from './ThemedView';
 import { useColorScheme, View } from 'react-native';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Colors } from '@/constants/Colors';

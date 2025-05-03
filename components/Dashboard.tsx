@@ -1,10 +1,9 @@
 import React, { useRef, useState, useContext } from 'react';
 import { View, Text, Modal, Pressable, TouchableWithoutFeedback, findNodeHandle, UIManager, SafeAreaView, ScrollView } from 'react-native';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
-import { ThemedView } from '@/components/ThemedView';
-import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from './ThemedView';
 import TopBar from '@/components/TopBar';
-import { AuthContext } from '@/context/AuthContext';
+import { AuthContext } from '@/contexts/AuthContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Colors } from '@/constants/Colors';
 import { Divider, Icon } from 'react-native-paper';

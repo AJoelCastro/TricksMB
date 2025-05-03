@@ -5,6 +5,8 @@ import { createContext, PropsWithChildren, useEffect, useState } from 'react';
 
 type User ={
     token: string,
+    name: string;
+    email: string;
     role: string,
 }
 type AuthState = {
@@ -29,21 +31,29 @@ export const AuthProvider = ({ children } : PropsWithChildren) => {
     useEffect(() => {
         const init = async () => {
             const token = await AsyncStorage.getItem('token');
-            if (token) {
+            const name = await AsyncStorage.getItem('name');
+            const email = await AsyncStorage.getItem('email');
+            const role = await AsyncStorage.getItem('role');
+            if (token&& name && email && role) {
+                setUser({ token, role, name, email });
                 setisReady(true);
-                setUser({ token, role: 'user' }); // Assuming role is 'user' for now
-                router.replace('/menu');
             }
+            else {
+                logOut();
+            }  
         };
-
         init();
     }, []);
 
     const logIn = async (userData: User) => {
         try {
-            setUser(userData);
+            setUser({
+                token: userData.token,
+                role: userData.role,
+                name: userData.name,
+                email: userData.email
+            } as User);
             setisReady(true);
-            router.replace('/menu');
         } catch (error) {
             ShowError(error as Error);
         }
@@ -51,6 +61,9 @@ export const AuthProvider = ({ children } : PropsWithChildren) => {
     const logOut = async () => {
         try {
             await AsyncStorage.removeItem('token');
+            await AsyncStorage.removeItem('name');
+            await AsyncStorage.removeItem('email');
+            await AsyncStorage.removeItem('role');
             setUser(null);
             setisReady(false);
             router.replace('/');
