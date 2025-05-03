@@ -19,6 +19,7 @@ import { AuthContext } from '@/contexts/AuthContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Colors } from '@/constants/Colors';
 import UserService from '@/services/UserService';
+import { ThemedText } from '@/components/ThemedText';
 
 SplashScreen.preventAutoHideAsync(); // Asegura que la pantalla de carga no desaparezca antes de tiempo
 const Home = () => {
@@ -116,7 +117,7 @@ const Home = () => {
               placeholderTextColor={textColor}
               onChangeText={setCorreo}
               style={{
-                backgroundColor: contentColor,
+                backgroundColor: backIconColor,
               }}
             />
             <TextInput
@@ -124,7 +125,7 @@ const Home = () => {
               placeholder='Ingrese su contraseña'
               mode='outlined'
               style={{
-                backgroundColor: contentColor,
+                backgroundColor: backIconColor,
               }}
               textColor= {textColor}
               placeholderTextColor={textColor}
@@ -141,7 +142,7 @@ const Home = () => {
           </View>
           <View className='flex-row items-center gap-4 mt-6 ml-16'>
             <Icon name='check' size={16} color={textColor} />
-            <Text style={{color:textColor}}>Recordar Contraseña</Text>
+            <ThemedText style={{color:textColor}}>Recordar Contraseña</ThemedText>
           </View>
 
           {/* Botón de Iniciar Sesión */}
@@ -156,20 +157,19 @@ const Home = () => {
                 disabled={!isFormValid}
                 className={`rounded-md p-4 w-[90%] `}
                 style={{
-                  backgroundColor: contentColor,
+                  backgroundColor: backIconColor,
                   borderWidth: 0.15,
-                  shadowOpacity: 0.10
                 }}
               >
-                <Text 
-                  className='text-[#634AFF] text-center'
+                <ThemedText 
+                  className='text-center'
                   style={{
                     fontFamily: 'Inter-regular',
                     fontSize: 16,
                   }}
                 >
                   Iniciar Sesión
-                </Text>
+                </ThemedText>
               </Pressable>
             )}
           </View>

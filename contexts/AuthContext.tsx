@@ -46,7 +46,6 @@ export const AuthProvider = ({ children } : PropsWithChildren) => {
     }, []);
 
     const logIn = async (userData: User) => {
-        console.log("context",userData);
         try {
             setUser({
                 token: userData.token,
@@ -55,7 +54,6 @@ export const AuthProvider = ({ children } : PropsWithChildren) => {
                 email: userData.email
             } as User);
             setisReady(true);
-            router.replace('/(menu)/menu');
         } catch (error) {
             ShowError(error as Error);
         }

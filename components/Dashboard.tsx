@@ -39,7 +39,7 @@ const Dashboard = ({ children }: Props) => {
   };
 
   return (
-    <ThemedView className='h-full' style={{ backgroundColor }}>
+    <ThemedView className='h-full'>
       <TopBar
         icon1="menu"
         onPress1={() => navigation.dispatch(DrawerActions.openDrawer())}

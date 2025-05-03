@@ -36,6 +36,12 @@ export default function RootLayout() {
               }}
             />
             <Stack.Screen
+              name='(ADMIN)'
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
               name='modalCliente'
               options={{
                 presentation: 'modal',
@@ -48,12 +54,6 @@ export default function RootLayout() {
             />
             <Stack.Screen
               name='(menu)'
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name='(ADMIN)'
               options={{
                 headerShown: false,
               }}
