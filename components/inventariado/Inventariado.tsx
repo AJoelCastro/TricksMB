@@ -1,7 +1,7 @@
 import 'react-native-reanimated';
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Pressable,
+  Alert,
   Text,
   View,
   Dimensions,
@@ -21,17 +21,29 @@ import { TextInput, Card, Divider } from 'react-native-paper';
 import { useFocusEffect } from 'expo-router';
 import ModeloService from '@/services/ModeloService';
 
+// Type definitions
+type InventoryItem = {
+  idModelo: string;
+  nombreModelo: string;
+  imagen: string;
+  stockDisponible: number;
+  nombreAlmacen: string;
+};
+
+type CarouselImage = {
+  id: string;
+  url: string;
+};
+
 SplashScreen.preventAutoHideAsync();
 
 const { width, height } = Dimensions.get('window');
 
-const Inventario = () => {
-  const [inventario, setInventario] = useState([]);
-  const [loaded, error] = useFonts({
-    'Inter-Black': require('../../../assets/fonts/DMSans-Regular.ttf'),
-  });
-  const [busqueda, setBusqueda] = useState(null);
-  const images = [
+const InventariadoAdmin = () => {
+  const [inventario, setInventario] = useState<InventoryItem[]>([]);
+  const [busqueda, setBusqueda] = useState<string | null>(null);
+  
+  const images: CarouselImage[] = [
     {
       id: '1',
       url: 'https://r-charts.com/es/miscelanea/procesamiento-imagenes-magick_files/figure-html/color-fondo-imagen-r.png',
@@ -53,37 +65,36 @@ const Inventario = () => {
           const inventario = await ModeloService.getInventario();
           setInventario(inventario.stock);
         } catch (error) {
-          mostrarError(error);
+          mostrarError(error as Error);
         }
       };
       obtenerInventario();
     }, [])
   );
 
-  useEffect(() => {
-    if (loaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded, error]);
-
-  if (!loaded && !error) {
-    return null;
-  }
+  const mostrarError = (error: Error) => {
+    Alert.alert(
+      'Error',
+      `${error.message}`,
+      [{ text: 'OK' }]
+    );
+  };
 
   return (
-    <GestureHandlerRootView>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={80}
         className='flex-1'
       >
-        <View className=' bg-white h-full p-2 flex-1'>
+        <View className='bg-white h-full p-2 flex-1'>
           <View className='p-2'>
             <Text style={{ fontFamily: 'Inter-Black', fontSize: 28 }}>
               Inventario
             </Text>
           </View>
-          <View className='items-cente'>
+          
+          <View className='items-center'>
             <Carousel
               loop
               width={width * 0.98}
@@ -92,13 +103,9 @@ const Inventario = () => {
               data={inventario}
               scrollAnimationDuration={2000}
               mode='parallax'
-              // modeConfig={{
-              //   snapDirection: "left", // Dirección del stack (izquierda o derecha)
-              //   showLength: 1, // Número de elementos visibles en el stack
-              // }}
               renderItem={({ item }) => (
-                <View key={item.idModelo} className='flex-1 '>
-                  <Card className='w-full h-full '>
+                <View key={item.idModelo} className='flex-1'>
+                  <Card className='w-full h-full'>
                     <Image
                       source={{ uri: item.imagen }}
                       style={{
@@ -109,7 +116,7 @@ const Inventario = () => {
                       }}
                       contentFit='contain'
                     />
-                    <View className='items-center '>
+                    <View className='items-center'>
                       <Text style={{ fontSize: 20, fontFamily: 'Inter-Black' }}>
                         Modelo: {item.nombreModelo}
                       </Text>
@@ -119,24 +126,27 @@ const Inventario = () => {
               )}
             />
           </View>
+          
           <View className='mt-2'>
             <TextInput
               label='Buscar Modelo'
               mode='outlined'
               style={{ width: '100%', height: 40 }}
               left={<TextInput.Icon icon='magnify' color='black' />}
-              value={busqueda}
+              value={busqueda || ''}
               onChangeText={setBusqueda}
             />
           </View>
-          <View className=' h-full flex-1 mb-10 mt-4'>
+          
+          <View className='h-full flex-1 mb-10 mt-4'>
             <FlatList
               data={inventario}
+              keyExtractor={(item) => item.idModelo}
               renderItem={({ item }) => (
-                <View key={item.idModelo} className='gap-4 mt-2 px-4 flex-row '>
+                <View key={item.idModelo} className='gap-4 mt-2 px-4 flex-row'>
                   <View className='shadow-md shadow-gray-200 rounded-md'>
                     <Image
-                      source={item.imagen}
+                      source={{ uri: item.imagen }}
                       style={{ width: 150, height: 150, borderRadius: 10 }}
                       contentFit='contain'
                     />
@@ -161,4 +171,5 @@ const Inventario = () => {
     </GestureHandlerRootView>
   );
 };
-export default Inventario;
+
+export default InventariadoAdmin;
