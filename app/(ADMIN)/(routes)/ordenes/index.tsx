@@ -20,7 +20,7 @@ const IndexOrdenesAdmin = () => {
         <ThemedView className='w-full m-4 mt-8 flex flex-row gap-4'>
                 <Pressable
                     className='rounded-md p-4 w-[45%] gap-4'
-                    onPress={() => router.push('/(menu)/ordenes_produccion/(tabs)/crear')}
+                    onPress={() => router.push('/(ADMIN)/(routes)/ordenes/(ordenesTab)/crear')}
                     style={{ backgroundColor: backIconColor}}
                 >
                     <View>
@@ -36,7 +36,7 @@ const IndexOrdenesAdmin = () => {
                 </Pressable>
                 <Pressable
                     className='rounded-md p-4 w-[45%] gap-4'
-                    onPress={() => router.push('/almacen')}
+                    onPress={() => router.push('/(ADMIN)/(routes)/ordenes/(ordenesTab)/editar')}
                     style={{ backgroundColor: backIconColor}}
                 >
                     <View>
@@ -54,7 +54,7 @@ const IndexOrdenesAdmin = () => {
             <ThemedView className='w-full m-4 mt-4 flex flex-row gap-4'>
                 <Pressable
                     className='rounded-md p-4 w-[45%] gap-4'
-                    onPress={() => router.push('/inventariado')}
+                    onPress={() => router.push('/(ADMIN)/(routes)/ordenes/(ordenesTab)/cancelar')}
                     style={{ backgroundColor: backIconColor}}
                 >
                     <View>
