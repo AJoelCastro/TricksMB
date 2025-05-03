@@ -22,7 +22,7 @@ import UserService from '@/services/UserService';
 
 SplashScreen.preventAutoHideAsync(); // Asegura que la pantalla de carga no desaparezca antes de tiempo
 const Home = () => {
-
+  const router = useRouter();
   const [correo, setCorreo] = useState(''); // Estado para el email
   const [contrasenia, setContrasenia] = useState(''); // Estado para la contraseña
   const [loading, setLoading] = useState(false); // Estado para indicar si está cargando
@@ -54,6 +54,11 @@ const Home = () => {
     }
     setLoading(false);
   };
+  useEffect(() => {
+    if (authContext.user?.role === 'ADMIN') {
+        router.replace('/(ADMIN)/(routes)/dashboard');
+    }
+  }, [authContext.user]);
 
   const backgroundColor = useThemeColor(
     { light: Colors.light.background, dark: Colors.dark.background },
