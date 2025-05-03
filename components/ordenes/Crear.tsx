@@ -25,9 +25,13 @@ import ModeloService from '@/services/ModeloService';
 import DetallePedidoService from '@/services/DetallePedidoService';
 import TipoCalzadoService from '@/services/TipoCalzadoService';
 import CaracteristicasService from '@/services/CaracteristicasService';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { Colors } from '@/constants/Colors';
 
 // Components
 import { ThemedView } from '../ThemedView';
+import { ThemedText } from '../ThemedText';
+
 
 // Types
 type Cliente = {
@@ -92,6 +96,32 @@ const CrearOrden: React.FC = () => {
   const [currentDate] = useState<string>(new Date().toISOString().split('T')[0]);
 
   const router = useRouter();
+
+  const backgroundColor = useThemeColor(
+    { light: Colors.light.background, dark: Colors.dark.background },
+    'background'
+  );
+  const textColor = useThemeColor(
+      { light: Colors.light.text, dark: Colors.dark.text },
+      'text'
+  );
+  const iconColor = useThemeColor(
+      { light: Colors.light.icon, dark: Colors.dark.icon },
+      'icon'
+  );
+  const tabColor = useThemeColor(
+      { light: Colors.light.tabIconSelected, dark: Colors.dark.tabIconSelected },
+      'tabIconSelected'
+  );
+  const backIconColor = useThemeColor(
+      { light: Colors.light.backIcon, dark: Colors.dark.backIcon },
+      'backIcon'
+  );
+  const contentColor = useThemeColor(
+      { light: Colors.light.content, dark: Colors.dark.content },
+      'content'
+  );
+
 
   // Opciones de selectores
   const opcionesTaco: OpcionSelector[] = [
@@ -410,11 +440,9 @@ const CrearOrden: React.FC = () => {
       >
         <ScrollView className='mx-4 gap-2'>
           {/* Sección Cliente */}
-          <Text className='font-bold mt-2 mb-3 text-lg'>Buscar Cliente por Tipo</Text>
-          
           <View className='relative'>
             <TextInput
-              label='DNI O RUC'
+              label='DNI O RUC DEL CLIENTE'
               placeholder='Ingrese un número de DNI o RUC'
               mode='outlined'
               className='h-10 rounded-lg'
@@ -437,7 +465,7 @@ const CrearOrden: React.FC = () => {
             />
 
             {showFilteredClientes && filteredClientes.length > 0 && (
-              <View className='absolute z-10 top-16 w-full bg-white rounded-lg shadow-md max-h-80 right-0 left-0 shadow-black/20'>
+              <ThemedView className='absolute z-10 top-16 w-full rounded-lg shadow-md max-h-80 right-0 left-0 shadow-black/20'>
                 {filteredClientes.map(item => (
                   <View key={item.identificador}>
                     <Pressable
@@ -447,13 +475,13 @@ const CrearOrden: React.FC = () => {
                       }}
                     >
                       <Card.Content style={{ padding: 10 }}>
-                        <Text>{item.identificador}</Text>
+                        <ThemedText>{item.identificador}</ThemedText>
                       </Card.Content>
                       <Divider />
                     </Pressable>
                   </View>
                 ))}
-              </View>
+              </ThemedView>
             )}
 
             <Pressable
@@ -464,14 +492,14 @@ const CrearOrden: React.FC = () => {
 
           {/* Info Cliente */}
           {tipoCliente === 'natural' && cliente?.Nombre && (
-            <View className='gap-2 mb-2'>
-              <Text className='text-black text-lg font-bold'>Nombre: {cliente.Nombre}</Text>
+            <View className='gap-2 my-2'>
+              <ThemedText className='text-lg font-bold'>Nombre: {cliente.Nombre}</ThemedText>
             </View>
           )}
 
           {tipoCliente === 'juridico' && cliente?.Razon_social && (
-            <View className='gap-2 mb-2'>
-              <Text className='text-black text-lg font-bold'>Razón Social: {cliente.Razon_social}</Text>
+            <View className='gap-2 my-2'>
+              <ThemedText className='text-lg font-bold'>Razón Social: {cliente.Razon_social}</ThemedText>
             </View>
           )}
 
@@ -565,7 +593,7 @@ const CrearOrden: React.FC = () => {
             />
 
             {openDatePicker && (
-              <View className='bg-[#151718]'>
+              <View style={{ backgroundColor: backIconColor }}>
                 <DateTimePicker
                   value={fechaEntrega}
                   mode='date'
@@ -582,8 +610,9 @@ const CrearOrden: React.FC = () => {
           {/* Series */}
           <View className='flex mt-4 mb-4 gap-5'>
             <View className='flex-row items-center gap-4'>
-              <Text className='font-bold'>Serie Inicio</Text>
-              <View className='h-8 bg-gray-100 border-l-2 items-center justify-center w-[30%]'>
+              <ThemedText className='font-bold'>Serie Inicio</ThemedText>
+              <View className='h-8 border-l-2 items-center justify-center w-[30%]'
+              >
                 <ModalSelector
                   data={opcionesSerieInicio}
                   onChange={(talla: OpcionSelector) => setSelectSerieInicio(talla.key)}
@@ -593,18 +622,18 @@ const CrearOrden: React.FC = () => {
                 >
                   <TextInput
                     editable={false}
-                    style={{ height: 40 }}
+                    style={{ height: 40, backgroundColor: backIconColor }}
                     placeholder='Talla'
                     value={selectSerieInicio}
-                    className='bg-gray-200 rounded-lg font-bold w-full'
+                    className='rounded-lg font-bold w-full'
                   />
                 </ModalSelector>
               </View>
             </View>
 
             <View className='flex-row items-center gap-4'>
-              <Text className='font-bold'>Serie Fin</Text>
-              <View className='h-8 bg-gray-100 border-l-2 items-center justify-center w-[30%]'>
+              <ThemedText className='font-bold'>Serie Fin</ThemedText>
+              <View className='h-8 border-l-2 items-center justify-center w-[30%]'>
                 <ModalSelector
                   data={opcionesSerieFin}
                   onChange={(talla: OpcionSelector) => setSelectSerieFin(talla.key)}
@@ -614,10 +643,10 @@ const CrearOrden: React.FC = () => {
                 >
                   <TextInput
                     editable={false}
-                    style={{ height: 40 }}
+                    style={{ height: 40, backgroundColor: backIconColor  }}
                     placeholder='Talla'
                     value={selectSerieFin}
-                    className='bg-gray-200 rounded-lg font-bold w-full'
+                    className='rounded-lg font-bold w-full'
                   />
                 </ModalSelector>
               </View>
@@ -681,12 +710,12 @@ const CrearOrden: React.FC = () => {
             className='flex-row gap-2 justify-center items-center mt-2'
             onPress={handleAgregarFila}
           >
-            <Text className='text-lg'>Agregar</Text>
-            <Icon source='plus-circle' size={20} />
+            <ThemedText className='text-lg'>Agregar</ThemedText>
+            <Icon source='plus-circle' size={20} color={iconColor}/>
           </TouchableOpacity>
 
           {/* Detalle de la orden */}
-          <Text className='font-bold mt-4 text-lg mx-auto'>Detalle de la orden</Text>
+          <ThemedText className='font-bold mt-4 text-lg mx-auto'>Detalle de la orden</ThemedText>
           
           <View className='mt-2 gap-2'>
             <TextInput
@@ -700,7 +729,7 @@ const CrearOrden: React.FC = () => {
           </View>
 
           <View className='mt-2 flex-row items-center gap-8'>
-            <Text className='font-bold'>Altura de taco:</Text>
+            <ThemedText className='font-bold'>Altura de taco:</ThemedText>
             <ModalSelector
               data={opcionesTaco}
               onChange={(talla: OpcionSelector) => setTallaTaco(talla.key)}
@@ -711,9 +740,9 @@ const CrearOrden: React.FC = () => {
               <TextInput
                 editable={false}
                 placeholder='Seleccione una talla'
-                style={{ height: 40 }}
+                style={{ height: 40, backgroundColor: backIconColor }}
                 value={tallaTaco}
-                className='bg-gray-200 rounded-lg font-bold'
+                className=' rounded-lg font-bold'
               />
             </ModalSelector>
           </View>
@@ -772,15 +801,16 @@ const CrearOrden: React.FC = () => {
             />
           </View>
 
-          <Button
-            mode='contained-tonal'
-            icon='note'
-            buttonColor='#6969'
-            textColor='#000'
+          <Pressable
             onPress={handleCrearPedido}
+            className='flex-row gap-2 items-center justify-center rounded-lg py-2'
+            style={{ backgroundColor: "#634AFF" }}
           >
-            Crear Pedido
-          </Button>
+            <ThemedText>
+              Crear Pedido
+            </ThemedText>
+            <Icon source='check' size={20} color={iconColor} />
+          </Pressable>
 
           <View className='mb-32' />
         </ScrollView>
