@@ -42,17 +42,6 @@ export default function RootLayout() {
               }}
             />
             <Stack.Screen
-              name='modalCliente'
-              options={{
-                presentation: 'modal',
-                headerTitle: 'Cliente Nuevo',
-                headerStyle: {
-                  backgroundColor: backgroundColor,
-                },
-                headerTintColor: textColor,
-              }}
-            />
-            <Stack.Screen
               name='(menu)'
               options={{
                 headerShown: false,
