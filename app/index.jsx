@@ -18,6 +18,7 @@ import ShowError from '@/components/ShowError';
 import { AuthContext } from '@/contexts/AuthContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Colors } from '@/constants/Colors';
+import UserService from '@/services/UserService';
 
 SplashScreen.preventAutoHideAsync(); // Asegura que la pantalla de carga no desaparezca antes de tiempo
 const Home = () => {
@@ -44,8 +45,9 @@ const Home = () => {
       return;
     }
     try {
-      const data = await AuthService.login(correo, contrasenia);
-      authContext.logIn({token: data.token, role: ''});
+      const dataLogin = await AuthService.login(correo, contrasenia);
+      const dataUser = await UserService.getPerfil();
+      authContext.logIn({token: dataLogin.token, name: dataUser.nombres, email: dataUser.correo, role: dataUser.rol});
     } catch (error) {
       ShowError(error);
       setLoading(true);
@@ -78,13 +80,6 @@ const Home = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       
       <SafeAreaView className='flex-1 h-full ' style={{position:'relative', backgroundColor: backgroundColor}}>
-        {/* Logo
-        <View className='flex items-center justify-center mt-16 '>
-          <Image
-            source={require('@/assets/images/namiTest.jpg')}
-            style={{ width: 168, height: 168, borderRadius: 84 }}
-          />
-        </View> */}
         <View  style={{ height: '20%' }} >
           <Image
             source={require('@/assets/images/TricksLogo.png')}

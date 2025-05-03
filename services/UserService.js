@@ -20,7 +20,6 @@ const UserService = {
             `Error al obtener el perfil: ${error.response.status}`
         );
       } else if (error.request) {
-        console.log('error.request', error.request);
         throw new Error(
           'No se recibió respuesta del servidor. Verifique su conexión.'
         );
