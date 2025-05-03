@@ -98,6 +98,20 @@ export default function AdminRoutesLayout() {
             ),
           }}
         />
+        <Drawer.Screen
+          name="datos/index" // This is the name of the page and must match the url from root
+          options={{
+            drawerLabel: 'Crear Datos',
+            headerShown: false,
+            drawerIcon: () => (
+              <Icon
+                source='database'
+                color={iconColor}
+                size={24}
+              />
+            ),
+          }}
+        />
       </Drawer>
     </GestureHandlerRootView>
   );
