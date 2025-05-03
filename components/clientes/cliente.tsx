@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Pressable, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, Pressable, Alert, KeyboardAvoidingView, Platform } from 'react-native'; 
 import { TextInput, Icon } from 'react-native-paper';
 import { useFonts } from 'expo-font';
 
