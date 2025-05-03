@@ -29,7 +29,7 @@ export default function AdminRoutesLayout() {
           }}
         />
         <Drawer.Screen
-          name="almacenes/index" // This is the name of the page and must match the url from root
+          name="ordenes/index" // This is the name of the page and must match the url from root
           options={{
             drawerLabel: 'Almacenes',
             headerShown: false,
@@ -57,13 +57,27 @@ export default function AdminRoutesLayout() {
           }}
         />
         <Drawer.Screen
-          name="almacenes/index" // This is the name of the page and must match the url from root
+          name="historial/index" // This is the name of the page and must match the url from root
           options={{
             drawerLabel: 'Almacenes',
             headerShown: false,
             drawerIcon: () => (
               <Icon
                 source='warehouse'
+                color={iconColor}
+                size={24}
+              />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="inventario/index" // This is the name of the page and must match the url from root
+          options={{
+            drawerLabel: 'Inventario',
+            headerShown: false,
+            drawerIcon: () => (
+              <Icon
+                source='package-variant'
                 color={iconColor}
                 size={24}
               />
