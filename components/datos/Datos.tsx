@@ -10,11 +10,12 @@ import { Colors } from '@/constants/Colors';
 import * as SplashScreen from 'expo-splash-screen';
 import { ThemedView } from '../ThemedView';
 import { ThemedText } from '../ThemedText';
+import TipoCalzadoService from '@/services/TipoCalzadoService';
   
-type TipoCliente = 'natural' | 'juridico' | '';
+type Tipo = 'tipoCalzado' | 'juridico' | '';
 
 interface DatosCliente {
-    tipoCliente: TipoCliente;
+    tipoCliente: Tipo;
     nombre?: string;
     dni?: string;
     telefono?: string;
@@ -25,7 +26,7 @@ interface DatosCliente {
 
 SplashScreen.preventAutoHideAsync();
 const DatosAdmin = () => {
-    const [tipoCliente, setTipoCliente] = useState<TipoCliente>('');
+    const [tipo, setTipo] = useState<Tipo>('');
     const [clienteNatural, setClienteNatural] = useState<string>('');
     const [representanteLegal, setRepresentanteLegal] = useState<string>('');
     const [dni, setDni] = useState<string>('');
@@ -33,6 +34,7 @@ const DatosAdmin = () => {
     const [telefonoNatural, setTelefonoNatural] = useState<string>('');
     const [telefonoJuridico, setTelefonoJuridico] = useState<string>('');
     const [razonSocial, setRazonSocial] = useState<string>('');
+    const [tipoCalzado, setTipoCalzado] = useState<string>('');
 
     const validarDatosCliente = (
       tipoCliente: TipoCliente,
@@ -63,52 +65,22 @@ const DatosAdmin = () => {
       return true;
     };
   
-    const handleCrearCliente = async (): Promise<void> => {
+    const handleCrearTipoCalzado = async () => {
+      if (!tipoCalzado) {
+        Alert.alert('Error', 'Debe ingresar el tipo de calzado');
+        return;
+      }
       try {
-        let datosCliente: DatosCliente = { tipoCliente };
-  
-        if (tipoCliente === 'natural') {
-          datosCliente = {
-            ...datosCliente,
-            nombre: clienteNatural,
-            dni,
-            telefono: telefonoNatural,
-          };
-        } else if (tipoCliente === 'juridico') {
-          datosCliente = {
-            ...datosCliente,
-            razonSocial,
-            ruc,
-            representanteLegal,
-            telefono: telefonoJuridico,
-          };
+        const dataTipoCalzado = await TipoCalzadoService.createTipoCalzado(tipoCalzado);
+        if (dataTipoCalzado.status === 201) {
+            setTipoCalzado('');
+            setTipo('');
+            Alert.alert('Éxito', 'Tipo de calzado creado exitosamente');
         }
-  
-        if (!validarDatosCliente(tipoCliente, dni, ruc, telefonoNatural, telefonoJuridico)) {
-          return;
-        }
-  
-        if (!Object.values(datosCliente).every(valor => valor && valor.toString().trim() !== '')) {
-          Alert.alert('Error', 'Por favor, completa todos los campos.');
-          return;
-        }
-  
-        await ClienteService.crearCliente(datosCliente, tipoCliente);
-        Alert.alert('Éxito', `Cliente ${tipoCliente} creado correctamente`);
-  
-        // Reset form
-        setTipoCliente('');
-        setDni('');
-        setClienteNatural('');
-        setTelefonoNatural('');
-        setRuc('');
-        setRazonSocial('');
-        setRepresentanteLegal('');
-        setTelefonoJuridico('');
       } catch (error) {
         mostrarError(error as Error);
       }
-    };
+    }
   
     const mostrarError = (error: Error): void => {
       Alert.alert(
@@ -151,19 +123,19 @@ const DatosAdmin = () => {
             >
                 <ThemedView className='flex-row justify-center gap-4 mt-4'>
                     <Pressable
-                        onPress={() => setTipoCliente('natural')}
+                        onPress={() => setTipo('tipoCalzado')}
                         className={`px-4 py-2 rounded-md w-[45%] gap-2 ${
-                        tipoCliente === 'natural' ? 'border border-[#634AFF]' : ''
+                        tipo === 'tipoCalzado' ? 'border border-[#634AFF]' : ''
                         }`}
                         style={{ backgroundColor: contentColor }}
                     >
-                        <Icon source='account' size={20} color={iconColor} />
-                        <ThemedText >Cliente Natural</ThemedText>
+                        <Icon source='shoe-heel' size={20} color={iconColor} />
+                        <ThemedText >Tipo de Calzado</ThemedText>
                     </Pressable>
                     <Pressable
-                        onPress={() => setTipoCliente('juridico')}
+                        onPress={() => setTipo('juridico')}
                         className={`px-4 py-2 rounded-md w-[45%] gap-2 ${
-                        tipoCliente === 'juridico' ? 'border border-[#634AFF]' : ''
+                        tipo === 'juridico' ? 'border border-[#634AFF]' : ''
                         }`}
                         style={{ backgroundColor: contentColor }}
                     >
@@ -172,42 +144,32 @@ const DatosAdmin = () => {
                     </Pressable>
                 </ThemedView>
         
-                {tipoCliente === 'natural' && (
-                <ThemedView className='mt-4 gap-2'>
-                    <ThemedText style={{ fontFamily: 'Inter-Black', fontSize: 18 }} className='mx-auto'>
-                        Datos del cliente Natural
-                    </ThemedText>
-                    <ThemedView className='gap-2'>
-                        <TextInput
-                            placeholder='10101010'
-                            value={dni}
-                            onChangeText={setDni}
-                            keyboardType='numeric'
-                            maxLength={8}
-                            label='DNI'
-                            mode='outlined'
-                        />
-                        <TextInput
-                            placeholder='Juan Perez'
-                            value={clienteNatural}
-                            onChangeText={setClienteNatural}
-                            label='Nombres y Apellidos'
-                            mode='outlined'
-                        />
-                        <TextInput
-                            placeholder='999999999'
-                            value={telefonoNatural}
-                            onChangeText={setTelefonoNatural}
-                            keyboardType='numeric'
-                            maxLength={9}
-                            label='Número de teléfono'
-                            mode='outlined'
-                        />
+                {tipo === 'tipoCalzado' && (
+                    <ThemedView className='mt-4 gap-2'>
+                        <ThemedText style={{ fontFamily: 'Inter-Black', fontSize: 18 }} className='mx-auto'>
+                            Datos del Tipo de Calzado
+                        </ThemedText>
+                        <ThemedView className='gap-2'>
+                            <TextInput
+                                placeholder='Botin'
+                                value={tipoCalzado}
+                                onChangeText={setTipoCalzado}
+                                label='Tipo de Calzado'
+                                mode='outlined'
+                            />
+                        </ThemedView>
+                        <Pressable
+                            className='bg-[#634AFF] p-4 rounded-lg mt-4'
+                            onPress={handleCrearTipoCalzado}
+                        >
+                            <Text className='text-white text-center font-bold'>
+                                Registrar Datos
+                            </Text>
+                        </Pressable>
                     </ThemedView>
-                </ThemedView>
                 )}
         
-                {tipoCliente === 'juridico' && (
+                {tipo === 'juridico' && (
                 <ThemedView className='mt-4 gap-2'>
                     <ThemedText style={{ fontFamily: 'Inter-Black', fontSize: 18 }} className='mx-auto'>
                         Datos del cliente Jurídico
@@ -248,17 +210,7 @@ const DatosAdmin = () => {
                     </ThemedView>
                 </ThemedView>
                 )}
-        
-                {tipoCliente !== '' && (
-                <Pressable
-                    className='bg-[#634AFF] p-4 rounded-lg mt-4'
-                    onPress={handleCrearCliente}
-                >
-                    <Text className='text-white text-center font-bold'>
-                    Registrar Cliente
-                    </Text>
-                </Pressable>
-                )}
+
             </KeyboardAvoidingView>
         </ThemedView>
     );

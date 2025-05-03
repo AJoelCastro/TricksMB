@@ -4,6 +4,21 @@ import AuthService from './AuthService';
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 const TipoCalzadoService = {
+  createTipoCalzado: async (tipoCalzado) => {
+    try {
+      const token = await AuthService.getToken();
+      let nombre = tipoCalzado;
+      const response = await axios.post(`${API_URL}/tipoCalzado/crear`,{nombre},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      return response.data;
+    }
+    catch (error) {
+      throw error;
+    }
+  },
   
   getAllTipoCalzado: async () => {
     try {
@@ -13,10 +28,6 @@ const TipoCalzadoService = {
       });
       return response.data;
     } catch (error) {
-      console.error(
-        'Error al obtener los tipo de calzado:',
-        error.response?.data || error.message
-      );
       throw error;
     }
   },
@@ -32,10 +43,6 @@ const TipoCalzadoService = {
       );
       return response.data;
     } catch (error) {
-      console.error(
-        '(TipoCalzadoService) Error al obtener Tipo de calzado: ',
-        error.response?.data || error.message
-      );
       throw error;
     }
   },
