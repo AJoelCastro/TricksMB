@@ -1,14 +1,13 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import Dashboard from '@/components/Dashboard'
-import EditarOrden from '@/components/ordenes/Editar'
 
-const IndexEditarAdmin = () => {
+const IndexClientesAdmin = () => {
   return (
     <Dashboard>
-        <EditarOrden></EditarOrden>
+        <></>
     </Dashboard>
   )
 }
 
-export default IndexEditarAdmin
+export default IndexClientesAdmin

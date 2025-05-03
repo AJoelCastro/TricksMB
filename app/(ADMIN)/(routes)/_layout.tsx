@@ -84,6 +84,20 @@ export default function AdminRoutesLayout() {
             ),
           }}
         />
+        <Drawer.Screen
+          name="clientes/index" // This is the name of the page and must match the url from root
+          options={{
+            drawerLabel: 'Clientes',
+            headerShown: false,
+            drawerIcon: () => (
+              <Icon
+                source='account-multiple'
+                color={iconColor}
+                size={24}
+              />
+            ),
+          }}
+        />
       </Drawer>
     </GestureHandlerRootView>
   );

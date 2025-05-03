@@ -2,9 +2,7 @@ import { useState } from 'react';
 import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { TextInput } from 'react-native-paper';
 
-import Icon from 'react-native-vector-icons/FontAwesome';
 
-import '../../../../../global.css';
 
 export default function cancelar() {
   const [codigo, setCodigo] = useState('');
