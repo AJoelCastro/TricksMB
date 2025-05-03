@@ -29,7 +29,7 @@ export default function AdminRoutesLayout() {
           }}
         />
         <Drawer.Screen
-          name="ordenes/index" // This is the name of the page and must match the url from root
+          name="ordenes" // This is the name of the page and must match the url from root
           options={{
             drawerLabel: 'Ordenes',
             headerShown: false,
