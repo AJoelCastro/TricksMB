@@ -31,11 +31,11 @@ export default function AdminRoutesLayout() {
         <Drawer.Screen
           name="ordenes/index" // This is the name of the page and must match the url from root
           options={{
-            drawerLabel: 'Almacenes',
+            drawerLabel: 'Ordenes',
             headerShown: false,
             drawerIcon: () => (
               <Icon
-                source='warehouse'
+                source='file-cog'
                 color={iconColor}
                 size={24}
               />
@@ -59,11 +59,11 @@ export default function AdminRoutesLayout() {
         <Drawer.Screen
           name="historial/index" // This is the name of the page and must match the url from root
           options={{
-            drawerLabel: 'Almacenes',
+            drawerLabel: 'Historial de Pedidos',
             headerShown: false,
             drawerIcon: () => (
               <Icon
-                source='warehouse'
+                source='history'
                 color={iconColor}
                 size={24}
               />
