@@ -1,5 +1,6 @@
 import axios from 'axios';
 import AuthService from './AuthService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -12,6 +13,10 @@ const UserService = {
       const response = await axios.get(`${API_URL}/usuario/perfil`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      const { correo, nombres, rol } = response.data;
+      await AsyncStorage.setItem('name', nombres);
+      await AsyncStorage.setItem('email', correo);
+      await AsyncStorage.setItem('role', rol);
       return response.data;
     } catch (error) {
       if (error.response) {
