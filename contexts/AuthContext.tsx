@@ -34,6 +34,7 @@ export const AuthProvider = ({ children } : PropsWithChildren) => {
             const name = await AsyncStorage.getItem('name');
             const email = await AsyncStorage.getItem('email');
             const role = await AsyncStorage.getItem('role');
+            console.log(token, name, email, role);
             if (token&& name && email && role) {
                 setUser({ token, role, name, email });
                 setisReady(true);
@@ -46,6 +47,7 @@ export const AuthProvider = ({ children } : PropsWithChildren) => {
     }, []);
 
     const logIn = async (userData: User) => {
+        console.log("context",userData);
         try {
             setUser({
                 token: userData.token,
@@ -54,6 +56,7 @@ export const AuthProvider = ({ children } : PropsWithChildren) => {
                 email: userData.email
             } as User);
             setisReady(true);
+            router.replace('/(menu)/menu');
         } catch (error) {
             ShowError(error as Error);
         }
