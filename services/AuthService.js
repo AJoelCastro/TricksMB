@@ -11,7 +11,6 @@ const AuthService = {
         correo,
         contrasenia,
       });
-      console.log('Respuesta del servidor:', response.data);
       const token = response.data?.token;
       if (!token) {
         throw new Error(
@@ -20,9 +19,8 @@ const AuthService = {
       }
 
       await AsyncStorage.setItem('token', token);
-      console.log('Token guardado:', token);
       return response.data;
-    } catch (error) {
+    }catch (error) {
       if (error.message) {
         // El servidor respondió con un código de error
           throw Error(error.message) || `Error al obtener el token de acceso: ${error.response.status}`
@@ -40,7 +38,6 @@ const AuthService = {
 
   logout: async () => {
     console.log('Cerrando sesión...');
-
     await AsyncStorage.removeItem('token'); // Eliminar token
   },
 
