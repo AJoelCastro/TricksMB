@@ -1,18 +1,20 @@
 import React, { useContext, useEffect } from 'react';
 import { Redirect, Stack } from 'expo-router';
 import { Text, TouchableOpacity } from 'react-native';
+import { useFonts } from 'expo-font';
+
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Colors } from '@/constants/Colors';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
 import { AuthContext } from '@/contexts/AuthContext';
+
+import * as SplashScreen from 'expo-splash-screen';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 
 SplashScreen.preventAutoHideAsync();
 export default function MenuLayout() {
   
   const authContext = useContext(AuthContext);
-  
+
   if(!authContext.isReady){
     return <Redirect href={'/'}/>
   }
@@ -24,10 +26,6 @@ export default function MenuLayout() {
     { light: Colors.light.text, dark: Colors.dark.text },
     'text'
   );
-
-  const handleLogout = async () => {
-    authContext.logOut();
-  };
 
   const [loaded, error] = useFonts({
     'Inter-Black': require('../../assets/fonts/DMSans-Regular.ttf'),
@@ -48,25 +46,7 @@ export default function MenuLayout() {
       <Stack.Screen
         name='menu'
         options={{
-          headerTitle: 'Menu',
-          headerStyle: {
-            backgroundColor: backgroundColor,
-          },
-          headerTintColor: textColor,
-          headerRight: () => (
-            <TouchableOpacity onPress={handleLogout}>
-              <Text
-                className='font-bold '
-                style={{
-                  fontFamily: 'Inter-Black',
-                  color: textColor,
-                  fontSize: 15,
-                }}
-              >
-                Cerrar sesion
-              </Text>
-            </TouchableOpacity>
-          ),
+          headerShown: false,
         }}
       />
       <Stack.Screen
