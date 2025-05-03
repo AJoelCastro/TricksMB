@@ -23,7 +23,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DetallePedidoService from '../../../../../services/DetallePedidoService';
 
-import '../../../../../global.css';
 import TipoCalzadoService from '@/services/TipoCalzadoService';
 import CaracteristicasService from '@/services/CaracteristicasService';
 
