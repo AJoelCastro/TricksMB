@@ -34,7 +34,7 @@ export default function OrdenesTabLayout() {
         }}
         >
         <Tabs.Screen
-            name='(tabs)/crear/index'
+            name='(ordenesTab)/crear/index'
             options={{
             title: 'Crear',
             tabBarIcon: () => <Icon source='plus' size={22} color={textColor} />,
@@ -54,7 +54,7 @@ export default function OrdenesTabLayout() {
             }}
         />
         <Tabs.Screen
-            name='(tabs)/editar/index'
+            name='(ordenesTab)/editar/index'
             options={{
             title: 'Editar',
             tabBarIcon: () => <Icon source='edit' size={22} color={textColor} />,
@@ -65,7 +65,7 @@ export default function OrdenesTabLayout() {
             }}
         />
         <Tabs.Screen
-            name='(tabs)/cancelar/index'
+            name='(ordenesTab)/cancelar/index'
             options={{
             title: 'Cancelar',
             tabBarIcon: () => (
