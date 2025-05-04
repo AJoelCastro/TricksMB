@@ -11,60 +11,32 @@ import * as SplashScreen from 'expo-splash-screen';
 import { ThemedView } from '../ThemedView';
 import { ThemedText } from '../ThemedText';
 import TipoCalzadoService from '@/services/TipoCalzadoService';
+import ModalSelector from 'react-native-modal-selector';
   
-type Tipo = 'tipoCalzado' | 'juridico' | '';
-
-interface DatosCliente {
-    tipoCliente: Tipo;
-    nombre?: string;
-    dni?: string;
-    telefono?: string;
-    razonSocial?: string;
-    ruc?: string;
-    representanteLegal?: string;
-}
-
+type Tipo = 'tipoCalzado' | 'modelo' | '';
+type TipoCalzado = {
+    idTipo: number;
+    Nombre: string;
+};
 SplashScreen.preventAutoHideAsync();
 const DatosAdmin = () => {
     const [tipo, setTipo] = useState<Tipo>('');
-    const [clienteNatural, setClienteNatural] = useState<string>('');
-    const [representanteLegal, setRepresentanteLegal] = useState<string>('');
-    const [dni, setDni] = useState<string>('');
-    const [ruc, setRuc] = useState<string>('');
-    const [telefonoNatural, setTelefonoNatural] = useState<string>('');
-    const [telefonoJuridico, setTelefonoJuridico] = useState<string>('');
-    const [razonSocial, setRazonSocial] = useState<string>('');
+    const [modelo, setModelo] = useState<string>('');
     const [tipoCalzado, setTipoCalzado] = useState<string>('');
+    const [tipoCalzadoModal, setTipoCalzadoModal] = useState<number>(0);
+    const [dataTipoCalzado, setDataTipoCalzado] = useState<TipoCalzado[]>([]);
 
-    const validarDatosCliente = (
-      tipoCliente: TipoCliente,
-      dni: string,
-      ruc: string,
-      telefonoNatural: string,
-      telefonoJuridico: string
-    ): boolean => {
-      if (tipoCliente === 'natural') {
-        if (!dni || dni.length !== 8) {
-          Alert.alert('Error', 'El DNI debe tener 8 dígitos');
-          return false;
-        }
-        if (!telefonoNatural || telefonoNatural.length !== 9) {
-          Alert.alert('Error', 'El teléfono debe tener 9 dígitos');
-          return false;
-        }
-      } else if (tipoCliente === 'juridico') {
-        if (!ruc || ruc.length !== 11) {
-          Alert.alert('Error', 'El RUC debe tener 11 dígitos');
-          return false;
-        }
-        if (!telefonoJuridico || telefonoJuridico.length !== 9) {
-          Alert.alert('Error', 'El teléfono debe tener 9 dígitos');
-          return false;
-        }
-      }
-      return true;
-    };
-  
+    useEffect(() => {
+        const cargarTipoCalzado = async () => {
+          try {
+            const tipos = await TipoCalzadoService.getAllTipoCalzado();
+            setDataTipoCalzado(tipos.tipoCalzado);
+          } catch (error) {
+            console.error('Error cargando tipos de calzado:', error);
+          }
+        };
+        cargarTipoCalzado();
+      }, []);
     const handleCrearTipoCalzado = async () => {
       if (!tipoCalzado) {
         Alert.alert('Error', 'Debe ingresar el tipo de calzado');
@@ -90,10 +62,6 @@ const DatosAdmin = () => {
       );
     };
   
-    const backgroundColor = useThemeColor(
-        { light: Colors.light.background, dark: Colors.dark.background },
-        'background'
-    );
     const textColor = useThemeColor(
         { light: Colors.light.text, dark: Colors.dark.text },
         'text'
@@ -101,10 +69,6 @@ const DatosAdmin = () => {
     const iconColor = useThemeColor(
         { light: Colors.light.icon, dark: Colors.dark.icon },
         'icon'
-    );
-    const tabColor = useThemeColor(
-        { light: Colors.light.tabIconSelected, dark: Colors.dark.tabIconSelected },
-        'tabIconSelected'
     );
     const backIconColor = useThemeColor(
         { light: Colors.light.backIcon, dark: Colors.dark.backIcon },
@@ -129,18 +93,18 @@ const DatosAdmin = () => {
                         }`}
                         style={{ backgroundColor: contentColor }}
                     >
-                        <Icon source='shoe-heel' size={20} color={iconColor} />
+                        <Icon source='shoe-print' size={20} color={iconColor} />
                         <ThemedText >Tipo de Calzado</ThemedText>
                     </Pressable>
                     <Pressable
-                        onPress={() => setTipo('juridico')}
+                        onPress={() => setTipo('modelo')}
                         className={`px-4 py-2 rounded-md w-[45%] gap-2 ${
-                        tipo === 'juridico' ? 'border border-[#634AFF]' : ''
+                        tipo === 'modelo' ? 'border border-[#634AFF]' : ''
                         }`}
                         style={{ backgroundColor: contentColor }}
                     >
-                        <Icon source='office-building' size={20} color={iconColor} />
-                        <ThemedText className='text-[#634AFF]'>Cliente Juridico</ThemedText>
+                        <Icon source='shoe-heel' size={20} color={iconColor} />
+                        <ThemedText className='text-[#634AFF]'>Modelo</ThemedText>
                     </Pressable>
                 </ThemedView>
         
@@ -169,45 +133,42 @@ const DatosAdmin = () => {
                     </ThemedView>
                 )}
         
-                {tipo === 'juridico' && (
+                {tipo === 'modelo' && (
                 <ThemedView className='mt-4 gap-2'>
                     <ThemedText style={{ fontFamily: 'Inter-Black', fontSize: 18 }} className='mx-auto'>
-                        Datos del cliente Jurídico
+                        Datos del Modelo
                     </ThemedText>
                     <ThemedView className='gap-2'>
                         <TextInput
-                            placeholder='10345678901'
-                            value={ruc}
-                            onChangeText={setRuc}
-                            keyboardType='numeric'
-                            maxLength={11}
-                            label='RUC'
+                            placeholder='Primavera'
+                            value={modelo}
+                            onChangeText={setModelo}
+                            label='Modelo'
                             mode='outlined'
                         />
-                        <TextInput
-                            placeholder='Razón social'
-                            value={razonSocial}
-                            onChangeText={setRazonSocial}
-                            label='Razón social'
-                            mode='outlined'
-                        />
-                        <TextInput
-                            placeholder='Datos del RL'
-                            value={representanteLegal}
-                            onChangeText={setRepresentanteLegal}
-                            label='Representante Legal'
-                            mode='outlined'
-                        />
-                        <TextInput
-                            placeholder='999999999'
-                            value={telefonoJuridico}
-                            onChangeText={setTelefonoJuridico}
-                            keyboardType='numeric'
-                            maxLength={9}
-                            label='Número de contacto'
-                            mode='outlined'
-                        />
+                        <ModalSelector
+                            data={dataTipoCalzado}
+                            keyExtractor={(item: TipoCalzado) => item.idTipo.toString()}
+                            labelExtractor={(item: TipoCalzado) => item.Nombre}
+                            onChange={(item: TipoCalzado) => setTipoCalzadoModal(item.idTipo)}
+                            cancelText='Cancelar'
+                        >
+                            <TextInput
+                                label='Tipos de Calzado'
+                                mode='outlined'
+                                editable={false}
+                                value={`${tipoCalzadoModal}`}
+                            />
+                        </ModalSelector>
                     </ThemedView>
+                    <Pressable
+                        className='bg-[#634AFF] p-4 rounded-lg mt-4'
+                        onPress={handleCrearModelo}
+                    >
+                        <Text className='text-white text-center font-bold'>
+                            Registrar Datos
+                        </Text>
+                    </Pressable>
                 </ThemedView>
                 )}
 
