@@ -279,7 +279,7 @@ const DatosAdmin = () => {
                             cancelText='Cancelar'
                         >
                             <TextInput
-                                label='Tipos de Calzado'
+                                label='Tipos de Modelo'
                                 mode='outlined'
                                 editable={false}
                                 value={`${imagenModeloModal}`}
