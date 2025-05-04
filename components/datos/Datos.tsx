@@ -14,8 +14,9 @@ import TipoCalzadoService from '@/services/TipoCalzadoService';
 import ModalSelector from 'react-native-modal-selector';
 import ModeloService from '@/services/ModeloService';
 import ImagenService from '@/services/ImagenService';
+import TipoAlmacenService from '@/services/TipoAlmacenService';
   
-type Tipo = 'tipoCalzado' | 'modelo' | 'imagenModelo' | '';
+type Tipo = 'tipoCalzado' | 'modelo' | 'imagenModelo' | 'tipoAlmacen' | '';
 type TipoCalzado = {
     idTipo: number;
     Nombre: string;
@@ -37,6 +38,8 @@ const DatosAdmin = () => {
     const [imagenModelo, setImagenModelo] = useState<string>('');
     const [dataModelo, setDataModelo] = useState<TipoModelo[]>([]);
     const [imagenModeloModal, setImagenModeloModal] = useState<number>(0);
+
+    const [tipoAlmacen, setTipoAlmacen] = useState<string>('');
 
     useEffect(() => {
         const cargarTipoCalzado = async () => {
@@ -116,6 +119,24 @@ const DatosAdmin = () => {
       }
     }
 
+    const handleCrearTipoAlmacen = async () => {
+      if (!tipoAlmacen) {
+        Alert.alert('Error', 'Debe ingresar el tipo de almacen');
+        return;
+      }
+      try {
+        let nombre = tipoAlmacen;
+        const dataTipoAlmacen = await TipoAlmacenService.createTipoAlmacen(nombre);
+        if (dataTipoAlmacen.status === 201) {
+            setTipoAlmacen('');
+            setTipo('');
+            Alert.alert('Éxito', 'Tipo de almacen creado exitosamente');
+        }
+      }catch (error) {
+        mostrarError(error as Error);
+      }
+    }
+
     const mostrarError = (error: Error): void => {
       Alert.alert(
         'Error',
@@ -182,16 +203,16 @@ const DatosAdmin = () => {
                         <Icon source='image' size={20} color={iconColor} />
                         <ThemedText >Imagen de Modelo</ThemedText>
                     </Pressable>
-                    {/* <Pressable
-                        onPress={() => setTipo('modelo')}
+                    <Pressable
+                        onPress={() => setTipo('tipoAlmacen')}
                         className={`px-4 py-2 rounded-md w-[45%] gap-2 ${
-                        tipo === 'modelo' ? 'border border-[#634AFF]' : ''
+                        tipo === 'tipoAlmacen' ? 'border border-[#634AFF]' : ''
                         }`}
                         style={{ backgroundColor: contentColor }}
                     >
-                        <Icon source='shoe-heel' size={20} color={iconColor} />
-                        <ThemedText className='text-[#634AFF]'>Modelo</ThemedText>
-                    </Pressable> */}
+                        <Icon source='warehouse' size={20} color={iconColor} />
+                        <ThemedText className='text-[#634AFF]'>Tipo de Almacen</ThemedText>
+                    </Pressable>
                 </ThemedView>
         
                 {tipo === 'tipoCalzado' && (
@@ -289,6 +310,31 @@ const DatosAdmin = () => {
                     <Pressable
                         className='bg-[#634AFF] p-4 rounded-lg mt-4'
                         onPress={handleCrearImagenModelo}
+                    >
+                        <Text className='text-white text-center font-bold'>
+                            Registrar Datos
+                        </Text>
+                    </Pressable>
+                </ThemedView>
+                )}
+                {tipo === 'tipoAlmacen' && (
+                <ThemedView className='mt-4 gap-2'>
+                    <ThemedText style={{ fontFamily: 'Inter-Black', fontSize: 18 }} className='mx-auto'>
+                        Datos del tipo de Almacen
+                    </ThemedText>
+                    <ThemedView className='gap-2'>
+                        <TextInput
+                            placeholder='Nombre del Tipo de Almacen'
+                            value={tipoAlmacen}
+                            onChangeText={setTipoAlmacen}
+                            label='Tipo Almacen'
+                            mode='outlined'
+                        />
+                        
+                    </ThemedView>
+                    <Pressable
+                        className='bg-[#634AFF] p-4 rounded-lg mt-4'
+                        onPress={handleCrearTipoAlmacen}
                     >
                         <Text className='text-white text-center font-bold'>
                             Registrar Datos
