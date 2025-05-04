@@ -12,6 +12,7 @@ import { ThemedView } from '../ThemedView';
 import { ThemedText } from '../ThemedText';
 import TipoCalzadoService from '@/services/TipoCalzadoService';
 import ModalSelector from 'react-native-modal-selector';
+import ModeloService from '@/services/ModeloService';
   
 type Tipo = 'tipoCalzado' | 'modelo' | '';
 type TipoCalzado = {
@@ -60,7 +61,15 @@ const DatosAdmin = () => {
         return;
       }
       try {
-        
+        let idTipo = tipoCalzadoModal;
+        let nombre = modelo;
+        const dataModelo = await ModeloService.createModelo(idTipo, nombre);
+        if (dataModelo.status === 201) {
+            setModelo('');
+            setTipo('');
+            setTipoCalzadoModal(0);
+            Alert.alert('Éxito', 'Modelo creado exitosamente');
+        }
       }catch (error) {
         mostrarError(error as Error);
       }
