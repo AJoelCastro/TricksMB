@@ -13,6 +13,7 @@ import { ThemedText } from '../ThemedText';
 import TipoCalzadoService from '@/services/TipoCalzadoService';
 import ModalSelector from 'react-native-modal-selector';
 import ModeloService from '@/services/ModeloService';
+import ImagenService from '@/services/ImagenService';
   
 type Tipo = 'tipoCalzado' | 'modelo' | 'imagenModelo' | '';
 type TipoCalzado = {
@@ -101,7 +102,15 @@ const DatosAdmin = () => {
         return;
       }
       try {
-        
+        let idModelo = imagenModeloModal;
+        let url = imagenModelo;
+        const dataImagen = await ImagenService.createImagen(idModelo, url);
+        if (dataImagen.status === 201) {
+            setImagenModelo('');
+            setTipo('');
+            setImagenModeloModal(0);
+            Alert.alert('Éxito', 'Imagen creada exitosamente');
+        }
       }catch (error) {
         mostrarError(error as Error);
       }
