@@ -19,21 +19,6 @@ const ModeloService = {
       throw error;
     }
   },
-  createImagenModelo: async (idTipo, nombre) => {
-    try {
-      const token = await AuthService.getToken();
-      if (!token)
-        throw new Error(
-          '⚠️ No se recibió un token en la respuesta del servidor.'
-        );
-      const response = await axios.post(`${API_URL}/modelo/crear`,{idTipo,nombre}, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      return response.data;
-    }catch (error) {
-      throw error;
-    }
-  },
   getAllModelo: async () => {
     try {
       const token = await AuthService.getToken();
