@@ -4,6 +4,14 @@ import AuthService from './AuthService';
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 const AlmacenService = {
+    crearAlmacen: async (idTipoAlmacen) => {
+        try {
+            
+        }catch (error) {
+            throw error;
+        }
+    },
+
     getAllAlmacenes: async () => {
         try {
             const token = await AuthService.getToken();
