@@ -95,6 +95,17 @@ const DatosAdmin = () => {
         mostrarError(error as Error);
       }
     }
+    const handleCrearImagenModelo = async () => {
+      if (!imagenModelo ||!imagenModeloModal) {
+        Alert.alert('Error', 'Debe ingresar la URL y el modelo');
+        return;
+      }
+      try {
+        
+      }catch (error) {
+        mostrarError(error as Error);
+      }
+    }
 
     const mostrarError = (error: Error): void => {
       Alert.alert(
@@ -268,7 +279,7 @@ const DatosAdmin = () => {
                     </ThemedView>
                     <Pressable
                         className='bg-[#634AFF] p-4 rounded-lg mt-4'
-                        onPress={handleCrearModelo}
+                        onPress={handleCrearImagenModelo}
                     >
                         <Text className='text-white text-center font-bold'>
                             Registrar Datos
