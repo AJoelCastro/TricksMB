@@ -47,7 +47,18 @@ const DatosAdmin = () => {
           }
         };
         cargarTipoCalzado();
-      }, []);
+    }, []);
+    useEffect(() => {
+        const cargarIdModelo = async () => {
+          try {
+            const dataModel = await ModeloService.getAllModelo();
+            setDataModelo(dataModel.modelos);
+          } catch (error) {
+            console.error('Error cargando tipos de calzado:', error);
+          }
+        };
+        cargarIdModelo();
+    }, []);
     const handleCrearTipoCalzado = async () => {
       if (!tipoCalzado) {
         Alert.alert('Error', 'Debe ingresar el tipo de calzado');
@@ -242,9 +253,9 @@ const DatosAdmin = () => {
                         />
                         <ModalSelector
                             data={dataModelo}
-                            keyExtractor={(item: TipoModelo) => item.idTipo.toString()}
+                            keyExtractor={(item: TipoModelo) => item.idModelo.toString()}
                             labelExtractor={(item: TipoModelo) => item.Nombre}
-                            onChange={(item: TipoModelo) => setImagenModeloModal(item.idTipo)}
+                            onChange={(item: TipoModelo) => setImagenModeloModal(item.idModelo)}
                             cancelText='Cancelar'
                         >
                             <TextInput
