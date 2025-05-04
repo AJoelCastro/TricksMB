@@ -19,6 +19,20 @@ const TipoAlmacenService = {
       throw error;
     }
   },
+  getTipoAlmacenes: async () => {
+    try {
+      const token = await AuthService.getToken();
+      if (!token) throw new Error('No hay token disponible');
+      const response = await axios.get(`${API_URL}/tipoAlmacen/todos`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      return response.data;
+    }catch (error) {
+      throw error;
+    }
+  }
   
 };
 

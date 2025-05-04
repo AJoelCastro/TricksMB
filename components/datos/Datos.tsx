@@ -27,7 +27,7 @@ type TipoModelo= {
     Nombre: string;
 };
 type TipoAlmacen= {
-    idTipoAlmacen: number;
+    idTipo_almacen: number;
     Nombre: string;
 };
 
@@ -55,7 +55,7 @@ const DatosAdmin = () => {
             const tipos = await TipoCalzadoService.getAllTipoCalzado();
             setDataTipoCalzado(tipos.tipoCalzado);
           } catch (error) {
-            console.error('Error cargando tipos de calzado:', error);
+            mostrarError(error as Error);
           }
         };
         cargarTipoCalzado();
@@ -66,11 +66,24 @@ const DatosAdmin = () => {
             const dataModel = await ModeloService.getAllModelo();
             setDataModelo(dataModel.modelos);
           } catch (error) {
-            console.error('Error cargando tipos de calzado:', error);
+            mostrarError(error as Error);
           }
         };
         cargarIdModelo();
     }, []);
+
+    useEffect(() => {
+        const cargarTipoAlmacen = async () => {
+          try {
+            const dataModel = await TipoAlmacenService.getTipoAlmacenes();
+            setDataTipoAlmacenToAlmacen(dataModel.salida);
+          } catch (error) {
+            mostrarError(error as Error);
+          }
+        };
+        cargarTipoAlmacen();
+    }, []);
+    
     const handleCrearTipoCalzado = async () => {
       if (!tipoCalzado) {
         Alert.alert('Error', 'Debe ingresar el tipo de calzado');
@@ -140,6 +153,17 @@ const DatosAdmin = () => {
             setTipo('');
             Alert.alert('Éxito', 'Tipo de almacen creado exitosamente');
         }
+      }catch (error) {
+        mostrarError(error as Error);
+      }
+    }
+    const handleCrearAlmacen = async () => {
+      if (!tipoAlmacenToAlmacen) {
+        Alert.alert('Error', 'Debe ingresar el tipo de almacen');
+        return;
+      }
+      try {
+        
       }catch (error) {
         mostrarError(error as Error);
       }
@@ -382,9 +406,9 @@ const DatosAdmin = () => {
                     <ThemedView className='gap-2'>
                         <ModalSelector
                             data={dataTipoAlmacenToAlmacen}
-                            keyExtractor={(item: TipoAlmacen) => item.idTipoAlmacen.toString()}
+                            keyExtractor={(item: TipoAlmacen) => item.idTipo_almacen.toString()}
                             labelExtractor={(item: TipoAlmacen) => item.Nombre}
-                            onChange={(item: TipoAlmacen) => setTipoAlmacenToAlmacen(item.idTipoAlmacen)}
+                            onChange={(item: TipoAlmacen) => setTipoAlmacenToAlmacen(item.idTipo_almacen)}
                             cancelText='Cancelar'
                         >
                             <TextInput
@@ -398,7 +422,7 @@ const DatosAdmin = () => {
                     </ThemedView>
                     <Pressable
                         className='bg-[#634AFF] p-4 rounded-lg mt-4'
-                        onPress={handleCrearTipoAlmacen}
+                        onPress={handleCrearAlmacen}
                     >
                         <Text className='text-white text-center font-bold'>
                             Registrar Datos
