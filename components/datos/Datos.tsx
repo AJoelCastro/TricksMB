@@ -19,15 +19,23 @@ type TipoCalzado = {
     idTipo: number;
     Nombre: string;
 };
+type TipoModelo= {
+    idModelo: number;
+    idTipo: number;
+    Nombre: string;
+};
 SplashScreen.preventAutoHideAsync();
 const DatosAdmin = () => {
     const [tipo, setTipo] = useState<Tipo>('');
     const [modelo, setModelo] = useState<string>('');
+
     const [tipoCalzado, setTipoCalzado] = useState<string>('');
     const [tipoCalzadoModal, setTipoCalzadoModal] = useState<number>(0);
     const [dataTipoCalzado, setDataTipoCalzado] = useState<TipoCalzado[]>([]);
+
     const [imagenModelo, setImagenModelo] = useState<string>('');
-    const [dataModelo, setDataModelo] = useState<TipoCalzado[]>([]);
+    const [dataModelo, setDataModelo] = useState<TipoModelo[]>([]);
+    const [imagenModeloModal, setImagenModeloModal] = useState<number>(0);
 
     useEffect(() => {
         const cargarTipoCalzado = async () => {
@@ -143,7 +151,7 @@ const DatosAdmin = () => {
                         <Icon source='image' size={20} color={iconColor} />
                         <ThemedText >Imagen de Modelo</ThemedText>
                     </Pressable>
-                    <Pressable
+                    {/* <Pressable
                         onPress={() => setTipo('modelo')}
                         className={`px-4 py-2 rounded-md w-[45%] gap-2 ${
                         tipo === 'modelo' ? 'border border-[#634AFF]' : ''
@@ -152,7 +160,7 @@ const DatosAdmin = () => {
                     >
                         <Icon source='shoe-heel' size={20} color={iconColor} />
                         <ThemedText className='text-[#634AFF]'>Modelo</ThemedText>
-                    </Pressable>
+                    </Pressable> */}
                 </ThemedView>
         
                 {tipo === 'tipoCalzado' && (
@@ -217,43 +225,6 @@ const DatosAdmin = () => {
                         </Text>
                     </Pressable>
                 </ThemedView>
-                )}{tipo === 'modelo' && (
-                <ThemedView className='mt-4 gap-2'>
-                    <ThemedText style={{ fontFamily: 'Inter-Black', fontSize: 18 }} className='mx-auto'>
-                        Datos del Modelo
-                    </ThemedText>
-                    <ThemedView className='gap-2'>
-                        <TextInput
-                            placeholder='Primavera'
-                            value={modelo}
-                            onChangeText={setModelo}
-                            label='Modelo'
-                            mode='outlined'
-                        />
-                        <ModalSelector
-                            data={dataTipoCalzado}
-                            keyExtractor={(item: TipoCalzado) => item.idTipo.toString()}
-                            labelExtractor={(item: TipoCalzado) => item.Nombre}
-                            onChange={(item: TipoCalzado) => setTipoCalzadoModal(item.idTipo)}
-                            cancelText='Cancelar'
-                        >
-                            <TextInput
-                                label='Tipos de Calzado'
-                                mode='outlined'
-                                editable={false}
-                                value={`${tipoCalzadoModal}`}
-                            />
-                        </ModalSelector>
-                    </ThemedView>
-                    <Pressable
-                        className='bg-[#634AFF] p-4 rounded-lg mt-4'
-                        onPress={handleCrearModelo}
-                    >
-                        <Text className='text-white text-center font-bold'>
-                            Registrar Datos
-                        </Text>
-                    </Pressable>
-                </ThemedView>
                 )}
 
                 {tipo === 'imagenModelo' && (
@@ -271,16 +242,16 @@ const DatosAdmin = () => {
                         />
                         <ModalSelector
                             data={dataModelo}
-                            keyExtractor={(item: TipoCalzado) => item.idTipo.toString()}
-                            labelExtractor={(item: TipoCalzado) => item.Nombre}
-                            onChange={(item: TipoCalzado) => setTipoCalzadoModal(item.idTipo)}
+                            keyExtractor={(item: TipoModelo) => item.idTipo.toString()}
+                            labelExtractor={(item: TipoModelo) => item.Nombre}
+                            onChange={(item: TipoModelo) => setImagenModeloModal(item.idTipo)}
                             cancelText='Cancelar'
                         >
                             <TextInput
                                 label='Tipos de Calzado'
                                 mode='outlined'
                                 editable={false}
-                                value={`${tipoCalzadoModal}`}
+                                value={`${imagenModeloModal}`}
                             />
                         </ModalSelector>
                     </ThemedView>
