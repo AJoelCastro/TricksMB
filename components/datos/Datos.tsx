@@ -54,6 +54,18 @@ const DatosAdmin = () => {
       }
     }
   
+    const handleCrearModelo = async () => {
+      if (!modelo || !tipoCalzadoModal) {
+        Alert.alert('Error', 'Debe ingresar el modelo y el tipo de calzado');
+        return;
+      }
+      try {
+        
+      }catch (error) {
+        mostrarError(error as Error);
+      }
+    }
+
     const mostrarError = (error: Error): void => {
       Alert.alert(
         'Error',
