@@ -11,14 +11,15 @@ import {
   FlatList, 
   Platform, 
   KeyboardAvoidingView, 
-  Pressable 
+  Pressable,
+  SafeAreaView 
 } from 'react-native';
 import { Button, Card, Divider, TextInput } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { Icon } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ModalSelector from 'react-native-modal-selector';
-
+import { Image } from 'expo-image';
 // Services
 import ClienteService from '@/services/ClienteService';
 import ModeloService from '@/services/ModeloService';
@@ -39,7 +40,6 @@ type Cliente = {
   Nombre?: string;
   Razon_social?: string;
 };
-
 type Modelo = {
   idModelo: number;
   Nombre: string;
@@ -509,7 +509,7 @@ const CrearOrden: React.FC = () => {
               data={dataTipoCalzado}
               keyExtractor={(item: TipoCalzado) => item.idTipo.toString()}
               labelExtractor={(item: TipoCalzado) => item.Nombre}
-              onChange={(item: TipoCalzado) => setTipoCalzado(item)}
+              onChange={(item: TipoCalzado) => {setTipoCalzado(item); cargarModelosPorId();}}
               cancelText='Cancelar'
               cancelStyle={styles.cancelButton}
               cancelTextStyle={styles.cancelText}
@@ -525,7 +525,6 @@ const CrearOrden: React.FC = () => {
 
             <TouchableOpacity onPress={() => {
               setModalModeloVisible(true);
-              cargarModelosPorId();
             }}>
               <TextInput
                 label='Modelo'
@@ -536,39 +535,66 @@ const CrearOrden: React.FC = () => {
             </TouchableOpacity>
 
             <Modal visible={modalModeloVisible} transparent animationType='slide'>
-              <View className='flex-1 my-6 pb-6 px-2'>
-                <View className='flex-row justify-end p-3'>
-                  <TouchableOpacity
-                    onPress={() => setModalModeloVisible(false)}
-                    className='bg-black/50 rounded-full p-2'
-                  >
-                    <Icon source='close' size={22} color='white' />
-                  </TouchableOpacity>
-                </View>
-                
-                <FlatList
-                  data={dataModelos}
-                  keyExtractor={(item: Modelo) => item.idModelo.toString()}
-                  renderItem={({ item }: { item: Modelo }) => (
-                    <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
-                      <Card.Cover 
-                        source={{ uri: item.imagenes[0] }} 
-                        style={{ height: 350, resizeMode: 'cover' }} 
-                      />
-                      <Card.Content>
-                        <TouchableOpacity
-                          onPress={() => {
-                            setModelo(item.Nombre);
-                            setModalModeloVisible(false);
+              <SafeAreaView style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                <View style={{ flex: 1, margin: 6, paddingBottom: 6, paddingHorizontal: 2 }}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'flex-end', padding: 12 }}>
+                    <TouchableOpacity
+                      onPress={() => setModalModeloVisible(false)}
+                      style={{
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        borderRadius: 20,
+                        padding: 8,
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
+                    >
+                      <Icon source='close' size={22} color='white' />
+                    </TouchableOpacity>
+                  </View>
+                  
+                  <FlatList
+                    data={dataModelos}
+                    keyExtractor={(item: Modelo) => item.idModelo.toString()}
+                    renderItem={({ item }: { item: Modelo }) => (
+                      <View style={{ 
+                        marginBottom: 10, 
+                        borderRadius: 10, 
+                        elevation: 5,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.25,
+                        shadowRadius: 3.84,
+                        backgroundColor: 'white',
+                        overflow: 'hidden'
+                      }}>
+                        <Image
+                          source={{ uri: item.imagenes[0] }}
+                          style={{ 
+                            height: 350, 
+                            width: '100%',
                           }}
-                        >
-                          <Text className='titleMedium'>{item.Nombre}</Text>
-                        </TouchableOpacity>
-                      </Card.Content>
-                    </Card>
-                  )}
-                />
-              </View>
+                          contentFit='cover'
+                        />
+                        <View style={{ padding: 16 }}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setModelo(item.Nombre);
+                              setModalModeloVisible(false);
+                            }}
+                          >
+                            <Text style={{ 
+                              fontSize: 16, 
+                              fontWeight: '500' 
+                            }}>
+                              {item.Nombre}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    )}
+                  />
+                </View>
+              </SafeAreaView>
             </Modal>
 
             <TextInput
