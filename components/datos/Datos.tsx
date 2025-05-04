@@ -14,7 +14,7 @@ import TipoCalzadoService from '@/services/TipoCalzadoService';
 import ModalSelector from 'react-native-modal-selector';
 import ModeloService from '@/services/ModeloService';
   
-type Tipo = 'tipoCalzado' | 'modelo' | '';
+type Tipo = 'tipoCalzado' | 'modelo' | 'imagenModelo' | '';
 type TipoCalzado = {
     idTipo: number;
     Nombre: string;
@@ -26,6 +26,8 @@ const DatosAdmin = () => {
     const [tipoCalzado, setTipoCalzado] = useState<string>('');
     const [tipoCalzadoModal, setTipoCalzadoModal] = useState<number>(0);
     const [dataTipoCalzado, setDataTipoCalzado] = useState<TipoCalzado[]>([]);
+    const [imagenModelo, setImagenModelo] = useState<string>('');
+    const [dataModelo, setDataModelo] = useState<TipoCalzado[]>([]);
 
     useEffect(() => {
         const cargarTipoCalzado = async () => {
@@ -106,6 +108,7 @@ const DatosAdmin = () => {
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
                 className='p-2 h-full'
             >
+                {/* PRIMERA SECCION */}
                 <ThemedView className='flex-row justify-center gap-4 mt-4'>
                     <Pressable
                         onPress={() => setTipo('tipoCalzado')}
@@ -116,6 +119,29 @@ const DatosAdmin = () => {
                     >
                         <Icon source='shoe-print' size={20} color={iconColor} />
                         <ThemedText >Tipo de Calzado</ThemedText>
+                    </Pressable>
+                    <Pressable
+                        onPress={() => setTipo('modelo')}
+                        className={`px-4 py-2 rounded-md w-[45%] gap-2 ${
+                        tipo === 'modelo' ? 'border border-[#634AFF]' : ''
+                        }`}
+                        style={{ backgroundColor: contentColor }}
+                    >
+                        <Icon source='shoe-heel' size={20} color={iconColor} />
+                        <ThemedText className='text-[#634AFF]'>Modelo</ThemedText>
+                    </Pressable>
+                </ThemedView>
+                {/* SEGUNDA SECCION */}
+                <ThemedView className='flex-row justify-center gap-4 mt-4'>
+                    <Pressable
+                        onPress={() => setTipo('imagenModelo')}
+                        className={`px-4 py-2 rounded-md w-[45%] gap-2 ${
+                            tipo === 'imagenModelo' ? 'border border-[#634AFF]' : ''
+                        }`}
+                        style={{ backgroundColor: contentColor }}
+                    >
+                        <Icon source='image' size={20} color={iconColor} />
+                        <ThemedText >Imagen de Modelo</ThemedText>
                     </Pressable>
                     <Pressable
                         onPress={() => setTipo('modelo')}
@@ -169,6 +195,82 @@ const DatosAdmin = () => {
                         />
                         <ModalSelector
                             data={dataTipoCalzado}
+                            keyExtractor={(item: TipoCalzado) => item.idTipo.toString()}
+                            labelExtractor={(item: TipoCalzado) => item.Nombre}
+                            onChange={(item: TipoCalzado) => setTipoCalzadoModal(item.idTipo)}
+                            cancelText='Cancelar'
+                        >
+                            <TextInput
+                                label='Tipos de Calzado'
+                                mode='outlined'
+                                editable={false}
+                                value={`${tipoCalzadoModal}`}
+                            />
+                        </ModalSelector>
+                    </ThemedView>
+                    <Pressable
+                        className='bg-[#634AFF] p-4 rounded-lg mt-4'
+                        onPress={handleCrearModelo}
+                    >
+                        <Text className='text-white text-center font-bold'>
+                            Registrar Datos
+                        </Text>
+                    </Pressable>
+                </ThemedView>
+                )}{tipo === 'modelo' && (
+                <ThemedView className='mt-4 gap-2'>
+                    <ThemedText style={{ fontFamily: 'Inter-Black', fontSize: 18 }} className='mx-auto'>
+                        Datos del Modelo
+                    </ThemedText>
+                    <ThemedView className='gap-2'>
+                        <TextInput
+                            placeholder='Primavera'
+                            value={modelo}
+                            onChangeText={setModelo}
+                            label='Modelo'
+                            mode='outlined'
+                        />
+                        <ModalSelector
+                            data={dataTipoCalzado}
+                            keyExtractor={(item: TipoCalzado) => item.idTipo.toString()}
+                            labelExtractor={(item: TipoCalzado) => item.Nombre}
+                            onChange={(item: TipoCalzado) => setTipoCalzadoModal(item.idTipo)}
+                            cancelText='Cancelar'
+                        >
+                            <TextInput
+                                label='Tipos de Calzado'
+                                mode='outlined'
+                                editable={false}
+                                value={`${tipoCalzadoModal}`}
+                            />
+                        </ModalSelector>
+                    </ThemedView>
+                    <Pressable
+                        className='bg-[#634AFF] p-4 rounded-lg mt-4'
+                        onPress={handleCrearModelo}
+                    >
+                        <Text className='text-white text-center font-bold'>
+                            Registrar Datos
+                        </Text>
+                    </Pressable>
+                </ThemedView>
+                )}
+
+                {tipo === 'imagenModelo' && (
+                <ThemedView className='mt-4 gap-2'>
+                    <ThemedText style={{ fontFamily: 'Inter-Black', fontSize: 18 }} className='mx-auto'>
+                        Datos de la Imagen Modelo
+                    </ThemedText>
+                    <ThemedView className='gap-2'>
+                        <TextInput
+                            placeholder='URL de la Imagen'
+                            value={imagenModelo}
+                            onChangeText={setImagenModelo}
+                            label='URL'
+                            mode='outlined'
+                        />
+                        <ModalSelector
+                            data={dataModelo}
                             keyExtractor={(item: TipoCalzado) => item.idTipo.toString()}
                             labelExtractor={(item: TipoCalzado) => item.Nombre}
                             onChange={(item: TipoCalzado) => setTipoCalzadoModal(item.idTipo)}
