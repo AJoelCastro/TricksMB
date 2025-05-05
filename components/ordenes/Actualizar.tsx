@@ -355,25 +355,45 @@ const IndexActualizarOrden = () => {
               Empleados Asignados
             </Text>
           </ThemedView>
-          <View style={{flex: 1}}>
+          <View>
             <FlatList
               data={empleadosAsignados}
               keyExtractor={item => item.Empleado_idEmpleado.toString()}
               renderItem={({ item }) => (
-                <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
-                  <View className='flex-row p-2'>
+                <View style={{
+                  marginBottom: 10,
+                  borderRadius: 10,
+                  backgroundColor: '#fff',
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 4,
+                  elevation: 5, // Para Android
+                }}>
+                  <View style={{
+                    flexDirection: 'row',
+                    padding: 8,
+                    alignItems: 'center'
+                  }}>
                     <View style={{ padding: 16 }}>
                       <View style={{ gap: 4 }}>
-                        <Text style={{ fontSize: 16, color: '#000' }}>
+                        <Text style={{
+                          fontSize: 16,
+                          fontWeight: '600',
+                          color: '#1a1a1a'
+                        }}>
                           Nombres: {item.Nombres}
                         </Text>
-                        <Text style={{ fontSize: 16, color: '#000' }}>
+                        <Text style={{
+                          fontSize: 16,
+                          color: '#4d4d4d'
+                        }}>
                           DNI: {item.DNI}
                         </Text>
                       </View>
                     </View>
                   </View>
-                </Card>
+                </View>
               )}
             />
           </View>
