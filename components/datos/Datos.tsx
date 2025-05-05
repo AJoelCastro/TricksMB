@@ -14,6 +14,7 @@ import TipoCalzadoService from '@/services/TipoCalzadoService';
 import ModalSelector from 'react-native-modal-selector';
 import ModeloService from '@/services/ModeloService';
 import ImagenService from '@/services/ImagenService';
+import AlmacenService from '@/services/AlmacenService';
   
 type Tipo = 'tipoCalzado' | 'modelo' | 'imagenModelo' | 'almacen' | '';
 type TipoCalzado = {
@@ -39,6 +40,9 @@ const DatosAdmin = () => {
     const [dataModelo, setDataModelo] = useState<TipoModelo[]>([]);
     const [imagenModeloModal, setImagenModeloModal] = useState<number>(0);
 
+    const [nombreAlmacen, setNombreAlmacen] = useState<string>('');
+    const [imagenAlmacen, setImagenAlmacen] = useState<string>('');
+    const [direccionAlmacen, setDireccionAlmacen] = useState<string>('');
 
     useEffect(() => {
         const cargarTipoCalzado = async () => {
@@ -50,7 +54,7 @@ const DatosAdmin = () => {
           }
         };
         cargarTipoCalzado();
-    }, []);
+    }, [tipoCalzado]);
     useEffect(() => {
         const cargarIdModelo = async () => {
           try {
@@ -61,7 +65,7 @@ const DatosAdmin = () => {
           }
         };
         cargarIdModelo();
-    }, []);
+    }, [modelo]);
 
     
     const handleCrearTipoCalzado = async () => {
@@ -120,12 +124,22 @@ const DatosAdmin = () => {
       }
     }
     const handleCrearAlmacen = async () => {
-      if (!true) {
-        Alert.alert('Error', 'Debe ingresar el tipo de almacen');
+      if (!nombreAlmacen ||!imagenAlmacen ||!direccionAlmacen) {
+        Alert.alert('Error', 'Debe ingresar los datos del almacen');
         return;
       }
       try {
-        
+        let nombre = nombreAlmacen;
+        let imagen = imagenAlmacen;
+        let direccion = direccionAlmacen;
+        const dataAlmacen = await AlmacenService.crearAlmacen(nombre, imagen, direccion);
+        if (dataAlmacen.status === 201) {
+            setNombreAlmacen('');
+            setImagenAlmacen('');
+            setDireccionAlmacen('');
+            setTipo('');
+            Alert.alert('Éxito', 'Almacen creado exitosamente');
+        }
       }catch (error) {
         mostrarError(error as Error);
       }
@@ -339,8 +353,31 @@ const DatosAdmin = () => {
                 {tipo === 'almacen' && (
                 <ThemedView className='mt-4 gap-2'>
                     <ThemedText style={{ fontFamily: 'Inter-Black', fontSize: 18 }} className='mx-auto'>
-                        Datos del tipo de Almacen
+                        Datos del Almacen
                     </ThemedText>
+                    <ThemedView className='gap-2'>
+                        <TextInput
+                            placeholder='Trujillo'
+                            value={nombreAlmacen}
+                            onChangeText={setNombreAlmacen}
+                            label='Nombre del Almacen'
+                            mode='outlined'
+                        />
+                        <TextInput
+                            placeholder='https://URL_ADDRESS'
+                            value={imagenAlmacen}
+                            onChangeText={setImagenAlmacen}
+                            label='Imagen del Almacen'
+                            mode='outlined'
+                        />
+                        <TextInput
+                            placeholder='Av España 123'
+                            value={direccionAlmacen}
+                            onChangeText={setDireccionAlmacen}
+                            label='Dirección del Almacen'
+                            mode='outlined'
+                        />
+                    </ThemedView>
                     <Pressable
                         className='bg-[#634AFF] p-4 rounded-lg mt-4'
                         onPress={handleCrearAlmacen}
