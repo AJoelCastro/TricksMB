@@ -14,7 +14,6 @@ import TipoCalzadoService from '@/services/TipoCalzadoService';
 import ModalSelector from 'react-native-modal-selector';
 import ModeloService from '@/services/ModeloService';
 import ImagenService from '@/services/ImagenService';
-import TipoAlmacenService from '@/services/TipoAlmacenService';
   
 type Tipo = 'tipoCalzado' | 'modelo' | 'imagenModelo' | 'almacen' | '';
 type TipoCalzado = {
