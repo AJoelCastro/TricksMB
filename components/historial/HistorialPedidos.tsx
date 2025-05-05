@@ -9,16 +9,18 @@ import {
   SafeAreaView,
   Modal,
 } from 'react-native';
-import { Card, Divider, Icon } from 'react-native-paper';
+import { Divider, Icon } from 'react-native-paper';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Colors } from '@/constants/Colors';
+import { ThemedView } from '@/components/ThemedView';
 
 import * as SplashScreen from 'expo-splash-screen';
 
 import DetallePedidoService from '@/services/DetallePedidoService';
 import ModeloService from '@/services/ModeloService';
+import { ThemedText } from '../ThemedText';
 
 // Type definitions
 type EstadoPedido = 'Editable' | 'Finalizado' | 'Proceso' | 'Cancelado' | 'Vencido' | null;
@@ -158,10 +160,10 @@ const HistorialPedidosAdmin = () => {
   };
 
   return (
-    <View className='bg-white flex-1 p-2 gap-4'>
-      <Text style={{ fontFamily: 'Inter-Light', fontSize: 28 }} className='text-gray-600 my-4'>
+    <ThemedView style={{flex:1, padding:4}}>
+      <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 28, marginVertical:16 }}>
         HISTORIAL DE PEDIDOS
-      </Text>
+      </ThemedText>
       
       <View className='flex-col gap-2'>
         <View className='flex-row justify-between'>
@@ -170,11 +172,11 @@ const HistorialPedidosAdmin = () => {
               className='bg-gray-100 rounded-full p-4'
               onPress={() => setEstado('Editable')}
             >
-              <Icon source='square-o' size={20} color='#634AFF' />
+              <Icon source='clock-outline' size={20} color='#FFA500' />
             </Pressable>
-            <Text style={{ fontFamily: 'Inter-Light', fontSize: 15 }} className='text-gray-800'>
+            <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 15 }} >
               Pendientes
-            </Text>
+            </ThemedText>
           </View>
 
           <View className='items-center gap-2'>
@@ -182,11 +184,11 @@ const HistorialPedidosAdmin = () => {
               className='bg-gray-100 rounded-full p-4'
               onPress={() => setEstado('Finalizado')}
             >
-              <Icon source='check' size={20} color={iconColor} />
+              <Icon source='check' size={20} color="#10B981" />
             </Pressable>
-            <Text style={{ fontFamily: 'Inter-Light', fontSize: 15 }} className='text-gray-800'>
+            <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 15 }}>
               Completadas
-            </Text>
+            </ThemedText>
           </View>
           
           <View className='items-center gap-2'>
@@ -194,11 +196,11 @@ const HistorialPedidosAdmin = () => {
               className='bg-gray-100 rounded-full p-4'
               onPress={() => setEstado('Vencido')}
             >
-              <Icon source='exclamation-circle' size={20} color={iconColor} />
+              <Icon source='alert-circle-outline' size={20} color="#FF0000" />
             </Pressable>
-            <Text style={{ fontFamily: 'Inter-Light', fontSize: 15 }} className='text-gray-800'>
+            <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 15 }}>
               Vencidas
-            </Text>
+            </ThemedText>
           </View>
         </View>
         
@@ -210,11 +212,11 @@ const HistorialPedidosAdmin = () => {
               className='bg-gray-100 rounded-full p-4'
               onPress={() => setEstado('Proceso')}
             >
-              <Icon source='check-square' size={20} color={iconColor} />
+              <Icon source='sync' size={20} color="#3B82F6" />
             </Pressable>
-            <Text style={{ fontFamily: 'Inter-Light', fontSize: 15 }} className='text-gray-800'>
+            <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 15 }}>
               En Proceso
-            </Text>
+            </ThemedText>
           </View>
           
           <View className='items-center gap-2'>
@@ -222,17 +224,17 @@ const HistorialPedidosAdmin = () => {
               className='bg-gray-100 rounded-full p-4'
               onPress={() => setEstado('Cancelado')}
             >
-              <Icon source='times' size={20} color={iconColor} />
+              <Icon source='close-circle-outline' size={20} color="#808080" />
             </Pressable>
-            <Text style={{ fontFamily: 'Inter-Light', fontSize: 15 }} className='text-gray-800'>
+            <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 15 }} >
               Canceladas
-            </Text>
+            </ThemedText>
           </View>
         </View>
       </View>
       
       {mostrarPedidos && data && (
-        <SafeAreaView className='flex-1 mt-4 bg-white'>
+        <SafeAreaView className='mt-4'>
           <Text 
             style={{ fontFamily: 'Inter-Regular', fontSize: 20, textAlign: 'center' }} 
             className='text-gray-600 my-2'
@@ -244,50 +246,91 @@ const HistorialPedidosAdmin = () => {
             data={data}
             keyExtractor={item => item.Codigo_pedido}
             renderItem={({ item }) => (
-              <Card className='p-2 gap-4 my-2' style={{ backgroundColor: 'white' }}>
+              <View style={{
+                padding: 8, // Equivalente a p-2
+                gap: 16, // Equivalente a gap-4 (1 gap unit = 4px)
+                marginVertical: 8, // Equivalente a my-2
+                backgroundColor: contentColor,
+                borderRadius: 8,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                elevation: 3
+              }}>
                 <Pressable
-                  className='flex-row gap-2 justify-between items-center'
+                  style={{
+                    flexDirection: 'row',
+                    gap: 8, // Equivalente a gap-2
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}
                   onPress={() => {
                     setShowCardDetail(true);
                     setCodigoPedido(item.Codigo_pedido);
                   }}
                 >
-                  <View className='bg-gray-100 rounded-full p-4'>
-                    <Icon source='shopping-cart' size={20} color={iconColor} />
+                  <View style={{
+                    borderRadius: 100, // rounded-full
+                    padding: 16 // p-4
+                  }}>
+                    <Icon source='cart' size={20} color={iconColor} />
                   </View>
+                  
                   <View>
-                    <Text style={{ fontFamily: 'Inter-Light', fontSize: 15 }} className='text-gray-800'>
+                    <ThemedText style={{ 
+                      fontFamily: 'Inter-Light', 
+                      fontSize: 15, 
+                    }}>
                       {item.Codigo_pedido}
-                    </Text>
-                    <Text style={{ fontFamily: 'Inter-Light', fontSize: 15 }} className='text-gray-800'>
+                    </ThemedText>
+                    <ThemedText style={{ 
+                      fontFamily: 'Inter-Light', 
+                      fontSize: 15, 
+                    }}>
                       Entrega: {item.Fecha_entrega}
-                    </Text>
+                    </ThemedText>
                   </View>
+                  
                   <View>
                     <Image
                       source={{ uri: item.Imagenes[0] }}
-                      style={{ width: 100, height: 100 }}
+                      style={{ 
+                        width: 100, 
+                        height: 100,
+                        borderRadius: 8 // rounded-lg
+                      }}
                       contentFit='cover'
-                      className='rounded-lg'
                     />
                   </View>
                 </Pressable>
-              </Card>
+              </View>
             )}
           />
         </SafeAreaView>
       )}
       
       <Modal visible={showCardDetail} transparent={true} animationType='fade'>
-        <SafeAreaView className='flex-1 bg-gray-100/10 justify-center items-center'>
-          <View className='p-2 gap-4 my-2 w-full h-full' style={{ backgroundColor: 'white' }}>
-            <Card>
-              <Card.Content style={{ alignItems: 'center', backgroundColor: 'white' }}>
-                <Text style={{ fontFamily: 'Inter-Light', fontSize: 18 }} className='text-gray-800'>
-                  Modelo: {nameModel}
-                </Text>
-              </Card.Content>
-            </Card>
+        <SafeAreaView className='flex-1 justify-center items-center'>
+          <ThemedView className='p-2 gap-4 my-2 w-full h-full'>
+            <ThemedView style={{
+              borderRadius: 8,
+              padding: 16,
+              alignItems: 'center',
+              backgroundColor: contentColor,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 4,
+              elevation: 3,
+              marginVertical: 8
+            }}>
+              <ThemedText style={{ 
+                fontFamily: 'Inter-Light', 
+                fontSize: 18, 
+              }}>
+                Modelo: {nameModel}
+              </ThemedText>
+            </ThemedView>
             
             <View className='items-center my-2'>
               <Image
@@ -298,23 +341,42 @@ const HistorialPedidosAdmin = () => {
               />
             </View>
             
-            <Card>
-              <Card.Content>
-                <Text style={{ fontFamily: 'Inter-Light', fontSize: 16 }} className='text-gray-800'>
+            <ThemedView style={{
+              borderRadius: 8,
+              padding: 16,
+              shadowColor: '#000',
+              backgroundColor: contentColor,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 4,
+              elevation: 3,
+              marginVertical: 8
+            }}>
+              <View style={{ gap: 8 }}> {/* Equivalente al espaciado entre textos en Card.Content */}
+                <ThemedText style={{ 
+                  fontFamily: 'Inter-Light', 
+                  fontSize: 16, 
+                }}>
                   Codigo: {codigoPedido}
-                </Text>
-                <Text style={{ fontFamily: 'Inter-Light', fontSize: 16 }} className='text-gray-800'>
+                </ThemedText>
+                <ThemedText style={{ 
+                  fontFamily: 'Inter-Light', 
+                  fontSize: 16, 
+                }}>
                   Estado: {estado}
-                </Text>
-                <Text style={{ fontFamily: 'Inter-Light', fontSize: 16 }} className='text-gray-800'>
+                </ThemedText>
+                <ThemedText style={{ 
+                  fontFamily: 'Inter-Light', 
+                  fontSize: 16, 
+                }}>
                   Fecha de creación: {dataModelo?.Fecha_creacion.slice(0, 10)}
-                </Text>
-              </Card.Content>
-            </Card>
+                </ThemedText>
+              </View>
+            </ThemedView>
             
-            <View>
+            <View style={{backgroundColor:contentColor}}>
               <Pressable
-                className='bg-gray-100 items-center rounded-full p-4'
+                className='items-center rounded-full p-4'
                 onPress={() => setShowCardDetail(false)}
               >
                 <Text style={{ fontFamily: 'Inter-Regular', fontSize: 16 }} className='text-[#634AFF]'>
@@ -322,10 +384,10 @@ const HistorialPedidosAdmin = () => {
                 </Text>
               </Pressable>
             </View>
-          </View>
+          </ThemedView>
         </SafeAreaView>
       </Modal>
-    </View>
+    </ThemedView>
   );
 };
 
