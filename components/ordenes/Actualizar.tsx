@@ -19,6 +19,7 @@ import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 import EmpleadoService from '@/services/EmpleadoService';
 import { ThemedText } from '../ThemedText';
 import { ThemedView } from '../ThemedView';
+import ShowError from '../ShowError';
 
 interface Empleado {
   idEmpleado: number;
@@ -88,7 +89,7 @@ const IndexActualizarOrden = () => {
           );
         }
       } catch (error) {
-        console.error('Error al obtener el pedido', error);
+        ShowError(error as Error);
       }
     } else {
       alert('Asigne empleados primero');
@@ -148,7 +149,7 @@ const IndexActualizarOrden = () => {
               break;
           }
         } catch (error) {
-          console.error('Error al obtener el area de trabajo.');
+          ShowError(error as Error);
         }
       }
     };
@@ -271,8 +272,6 @@ const IndexActualizarOrden = () => {
     obtenerEmpleadosPorArea();
   }, [showModal]);
   const agregarOQuitarEmpleado = (item: Empleado) => {
-    console.log("emp", item) 
-    console.log("empleados", empleados)
     setCheckedEmpleados(prev => ({
       ...prev,
       [item.idEmpleado]: !prev[item.idEmpleado]
