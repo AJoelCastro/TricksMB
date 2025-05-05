@@ -10,6 +10,7 @@ import {
   Platform,
   SafeAreaView,
   Alert,
+  Dimensions,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Card, Checkbox, Divider, TextInput, Icon } from 'react-native-paper';
@@ -42,6 +43,8 @@ interface Option {
   color: string;
 }
 type EstadoPedido = 'Editable' | 'Proceso' | 'Finalizado' | ''; // Add any other possible states
+
+const height = Dimensions.get('window').height;
 const IndexActualizarOrden = () => {
   const route = useRouter();
   const [codigoOrden, setCodigoOrden] = useState<string>('');
@@ -80,7 +83,8 @@ const IndexActualizarOrden = () => {
         const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
         if (data) {
           route.push(
-            `/ordenes_produccion/actualizar/${option.title}?codigoOrden=${codigoOrden}`
+            '/(ADMIN)/(routes)/ordenes/(ordenesStack)/actualizar/etapa'
+            // `/ordenes_produccion/actualizar/${option.title}?codigoOrden=${codigoOrden}`
           );
         }
       } catch (error) {
@@ -254,8 +258,7 @@ const IndexActualizarOrden = () => {
       if (showModal) {
         try {
           const nomArea = capitalizarPrimeraLetra(areaTrabajo);
-          const dataEmpleados =
-            await EmpleadoService.obtenerEmpleadosPorArea(nomArea);
+          const dataEmpleados = await EmpleadoService.obtenerEmpleadosPorArea(nomArea);
           if (dataEmpleados.status !== 200) {
             throw new Error('Error al obtener empleados');
           }
@@ -267,8 +270,9 @@ const IndexActualizarOrden = () => {
     };
     obtenerEmpleadosPorArea();
   }, [showModal]);
-
   const agregarOQuitarEmpleado = (item: Empleado) => {
+    console.log("emp", item) 
+    console.log("empleados", empleados)
     setCheckedEmpleados(prev => ({
       ...prev,
       [item.idEmpleado]: !prev[item.idEmpleado]
@@ -352,26 +356,28 @@ const IndexActualizarOrden = () => {
               Empleados Asignados
             </Text>
           </ThemedView>
-          <ThemedView className='bg-white p-4 rounded-lg w-[100%]'>
+          <View style={{flex: 1}}>
             <FlatList
               data={empleadosAsignados}
               keyExtractor={item => item.Empleado_idEmpleado.toString()}
               renderItem={({ item }) => (
                 <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
                   <View className='flex-row p-2'>
-                    <Card.Content>
-                      <View className='gap-1'>
-                        <ThemedText>
+                    <View style={{ padding: 16 }}>
+                      <View style={{ gap: 4 }}>
+                        <Text style={{ fontSize: 16, color: '#000' }}>
                           Nombres: {item.Nombres}
-                        </ThemedText>
-                        <ThemedText >DNI: {item.DNI}</ThemedText>
+                        </Text>
+                        <Text style={{ fontSize: 16, color: '#000' }}>
+                          DNI: {item.DNI}
+                        </Text>
                       </View>
-                    </Card.Content>
+                    </View>
                   </View>
                 </Card>
               )}
             />
-          </ThemedView>
+          </View>
         </ThemedView>
       );
     }
@@ -389,18 +395,40 @@ const IndexActualizarOrden = () => {
               data={empleados}
               keyExtractor={item => item.idEmpleado.toString()}
               renderItem={({ item }) => (
-                <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
-                  <View className='flex-row p-2'>
-                    <Card.Content>
-                      <View className='gap-1'>
-                        <ThemedText >
+                <View style={{
+                  marginBottom: 10,
+                  borderRadius: 10,
+                  backgroundColor: 'white',
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 4,
+                  elevation: 3, // Para Android
+                }}>
+                  <View style={{
+                    flexDirection: 'row',
+                    padding: 12,
+                    alignItems: 'center'
+                  }}>
+                    <View style={{ flex: 1 }}>
+                      <View style={{ gap: 6 }}>
+                        <Text style={{
+                          fontSize: 16,
+                          fontWeight: '600',
+                          color: '#333'
+                        }}>
                           Nombres: {item.Nombres}
-                        </ThemedText>
-                        <ThemedText>DNI: {item.Dni}</ThemedText>
+                        </Text>
+                        <Text style={{
+                          fontSize: 14,
+                          color: '#666'
+                        }}>
+                          DNI: {item.Dni}
+                        </Text>
                       </View>
-                    </Card.Content>
+                    </View>
                   </View>
-                </Card>
+                </View>
               )}
             />
           </View>
@@ -434,163 +462,207 @@ const IndexActualizarOrden = () => {
   };
 
   return (
-    <ThemedView>
-        <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1 }}
-        >
-            <ThemedView className='flex-1 p-4'>
-                <ThemedView className='relative mb-4'>
-                    <TextInput
-                        label={'Codigo de orden'}
-                        mode='outlined'
-                        placeholder='Ingresa el código'
-                        value={codigoOrden}
-                        onChangeText={handleSearch}
+    <KeyboardAvoidingView
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    style={{ flex: 1, padding:8 }}
+    keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+    >
+        <View style={{ height: height }}>
+            <ThemedView className='relative mb-4'>
+                <TextInput
+                    label={'Codigo de orden'}
+                    mode='outlined'
+                    placeholder='Ingresa el código'
+                    value={codigoOrden}
+                    onChangeText={handleSearch}
+                    onPressIn={() => {
+                      setShowTextInputCodigoOrden(false);
+                    }}
+                    disabled={showTextInputCodigoOrden}
+                    onFocus={() => {
+                      if (codigoOrden.length > 0) {
+                          setShowSuggestions(true);
+                      }
+                      }}
+                    onBlur={() => {
+                      
+                    }}
+                    right={
+                    <TextInput.Icon
+                        icon='magnify'
                         onPressIn={() => {
-                        setShowTextInputCodigoOrden(false);
+                        verificarProceso();
+                        setShowTextInputCodigoOrden(true);
                         }}
-                        disabled={showTextInputCodigoOrden}
-                        onFocus={() => {
-                        if (codigoOrden.length > 0) {
-                            setShowSuggestions(true);
-                        }
-                        }}
-                        onBlur={() => {
-                        setTimeout(() => setShowSuggestions(false), 1200);
-                        }}
-                        right={
-                        <TextInput.Icon
-                            icon='magnify'
-                            onPressIn={() => {
-                            verificarProceso();
-                            setShowTextInputCodigoOrden(true);
-                            }}
-                        />
-                        }
                     />
-                    {showSuggestions && filteredSuggestions.length > 0 && (
-                        <View className='absolute z-10 top-16 w-full bg-white rounded-lg shadow-md max-h-80 right-0 left-0'>
-                        <FlatList
-                            data={filteredSuggestions}
-                            keyExtractor={item => item.Codigo_pedido}
-                            renderItem={({ item }) => (
-                            <TouchableOpacity
-                                onPress={() => {
-                                setCodigoOrden(item.Codigo_pedido);
-                                setShowSuggestions(false);
-                                }}
-                            >
-                                <Card.Content className='p-2'>
-                                <Text>{item.Codigo_pedido}</Text>
-                                </Card.Content>
-                                <Divider></Divider>
-                            </TouchableOpacity>
-                            )}
-                        />
-                        </View>
-                    )}
-                    <Pressable
-                        onPress={() => setShowSuggestions(false)}
-                        className={
-                        !showSuggestions
-                            ? 'opacity-0 h-0'
-                            : 'absolute inset-0 z-5 bg-transparent'
-                        }
-                    />
-                </ThemedView>
-                {estado === 'Editable' && (
-                <TouchableOpacity
-                    onPress={iniciarProceso}
-                    activeOpacity={0.8}
-                    className={`h-[15%] justify-center items-center rounded-2xl ${estado === 'Editable' ? 'bg-blue-500' : 'bg-gray-700'} mt-4`}
-                    disabled={estado !== 'Editable'}
-                >
-                    <Icon source='play-circle' size={40} color='#FFF' />
-                    <Text className='mt-2 text-white text-lg font-bold'>
-                    Iniciar proceso
-                    </Text>
-                </TouchableOpacity>
-                )}
-                {estado === 'Proceso' && (
-                    <ThemedView className='mt-4 gap-2'>
-                        <View className='gap-4'>
-                        {options
-                            .filter(option => option.title === areaTrabajo)
-                            .map(option => (
-                            <TouchableOpacity
-                                key={option.id}
-                                onPress={() => handleOptionPress(option)}
-                                activeOpacity={0.8}
-                                disabled={estado!== 'Proceso'}
-                            >
-                                <View
-                                className={`justify-center items-center rounded-2xl p-2 ${option.color}`}
-                                >
-                                <Icon source={option.icon} size={40} color='#FFF' />
-                                <Text className='mt-2 text-white text-lg font-bold'>
-                                    {option.title}
-                                </Text>
-                                </View>
-                            </TouchableOpacity>
-                            ))}
-                        </View>
-                        {renderEmpleadosSection()}
-                    </ThemedView>
-                )}
-                <Modal
-                    visible={showModal}
-                    onRequestClose={() => setShowModal(!showModal)}
-                    animationType='fade'
-                    transparent={true}
-                >
-                    <ThemedView>
-                        <SafeAreaView className='flex-1 justify-center items-center'>
-                            <View className='bg-white p-4 rounded-lg w-[90%]'>
-                            <FlatList
-                                data={dataEmpleados}
-                                keyExtractor={item => item.idEmpleado.toString()}
-                                renderItem={({ item }) => (
-                                <Card style={{ marginBottom: 10, borderRadius: 10, elevation: 5 }}>
-                                    <View className='flex-row p-2'>
-                                    <View className='bg-white rounded-full'>
-                                        <Checkbox
-                                        status={
-                                            checkedEmpleados[item.idEmpleado]
-                                            ? 'checked'
-                                            : 'unchecked'
-                                        }
-                                        onPress={() => {
-                                            agregarOQuitarEmpleado(item);
-                                        }}
-                                        color='#3B82F6'
-                                        />
-                                    </View>
-                                    <Card.Content>
-                                        <View className='gap-1'>
-                                        <ThemedText >
-                                            Nombres: {item.Nombres}
-                                        </ThemedText>
-                                        <ThemedText >DNI: {item.Dni}</ThemedText>
-                                        </View>
-                                    </Card.Content>
-                                    </View>
-                                </Card>
-                                )}
-                            />
-                            <Pressable
-                                onPress={() => setShowModal(!showModal)}
-                                className='bg-blue-500 px-4 py-2 rounded-lg'
-                            >
-                                <Text className='text-white text-center'>Cerrar</Text>
-                            </Pressable>
+                    }
+                />
+                {showSuggestions && filteredSuggestions.length > 0 && (
+                    <View className='absolute z-10 top-16 w-full bg-white rounded-lg shadow-md max-h-80 right-0 left-0'>
+                      <FlatList
+                        data={filteredSuggestions}
+                        keyExtractor={item => item.Codigo_pedido}
+                        renderItem={({ item }) => (
+                          <TouchableOpacity
+                              onPress={() => {
+                              setCodigoOrden(item.Codigo_pedido);
+                              setShowSuggestions(false);
+                              }}
+                          >
+                            <View style={{
+                              padding: 8,
+                              borderRadius: 6,
+                              marginVertical: 4
+                            }}>
+                              <Text style={{
+                                fontSize: 14,
+                                fontWeight: '500',
+                                color: '#333'
+                              }}>
+                                {item.Codigo_pedido}
+                              </Text>
                             </View>
-                        </SafeAreaView>
-                    </ThemedView>
-                </Modal>
+                            <Divider/>
+                          </TouchableOpacity>
+                        )}
+                      />
+                    </View>
+                )}
+                <Pressable
+                    onPress={() => setShowSuggestions(false)}
+                    className={
+                    !showSuggestions
+                        ? 'opacity-0 h-0'
+                        : 'absolute inset-0 z-5 bg-transparent'
+                    }
+                />
             </ThemedView>
-        </KeyboardAvoidingView>
-    </ThemedView>
+            {estado === 'Editable' && (
+              <TouchableOpacity
+                  onPress={iniciarProceso}
+                  activeOpacity={0.8}
+                  className={`h-[10%] justify-center items-center rounded-2xl ${estado === 'Editable' ? 'bg-blue-500' : 'bg-gray-700'} mt-4`}
+                  disabled={estado !== 'Editable'}
+              >
+                  <Icon source='play-circle' size={40} color='#FFF' />
+                  <Text className='mt-2 text-white text-lg font-bold'>
+                  Iniciar proceso
+                  </Text>
+              </TouchableOpacity>
+            )}
+            {estado === 'Proceso' && (
+                <ThemedView className='mt-4 gap-2'>
+                    <View className='gap-4'>
+                    {options
+                        .filter(option => option.title === areaTrabajo)
+                        .map(option => (
+                        <TouchableOpacity
+                            key={option.id}
+                            onPress={() => handleOptionPress(option)}
+                            activeOpacity={0.8}
+                            disabled={estado!== 'Proceso'}
+                        >
+                            <View
+                            className={`justify-center items-center rounded-2xl p-2 ${option.color}`}
+                            >
+                            <Icon source={option.icon} size={40} color='#FFF' />
+                            <Text className='mt-2 text-white text-lg font-bold'>
+                                {option.title}
+                            </Text>
+                            </View>
+                        </TouchableOpacity>
+                        ))}
+                    </View>
+                    {renderEmpleadosSection()}
+                </ThemedView>
+            )}
+            <Modal
+              visible={showModal}
+              onRequestClose={() => setShowModal(!showModal)}
+              animationType='fade'
+              transparent={true}
+            >
+              <View style={{ 
+                flex: 1,
+                backgroundColor: 'rgba(0,0,0,0.5)', // Fondo semitransparente
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
+                <SafeAreaView style={{ width: '90%', maxHeight: '80%' }}>
+                  <View style={{ 
+                    backgroundColor: 'white',
+                    borderRadius: 10,
+                    padding: 16,
+                    maxHeight: '100%'
+                  }}>
+                    <FlatList
+                      data={dataEmpleados}
+                      keyExtractor={item => item.idEmpleado.toString()}
+                      renderItem={({ item }) => (
+                        <View style={{
+                          marginBottom: 10,
+                          borderRadius: 10,
+                          backgroundColor: 'white',
+                          shadowColor: '#000',
+                          shadowOffset: { width: 0, height: 2 },
+                          shadowOpacity: 0.1,
+                          shadowRadius: 4,
+                          elevation: 5,
+                          padding: 12
+                        }}>
+                          {/* Checkbox y contenido del empleado */}
+                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <TouchableOpacity onPress={() => agregarOQuitarEmpleado(item)}>
+                              <View style={{
+                                width: 24,
+                                height: 24,
+                                borderRadius: 12,
+                                borderWidth: 2,
+                                borderColor: '#3B82F6',
+                                backgroundColor: checkedEmpleados[item.idEmpleado] ? '#3B82F6' : 'transparent',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginRight: 12
+                              }}>
+                                {checkedEmpleados[item.idEmpleado] && (
+                                  <Text style={{ color: 'white' }}>✓</Text>
+                                )}
+                              </View>
+                            </TouchableOpacity>
+                            
+                            <View>
+                              <Text style={{ fontSize: 16, fontWeight: '600' }}>
+                                {item.Nombres}
+                              </Text>
+                              <Text style={{ color: '#666' }}>DNI: {item.Dni}</Text>
+                            </View>
+                          </View>
+                        </View>
+                      )}
+                      ListEmptyComponent={
+                        <Text style={{ textAlign: 'center', padding: 20 }}>
+                          No hay empleados disponibles
+                        </Text>
+                      }
+                    />
+                    
+                    <Pressable
+                      onPress={() => setShowModal(false)}
+                      style={{
+                        backgroundColor: '#3B82F6',
+                        padding: 12,
+                        borderRadius: 8,
+                        marginTop: 10
+                      }}
+                    >
+                      <Text style={{ color: 'white', textAlign: 'center' }}>Cerrar</Text>
+                    </Pressable>
+                  </View>
+                </SafeAreaView>
+              </View>
+            </Modal>
+        </View>
+    </KeyboardAvoidingView>
   );
 };
 
