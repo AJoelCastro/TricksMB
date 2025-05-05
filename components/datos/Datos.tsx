@@ -16,7 +16,7 @@ import ModeloService from '@/services/ModeloService';
 import ImagenService from '@/services/ImagenService';
 import TipoAlmacenService from '@/services/TipoAlmacenService';
   
-type Tipo = 'tipoCalzado' | 'modelo' | 'imagenModelo' | 'tipoAlmacen' | 'almacen' | '';
+type Tipo = 'tipoCalzado' | 'modelo' | 'imagenModelo' | 'almacen' | '';
 type TipoCalzado = {
     idTipo: number;
     Nombre: string;
@@ -24,10 +24,6 @@ type TipoCalzado = {
 type TipoModelo= {
     idModelo: number;
     idTipo: number;
-    Nombre: string;
-};
-type TipoAlmacen= {
-    idTipo_almacen: number;
     Nombre: string;
 };
 
@@ -44,10 +40,6 @@ const DatosAdmin = () => {
     const [dataModelo, setDataModelo] = useState<TipoModelo[]>([]);
     const [imagenModeloModal, setImagenModeloModal] = useState<number>(0);
 
-    const [tipoAlmacen, setTipoAlmacen] = useState<string>('');
-
-    const [tipoAlmacenToAlmacen, setTipoAlmacenToAlmacen] = useState<number>(0);
-    const [dataTipoAlmacenToAlmacen, setDataTipoAlmacenToAlmacen] = useState<TipoAlmacen[]>([]);
 
     useEffect(() => {
         const cargarTipoCalzado = async () => {
@@ -72,17 +64,6 @@ const DatosAdmin = () => {
         cargarIdModelo();
     }, []);
 
-    useEffect(() => {
-        const cargarTipoAlmacen = async () => {
-          try {
-            const dataModel = await TipoAlmacenService.getTipoAlmacenes();
-            setDataTipoAlmacenToAlmacen(dataModel.salida);
-          } catch (error) {
-            mostrarError(error as Error);
-          }
-        };
-        cargarTipoAlmacen();
-    }, []);
     
     const handleCrearTipoCalzado = async () => {
       if (!tipoCalzado) {
@@ -139,26 +120,8 @@ const DatosAdmin = () => {
         mostrarError(error as Error);
       }
     }
-
-    const handleCrearTipoAlmacen = async () => {
-      if (!tipoAlmacen) {
-        Alert.alert('Error', 'Debe ingresar el tipo de almacen');
-        return;
-      }
-      try {
-        let nombre = tipoAlmacen;
-        const dataTipoAlmacen = await TipoAlmacenService.createTipoAlmacen(nombre);
-        if (dataTipoAlmacen.status === 201) {
-            setTipoAlmacen('');
-            setTipo('');
-            Alert.alert('Éxito', 'Tipo de almacen creado exitosamente');
-        }
-      }catch (error) {
-        mostrarError(error as Error);
-      }
-    }
     const handleCrearAlmacen = async () => {
-      if (!tipoAlmacenToAlmacen) {
+      if (!true) {
         Alert.alert('Error', 'Debe ingresar el tipo de almacen');
         return;
       }
@@ -236,20 +199,6 @@ const DatosAdmin = () => {
                         <ThemedText >Imagen de Modelo</ThemedText>
                     </Pressable>
                     <Pressable
-                        onPress={() => setTipo('tipoAlmacen')}
-                        className={`px-4 py-2 rounded-md w-[45%] gap-2 ${
-                        tipo === 'tipoAlmacen' ? 'border border-[#634AFF]' : ''
-                        }`}
-                        style={{ backgroundColor: contentColor }}
-                    >
-                        <Icon source='warehouse' size={20} color={iconColor} />
-                        <ThemedText className='text-[#634AFF]'>Tipo de Almacen</ThemedText>
-                    </Pressable>
-                </ThemedView>
-
-                {/* TERCERA SECCION */}
-                <ThemedView className='flex-row justify-center gap-4 mt-4'>
-                    <Pressable
                         onPress={() => setTipo('almacen')}
                         className={`px-4 py-2 rounded-md w-[45%] gap-2 ${
                             tipo === 'almacen' ? 'border border-[#634AFF]' : ''
@@ -259,6 +208,20 @@ const DatosAdmin = () => {
                         <Icon source='warehouse' size={20} color={iconColor} />
                         <ThemedText >Almacen</ThemedText>
                     </Pressable>
+                </ThemedView>
+
+                {/* TERCERA SECCION */}
+                <ThemedView className='flex-row justify-center gap-4 mt-4'>
+                    {/* <Pressable
+                        onPress={() => setTipo('almacen')}
+                        className={`px-4 py-2 rounded-md w-[45%] gap-2 ${
+                            tipo === 'almacen' ? 'border border-[#634AFF]' : ''
+                        }`}
+                        style={{ backgroundColor: contentColor }}
+                    >
+                        <Icon source='warehouse' size={20} color={iconColor} />
+                        <ThemedText >Almacen</ThemedText>
+                    </Pressable> */}
                     {/* <Pressable
                         onPress={() => setTipo('tipoAlmacen')}
                         className={`px-4 py-2 rounded-md w-[45%] gap-2 ${
@@ -373,53 +336,12 @@ const DatosAdmin = () => {
                     </Pressable>
                 </ThemedView>
                 )}
-                {tipo === 'tipoAlmacen' && (
-                <ThemedView className='mt-4 gap-2'>
-                    <ThemedText style={{ fontFamily: 'Inter-Black', fontSize: 18 }} className='mx-auto'>
-                        Datos del tipo de Almacen
-                    </ThemedText>
-                    <ThemedView className='gap-2'>
-                        <TextInput
-                            placeholder='Nombre del Tipo de Almacen'
-                            value={tipoAlmacen}
-                            onChangeText={setTipoAlmacen}
-                            label='Tipo Almacen'
-                            mode='outlined'
-                        />
-                        
-                    </ThemedView>
-                    <Pressable
-                        className='bg-[#634AFF] p-4 rounded-lg mt-4'
-                        onPress={handleCrearTipoAlmacen}
-                    >
-                        <Text className='text-white text-center font-bold'>
-                            Registrar Datos
-                        </Text>
-                    </Pressable>
-                </ThemedView>
-                )}
+                
                 {tipo === 'almacen' && (
                 <ThemedView className='mt-4 gap-2'>
                     <ThemedText style={{ fontFamily: 'Inter-Black', fontSize: 18 }} className='mx-auto'>
                         Datos del tipo de Almacen
                     </ThemedText>
-                    <ThemedView className='gap-2'>
-                        <ModalSelector
-                            data={dataTipoAlmacenToAlmacen}
-                            keyExtractor={(item: TipoAlmacen) => item.idTipo_almacen.toString()}
-                            labelExtractor={(item: TipoAlmacen) => item.Nombre}
-                            onChange={(item: TipoAlmacen) => setTipoAlmacenToAlmacen(item.idTipo_almacen)}
-                            cancelText='Cancelar'
-                        >
-                            <TextInput
-                                label='Tipos de Almacen'
-                                mode='outlined'
-                                editable={false}
-                                value={`${tipoAlmacenToAlmacen}`}
-                            />
-                        </ModalSelector>
-                        
-                    </ThemedView>
                     <Pressable
                         className='bg-[#634AFF] p-4 rounded-lg mt-4'
                         onPress={handleCrearAlmacen}
