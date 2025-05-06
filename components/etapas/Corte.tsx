@@ -22,6 +22,9 @@ import CaracteristicasService from '@/services/CaracteristicasService';
 import PedidoService from '@/services/PedidoService';
 import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 import EmpleadoService from '@/services/EmpleadoService';
+import { Image } from 'expo-image';
+import { Colors } from '@/constants/Colors';
+import { ThemedText } from '../ThemedText';
 
 // Type definitions
 type Cliente = {
@@ -391,10 +394,6 @@ const EtapaCorte = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1 }}
-    >
       <ScrollView className='mx-4 gap-2'>
         <SafeAreaView>
           {tipoCliente === 'natural' && cliente && (
@@ -466,45 +465,46 @@ const EtapaCorte = () => {
             ))}
           </View>
           
-          <View className='gap-2'>
-            <View className='flex-row justify-between'>
-              <View className='w-[30%]'>
-                <Card style={{ borderRadius: 10 }}>
-                  <Card.Cover
-                    style={{ resizeMode: 'contain' }}
-                    source={{ uri: modelo?.imagenes?.[0] }}
-                  />
-                  <Card.Content>
-                    <Text>{modelo?.modelo?.Nombre}</Text>
-                  </Card.Content>
-                </Card>
-              </View>
-              <View className='w-[48%] gap-2 justify-center'>
-                <TextInput
-                  editable={false}
-                  mode='outlined'
-                  label={'Tipo de calzado'}
-                  value={tipoCalzado}
+          <View className="gap-4 p-2">
+            <View className="flex-row justify-between items-stretch h-48">
+              {/* Contenedor de la imagen */}
+              <View className="w-[30%] rounded-xl overflow-hidden justify-center items-center" style={{backgroundColor:Colors.dark.content}}>
+                <Image
+                  style={{ width: 200, height: 200 }}
+                  contentFit="contain"
+                  source={{ uri: modelo?.imagenes?.[0] }}
                 />
+              </View>
+
+              {/* Contenedor de formulario */}
+              <View className="w-[65%] gap-2 justify-center">
                 <TextInput
-                  label='Modelo'
-                  mode='outlined'
+                  mode="outlined"
+                  label="Tipo de calzado"
+                  value={tipoCalzado}
+                  editable={false}
+                />
+                
+                <TextInput
+                  mode="outlined"
+                  label="Modelo"
                   value={modelo?.modelo?.Nombre}
                   editable={false}
                 />
+                
                 <TextInput
-                  mode='outlined'
-                  label='Fecha de creacion'
+                  mode="outlined"
+                  label="Fecha creación"
                   value={currentDate}
                   editable={false}
-                  right={<TextInput.Icon icon='calendar' />}
+                  right={<TextInput.Icon icon="calendar" />}
                 />
                 <TextInput
-                  label='Fecha de entrega'
-                  mode='outlined'
+                  mode="outlined"
+                  label="Fecha entrega"
                   value={fechaEntrega.toISOString().split('T')[0]}
                   editable={false}
-                  right={<TextInput.Icon icon='calendar' />}
+                  right={<TextInput.Icon icon="calendar" />}
                 />
               </View>
             </View>
@@ -703,10 +703,8 @@ const EtapaCorte = () => {
           >
             Actualizar Avance
           </Button>
-          <View className='mb-32'></View>
         </SafeAreaView>
       </ScrollView>
-    </KeyboardAvoidingView>
   );
 };
 

@@ -88,10 +88,14 @@ const IndexActualizarOrden = () => {
       try {
         const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
         if (data) {
-          route.push(
-            '/(ADMIN)/(routes)/ordenes/(ordenesStack)/actualizar/etapa'
+          route.push({
+            pathname: '/(ADMIN)/(routes)/ordenes/(ordenesStack)/actualizar/etapa',
+            params: {
+              etapa: option.title,
+              codigoOrden: codigoOrden,
+            },
             // `/ordenes_produccion/actualizar/${option.title}?codigoOrden=${codigoOrden}`
-          );
+          });
         }
       } catch (error) {
         ShowError(error as Error);
