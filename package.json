@@ -41,7 +41,7 @@
     "expo-web-browser": "~14.1.6",
     "jwt-decode": "^4.0.0",
     "nativewind": "^4.1.23",
-    "react": "19.0.0",
+    "react": "^19.1.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.2",
     "react-native-gesture-handler": "~2.24.0",
