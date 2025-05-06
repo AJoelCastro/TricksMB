@@ -295,27 +295,51 @@ export default function AlmacenAdmin() {
             </ThemedView>
             <ScrollView className='w-full mt-4 gap-4'>
                 {almacenes?.map((almacen, index) => (
-                <Card key={index} style={{ padding: 4, marginTop: 4, backgroundColor: backIconColor }}>
+                  <View key={index} style={{ 
+                    padding: 4, 
+                    marginTop: 4, 
+                    backgroundColor: contentColor,
+                    borderRadius: 8, // Añadido para simular el estilo de Card
+                    shadowColor: '#000', // Opcional: para efecto de sombra similar a Card
+                    shadowOffset: { width: 0, height: 2 }, // Opcional
+                    shadowOpacity: 0.1, // Opcional
+                    shadowRadius: 4, // Opcional
+                    elevation: 3, // Opcional (para Android)
+                  }}>
                     <Pressable
-                    className='p-4 rounded-lg flex-row gap-4 justify-between'
-                    onPress={() => setAlmacenSeleccionado(almacen.nombre)}
+                      style={{ 
+                        padding: 16, 
+                        borderRadius: 8,
+                        flexDirection: 'row',
+                        gap: 16,
+                        justifyContent: 'space-between'
+                      }}
+                      onPress={() => setAlmacenSeleccionado(almacen.nombre)}
                     >
-                    <View className='flex-1 justify-center'>
-                        <ThemedText className='mt-2' style={{ fontFamily: 'Inter-SemiBold', fontSize: 16 }}>
-                        Nombre: {almacen.nombre}
+                      <View style={{ flex: 1, justifyContent: 'center' }}>
+                        <ThemedText style={{ 
+                          marginTop: 8,
+                          fontFamily: 'Inter-SemiBold', 
+                          fontSize: 16 
+                        }}>
+                          Nombre: {almacen.nombre}
                         </ThemedText>
-                        <ThemedText className='mt-2' style={{ fontFamily: 'Inter-Regular', fontSize: 16 }}>
-                        Stock total: {almacen.stock}
+                        <ThemedText style={{ 
+                          marginTop: 8,
+                          fontFamily: 'Inter-Regular', 
+                          fontSize: 16 
+                        }}>
+                          Stock total: {almacen.stock}
                         </ThemedText>
-                    </View>
-                    <View>
+                      </View>
+                      <View>
                         <Image
-                        source={{ uri: almacen.imagen }}
-                        style={{ width: 180, height: 180, borderRadius: 10 }}
+                          source={{ uri: almacen.imagen }}
+                          style={{ width: 180, height: 180, borderRadius: 10 }}
                         />
-                    </View>
+                      </View>
                     </Pressable>
-                </Card>
+                  </View>
                 ))}
             </ScrollView>
             </>
@@ -324,7 +348,7 @@ export default function AlmacenAdmin() {
             <View>
                 {!showCamera && (
                 <View className='mx-4 mt-6'>
-                    <ThemedText style={{ fontFamily: 'Inter-Black', fontSize: 26 }}>
+                    <ThemedText type='subtitle' style={{fontSize:24}}>
                     Almacén {almacenSeleccionado}
                     </ThemedText>
                 </View>
@@ -343,22 +367,31 @@ export default function AlmacenAdmin() {
             {/* CAMARA */}
             {showCamera && (
                 <View className='p-4'>
-                <CameraView
+                <View style={{ position: 'relative' }}>
+                  <CameraView
                     facing={facing}
                     onBarcodeScanned={qrLeido ? handleBarcodeScanned : undefined}
                     style={{
-                    flex: 1,
-                    height: 300,
-                    width: 300,
-                    alignSelf: 'center',
+                      flex: 1,
+                      height: 300,
+                      width: 300,
+                      alignSelf: 'center',
                     }}
-                >
-                    <View style={{ position: 'absolute', bottom: 20, alignSelf: 'center' }}>
+                  />
+                  
+                  {/* Botón de refrescar posicionado absolutamente */}
+                  <View style={{ 
+                    position: 'absolute', 
+                    bottom: 20, 
+                    alignSelf: 'center',
+                    width: 300, // Mismo ancho que la cámara para centrar correctamente
+                    alignItems: 'center'
+                  }}>
                     <Pressable onPress={toggleCameraFacing}>
-                        <Icon source='refresh' size={32} color={iconColor} />
+                      <Icon source='refresh' size={32} color={iconColor} />
                     </Pressable>
-                    </View>
-                </CameraView>
+                  </View>
+                </View>
                 
                 <View className='flex-row justify-center gap-4 mt-8'>
                     <Pressable
@@ -366,9 +399,22 @@ export default function AlmacenAdmin() {
                         onPress={() => setQrLeido(!qrLeido)}
                         style={{ backgroundColor: backIconColor }}
                     >
-                    <ThemedText className='text-center' style={{ fontFamily: 'Inter-Light', fontSize: 16 }}>
-                        Scanear QR
-                    </ThemedText>
+                      <ThemedText className='text-center' style={{ fontFamily: 'Inter-Light', fontSize: 16 }}>
+                          Scanear QR
+                      </ThemedText>
+                    </Pressable>
+                    <Pressable
+                        className=' p-4 rounded-lg w-[45%]'
+                        onPress={() => {
+                          setQrLeido(false)
+                          setShowCamera(false)
+                          setAlmacenSeleccionado('')
+                          setShowRegisters(true)
+                        }}
+                    >
+                      <ThemedText className='text-center' style={{ fontFamily: 'Inter-Light', fontSize: 16 }}>
+                          Cancelar
+                      </ThemedText>
                     </Pressable>
                 </View>
                 
