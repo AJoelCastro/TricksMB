@@ -473,10 +473,9 @@ const EditarOrden: React.FC = () => {
       'content'
   );
   return (
-    <SafeAreaView className='mx-4 gap-2'>
-      <ScrollView >
+    <SafeAreaView className='mx-4 gap-2' style={{flex:1}}>
         {/* Búsqueda de pedido */}
-        <View className='relative mb-4 z-10'>
+        <View className='relative'>
           <TextInput
             label='Código de orden'
             mode='outlined'
@@ -503,7 +502,7 @@ const EditarOrden: React.FC = () => {
           />
 
           {showSuggestions && filteredSuggestions.length > 0 && (
-            <ThemedView className='absolute z-10 top-16 w-full rounded-md shadow-md max-h-80 right-0 left-0' style={{backgroundColor:contentColor}}>
+            <View className='absolute z-10 top-16 w-full rounded-md shadow-md max-h-80 right-0 left-0' style={{backgroundColor:contentColor, flex:1}}>
               <FlatList
                 data={filteredSuggestions}
                 keyExtractor={item => item.Codigo_pedido}
@@ -521,7 +520,7 @@ const EditarOrden: React.FC = () => {
                   </TouchableOpacity>
                 )}
               />
-            </ThemedView>
+            </View>
           )}
 
           <Pressable
@@ -529,313 +528,313 @@ const EditarOrden: React.FC = () => {
             className={!showSuggestions ? 'opacity-0 h-0' : 'absolute inset-0 z-5 bg-transparent'}
           />
         </View>
-
-        {/* Información del cliente */}
-        {tipoCliente === 'natural' && cliente && (
-          <View className='gap-2 mb-2'>
-            <View className='flex-col'>
-              <TextInput
-                value={cliente.nombre}
-                mode='outlined'
-                label='Nombre'
-                editable={false}
-              />
-              <TextInput
-                value={cliente.Dni || ''}
-                mode='outlined'
-                label='DNI'
-                editable={false}
-              />
-            </View>
-          </View>
-        )}
-
-        {tipoCliente === 'juridico' && cliente && (
-          <View className='gap-2 mb-2'>
-            <View className='flex-col'>
-              <TextInput
-                value={cliente.nombre}
-                mode='outlined'
-                label='Razón Social'
-                editable={false}
-              />
-              <TextInput
-                value={cliente.Ruc || ''}
-                mode='outlined'
-                label='RUC'
-                editable={false}
-              />
-            </View>
-          </View>
-        )}
-
-        {/* Selectores principales */}
-        <View className='gap-2'>
-          <ModalSelector
-            data={dataTipoCalzado}
-            keyExtractor={(item: TipoCalzado) => item.idTipo.toString()}
-            labelExtractor={(item: TipoCalzado) => item.Nombre}
-            onChange={(item: TipoCalzado) => setTipoCalzado(item)}
-            cancelText='Cancelar'
-            cancelStyle={styles.cancelButton}
-            cancelTextStyle={styles.cancelText}
-          >
-            <TextInput
-              editable={false}
-              mode='outlined'
-              label='Tipo de calzado'
-              placeholder='Tipo de calzado'
-              value={tipoCalzado?.Nombre || ''}
-            />
-          </ModalSelector>
-
-          
-          <TextInput
-            label='Modelo'
-            mode='outlined'
-            value={modelo}
-            editable={false}
-          />
-
-          <TextInput
-            mode='outlined'
-            label='Fecha de creación'
-            value={currentDate}
-            editable={false}
-            right={<TextInput.Icon icon='calendar' />}
-          />
-
-          <TextInput
-            label='Fecha de entrega'
-            mode='outlined'
-            value={fechaEntrega.toISOString().split('T')[0]}
-            editable={false}
-            right={
-              <TextInput.Icon
-                icon='calendar'
-                onPress={() => setOpenDatePicker(!openDatePicker)}
-              />
-            }
-          />
-
-          {openDatePicker && (
-            <View style={{backgroundColor:contentColor}}>
-              <DateTimePicker
-                value={fechaEntrega}
-                mode='date'
-                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                onChange={(event, selectedDate) => {
-                  setOpenDatePicker(false);
-                  if (selectedDate) setFechaEntrega(selectedDate);
-                }}
-              />
+        <ScrollView>
+          {/* Información del cliente */}
+          {tipoCliente === 'natural' && cliente && (
+            <View className='gap-2 mb-2'>
+              <View className='flex-col'>
+                <TextInput
+                  value={cliente.nombre}
+                  mode='outlined'
+                  label='Nombre'
+                  editable={false}
+                />
+                <TextInput
+                  value={cliente.Dni || ''}
+                  mode='outlined'
+                  label='DNI'
+                  editable={false}
+                />
+              </View>
             </View>
           )}
-        </View>
 
-        {/* Series */}
-        <View className='flex mt-4 mb-4 gap-5'>
-          <View className='flex-row items-center gap-4'>
-            <ThemedText className='font-bold'>Serie Inicio</ThemedText>
-            <View className='h-8 border-l-2 items-center justify-center w-[30%]'>
-              <ModalSelector
-                data={opcionesSerieInicio}
-                onChange={(talla: OpcionSelector) => setSelectSerieInicio(talla.key)}
-                cancelText='Cancelar'
-                cancelStyle={styles.cancelButton}
-                cancelTextStyle={styles.cancelText}
-              >
+          {tipoCliente === 'juridico' && cliente && (
+            <View className='gap-2 mb-2'>
+              <View className='flex-col'>
                 <TextInput
+                  value={cliente.nombre}
+                  mode='outlined'
+                  label='Razón Social'
                   editable={false}
-                  style={{ height: 40 }}
-                  placeholder='Talla'
-                  value={selectSerieInicio}
-                  className='rounded-lg font-bold w-full'
                 />
-              </ModalSelector>
+                <TextInput
+                  value={cliente.Ruc || ''}
+                  mode='outlined'
+                  label='RUC'
+                  editable={false}
+                />
+              </View>
+            </View>
+          )}
+
+          {/* Selectores principales */}
+          <View className='gap-2'>
+            <ModalSelector
+              data={dataTipoCalzado}
+              keyExtractor={(item: TipoCalzado) => item.idTipo.toString()}
+              labelExtractor={(item: TipoCalzado) => item.Nombre}
+              onChange={(item: TipoCalzado) => setTipoCalzado(item)}
+              cancelText='Cancelar'
+              cancelStyle={styles.cancelButton}
+              cancelTextStyle={styles.cancelText}
+            >
+              <TextInput
+                editable={false}
+                mode='outlined'
+                label='Tipo de calzado'
+                placeholder='Tipo de calzado'
+                value={tipoCalzado?.Nombre || ''}
+              />
+            </ModalSelector>
+
+            
+            <TextInput
+              label='Modelo'
+              mode='outlined'
+              value={modelo}
+              editable={false}
+            />
+
+            <TextInput
+              mode='outlined'
+              label='Fecha de creación'
+              value={currentDate}
+              editable={false}
+              right={<TextInput.Icon icon='calendar' />}
+            />
+
+            <TextInput
+              label='Fecha de entrega'
+              mode='outlined'
+              value={fechaEntrega.toISOString().split('T')[0]}
+              editable={false}
+              right={
+                <TextInput.Icon
+                  icon='calendar'
+                  onPress={() => setOpenDatePicker(!openDatePicker)}
+                />
+              }
+            />
+
+            {openDatePicker && (
+              <View style={{backgroundColor:contentColor}}>
+                <DateTimePicker
+                  value={fechaEntrega}
+                  mode='date'
+                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                  onChange={(event, selectedDate) => {
+                    setOpenDatePicker(false);
+                    if (selectedDate) setFechaEntrega(selectedDate);
+                  }}
+                />
+              </View>
+            )}
+          </View>
+
+          {/* Series */}
+          <View className='flex mt-4 mb-4 gap-5'>
+            <View className='flex-row items-center gap-4'>
+              <ThemedText className='font-bold'>Serie Inicio</ThemedText>
+              <View className='h-8 border-l-2 items-center justify-center w-[30%]'>
+                <ModalSelector
+                  data={opcionesSerieInicio}
+                  onChange={(talla: OpcionSelector) => setSelectSerieInicio(talla.key)}
+                  cancelText='Cancelar'
+                  cancelStyle={styles.cancelButton}
+                  cancelTextStyle={styles.cancelText}
+                >
+                  <TextInput
+                    editable={false}
+                    style={{ height: 40 }}
+                    placeholder='Talla'
+                    value={selectSerieInicio}
+                    className='rounded-lg font-bold w-full'
+                  />
+                </ModalSelector>
+              </View>
+            </View>
+
+            <View className='flex-row items-center gap-4'>
+              <ThemedText className='font-bold'>Serie Fin</ThemedText>
+              <View className='h-8  border-l-2 items-center justify-center w-[30%]'>
+                <ModalSelector
+                  data={opcionesSerieFin}
+                  onChange={(talla: OpcionSelector) => setSelectSerieFin(talla.key)}
+                  cancelText='Cancelar'
+                  cancelStyle={styles.cancelButton}
+                  cancelTextStyle={styles.cancelText}
+                >
+                  <TextInput
+                    editable={false}
+                    style={{ height: 40 }}
+                    placeholder='Talla'
+                    value={selectSerieFin}
+                    className='rounded-lg font-bold w-full'
+                  />
+                </ModalSelector>
+              </View>
             </View>
           </View>
 
-          <View className='flex-row items-center gap-4'>
-            <ThemedText className='font-bold'>Serie Fin</ThemedText>
-            <View className='h-8  border-l-2 items-center justify-center w-[30%]'>
-              <ModalSelector
-                data={opcionesSerieFin}
-                onChange={(talla: OpcionSelector) => setSelectSerieFin(talla.key)}
-                cancelText='Cancelar'
-                cancelStyle={styles.cancelButton}
-                cancelTextStyle={styles.cancelText}
-              >
-                <TextInput
-                  editable={false}
-                  style={{ height: 40 }}
-                  placeholder='Talla'
-                  value={selectSerieFin}
-                  className='rounded-lg font-bold w-full'
-                />
-              </ModalSelector>
+          {/* Filas de características */}
+          {filas.map((fila, index) => (
+            <View key={fila.id} className='flex-row justify-between items-center mb-2'>
+              <TextInput
+                label='Talla'
+                className='rounded flex-1'
+                keyboardType='numeric'
+                placeholder='Talla'
+                style={{ height: 40, width: width * 0.25 }}
+                mode='outlined'
+                value={fila.talla}
+                onChangeText={(text) => {
+                  const nuevasFilas = [...filas];
+                  nuevasFilas[index].talla = text;
+                  setFilas(nuevasFilas);
+                }}
+              />
+              
+              <TextInput
+                label='Pares'
+                className='rounded flex-1'
+                placeholder='Pares'
+                style={{ height: 40, width: width * 0.25 }}
+                mode='outlined'
+                keyboardType='numeric'
+                value={fila.pares}
+                onChangeText={(text) => {
+                  const nuevasFilas = [...filas];
+                  nuevasFilas[index].pares = text;
+                  setFilas(nuevasFilas);
+                }}
+              />
+              
+              <TextInput
+                label='Color'
+                className='rounded flex-1'
+                placeholder='Color'
+                style={{ height: 40, width: width * 0.25 }}
+                mode='outlined'
+                value={fila.color}
+                onChangeText={(text) => {
+                  const nuevasFilas = [...filas];
+                  nuevasFilas[index].color = text;
+                  setFilas(nuevasFilas);
+                }}
+              />
+              
+              <TouchableOpacity onPress={() => handleEliminarFila(fila.id)}>
+                <Icon source='delete' size={20} color='red' />
+              </TouchableOpacity>
             </View>
+          ))}
+
+          <TouchableOpacity
+            className='flex-row gap-2 justify-center items-center mt-2'
+            onPress={handleAgregarFila}
+          >
+            <ThemedText className='text-lg'>Agregar</ThemedText>
+            <Icon source='plus-circle' size={20} color={iconColor}/>
+          </TouchableOpacity>
+
+          {/* Detalle de la orden */}
+          <ThemedText className='font-bold mt-4 text-lg mx-auto'>Detalle de la orden</ThemedText>
+          
+          <View className='mt-2 gap-2'>
+            <TextInput
+              label='Taco'
+              mode='outlined'
+              placeholder='Nombre de taco'
+              value={nombreTaco}
+              onChangeText={setNombreTaco}
+              className='rounded-lg h-10'
+            />
           </View>
-        </View>
 
-        {/* Filas de características */}
-        {filas.map((fila, index) => (
-          <View key={fila.id} className='flex-row justify-between items-center mb-2'>
-            <TextInput
-              label='Talla'
-              className='rounded flex-1'
-              keyboardType='numeric'
-              placeholder='Talla'
-              style={{ height: 40, width: width * 0.25 }}
-              mode='outlined'
-              value={fila.talla}
-              onChangeText={(text) => {
-                const nuevasFilas = [...filas];
-                nuevasFilas[index].talla = text;
-                setFilas(nuevasFilas);
-              }}
-            />
-            
-            <TextInput
-              label='Pares'
-              className='rounded flex-1'
-              placeholder='Pares'
-              style={{ height: 40, width: width * 0.25 }}
-              mode='outlined'
-              keyboardType='numeric'
-              value={fila.pares}
-              onChangeText={(text) => {
-                const nuevasFilas = [...filas];
-                nuevasFilas[index].pares = text;
-                setFilas(nuevasFilas);
-              }}
-            />
-            
-            <TextInput
-              label='Color'
-              className='rounded flex-1'
-              placeholder='Color'
-              style={{ height: 40, width: width * 0.25 }}
-              mode='outlined'
-              value={fila.color}
-              onChangeText={(text) => {
-                const nuevasFilas = [...filas];
-                nuevasFilas[index].color = text;
-                setFilas(nuevasFilas);
-              }}
-            />
-            
-            <TouchableOpacity onPress={() => handleEliminarFila(fila.id)}>
-              <Icon source='delete' size={20} color='red' />
-            </TouchableOpacity>
+          <View className='mt-2 flex-row items-center gap-8'>
+            <ThemedText className='font-bold'>Altura de taco:</ThemedText>
+            <ModalSelector
+              data={opcionesTaco}
+              onChange={(talla: OpcionSelector) => setTallaTaco(talla.key)}
+              cancelText='Cancelar'
+              cancelStyle={styles.cancelButton}
+              cancelTextStyle={styles.cancelText}
+            >
+              <TextInput
+                editable={false}
+                placeholder='Seleccione una talla'
+                style={{ height: 40 }}
+                value={tallaTaco}
+                className='rounded-lg font-bold'
+              />
+            </ModalSelector>
           </View>
-        ))}
 
-        <TouchableOpacity
-          className='flex-row gap-2 justify-center items-center mt-2'
-          onPress={handleAgregarFila}
-        >
-          <ThemedText className='text-lg'>Agregar</ThemedText>
-          <Icon source='plus-circle' size={20} color={iconColor}/>
-        </TouchableOpacity>
+          <View className='gap-2 mt-2 mb-4'>
+            <ModalSelector
+              data={opcionesMaterial}
+              onChange={(material: OpcionSelector) => setMaterial(material.label)}
+              cancelText='Cancelar'
+            >
+              <TextInput
+                label='Material'
+                mode='outlined'
+                editable={false}
+                value={material}
+              />
+            </ModalSelector>
 
-        {/* Detalle de la orden */}
-        <ThemedText className='font-bold mt-4 text-lg mx-auto'>Detalle de la orden</ThemedText>
-        
-        <View className='mt-2 gap-2'>
-          <TextInput
-            label='Taco'
-            mode='outlined'
-            placeholder='Nombre de taco'
-            value={nombreTaco}
-            onChangeText={setNombreTaco}
-            className='rounded-lg h-10'
-          />
-        </View>
+            <ModalSelector
+              data={opcionesTipoMaterial}
+              onChange={(tipoMaterial: OpcionSelector) => setTipoMaterial(tipoMaterial.label)}
+              cancelText='Cancelar'
+            >
+              <TextInput
+                label='Tipo de Material'
+                mode='outlined'
+                editable={false}
+                value={tipoMaterial}
+              />
+            </ModalSelector>
 
-        <View className='mt-2 flex-row items-center gap-8'>
-          <ThemedText className='font-bold'>Altura de taco:</ThemedText>
-          <ModalSelector
-            data={opcionesTaco}
-            onChange={(talla: OpcionSelector) => setTallaTaco(talla.key)}
-            cancelText='Cancelar'
-            cancelStyle={styles.cancelButton}
-            cancelTextStyle={styles.cancelText}
-          >
             <TextInput
-              editable={false}
-              placeholder='Seleccione una talla'
-              style={{ height: 40 }}
-              value={tallaTaco}
-              className='rounded-lg font-bold'
-            />
-          </ModalSelector>
-        </View>
-
-        <View className='gap-2 mt-2 mb-4'>
-          <ModalSelector
-            data={opcionesMaterial}
-            onChange={(material: OpcionSelector) => setMaterial(material.label)}
-            cancelText='Cancelar'
-          >
-            <TextInput
-              label='Material'
+              label='Suela'
               mode='outlined'
-              editable={false}
-              value={material}
+              value={suela}
+              placeholder='Suela'
+              onChangeText={setSuela}
             />
-          </ModalSelector>
 
-          <ModalSelector
-            data={opcionesTipoMaterial}
-            onChange={(tipoMaterial: OpcionSelector) => setTipoMaterial(tipoMaterial.label)}
-            cancelText='Cancelar'
-          >
             <TextInput
-              label='Tipo de Material'
+              label='Accesorios'
               mode='outlined'
-              editable={false}
-              value={tipoMaterial}
+              multiline
+              numberOfLines={1}
+              value={accesorios}
+              placeholder='Digite los accesorios'
+              onChangeText={setAccesorios}
             />
-          </ModalSelector>
 
-          <TextInput
-            label='Suela'
-            mode='outlined'
-            value={suela}
-            placeholder='Suela'
-            onChangeText={setSuela}
-          />
-
-          <TextInput
-            label='Accesorios'
-            mode='outlined'
-            multiline
-            numberOfLines={1}
-            value={accesorios}
-            placeholder='Digite los accesorios'
-            onChangeText={setAccesorios}
-          />
-
-          <TextInput
-            label='Forro'
-            mode='outlined'
-            value={forro}
-            onChangeText={setForro}
-            placeholder='Forro'
-          />
-        </View>
-        <Pressable
-          onPress={updatePedido}
-          className='flex-row gap-2 items-center justify-center rounded-lg py-2'
-          style={{ backgroundColor: "#634AFF" }}
-        >
-          <ThemedText style={{color:"white"}}>
-          Actualizar Pedido
-          </ThemedText>
-          <Icon source='check' size={20} color="white" />
-        </Pressable>
-      </ScrollView>
+            <TextInput
+              label='Forro'
+              mode='outlined'
+              value={forro}
+              onChangeText={setForro}
+              placeholder='Forro'
+            />
+          </View>
+          <Pressable
+            onPress={updatePedido}
+            className='flex-row gap-2 items-center justify-center rounded-lg py-2'
+            style={{ backgroundColor: "#634AFF" }}
+          >
+            <ThemedText style={{color:"white"}}>
+            Actualizar Pedido
+            </ThemedText>
+            <Icon source='check' size={20} color="white" />
+          </Pressable>
+        </ScrollView>
     </SafeAreaView>
   );
 };
