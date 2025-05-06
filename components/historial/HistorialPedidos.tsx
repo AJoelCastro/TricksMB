@@ -160,12 +160,12 @@ const HistorialPedidosAdmin = () => {
   };
 
   return (
-    <ThemedView style={{flex:1, padding:4}}>
-      <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 28, marginVertical:16 }}>
+    <SafeAreaView style={{flex: 1, padding: 8}}>
+      <ThemedText type='title' style={{marginVertical:16}}>
         HISTORIAL DE PEDIDOS
       </ThemedText>
       
-      <View className='flex-col gap-2'>
+      <View className='flex-col gap-2 '>
         <View className='flex-row justify-between'>
           <View className='items-center gap-2'>
             <Pressable
@@ -232,16 +232,15 @@ const HistorialPedidosAdmin = () => {
           </View>
         </View>
       </View>
-      
       {mostrarPedidos && data && (
-        <SafeAreaView className='mt-4'>
-          <Text 
-            style={{ fontFamily: 'Inter-Regular', fontSize: 20, textAlign: 'center' }} 
-            className='text-gray-600 my-2'
-          >
-            PEDIDOS
-          </Text>
-          
+        <SafeAreaView style={{flex: 1, marginTop: 16}} >
+          <View style={{backgroundColor: contentColor, padding:2}}>
+            <ThemedText 
+              style={{ fontFamily: 'Inter-Regular', fontSize: 20, textAlign: 'center' }} 
+            >
+              PEDIDOS
+            </ThemedText>
+          </View>
           <FlatList
             data={data}
             keyExtractor={item => item.Codigo_pedido}
@@ -249,7 +248,7 @@ const HistorialPedidosAdmin = () => {
               <View style={{
                 padding: 8, // Equivalente a p-2
                 gap: 16, // Equivalente a gap-4 (1 gap unit = 4px)
-                marginVertical: 8, // Equivalente a my-2
+                marginVertical: 4, // Equivalente a my-2
                 backgroundColor: contentColor,
                 borderRadius: 8,
                 shadowColor: '#000',
@@ -306,11 +305,14 @@ const HistorialPedidosAdmin = () => {
                 </Pressable>
               </View>
             )}
-          />
+            style={{flex: 1}}
+          /> 
+          
         </SafeAreaView>
+        
       )}
       
-      <Modal visible={showCardDetail} transparent={true} animationType='fade'>
+      <Modal visible={showCardDetail} animationType='fade'>
         <SafeAreaView className='flex-1 justify-center items-center'>
           <ThemedView className='p-2 gap-4 my-2 w-full h-full'>
             <ThemedView style={{
@@ -379,15 +381,15 @@ const HistorialPedidosAdmin = () => {
                 className='items-center rounded-full p-4'
                 onPress={() => setShowCardDetail(false)}
               >
-                <Text style={{ fontFamily: 'Inter-Regular', fontSize: 16 }} className='text-[#634AFF]'>
+                <ThemedText style={{ fontFamily: 'Inter-Regular', fontSize: 16, color: "#634AFF" }} >
                   Cerrar
-                </Text>
+                </ThemedText>
               </Pressable>
             </View>
           </ThemedView>
         </SafeAreaView>
       </Modal>
-    </ThemedView>
+    </SafeAreaView>
   );
 };
 

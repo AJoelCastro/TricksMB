@@ -39,7 +39,7 @@ const DashboardSinScroll = ({ children }: Props) => {
   };
 
   return (
-    <ThemedView className='h-full'>
+    <ThemedView className='flex-1'>
       <TopBar
         icon1="menu"
         onPress1={() => navigation.dispatch(DrawerActions.openDrawer())}
@@ -50,9 +50,7 @@ const DashboardSinScroll = ({ children }: Props) => {
         settingsButtonRef={settingsButtonRef}
       />
       {/* seccion en donde debe de ir el children */}
-      <SafeAreaView>
-        <View style={{marginBottom:32}}>{children}</View>
-      </SafeAreaView>
+      <View style={{flex: 1}}>{children}</View>
 
       {/* Modal de acciones */}
       <Modal
