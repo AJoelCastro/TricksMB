@@ -17,7 +17,7 @@ import {
   ScrollView,
 } from 'react-native-gesture-handler';
 import { Image } from 'expo-image';
-import { TextInput, Card, Divider } from 'react-native-paper';
+import { TextInput, Divider } from 'react-native-paper';
 import { useFocusEffect } from 'expo-router';
 import ModeloService from '@/services/ModeloService';
 
@@ -85,16 +85,16 @@ const InventariadoAdmin = () => {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={80}
-        className='flex-1'
+        style={{ flex: 1 }}
       >
-        <View className='bg-white h-full p-2 flex-1'>
-          <View className='p-2'>
+        <View style={{ backgroundColor: 'white', height: '100%', padding: 8, flex: 1 }}>
+          <View style={{ padding: 8 }}>
             <Text style={{ fontFamily: 'Inter-Black', fontSize: 28 }}>
               Inventario
             </Text>
           </View>
           
-          <View className='items-center'>
+          <View style={{ alignItems: 'center' }}>
             <Carousel
               loop
               width={width * 0.98}
@@ -104,30 +104,40 @@ const InventariadoAdmin = () => {
               scrollAnimationDuration={2000}
               mode='parallax'
               renderItem={({ item }) => (
-                <View key={item.idModelo} className='flex-1'>
-                  <Card className='w-full h-full'>
+                <View key={item.idModelo} style={{ flex: 1 }}>
+                  <View style={{ 
+                    width: '100%', 
+                    height: '100%',
+                    backgroundColor: 'white',
+                    borderRadius: 10,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 4,
+                    elevation: 3,
+                    overflow: 'hidden'
+                  }}>
                     <Image
                       source={{ uri: item.imagen }}
                       style={{
-                        height: '100%',
+                        height: '80%',
                         width: '100%',
-                        borderRadius: 10,
                         backgroundColor: 'white',
                       }}
                       contentFit='contain'
                     />
-                    <View className='items-center'>
+                    <View style={{ alignItems: 'center', padding: 8 }}>
                       <Text style={{ fontSize: 20, fontFamily: 'Inter-Black' }}>
                         Modelo: {item.nombreModelo}
                       </Text>
                     </View>
-                  </Card>
+                  </View>
                 </View>
               )}
             />
           </View>
           
-          <View className='mt-2'>
+          <View style={{ marginTop: 8 }}>
             <TextInput
               label='Buscar Modelo'
               mode='outlined'
@@ -138,20 +148,40 @@ const InventariadoAdmin = () => {
             />
           </View>
           
-          <View className='h-full flex-1 mb-10 mt-4'>
+          <View style={{ height: '100%', flex: 1, marginBottom: 40, marginTop: 16 }}>
             <FlatList
               data={inventario}
               keyExtractor={(item) => item.idModelo}
               renderItem={({ item }) => (
-                <View key={item.idModelo} className='gap-4 mt-2 px-4 flex-row'>
-                  <View className='shadow-md shadow-gray-200 rounded-md'>
+                <View key={item.idModelo} style={{ 
+                  gap: 16, 
+                  marginTop: 8, 
+                  paddingHorizontal: 16, 
+                  flexDirection: 'row',
+                  backgroundColor: 'white',
+                  borderRadius: 8,
+                  padding: 12,
+                  marginHorizontal: 8,
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 4,
+                  elevation: 2
+                }}>
+                  <View style={{ 
+                    shadowColor: 'gray',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.2,
+                    shadowRadius: 4,
+                    borderRadius: 10
+                  }}>
                     <Image
                       source={{ uri: item.imagen }}
                       style={{ width: 150, height: 150, borderRadius: 10 }}
                       contentFit='contain'
                     />
                   </View>
-                  <View className='flex-1 gap-2 justify-center'>
+                  <View style={{ flex: 1, gap: 8, justifyContent: 'center' }}>
                     <Text style={{ fontSize: 20, fontFamily: 'Inter-Black' }}>
                       Modelo: {item.nombreModelo}
                     </Text>
