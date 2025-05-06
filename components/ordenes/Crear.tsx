@@ -465,7 +465,7 @@ const CrearOrden: React.FC = () => {
             />
 
             {showFilteredClientes && filteredClientes.length > 0 && (
-              <ThemedView className='absolute z-10 top-16 w-full rounded-lg shadow-md max-h-80 right-0 left-0 shadow-black/20'>
+              <ThemedView className='absolute z-10 top-16 w-full rounded-lg shadow-md max-h-80 right-0 left-0 shadow-black/20' style={{backgroundColor:contentColor}}>
                 {filteredClientes.map(item => (
                   <View key={item.identificador}>
                     <Pressable
@@ -491,17 +491,31 @@ const CrearOrden: React.FC = () => {
           </View>
 
           {/* Info Cliente */}
-          {tipoCliente === 'natural' && cliente?.Nombre && (
-            <View className='gap-2 my-2'>
-              <ThemedText className='text-lg font-bold'>Nombre: {cliente.Nombre}</ThemedText>
+          {(tipoCliente === 'natural' && cliente?.Nombre) || 
+          (tipoCliente === 'juridico' && cliente?.Razon_social) ? (
+            <View style={{
+              backgroundColor: contentColor,
+              borderRadius: 10,
+              padding: 14,
+              marginVertical: 10,
+              borderLeftWidth: 4,
+              borderLeftColor: '#6366f1'
+            }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap:4 }}>
+                <Icon 
+                  source={tipoCliente === 'natural' ? 'account' : 'office-building'} 
+                  size={22} 
+                  color="#6366f1" 
+                />
+                <ThemedText style={{
+                  fontSize: 16,
+                  fontWeight: '400',
+                }}>
+                  {tipoCliente === 'natural' ? cliente.Nombre : cliente.Razon_social}
+                </ThemedText>
+              </View>
             </View>
-          )}
-
-          {tipoCliente === 'juridico' && cliente?.Razon_social && (
-            <View className='gap-2 my-2'>
-              <ThemedText className='text-lg font-bold'>Razón Social: {cliente.Razon_social}</ThemedText>
-            </View>
-          )}
+          ) : null}
 
           {/* Selectores */}
           <View className='gap-2'>

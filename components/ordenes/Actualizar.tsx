@@ -14,13 +14,18 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Card, Checkbox, Divider, TextInput, Icon } from 'react-native-paper';
+
 import DetallePedidoService from '@/services/DetallePedidoService';
 import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 import EmpleadoService from '@/services/EmpleadoService';
+
 import { ThemedText } from '../ThemedText';
 import { ThemedView } from '../ThemedView';
-import ShowError from '../ShowError';
 
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { Colors } from '@/constants/Colors';
+
+import ShowError from '../ShowError';
 interface Empleado {
   idEmpleado: number;
   Dni: string;
@@ -350,10 +355,10 @@ const IndexActualizarOrden = () => {
     if (showEmpleadosAsignados) {
       return (
         <ThemedView className='gap-1 mt-2'>
-          <ThemedView className='p-2 bg-white border-b border-gray-300 items-center'>
-            <Text className='text-lg font-bold text-black'>
+          <ThemedView className='p-2  border-b border-gray-300 items-center' style={{backgroundColor:contentColor}}>
+            <ThemedText className='text-lg font-bold'>
               Empleados Asignados
-            </Text>
+            </ThemedText>
           </ThemedView>
           <View>
             <FlatList
@@ -363,7 +368,7 @@ const IndexActualizarOrden = () => {
                 <View style={{
                   marginBottom: 10,
                   borderRadius: 10,
-                  backgroundColor: '#fff',
+                  backgroundColor: contentColor,
                   shadowColor: '#000',
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 0.1,
@@ -377,19 +382,17 @@ const IndexActualizarOrden = () => {
                   }}>
                     <View style={{ padding: 16 }}>
                       <View style={{ gap: 4 }}>
-                        <Text style={{
+                        <ThemedText style={{
                           fontSize: 16,
                           fontWeight: '600',
-                          color: '#1a1a1a'
                         }}>
                           Nombres: {item.Nombres}
-                        </Text>
-                        <Text style={{
+                        </ThemedText>
+                        <ThemedText style={{
                           fontSize: 16,
-                          color: '#4d4d4d'
                         }}>
                           DNI: {item.DNI}
-                        </Text>
+                        </ThemedText>
                       </View>
                     </View>
                   </View>
@@ -404,12 +407,12 @@ const IndexActualizarOrden = () => {
     if (empleados.length > 0) {
       return (
         <ThemedView className='gap-1 mt-2'>
-          <View className='p-2 bg-white border-b border-gray-300 items-center'>
-            <Text className='text-lg font-bold text-black'>
+          <View className='p-2 border-b border-gray-300 items-center' style={{backgroundColor:contentColor}}>
+            <ThemedText className='text-lg font-bold'>
               Empleados Asignados
-            </Text>
+            </ThemedText>
           </View>
-          <View className='bg-white p-4 rounded-lg w-[100%]'>
+          <View className='p-4 rounded-lg w-[100%]' style={{backgroundColor:contentColor}}>
             <FlatList
               data={empleados}
               keyExtractor={item => item.idEmpleado.toString()}
@@ -417,7 +420,7 @@ const IndexActualizarOrden = () => {
                 <View style={{
                   marginBottom: 10,
                   borderRadius: 10,
-                  backgroundColor: 'white',
+                  backgroundColor: contentColor,
                   shadowColor: '#000',
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 0.1,
@@ -431,19 +434,17 @@ const IndexActualizarOrden = () => {
                   }}>
                     <View style={{ flex: 1 }}>
                       <View style={{ gap: 6 }}>
-                        <Text style={{
+                        <ThemedText style={{
                           fontSize: 16,
                           fontWeight: '600',
-                          color: '#333'
                         }}>
                           Nombres: {item.Nombres}
-                        </Text>
-                        <Text style={{
+                        </ThemedText>
+                        <ThemedText style={{
                           fontSize: 14,
-                          color: '#666'
                         }}>
                           DNI: {item.Dni}
-                        </Text>
+                        </ThemedText>
                       </View>
                     </View>
                   </View>
@@ -453,13 +454,13 @@ const IndexActualizarOrden = () => {
           </View>
           <View className='flex-row gap-4 justify-center'>
             <Pressable onPress={() => setShowModal(!showModal)}>
-              <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#15a1ff] rounded-xl p-2 mx-auto'>
+              <View className='flex-row justify-center items-center gap-2 mt-2 rounded-xl p-2 mx-auto' style={{backgroundColor:backIconColor}}>
                 <ThemedText className='text-xl font-bold'>Agregar</ThemedText>
-                <Icon source='plus' size={20} color='#fff' />
+                <Icon source='plus' size={20} color={iconColor} />
               </View>
             </Pressable>
             <Pressable onPress={asignarEmpleados}>
-              <View className='flex-row justify-center items-center gap-2 mt-2 bg-[#13bf1e] px-6 rounded-xl p-2 mx-auto'>
+              <View className='flex-row justify-center items-center gap-2 mt-2 px-6 rounded-xl p-2 mx-auto' style={{backgroundColor: contentColor}}>
                 <ThemedText className='text-xl font-bold '>Asignar</ThemedText>
               </View>
             </Pressable>
@@ -471,15 +472,40 @@ const IndexActualizarOrden = () => {
     return (
       <Pressable
         onPress={() => setShowModal(!showModal)}
-        className='rounded-xl p-3 bg-gray-700 mt-3'
+        className='rounded-xl p-3 mt-3'
+        style={{ backgroundColor: backIconColor }}
       >
-        <Text className='text-white mx-auto text-lg font-semibold'>
+        <ThemedText className='mx-auto text-lg font-semibold'>
           Asignar Empleados
-        </Text>
+        </ThemedText>
       </Pressable>
     );
   };
 
+  const contentColor = useThemeColor(
+    { light: Colors.light.content, dark: Colors.dark.content },
+    'content'
+  );
+  const backgroundColor = useThemeColor(
+    { light: Colors.light.background, dark: Colors.dark.background },
+    'background'
+  );
+  const textColor = useThemeColor(
+      { light: Colors.light.text, dark: Colors.dark.text },
+      'text'
+  );
+  const iconColor = useThemeColor(
+      { light: Colors.light.icon, dark: Colors.dark.icon },
+      'icon'
+  );
+  const tabColor = useThemeColor(
+      { light: Colors.light.tabIconSelected, dark: Colors.dark.tabIconSelected },
+      'tabIconSelected'
+  );
+  const backIconColor = useThemeColor(
+      { light: Colors.light.backIcon, dark: Colors.dark.backIcon },
+      'backIcon'
+  );
   return (
     <KeyboardAvoidingView
     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -517,7 +543,7 @@ const IndexActualizarOrden = () => {
                     }
                 />
                 {showSuggestions && filteredSuggestions.length > 0 && (
-                    <View className='absolute z-10 top-16 w-full bg-white rounded-lg shadow-md max-h-80 right-0 left-0'>
+                    <View className='absolute z-10 top-16 w-full rounded-lg shadow-md max-h-80 right-0 left-0' style={{backgroundColor:contentColor}}>
                       <FlatList
                         data={filteredSuggestions}
                         keyExtractor={item => item.Codigo_pedido}
@@ -533,13 +559,12 @@ const IndexActualizarOrden = () => {
                               borderRadius: 6,
                               marginVertical: 4
                             }}>
-                              <Text style={{
+                              <ThemedText style={{
                                 fontSize: 14,
                                 fontWeight: '500',
-                                color: '#333'
                               }}>
                                 {item.Codigo_pedido}
-                              </Text>
+                              </ThemedText>
                             </View>
                             <Divider/>
                           </TouchableOpacity>
@@ -609,7 +634,7 @@ const IndexActualizarOrden = () => {
               }}>
                 <SafeAreaView style={{ width: '90%', maxHeight: '80%' }}>
                   <View style={{ 
-                    backgroundColor: 'white',
+                    backgroundColor: contentColor,
                     borderRadius: 10,
                     padding: 16,
                     maxHeight: '100%'
@@ -621,7 +646,6 @@ const IndexActualizarOrden = () => {
                         <View style={{
                           marginBottom: 10,
                           borderRadius: 10,
-                          backgroundColor: 'white',
                           shadowColor: '#000',
                           shadowOffset: { width: 0, height: 2 },
                           shadowOpacity: 0.1,
@@ -644,24 +668,24 @@ const IndexActualizarOrden = () => {
                                 marginRight: 12
                               }}>
                                 {checkedEmpleados[item.idEmpleado] && (
-                                  <Text style={{ color: 'white' }}>✓</Text>
+                                  <ThemedText >✓</ThemedText>
                                 )}
                               </View>
                             </TouchableOpacity>
                             
                             <View>
-                              <Text style={{ fontSize: 16, fontWeight: '600' }}>
+                              <ThemedText style={{ fontSize: 16, fontWeight: '600' }}>
                                 {item.Nombres}
-                              </Text>
-                              <Text style={{ color: '#666' }}>DNI: {item.Dni}</Text>
+                              </ThemedText>
+                              <ThemedText >DNI: {item.Dni}</ThemedText>
                             </View>
                           </View>
                         </View>
                       )}
                       ListEmptyComponent={
-                        <Text style={{ textAlign: 'center', padding: 20 }}>
+                        <ThemedText style={{ textAlign: 'center', padding: 20 }}>
                           No hay empleados disponibles
-                        </Text>
+                        </ThemedText>
                       }
                     />
                     
@@ -674,7 +698,7 @@ const IndexActualizarOrden = () => {
                         marginTop: 10
                       }}
                     >
-                      <Text style={{ color: 'white', textAlign: 'center' }}>Cerrar</Text>
+                      <ThemedText style={{ textAlign: 'center' }}>Cerrar</ThemedText>
                     </Pressable>
                   </View>
                 </SafeAreaView>
