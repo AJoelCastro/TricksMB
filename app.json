@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "TricksMB",
-    "slug": "TricksMB",
+    "slug": "tricksapp",
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/images/TricksLogo.png",
@@ -16,9 +16,14 @@
         "UISupportedInterfaceOrientations": [
           "UIInterfaceOrientationPortrait",
           "UIInterfaceOrientationLandscapeLeft",
+          "UIInterfaceOrientationLandscapeRight",
+          "UIInterfaceOrientationPortrait",
+          "UIInterfaceOrientationLandscapeLeft",
           "UIInterfaceOrientationLandscapeRight"
-        ]
-      }
+        ],
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.artur777.tricksapp"
     },
     "android": {
       "adaptiveIcon": {
@@ -26,7 +31,12 @@
         "backgroundColor": "#ffffff"
       },
       "softwareKeyboardLayoutMode": "resize",
-      "screenOrientation": "portrait"
+      "screenOrientation": "portrait",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.artur777.tricksapp"
     },
     "web": {
       "bundler": "metro",
@@ -54,12 +64,21 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/"]
+          "fonts": [
+            "./assets/fonts/"
+          ]
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "6e63018c-ecc8-47d1-92e0-e549a999821f"
+      }
+    },
+    "owner": "artur777"
   }
 }
