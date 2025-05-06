@@ -7,20 +7,21 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
 } from 'react-native';
-import { useFonts } from 'expo-font';
 import Carousel from 'react-native-reanimated-carousel';
-import * as SplashScreen from 'expo-splash-screen';
-import {
-  FlatList,
-  GestureHandlerRootView,
-  ScrollView,
-} from 'react-native-gesture-handler';
+import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Image } from 'expo-image';
-import { TextInput, Divider } from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 import { useFocusEffect } from 'expo-router';
-import ModeloService from '@/services/ModeloService';
 
+import ModeloService from '@/services/ModeloService';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { Colors } from '@/constants/Colors';
+
+import { ThemedText } from '../ThemedText';
+
+import * as SplashScreen from 'expo-splash-screen';
 // Type definitions
 type InventoryItem = {
   idModelo: string;
@@ -40,23 +41,9 @@ SplashScreen.preventAutoHideAsync();
 const { width, height } = Dimensions.get('window');
 
 const InventariadoAdmin = () => {
+
   const [inventario, setInventario] = useState<InventoryItem[]>([]);
   const [busqueda, setBusqueda] = useState<string | null>(null);
-  
-  const images: CarouselImage[] = [
-    {
-      id: '1',
-      url: 'https://r-charts.com/es/miscelanea/procesamiento-imagenes-magick_files/figure-html/color-fondo-imagen-r.png',
-    },
-    {
-      id: '2',
-      url: 'https://r-charts.com/es/miscelanea/procesamiento-imagenes-magick_files/figure-html/color-fondo-imagen-r.png',
-    },
-    {
-      id: '3',
-      url: 'https://r-charts.com/es/miscelanea/procesamiento-imagenes-magick_files/figure-html/color-fondo-imagen-r.png',
-    },
-  ];
 
   useFocusEffect(
     useCallback(() => {
@@ -80,6 +67,32 @@ const InventariadoAdmin = () => {
     );
   };
 
+  const backgroundColor = useThemeColor(
+    { light: Colors.light.background, dark: Colors.dark.background },
+    'background'
+  );
+  const textColor = useThemeColor(
+      { light: Colors.light.text, dark: Colors.dark.text },
+      'text'
+  );
+  const iconColor = useThemeColor(
+      { light: Colors.light.icon, dark: Colors.dark.icon },
+      'icon'
+  );
+  const tabColor = useThemeColor(
+      { light: Colors.light.tabIconSelected, dark: Colors.dark.tabIconSelected },
+      'tabIconSelected'
+  );
+  const backIconColor = useThemeColor(
+      { light: Colors.light.backIcon, dark: Colors.dark.backIcon },
+      'backIcon'
+  );
+  const contentColor = useThemeColor(
+      { light: Colors.light.content, dark: Colors.dark.content },
+      'content'
+  );
+
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <KeyboardAvoidingView
@@ -87,14 +100,9 @@ const InventariadoAdmin = () => {
         keyboardVerticalOffset={80}
         style={{ flex: 1 }}
       >
-        <View style={{ backgroundColor: 'white', height: '100%', padding: 8, flex: 1 }}>
-          <View style={{ padding: 8 }}>
-            <Text style={{ fontFamily: 'Inter-Black', fontSize: 28 }}>
-              Inventario
-            </Text>
-          </View>
+        <View style={{ backgroundColor: backgroundColor, height: '100%', padding: 8, flex: 1 }}>
           
-          <View style={{ alignItems: 'center' }}>
+          <View style={{ alignItems: 'center',backgroundColor: contentColor, }}>
             <Carousel
               loop
               width={width * 0.98}
@@ -108,7 +116,6 @@ const InventariadoAdmin = () => {
                   <View style={{ 
                     width: '100%', 
                     height: '100%',
-                    backgroundColor: 'white',
                     borderRadius: 10,
                     shadowColor: '#000',
                     shadowOffset: { width: 0, height: 2 },
@@ -127,9 +134,9 @@ const InventariadoAdmin = () => {
                       contentFit='contain'
                     />
                     <View style={{ alignItems: 'center', padding: 8 }}>
-                      <Text style={{ fontSize: 20, fontFamily: 'Inter-Black' }}>
+                      <ThemedText style={{ fontSize: 22, fontFamily: 'Inter-ligth' }}>
                         Modelo: {item.nombreModelo}
-                      </Text>
+                      </ThemedText>
                     </View>
                   </View>
                 </View>
@@ -148,7 +155,7 @@ const InventariadoAdmin = () => {
             />
           </View>
           
-          <View style={{ height: '100%', flex: 1, marginBottom: 40, marginTop: 16 }}>
+          <SafeAreaView style={{ height: '100%', flex: 1, marginTop: 16 }}>
             <FlatList
               data={inventario}
               keyExtractor={(item) => item.idModelo}
@@ -156,9 +163,9 @@ const InventariadoAdmin = () => {
                 <View key={item.idModelo} style={{ 
                   gap: 16, 
                   marginTop: 8, 
-                  paddingHorizontal: 16, 
+                  paddingHorizontal: 2, 
                   flexDirection: 'row',
-                  backgroundColor: 'white',
+                  backgroundColor: contentColor,
                   borderRadius: 8,
                   padding: 12,
                   marginHorizontal: 8,
@@ -182,20 +189,20 @@ const InventariadoAdmin = () => {
                     />
                   </View>
                   <View style={{ flex: 1, gap: 8, justifyContent: 'center' }}>
-                    <Text style={{ fontSize: 20, fontFamily: 'Inter-Black' }}>
+                    <ThemedText style={{ fontSize: 20, fontFamily: 'Inter-ligth' }}>
                       Modelo: {item.nombreModelo}
-                    </Text>
-                    <Text style={{ fontSize: 16, fontFamily: 'Inter-Black' }}>
+                    </ThemedText>
+                    <ThemedText style={{ fontSize: 16, fontFamily: 'Inter-ligth' }}>
                       Stock: {item.stockDisponible}
-                    </Text>
-                    <Text style={{ fontSize: 16, fontFamily: 'Inter-Black' }}>
+                    </ThemedText>
+                    <ThemedText style={{ fontSize: 16, fontFamily: 'Inter-ligth' }}>
                       Almacen(es): {item.nombreAlmacen}
-                    </Text>
+                    </ThemedText>
                   </View>
                 </View>
               )}
             />
-          </View>
+          </SafeAreaView>
         </View>
       </KeyboardAvoidingView>
     </GestureHandlerRootView>
