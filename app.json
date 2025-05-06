@@ -11,7 +11,6 @@
     "ios": {
       "supportsTablet": true,
       "requireFullScreen": true,
-      "screenOrientation": "unspecified",
       "infoPlist": {
         "UISupportedInterfaceOrientations": [
           "UIInterfaceOrientationPortrait",
@@ -31,7 +30,6 @@
         "backgroundColor": "#ffffff"
       },
       "softwareKeyboardLayoutMode": "resize",
-      "screenOrientation": "portrait",
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
