@@ -832,10 +832,10 @@ const CrearOrden: React.FC = () => {
             className='flex-row gap-2 items-center justify-center rounded-lg py-2'
             style={{ backgroundColor: "#634AFF" }}
           >
-            <ThemedText>
+            <ThemedText style={{color:"white" }}>
               Crear Pedido
             </ThemedText>
-            <Icon source='check' size={20} color={iconColor} />
+            <Icon source='check' size={20} color="white"  />
           </Pressable>
 
           <View className='mb-32' />

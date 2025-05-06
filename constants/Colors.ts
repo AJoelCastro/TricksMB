@@ -6,13 +6,13 @@
 export const Colors = {
   light: {
     text: '#1A1A1A',
-    background: '#FDFDFD',
+    background: '#FFFFFF',
     tint: '#00B383',
     icon: '#6B6B6B',
     tabIconDefault: '#A1A1A1',
     tabIconSelected: '#00B383',
-    backIcon: '#E6FFFA',
-    content: '#FFFFFF',
+    backIcon: '#F1F2FA',
+    content: '#FBFEFB',
   },
   dark: {
     text: '#EAEAEA',

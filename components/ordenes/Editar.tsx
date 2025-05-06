@@ -892,16 +892,16 @@ const EditarOrden: React.FC = () => {
               placeholder='Forro'
             />
           </View>
-
-          <Button
-            mode='contained-tonal'
-            icon='note'
-            buttonColor='#6969'
-            textColor='#000'
+          <Pressable
             onPress={updatePedido}
+            className='flex-row gap-2 items-center justify-center rounded-lg py-2'
+            style={{ backgroundColor: "#634AFF" }}
           >
+            <ThemedText style={{color:"white"}}>
             Actualizar Pedido
-          </Button>
+            </ThemedText>
+            <Icon source='check' size={20} color="white" />
+          </Pressable>
 
           <View className='mb-32' />
         </ScrollView>

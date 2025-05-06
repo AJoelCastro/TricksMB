@@ -28,7 +28,7 @@ const IndexOrdenesAdmin = () => {
                     </View>
                     <View>
                         <ThemedText
-                            style={{ fontFamily: 'Inter-Black', fontSize: 16 }}
+                            style={{ fontFamily: 'Inter-ligth', fontSize: 16 }}
                         >
                             Crear Orden
                         </ThemedText>
@@ -44,7 +44,7 @@ const IndexOrdenesAdmin = () => {
                     </View>
                     <View>
                         <ThemedText
-                            style={{ fontFamily: 'Inter-Black', fontSize: 16 }}
+                            style={{ fontFamily: 'Inter-ligth', fontSize: 16 }}
                         >
                             Editar Orden
                         </ThemedText>
@@ -62,7 +62,7 @@ const IndexOrdenesAdmin = () => {
                     </View>
                     <View>
                         <ThemedText
-                            style={{ fontFamily: 'Inter-Black', fontSize: 16 }}
+                            style={{ fontFamily: 'Inter-ligth', fontSize: 16 }}
                         >
                             Cancelar Orden
                         </ThemedText>
@@ -78,7 +78,7 @@ const IndexOrdenesAdmin = () => {
                     </View>
                     <View>
                         <ThemedText
-                            style={{ fontFamily: 'Inter-Black', fontSize: 16 }}
+                            style={{ fontFamily: 'Inter-ligth', fontSize: 16 }}
                         >
                             Actualizar Estado
                         </ThemedText>
