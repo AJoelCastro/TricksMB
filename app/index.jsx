@@ -69,17 +69,9 @@ const Home = () => {
       { light: Colors.light.text, dark: Colors.dark.text },
       'text'
   );
-  const tabColor = useThemeColor(
-      { light: Colors.light.tabIconSelected, dark: Colors.dark.tabIconSelected },
-      'tabIconSelected'
-  );
   const backIconColor = useThemeColor(
       { light: Colors.light.backIcon, dark: Colors.dark.backIcon },
       'backIcon'
-  );
-  const contentColor = useThemeColor(
-      { light: Colors.light.content, dark: Colors.dark.content },
-      'content'
   );
 
   return (
