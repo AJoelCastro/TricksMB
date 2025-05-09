@@ -35,18 +35,13 @@ const AuthService = {
       try {
         decoded = jwtDecode(token);
       } catch (error) {
-        console.error('❌ Token inválido:', error);
-        await AuthService.logout();
         return null;
       }
 
       // Verificar si el token ha expirado
       if (decoded.exp * 1000 < Date.now()) {
-        console.warn('⚠️ Token expirado. Cerrando sesión...');
-        await AuthService.logout();
         return null;
       }
-      console.log('✅ Token válidooooo');
       return token;
     } catch (error) {
       throw error;
