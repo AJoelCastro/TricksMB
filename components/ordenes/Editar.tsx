@@ -272,7 +272,6 @@ const EditarOrden: React.FC = () => {
   const cargarDetallePedido = async () => {
     try {
       const data = await DetallePedidoService.obtenerDetallePedido(codigoPedido);
-      console.log("data detalle pedido",data);
       setIdDetallePedido(data.detallePedido.idDetalle_pedido);
       setAccesorios(data.detallePedido.Accesorios);
       setTallaTaco(data.detallePedido.Altura_taco);
@@ -284,31 +283,26 @@ const EditarOrden: React.FC = () => {
       setFechaCreacion(new Date(data.detallePedido.Fecha_creacion));
 
       const dataTipoCalzado = await TipoCalzadoService.getTipoCalzadoByCodigoPedido(codigoPedido);
-      console.log("data tipo calzado",dataTipoCalzado);
-      setTipoCalzado({ idTipo: dataTipoCalzado.idTipo, Nombre: dataTipoCalzado.tipoCalzado.Nombre });
+      setTipoCalzado({ idTipo: dataTipoCalzado.tipoCalzado.idTipo, Nombre: dataTipoCalzado.tipoCalzado.Nombre });
 
       const dataModelo = await ModeloService.getModeloByCodigoPedido(codigoPedido); 
-      console.log("data modelo",dataModelo);
       setModelo(dataModelo.modelo.Nombre);
 
       const dataPedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
-      console.log("data pedido",dataPedido);
       setSelectSerieInicio(dataPedido.pedido.Serie_inicio);
       setSelectSerieFin(dataPedido.pedido.Serie_final);
       setFechaEntrega(new Date(dataPedido.pedido.Fecha_entrega));
 
       const dataCliente = await ClienteService.getClienteByCodigoPedido(codigoPedido);
-      console.log("data cliente",dataCliente);
       setTipoCliente(dataCliente.cliente.Tipo_cliente);
       setCliente(dataCliente.cliente);
 
       const dataCaracteristicas = await CaracteristicasService.getAllCaracteristicasById(data.detallePedido.idDetalle_pedido);
-      console.log("data caracteristicas",dataCaracteristicas);
       const filasTransformadas = dataCaracteristicas.caracteristicas.map((car: any) => ({
         id: car.idCaracteristicas,
-        talla: car.talla.toString(),
-        pares: car.cantidad.toString(),
-        color: car.color
+        talla: car.Talla.toString(),
+        pares: car.Cantidad.toString(),
+        color: car.Color.toString(),
       }));
       setFilas(filasTransformadas);
     } catch (error) {
