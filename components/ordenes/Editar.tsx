@@ -162,7 +162,8 @@ const EditarOrden: React.FC = () => {
   const [filas, setFilas] = useState<Caracteristica[]>([]);
   const [filasEliminadas, setFilasEliminadas] = useState<Caracteristica[]>([]);
   const [filasCreadas, setFilasCreadas] = useState<Caracteristica[]>([]);
-  const [currentDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [fechaCreacion, setFechaCreacion] = useState<Date>(new Date());
+
 
   // Estilos
   const styles = StyleSheet.create({
@@ -271,20 +272,24 @@ const EditarOrden: React.FC = () => {
   const cargarDetallePedido = async () => {
     try {
       const data = await DetallePedidoService.obtenerDetallePedido(codigoPedido);
-      setIdDetallePedido(data.idDetalle_pedido);
-      setAccesorios(data.Accesorios);
-      setTallaTaco(data.Altura_taco);
-      setForro(data.Forro);
-      setMaterial(data.Material);
-      setNombreTaco(data.Nombre_taco);
-      setSuela(data.Suela);
-      setTipoMaterial(data.Tipo_material);
+      console.log("data detalle pedido",data);
+      setIdDetallePedido(data.detallePedido.idDetalle_pedido);
+      setAccesorios(data.detallePedido.Accesorios);
+      setTallaTaco(data.detallePedido.Altura_taco);
+      setForro(data.detallePedido.Forro);
+      setMaterial(data.detallePedido.Material);
+      setNombreTaco(data.detallePedido.Nombre_taco);
+      setSuela(data.detallePedido.Suela);
+      setTipoMaterial(data.detallePedido.Tipo_material);
+      setFechaCreacion(new Date(data.detallePedido.Fecha_creacion));
 
       const dataTipoCalzado = await TipoCalzadoService.getTipoCalzadoByCodigoPedido(codigoPedido);
-      setTipoCalzado({ idTipo: dataTipoCalzado.idTipo, Nombre: dataTipoCalzado.Nombre });
+      console.log("data tipo calzado",dataTipoCalzado);
+      setTipoCalzado({ idTipo: dataTipoCalzado.idTipo, Nombre: dataTipoCalzado.tipoCalzado.Nombre });
 
-      const dataModelo = await ModeloService.getModeloByCodigoPedido(codigoPedido);
-      setModelo(dataModelo.Nombre);
+      const dataModelo = await ModeloService.getModeloByCodigoPedido(codigoPedido); 
+      console.log("data modelo",dataModelo);
+      setModelo(dataModelo.modelo.Nombre);
 
       const dataPedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
       console.log("data pedido",dataPedido);
@@ -293,11 +298,13 @@ const EditarOrden: React.FC = () => {
       setFechaEntrega(new Date(dataPedido.pedido.Fecha_entrega));
 
       const dataCliente = await ClienteService.getClienteByCodigoPedido(codigoPedido);
-      setTipoCliente(dataCliente.Tipo_cliente);
-      setCliente(dataCliente);
+      console.log("data cliente",dataCliente);
+      setTipoCliente(dataCliente.cliente.Tipo_cliente);
+      setCliente(dataCliente.cliente);
 
-      const dataCaracteristicas = await CaracteristicasService.getAllCaracteristicasById(data.idDetalle_pedido);
-      const filasTransformadas = dataCaracteristicas.map((car: any) => ({
+      const dataCaracteristicas = await CaracteristicasService.getAllCaracteristicasById(data.detallePedido.idDetalle_pedido);
+      console.log("data caracteristicas",dataCaracteristicas);
+      const filasTransformadas = dataCaracteristicas.caracteristicas.map((car: any) => ({
         id: car.idCaracteristicas,
         talla: car.talla.toString(),
         pares: car.cantidad.toString(),
@@ -599,7 +606,7 @@ const EditarOrden: React.FC = () => {
             <TextInput
               mode='outlined'
               label='Fecha de creación'
-              value={currentDate}
+              value={fechaCreacion.toISOString().split('T')[0] || ''}
               editable={false}
               right={<TextInput.Icon icon='calendar' />}
             />
@@ -765,7 +772,7 @@ const EditarOrden: React.FC = () => {
                 editable={false}
                 placeholder='Seleccione una talla'
                 style={{ height: 40 }}
-                value={tallaTaco}
+                value={tallaTaco.toString()}
                 className='rounded-lg font-bold'
               />
             </ModalSelector>
