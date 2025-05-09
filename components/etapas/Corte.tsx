@@ -8,8 +8,9 @@ import {
   Platform,
   KeyboardAvoidingView,
   SafeAreaView,
+  Pressable,
 } from 'react-native';
-import { Button, Card, TextInput } from 'react-native-paper';
+import { Button, Card, Icon, TextInput } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -120,17 +121,10 @@ const EtapaCorte = () => {
   const [fechaEntrega, setFechaEntrega] = useState<Date>(new Date());
   const [idDetallePedido, setIdDetallePedido] = useState<string>('');
   const [dataDetalleAreaTrabajo, setDataDetalleAreaTrabajo] = useState<DetalleAreaTrabajo[]>([]);
-  const [actualizado, setActualizado] = useState<boolean>(false);
   const [empleados, setEmpleados] = useState<Empleado[]>([]);
   const [filas, setFilas] = useState<Fila[]>([]);
   const [currentDate, setCurrentDate] = useState<string>('');
 
-  const getFechaActualizacion = (): string => {
-    const date = new Date();
-    return date.toISOString().split('T')[0];
-  };
-
-  const [fechaActualizacion] = useState<string>(getFechaActualizacion());
 
   const lockOrientation = async () => {
     await ScreenOrientation.lockAsync(
@@ -150,11 +144,6 @@ const EtapaCorte = () => {
       };
     }, [])
   );
-
-  const getCurrentDate = (): string => {
-    const date = new Date();
-    return date.toISOString().split('T')[0];
-  };
 
   const mostrarError = (error: Error) => {
     Alert.alert('Error', error.message || 'Error interno del servidor', [
@@ -230,7 +219,7 @@ const EtapaCorte = () => {
       id: item.idCaracteristicas.toString(),
       talla: item.Talla.toString(),
       pares: item.Cantidad.toString(),
-      color: item.Color,
+      color: item.Color.toString(),
     }));
   };
 
@@ -510,35 +499,6 @@ const EtapaCorte = () => {
             </View>
           </View>
           
-          <View className='flex-row mt-4 mb-4 gap-5'>
-            <View className='flex-row items-center gap-4'>
-              <Text className='font-bold'>Serie Inicio</Text>
-              <View className='h-8 bg-gray-100 border-l-2 items-center justify-center w-[30%]'>
-                <TextInput
-                  editable={false}
-                  style={{ height: 40 }}
-                  placeholder='Talla'
-                  placeholderTextColor={'black'}
-                  value={selectSerieInicio}
-                  className='bg-gray-200 rounded-lg font-bold w-full'
-                />
-              </View>
-            </View>
-            <View className='flex-row items-center gap-4'>
-              <Text className='font-bold'>Serie Fin </Text>
-              <View className='h-8 bg-gray-100 border-l-2 items-center justify-center w-[30%]'>
-                <TextInput
-                  editable={false}
-                  style={{ height: 40 }}
-                  placeholder='Talla'
-                  placeholderTextColor={'black'}
-                  value={selectSerieFin}
-                  className='bg-gray-200 rounded-lg font-bold w-full'
-                />
-              </View>
-            </View>
-          </View>
-          
           <View className='flex-row'>
             <View className='flex-1'>
               {filas.map((fila, index) => (
@@ -630,79 +590,16 @@ const EtapaCorte = () => {
             </View>
           </View>
           
-          <Text className='font-bold mt-4 text-lg mx-auto'>
-            Detalle de la orden
-          </Text>
-          
-          <View className='mt-2 gap-2'>
-            <TextInput
-              label='Taco'
-              mode='outlined'
-              placeholder='Nombre de taco'
-              placeholderTextColor={'gray'}
-              value={nombreTaco}
-              className='rounded-lg h-10'
-              editable={false}
-            />
-          </View>
-          
-          <View className='mt-2 flex-row items-center gap-8'>
-            <Text className='font-bold'>Altura de taco:</Text>
-            <TextInput
-              editable={false}
-              style={{ height: 40 }}
-              value={tallaTaco ? `Talla ${tallaTaco}` : 'Seleccione una talla'}
-              className='bg-gray-200 rounded-lg font-bold'
-            />
-          </View>
-          
-          <View className='gap-2 mt-2 mb-4'>
-            <TextInput
-              label={'Material'}
-              mode='outlined'
-              editable={false}
-              value={material}
-            />
-            <TextInput
-              label={'Tipo de Material'}
-              mode='outlined'
-              editable={false}
-              value={tipoMaterial}
-            />
-            <TextInput
-              label={'Suela'}
-              mode='outlined'
-              value={suela}
-              placeholder='Suela'
-              editable={false}
-            />
-            <TextInput
-              label={'Accesorios'}
-              mode='outlined'
-              multiline={true}
-              numberOfLines={1}
-              value={accesorios}
-              placeholder='Digite los accesorios'
-              editable={false}
-            />
-            <TextInput
-              label={'Forro'}
-              mode='outlined'
-              value={forro}
-              placeholder='Forro'
-              editable={false}
-            />
-          </View>
-          
-          <Button
-            mode='contained-tonal'
-            icon='note'
-            buttonColor='#6969'
-            textColor='#000'
+          <Pressable
             onPress={updatePedido}
+            className='flex-row gap-2 items-center justify-center rounded-lg py-2'
+            style={{ backgroundColor: "#634AFF" }}
           >
-            Actualizar Avance
-          </Button>
+            <ThemedText style={{color:"white" }}>
+              Actualizar Avance
+            </ThemedText>
+            <Icon source='check' size={20} color="white"  />
+          </Pressable>
         </SafeAreaView>
       </ScrollView>
   );
