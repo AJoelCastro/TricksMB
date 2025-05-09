@@ -655,7 +655,7 @@ const EditarOrden: React.FC = () => {
                     editable={false}
                     style={{ height: 40 }}
                     placeholder='Talla'
-                    value={selectSerieInicio}
+                    value={selectSerieInicio.toString()}
                     className='rounded-lg font-bold w-full'
                   />
                 </ModalSelector>
@@ -676,7 +676,7 @@ const EditarOrden: React.FC = () => {
                     editable={false}
                     style={{ height: 40 }}
                     placeholder='Talla'
-                    value={selectSerieFin}
+                    value={selectSerieFin.toString()}
                     className='rounded-lg font-bold w-full'
                   />
                 </ModalSelector>
