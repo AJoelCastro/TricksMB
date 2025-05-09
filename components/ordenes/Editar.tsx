@@ -10,7 +10,7 @@ import {
   Modal,
   FlatList,
   Platform,
-  KeyboardAvoidingView,
+  ScaledSize,
   Pressable,
   SafeAreaView,
 } from 'react-native';
@@ -33,6 +33,7 @@ import { ThemedView } from '../ThemedView';
 import { ThemedText } from '../ThemedText';
 
 import ShowError from '../ShowError';
+import * as ScreenOrientation from 'expo-screen-orientation';
 // Types
 type Cliente = {
   id: number;
@@ -71,8 +72,6 @@ type OpcionSelector = {
   key: string;
   label: string;
 };
-
-const { width } = Dimensions.get('window');
 
 const EditarOrden: React.FC = () => {
   // Opciones de selectores
@@ -163,8 +162,59 @@ const EditarOrden: React.FC = () => {
   const [filasEliminadas, setFilasEliminadas] = useState<Caracteristica[]>([]);
   const [filasCreadas, setFilasCreadas] = useState<Caracteristica[]>([]);
   const [fechaCreacion, setFechaCreacion] = useState<Date>(new Date());
+  const [width, setWidth] = useState(Dimensions.get('window').width);
+  const [typeScreen, setTypeScreen] = useState<string>('');
 
 
+  useEffect(() => {
+    // Convertir el valor numérico a un nombre legible
+    const getOrientationName = (orientation: ScreenOrientation.Orientation) => {
+      switch (orientation) {
+        case ScreenOrientation.Orientation.PORTRAIT_UP:
+          return 'Portrait Up';
+        case ScreenOrientation.Orientation.PORTRAIT_DOWN:
+          return 'Portrait Down';
+        case ScreenOrientation.Orientation.LANDSCAPE_LEFT:
+          return 'Landscape Left';
+        case ScreenOrientation.Orientation.LANDSCAPE_RIGHT:
+          return 'Landscape Right';
+        default:
+          return 'Unknown';
+      }
+    };
+
+    // Se ejecuta cada vez que cambia la orientación
+    const subscription = ScreenOrientation.addOrientationChangeListener(event => {
+      const orientation = event.orientationInfo.orientation;
+      setTypeScreen(getOrientationName(orientation));
+    });
+
+    // Obtiene la orientación inicial
+    (async () => {
+      const orientation = await ScreenOrientation.getOrientationAsync();
+      setTypeScreen(getOrientationName(orientation));
+    })();
+
+    // Limpia el listener al desmontar
+    return () => {
+      ScreenOrientation.removeOrientationChangeListener(subscription);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Se ejecuta cada vez que cambia la orientación o tamaño de la pantala
+    const handleChange = ({ window }: { window: ScaledSize }) => {
+      setWidth(window.width);
+    };
+
+    // Escucha algun cambio de dimensiones
+    const subscription = Dimensions.addEventListener('change', handleChange);
+
+    // Se elimina el listener cuando el componente se desmonta
+    return () => {
+      subscription?.remove?.();
+    };
+  }, []);
   // Estilos
   const styles = StyleSheet.create({
     cancelButton: {
@@ -686,7 +736,7 @@ const EditarOrden: React.FC = () => {
                 className='rounded flex-1'
                 keyboardType='numeric'
                 placeholder='Talla'
-                style={{ height: 40, width: width * 0.25 }}
+                style={{ height: 40, width: typeScreen ==='Portrait Up'? width * 0.25 : width /4.2 }} 
                 mode='outlined'
                 value={fila.talla}
                 onChangeText={(text) => {
@@ -700,7 +750,7 @@ const EditarOrden: React.FC = () => {
                 label='Pares'
                 className='rounded flex-1'
                 placeholder='Pares'
-                style={{ height: 40, width: width * 0.25 }}
+                style={{ height: 40, width: typeScreen ==='Portrait Up'? width * 0.25 : width /4.2 }}
                 mode='outlined'
                 keyboardType='numeric'
                 value={fila.pares}
@@ -715,7 +765,7 @@ const EditarOrden: React.FC = () => {
                 label='Color'
                 className='rounded flex-1'
                 placeholder='Color'
-                style={{ height: 40, width: width * 0.25 }}
+                style={{ height: 40, width: typeScreen ==='Portrait Up'? width * 0.25 : width /4.2 }}
                 mode='outlined'
                 value={fila.color}
                 onChangeText={(text) => {
