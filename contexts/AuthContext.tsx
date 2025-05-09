@@ -1,4 +1,5 @@
 import ShowError from '@/components/ShowError';
+import AuthService from '@/services/AuthService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SplashScreen, useRouter } from 'expo-router';
 import { createContext, PropsWithChildren, useEffect, useState } from 'react';
@@ -30,7 +31,7 @@ export const AuthProvider = ({ children } : PropsWithChildren) => {
 
     useEffect(() => {
         const init = async () => {
-            const token = await AsyncStorage.getItem('token');
+            const token = await AuthService.getToken();
             const name = await AsyncStorage.getItem('name');
             const email = await AsyncStorage.getItem('email');
             const role = await AsyncStorage.getItem('role');
