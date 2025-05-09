@@ -73,7 +73,7 @@ const Dashboard = ({ children }: Props) => {
                   paddingVertical: 20,
                   paddingHorizontal: 25,
                   width: '70%',
-                  height: '25%',
+                  height: '30%',
                   borderRadius: 8,
                   borderColor: textColor,
                   borderWidth: 1,
