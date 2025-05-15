@@ -97,21 +97,9 @@ const CrearOrden: React.FC = () => {
 
   const router = useRouter();
 
-  const backgroundColor = useThemeColor(
-    { light: Colors.light.background, dark: Colors.dark.background },
-    'background'
-  );
-  const textColor = useThemeColor(
-      { light: Colors.light.text, dark: Colors.dark.text },
-      'text'
-  );
   const iconColor = useThemeColor(
       { light: Colors.light.icon, dark: Colors.dark.icon },
       'icon'
-  );
-  const tabColor = useThemeColor(
-      { light: Colors.light.tabIconSelected, dark: Colors.dark.tabIconSelected },
-      'tabIconSelected'
   );
   const backIconColor = useThemeColor(
       { light: Colors.light.backIcon, dark: Colors.dark.backIcon },

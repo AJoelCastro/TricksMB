@@ -1,28 +1,27 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import Dashboard from '@/components/Dashboard'
-import { useLocalSearchParams } from 'expo-router'
-import DashboardSinScroll from '@/components/DashBoardSinScroll'
-import EtapaCorte from '@/components/etapas/Corte'
-import DashboardSinDrawerNiScroll from '@/components/DashboardSinDrawerNiScroll'
+import { View, Text } from 'react-native';
+import React from 'react';
+import { useLocalSearchParams } from 'expo-router';
+
+import DashboardSinDrawerNiScroll from '@/components/DashboardSinDrawerNiScroll';
+
+import EtapaCorte from '@/components/etapas/Corte';
+import EtapaPerfilado from '@/components/etapas/Perfilado';
+import EtapaArmado from '@/components/etapas/Armado';
+import EtapaAlistado from '@/components/etapas/Alistado';
 
 const IndexEtapaOrdenAdmin = () => {
-  const data = useLocalSearchParams();
-  console.log(data);
-  const codigoOrden = useLocalSearchParams().codigoOrden;
-  const etapa = useLocalSearchParams().etapa;
-  if(etapa === "corte"){
-    return (
-      <DashboardSinDrawerNiScroll>
-          <EtapaCorte></EtapaCorte>
-      </DashboardSinDrawerNiScroll>
-    )
-  }
-  return (
-    <Dashboard>
-        <></>
-    </Dashboard>
-  )
-}
+  const { codigoOrden,etapa } = useLocalSearchParams();
+  console.log('datos',codigoOrden,etapa);
+  const etapaComponents: Record<string, React.ReactNode> = {
+    corte: <EtapaCorte />,
+    perfilado: <EtapaPerfilado />,
+    armado: <EtapaArmado />,
+    alistado: <EtapaAlistado />,
+  };
 
-export default IndexEtapaOrdenAdmin
+  const contenido = etapaComponents[etapa as string] ?? <Text>Etapa no válida</Text>;
+
+  return <DashboardSinDrawerNiScroll>{contenido}</DashboardSinDrawerNiScroll>;
+};
+
+export default IndexEtapaOrdenAdmin;
