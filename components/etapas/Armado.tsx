@@ -8,8 +8,9 @@ import {
   Platform,
   KeyboardAvoidingView,
   SafeAreaView,
+  Pressable,
 } from 'react-native';
-import { Button, Card, TextInput } from 'react-native-paper';
+import { Button, Card, Icon, TextInput } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -22,6 +23,9 @@ import CaracteristicasService from '@/services/CaracteristicasService';
 import PedidoService from '@/services/PedidoService';
 import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 import EmpleadoService from '@/services/EmpleadoService';
+import { Image } from 'expo-image';
+import { Colors } from '@/constants/Colors';
+import { ThemedText } from '../ThemedText';
 
 // Type definitions
 type Cliente = {
@@ -117,17 +121,10 @@ const EtapaArmado = () => {
   const [fechaEntrega, setFechaEntrega] = useState<Date>(new Date());
   const [idDetallePedido, setIdDetallePedido] = useState<string>('');
   const [dataDetalleAreaTrabajo, setDataDetalleAreaTrabajo] = useState<DetalleAreaTrabajo[]>([]);
-  const [actualizado, setActualizado] = useState<boolean>(false);
   const [empleados, setEmpleados] = useState<Empleado[]>([]);
   const [filas, setFilas] = useState<Fila[]>([]);
   const [currentDate, setCurrentDate] = useState<string>('');
 
-  const getFechaActualizacion = (): string => {
-    const date = new Date();
-    return date.toISOString().split('T')[0];
-  };
-
-  const [fechaActualizacion] = useState<string>(getFechaActualizacion());
 
   const lockOrientation = async () => {
     await ScreenOrientation.lockAsync(
@@ -147,11 +144,6 @@ const EtapaArmado = () => {
       };
     }, [])
   );
-
-  const getCurrentDate = (): string => {
-    const date = new Date();
-    return date.toISOString().split('T')[0];
-  };
 
   const mostrarError = (error: Error) => {
     Alert.alert('Error', error.message || 'Error interno del servidor', [
@@ -227,7 +219,7 @@ const EtapaArmado = () => {
       id: item.idCaracteristicas.toString(),
       talla: item.Talla.toString(),
       pares: item.Cantidad.toString(),
-      color: item.Color,
+      color: item.Color.toString(),
     }));
   };
 
@@ -391,15 +383,11 @@ const EtapaArmado = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1 }}
-    >
       <ScrollView className='mx-4 gap-2'>
         <SafeAreaView>
           {tipoCliente === 'natural' && cliente && (
-            <View className='gap-2 mb-2'>
-              <View className='flex-row justify-between'>
+            <View className='mb-2'>
+              <View className='flex-row justify-between gap-4'>
                 <View className='w-[65%]'>
                   <TextInput
                     value={cliente.nombre}
@@ -408,7 +396,7 @@ const EtapaArmado = () => {
                     editable={false}
                   />
                 </View>
-                <View className='w-[30%]'>
+                <View className='flex-1'>
                   <TextInput
                     value={cliente.Dni}
                     mode='outlined'
@@ -421,8 +409,8 @@ const EtapaArmado = () => {
           )}
           
           {tipoCliente === 'juridico' && cliente && (
-            <View className='gap-2 mb-2'>
-              <View className='flex-row justify-between'>
+            <View className='mb-2'>
+              <View className='flex-row justify-between gap-8'>
                 <View className='w-[65%]'>
                   <TextInput
                     value={cliente.nombre}
@@ -431,7 +419,7 @@ const EtapaArmado = () => {
                     editable={false}
                   />
                 </View>
-                <View className='w-[30%]'>
+                <View className='flex-1'>
                   <TextInput
                     value={cliente.Ruc}
                     mode='outlined'
@@ -445,7 +433,7 @@ const EtapaArmado = () => {
           
           <View className='mb-3'>
             {empleados.map((empleado, index) => (
-              <View key={index} className='flex-row justify-between'>
+              <View key={index} className='flex-row justify-between gap-4 mb-4'>
                 <View className='w-[65%]'>
                   <TextInput
                     value={empleado.Nombres}
@@ -454,7 +442,7 @@ const EtapaArmado = () => {
                     editable={false}
                   />
                 </View>
-                <View className='w-[30%]'>
+                <View className='flex-1'>
                   <TextInput
                     value={empleado.DNI}
                     mode='outlined'
@@ -466,84 +454,56 @@ const EtapaArmado = () => {
             ))}
           </View>
           
-          <View className='gap-2'>
-            <View className='flex-row justify-between'>
-              <View className='w-[30%]'>
-                <Card style={{ borderRadius: 10 }}>
-                  <Card.Cover
-                    style={{ resizeMode: 'contain' }}
-                    source={{ uri: modelo?.imagenes?.[0] }}
-                  />
-                  <Card.Content>
-                    <Text>{modelo?.modelo?.Nombre}</Text>
-                  </Card.Content>
-                </Card>
-              </View>
-              <View className='w-[48%] gap-2 justify-center'>
-                <TextInput
-                  editable={false}
-                  mode='outlined'
-                  label={'Tipo de calzado'}
-                  value={tipoCalzado}
+          <View className="gap-4 mb-4">
+            <View className="flex-row justify-between items-stretch">
+              {/* Contenedor de la imagen */}
+              <View className="w-[45%] rounded-xl overflow-hidden justify-center items-center" style={{backgroundColor:Colors.dark.content}}>
+                <Image
+                  style={{ width: 200, height: 200 }}
+                  contentFit="contain"
+                  source={{ uri: modelo?.imagenes?.[0] }}
                 />
+              </View>
+
+              {/* Contenedor de formulario */}
+              <View className="flex-1 gap-2 justify-center">
                 <TextInput
-                  label='Modelo'
-                  mode='outlined'
+                  mode="outlined"
+                  label="Tipo de calzado"
+                  value={tipoCalzado}
+                  editable={false}
+                />
+                
+                <TextInput
+                  mode="outlined"
+                  label="Modelo"
                   value={modelo?.modelo?.Nombre}
                   editable={false}
                 />
+                
                 <TextInput
-                  mode='outlined'
-                  label='Fecha de creacion'
+                  mode="outlined"
+                  label="Fecha creación"
                   value={currentDate}
                   editable={false}
-                  right={<TextInput.Icon icon='calendar' />}
+                  right={<TextInput.Icon icon="calendar" />}
                 />
                 <TextInput
-                  label='Fecha de entrega'
-                  mode='outlined'
+                  mode="outlined"
+                  label="Fecha entrega"
                   value={fechaEntrega.toISOString().split('T')[0]}
                   editable={false}
-                  right={<TextInput.Icon icon='calendar' />}
+                  right={<TextInput.Icon icon="calendar" />}
                 />
               </View>
             </View>
           </View>
           
-          <View className='flex-row mt-4 mb-4 gap-5'>
-            <View className='flex-row items-center gap-4'>
-              <Text className='font-bold'>Serie Inicio</Text>
-              <View className='h-8 bg-gray-100 border-l-2 items-center justify-center w-[30%]'>
-                <TextInput
-                  editable={false}
-                  style={{ height: 40 }}
-                  placeholder='Talla'
-                  placeholderTextColor={'black'}
-                  value={selectSerieInicio}
-                  className='bg-gray-200 rounded-lg font-bold w-full'
-                />
-              </View>
-            </View>
-            <View className='flex-row items-center gap-4'>
-              <Text className='font-bold'>Serie Fin </Text>
-              <View className='h-8 bg-gray-100 border-l-2 items-center justify-center w-[30%]'>
-                <TextInput
-                  editable={false}
-                  style={{ height: 40 }}
-                  placeholder='Talla'
-                  placeholderTextColor={'black'}
-                  value={selectSerieFin}
-                  className='bg-gray-200 rounded-lg font-bold w-full'
-                />
-              </View>
-            </View>
-          </View>
-          
-          <View className='flex-row'>
+          <View className='flex-row gap-3'>
             <View className='flex-1'>
               {filas.map((fila, index) => (
                 <View key={fila.id} className='flex-row gap-2 mb-2'>
-                  <View className='w-[20%]'>
+                  <View className='w-[24%]'>
                     <TextInput
                       label='Talla'
                       keyboardType='numeric'
@@ -554,7 +514,7 @@ const EtapaArmado = () => {
                       editable={false}
                     />
                   </View>
-                  <View className='w-[20%]'>
+                  <View className='w-[24%]'>
                     <TextInput
                       label='Pares'
                       placeholder='Pares'
@@ -565,7 +525,7 @@ const EtapaArmado = () => {
                       editable={false}
                     />
                   </View>
-                  <View className='w-[45%]'>
+                  <View className='flex-1'>
                     <TextInput
                       label='Color'
                       placeholder='Color'
@@ -578,7 +538,7 @@ const EtapaArmado = () => {
                 </View>
               ))}
             </View>
-            <View className='flex-1'>
+            <View className='flex-1 mb-4'>
               {dataDetalleAreaTrabajo.map((fila, index) => (
                 <View key={fila.id} className='flex-row gap-2 mb-2'>
                   <View className='w-[25%]'>
@@ -611,7 +571,7 @@ const EtapaArmado = () => {
                       }}
                     />
                   </View>
-                  <View className='w-[45%]'>
+                  <View className='flex-1'>
                     <TextInput
                       label={'Comentario'}
                       placeholder='Comentario'
@@ -630,83 +590,18 @@ const EtapaArmado = () => {
             </View>
           </View>
           
-          <Text className='font-bold mt-4 text-lg mx-auto'>
-            Detalle de la orden
-          </Text>
-          
-          <View className='mt-2 gap-2'>
-            <TextInput
-              label='Taco'
-              mode='outlined'
-              placeholder='Nombre de taco'
-              placeholderTextColor={'gray'}
-              value={nombreTaco}
-              className='rounded-lg h-10'
-              editable={false}
-            />
-          </View>
-          
-          <View className='mt-2 flex-row items-center gap-8'>
-            <Text className='font-bold'>Altura de taco:</Text>
-            <TextInput
-              editable={false}
-              style={{ height: 40 }}
-              value={tallaTaco ? `Talla ${tallaTaco}` : 'Seleccione una talla'}
-              className='bg-gray-200 rounded-lg font-bold'
-            />
-          </View>
-          
-          <View className='gap-2 mt-2 mb-4'>
-            <TextInput
-              label={'Material'}
-              mode='outlined'
-              editable={false}
-              value={material}
-            />
-            <TextInput
-              label={'Tipo de Material'}
-              mode='outlined'
-              editable={false}
-              value={tipoMaterial}
-            />
-            <TextInput
-              label={'Suela'}
-              mode='outlined'
-              value={suela}
-              placeholder='Suela'
-              editable={false}
-            />
-            <TextInput
-              label={'Accesorios'}
-              mode='outlined'
-              multiline={true}
-              numberOfLines={1}
-              value={accesorios}
-              placeholder='Digite los accesorios'
-              editable={false}
-            />
-            <TextInput
-              label={'Forro'}
-              mode='outlined'
-              value={forro}
-              placeholder='Forro'
-              editable={false}
-            />
-          </View>
-          
-          <Button
-            mode='contained-tonal'
-            icon='note'
-            buttonColor='#6969'
-            textColor='#000'
+          <Pressable
             onPress={updatePedido}
+            className='flex-row gap-2 items-center justify-center rounded-lg py-2'
+            style={{ backgroundColor: "#634AFF" }}
           >
-            Actualizar Avance
-          </Button>
-          <View className='mb-32'></View>
+            <ThemedText style={{color:"white" }}>
+              Actualizar Avance
+            </ThemedText>
+            <Icon source='check' size={20} color="white"  />
+          </Pressable>
         </SafeAreaView>
       </ScrollView>
-    </KeyboardAvoidingView>
   );
 };
 
