@@ -56,7 +56,7 @@ export default function Cancelar() {
   };
 
   return (
-    <ThemedView className="flex-1 justify-center items-center p-4" >
+    <ThemedView className="justify-center items-center p-4" >
       <ThemedView className="w-full max-w-md p-6 rounded-2xl shadow-sm" style={{ backgroundColor: contentColor }}>
         <ThemedText className="text-2xl font-semibold text-center">
           Cancelar Orden
