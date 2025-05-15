@@ -29,7 +29,6 @@ const DashboardSinDrawer = ({ children }: Props) => {
   const textColor = useThemeColor({ light: Colors.light.text, dark: Colors.dark.text }, 'text');
   const iconColor = useThemeColor({ light: Colors.light.icon, dark: Colors.dark.icon }, 'icon');
   const backIconColor = useThemeColor({ light: Colors.light.backIcon, dark: Colors.dark.backIcon }, 'backIcon');
-  const contentColor = useThemeColor({ light: Colors.light.content, dark: Colors.dark.content }, 'content');
 
   const openActions = () => {
     requestAnimationFrame(() => {
