@@ -13,19 +13,18 @@ import {
   Dimensions,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Card, Checkbox, Divider, TextInput, Icon } from 'react-native-paper';
+import { Divider, TextInput, Icon } from 'react-native-paper';
 
 import DetallePedidoService from '@/services/DetallePedidoService';
 import DetalleAreaTrabajoService from '@/services/DetalleAreaTrabajoService';
 import EmpleadoService from '@/services/EmpleadoService';
+import { useAppColors } from '@/hooks/useAppColors';
 
 import { ThemedText } from '../ThemedText';
 import { ThemedView } from '../ThemedView';
 
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { Colors } from '@/constants/Colors';
-
 import ShowError from '../ShowError';
+
 interface Empleado {
   idEmpleado: number;
   Dni: string;
@@ -66,6 +65,7 @@ const IndexActualizarOrden = () => {
   const [filteredSuggestions, setFilteredSuggestions] = useState<Pedido[]>([]);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
   const [showTextInputCodigoOrden, setShowTextInputCodigoOrden] = useState<boolean>(false);
+  const { content, icon, backIcon } = useAppColors();
 
   useEffect(() => {
     const obtenerPedidos = async () => {
@@ -359,7 +359,7 @@ const IndexActualizarOrden = () => {
     if (showEmpleadosAsignados) {
       return (
         <ThemedView className='gap-1 mt-2'>
-          <ThemedView className='p-2  border-b border-gray-300 items-center' style={{backgroundColor:contentColor}}>
+          <ThemedView className='p-2  border-b border-gray-300 items-center' style={{backgroundColor:content}}>
             <ThemedText className='text-lg font-bold'>
               Empleados Asignados
             </ThemedText>
@@ -372,7 +372,7 @@ const IndexActualizarOrden = () => {
                 <View style={{
                   marginBottom: 10,
                   borderRadius: 10,
-                  backgroundColor: contentColor,
+                  backgroundColor: content,
                   shadowColor: '#000',
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 0.1,
@@ -411,12 +411,12 @@ const IndexActualizarOrden = () => {
     if (empleados.length > 0) {
       return (
         <ThemedView className='gap-1 mt-2'>
-          <View className='p-2 border-b border-gray-300 items-center' style={{backgroundColor:contentColor}}>
+          <View className='p-2 border-b border-gray-300 items-center' style={{backgroundColor:content}}>
             <ThemedText className='text-lg font-bold'>
               Empleados Asignados
             </ThemedText>
           </View>
-          <View className='p-4 rounded-lg w-[100%]' style={{backgroundColor:contentColor}}>
+          <View className='p-4 rounded-lg w-[100%]' style={{backgroundColor:content}}>
             <FlatList
               data={empleados}
               keyExtractor={item => item.idEmpleado.toString()}
@@ -424,7 +424,7 @@ const IndexActualizarOrden = () => {
                 <View style={{
                   marginBottom: 10,
                   borderRadius: 10,
-                  backgroundColor: contentColor,
+                  backgroundColor: content,
                   shadowColor: '#000',
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 0.1,
@@ -458,13 +458,13 @@ const IndexActualizarOrden = () => {
           </View>
           <View className='flex-row gap-4 justify-center'>
             <Pressable onPress={() => setShowModal(!showModal)}>
-              <View className='flex-row justify-center items-center gap-2 mt-2 rounded-xl p-2 mx-auto' style={{backgroundColor:backIconColor}}>
+              <View className='flex-row justify-center items-center gap-2 mt-2 rounded-xl p-2 mx-auto' style={{backgroundColor:backIcon}}>
                 <ThemedText className='text-xl font-bold'>Agregar</ThemedText>
-                <Icon source='plus' size={20} color={iconColor} />
+                <Icon source='plus' size={20} color={icon} />
               </View>
             </Pressable>
             <Pressable onPress={asignarEmpleados}>
-              <View className='flex-row justify-center items-center gap-2 mt-2 px-6 rounded-xl p-2 mx-auto' style={{backgroundColor: contentColor}}>
+              <View className='flex-row justify-center items-center gap-2 mt-2 px-6 rounded-xl p-2 mx-auto' style={{backgroundColor: content}}>
                 <ThemedText className='text-xl font-bold '>Asignar</ThemedText>
               </View>
             </Pressable>
@@ -477,7 +477,7 @@ const IndexActualizarOrden = () => {
       <Pressable
         onPress={() => setShowModal(!showModal)}
         className='rounded-xl p-3 mt-3'
-        style={{ backgroundColor: backIconColor }}
+        style={{ backgroundColor: backIcon }}
       >
         <ThemedText className='mx-auto text-lg font-semibold'>
           Asignar Empleados
@@ -485,37 +485,13 @@ const IndexActualizarOrden = () => {
       </Pressable>
     );
   };
-
-  const contentColor = useThemeColor(
-    { light: Colors.light.content, dark: Colors.dark.content },
-    'content'
-  );
-  const backgroundColor = useThemeColor(
-    { light: Colors.light.background, dark: Colors.dark.background },
-    'background'
-  );
-  const textColor = useThemeColor(
-      { light: Colors.light.text, dark: Colors.dark.text },
-      'text'
-  );
-  const iconColor = useThemeColor(
-      { light: Colors.light.icon, dark: Colors.dark.icon },
-      'icon'
-  );
-  const tabColor = useThemeColor(
-      { light: Colors.light.tabIconSelected, dark: Colors.dark.tabIconSelected },
-      'tabIconSelected'
-  );
-  const backIconColor = useThemeColor(
-      { light: Colors.light.backIcon, dark: Colors.dark.backIcon },
-      'backIcon'
-  );
   return (
     <KeyboardAvoidingView
     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     style={{ flex: 1, padding:8 }}
     keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
     >
+      <SafeAreaView style={{flex:1}}>
         <View style={{ height: height }}>
             <ThemedView className='relative mb-4'>
                 <TextInput
@@ -547,7 +523,7 @@ const IndexActualizarOrden = () => {
                     }
                 />
                 {showSuggestions && filteredSuggestions.length > 0 && (
-                    <View className='absolute z-10 top-16 w-full rounded-lg shadow-md max-h-80 right-0 left-0' style={{backgroundColor:contentColor}}>
+                    <View className='absolute z-10 top-16 w-full rounded-lg shadow-md max-h-80 right-0 left-0' style={{backgroundColor:content}}>
                       <FlatList
                         data={filteredSuggestions}
                         keyExtractor={item => item.Codigo_pedido}
@@ -638,7 +614,7 @@ const IndexActualizarOrden = () => {
               }}>
                 <SafeAreaView style={{ width: '90%', maxHeight: '80%' }}>
                   <View style={{ 
-                    backgroundColor: contentColor,
+                    backgroundColor: content,
                     borderRadius: 10,
                     padding: 16,
                     maxHeight: '100%'
@@ -709,6 +685,7 @@ const IndexActualizarOrden = () => {
               </View>
             </Modal>
         </View>
+        </SafeAreaView>
     </KeyboardAvoidingView>
   );
 };
