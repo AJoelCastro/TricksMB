@@ -2,24 +2,16 @@ import { Stack } from 'expo-router';
 
 import { AuthProvider } from '../contexts/AuthContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { Colors } from '@/constants/Colors';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 import '../global.css';
 import { PaperProvider } from 'react-native-paper';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { useAppColors } from '@/hooks/useAppColors';
 
 export default function RootLayout() {
 
   const colorScheme = useColorScheme();
-  const backgroundColor = useThemeColor(
-    { light: Colors.light.background, dark: Colors.dark.background },
-    'background'
-  );
-  const textColor = useThemeColor(
-    { light: Colors.light.text, dark: Colors.dark.text },
-    'text'
-  );
+  const { background, text } = useAppColors();
   return (
     <AuthProvider>
       <PaperProvider>
@@ -30,9 +22,9 @@ export default function RootLayout() {
               options={{
                 headerTitle: '',
                 headerStyle: {
-                  backgroundColor: backgroundColor,
+                  backgroundColor: background,
                 },
-                headerTintColor: textColor,
+                headerTintColor: text,
               }}
             />
             <Stack.Screen
@@ -45,9 +37,9 @@ export default function RootLayout() {
               name='+not-found'
               options={{
                 headerStyle: {
-                  backgroundColor: backgroundColor,
+                  backgroundColor: background,
                 },
-                headerTintColor: textColor,
+                headerTintColor: text,
               }}
             />
           </Stack>

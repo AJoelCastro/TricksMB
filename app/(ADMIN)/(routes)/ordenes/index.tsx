@@ -5,23 +5,19 @@ import { useRouter } from 'expo-router'
 import Dashboard from '@/components/Dashboard'
 import { ThemedView } from '@/components/ThemedView'
 import { ThemedText } from '@/components/ThemedText'
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { Colors } from '@/constants/Colors';
 import { Icon } from 'react-native-paper'
+import { useAppColors } from '@/hooks/useAppColors'
 
 const IndexOrdenesAdmin = () => {
     const router = useRouter();
-    const backIconColor = useThemeColor(
-        { light: Colors.light.backIcon, dark: Colors.dark.backIcon },
-        'backIcon'
-    );
+    const {background, backIcon} = useAppColors();
   return (
     <Dashboard>
         <ThemedView className='w-full m-4 mt-8 flex flex-row gap-4'>
                 <Pressable
                     className='rounded-md p-4 w-[45%] gap-4'
                     onPress={() => router.push('/(ADMIN)/(routes)/ordenes/(ordenesStack)/crear')}
-                    style={{ backgroundColor: backIconColor}}
+                    style={{ backgroundColor: backIcon}}
                 >
                     <View>
                         <Icon source='file-cog' size={24} color='#634AFF' />
@@ -37,7 +33,7 @@ const IndexOrdenesAdmin = () => {
                 <Pressable
                     className='rounded-md p-4 w-[45%] gap-4'
                     onPress={() => router.push('/(ADMIN)/(routes)/ordenes/(ordenesStack)/editar')}
-                    style={{ backgroundColor: backIconColor}}
+                    style={{ backgroundColor: backIcon}}
                 >
                     <View>
                         <Icon source='warehouse' size={24} color='#634AFF' />
@@ -55,7 +51,7 @@ const IndexOrdenesAdmin = () => {
                 <Pressable
                     className='rounded-md p-4 w-[45%] gap-4'
                     onPress={() => router.push('/(ADMIN)/(routes)/ordenes/(ordenesStack)/cancelar')}
-                    style={{ backgroundColor: backIconColor}}
+                    style={{ backgroundColor: backIcon}}
                 >
                     <View>
                         <Icon source='package-variant' size={24} color='#634AFF' />
@@ -71,7 +67,7 @@ const IndexOrdenesAdmin = () => {
                 <Pressable
                     className='rounded-md p-4 w-[45%] gap-4'
                     onPress={() => router.push('/(ADMIN)/(routes)/ordenes/(ordenesStack)/actualizar')}
-                    style={{ backgroundColor: backIconColor}}
+                    style={{ backgroundColor: backIcon}}
                 >
                     <View>
                         <Icon source='history' size={24} color='#634AFF' />

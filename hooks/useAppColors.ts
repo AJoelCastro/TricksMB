@@ -13,5 +13,6 @@ export const useAppColors = () => {
     icon,
     backIcon,
     background,
+    text,
   };
 };

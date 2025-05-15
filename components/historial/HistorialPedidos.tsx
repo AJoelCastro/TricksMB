@@ -21,6 +21,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import DetallePedidoService from '@/services/DetallePedidoService';
 import ModeloService from '@/services/ModeloService';
 import { ThemedText } from '../ThemedText';
+import { useAppColors } from '@/hooks/useAppColors';
 
 // Type definitions
 type EstadoPedido = 'Editable' | 'Finalizado' | 'Proceso' | 'Cancelado' | 'Vencido' | null;
@@ -44,6 +45,8 @@ SplashScreen.preventAutoHideAsync();
 
 const HistorialPedidosAdmin = () => {
   const router = useRouter();
+  const {content, icon} = useAppColors();
+
   const [estado, setEstado] = useState<EstadoPedido>(null);
   const [mostrarPedidos, setMostrarPedidos] = useState<boolean>(false);
   const [data, setData] = useState<Pedido[] | null>(null);
@@ -54,30 +57,6 @@ const HistorialPedidosAdmin = () => {
   const [modelImage, setModelImage] = useState<string | null>(null);
   const [nameModel, setNameModel] = useState<string | null>(null);
   
-  const backgroundColor = useThemeColor(
-    { light: Colors.light.background, dark: Colors.dark.background },
-    'background'
-    );
-    const textColor = useThemeColor(
-        { light: Colors.light.text, dark: Colors.dark.text },
-        'text'
-    );
-    const iconColor = useThemeColor(
-        { light: Colors.light.icon, dark: Colors.dark.icon },
-        'icon'
-    );
-    const tabColor = useThemeColor(
-        { light: Colors.light.tabIconSelected, dark: Colors.dark.tabIconSelected },
-        'tabIconSelected'
-    );
-    const backIconColor = useThemeColor(
-        { light: Colors.light.backIcon, dark: Colors.dark.backIcon },
-        'backIcon'
-    );
-    const contentColor = useThemeColor(
-        { light: Colors.light.content, dark: Colors.dark.content },
-        'content'
-    );
 
   useFocusEffect(
     useCallback(() => {
@@ -234,7 +213,7 @@ const HistorialPedidosAdmin = () => {
       </View>
       {mostrarPedidos && data && (
         <SafeAreaView style={{flex: 1, marginTop: 16}} >
-          <View style={{backgroundColor: contentColor, padding:2}}>
+          <View style={{backgroundColor: content, padding:2}}>
             <ThemedText 
               style={{ fontFamily: 'Inter-Regular', fontSize: 20, textAlign: 'center' }} 
             >
@@ -249,7 +228,7 @@ const HistorialPedidosAdmin = () => {
                 padding: 8, // Equivalente a p-2
                 gap: 16, // Equivalente a gap-4 (1 gap unit = 4px)
                 marginVertical: 4, // Equivalente a my-2
-                backgroundColor: contentColor,
+                backgroundColor: content,
                 borderRadius: 8,
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 2 },
@@ -273,7 +252,7 @@ const HistorialPedidosAdmin = () => {
                     borderRadius: 100, // rounded-full
                     padding: 16 // p-4
                   }}>
-                    <Icon source='cart' size={20} color={iconColor} />
+                    <Icon source='cart' size={20} color={icon} />
                   </View>
                   
                   <View>
@@ -319,7 +298,7 @@ const HistorialPedidosAdmin = () => {
               borderRadius: 8,
               padding: 16,
               alignItems: 'center',
-              backgroundColor: contentColor,
+              backgroundColor: content,
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.1,
               shadowRadius: 4,
@@ -347,7 +326,7 @@ const HistorialPedidosAdmin = () => {
               borderRadius: 8,
               padding: 16,
               shadowColor: '#000',
-              backgroundColor: contentColor,
+              backgroundColor: content,
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.1,
               shadowRadius: 4,
@@ -376,7 +355,7 @@ const HistorialPedidosAdmin = () => {
               </View>
             </ThemedView>
             
-            <View style={{backgroundColor:contentColor}}>
+            <View style={{backgroundColor:content}}>
               <Pressable
                 className='items-center rounded-full p-4'
                 onPress={() => setShowCardDetail(false)}

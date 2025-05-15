@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable, Alert, KeyboardAvoidingView, Platform } from 'react-native'; 
 import { TextInput, Icon } from 'react-native-paper';
-import { useFonts } from 'expo-font';
 
 import ClienteService from '@/services/ClienteService';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { Colors } from '@/constants/Colors';
 
 import * as SplashScreen from 'expo-splash-screen';
+
 import { ThemedView } from '../ThemedView';
 import { ThemedText } from '../ThemedText';
+import { useAppColors } from '@/hooks/useAppColors';
   
 type TipoCliente = 'natural' | 'juridico' | '';
 
@@ -25,6 +24,8 @@ interface DatosCliente {
 
 SplashScreen.preventAutoHideAsync();
 const ClienteAdmin = () => {
+
+    const { content, icon } = useAppColors();
     const [tipoCliente, setTipoCliente] = useState<TipoCliente>('');
     const [clienteNatural, setClienteNatural] = useState<string>('');
     const [representanteLegal, setRepresentanteLegal] = useState<string>('');
@@ -117,31 +118,7 @@ const ClienteAdmin = () => {
         [{ text: 'OK' }]
       );
     };
-  
-    const backgroundColor = useThemeColor(
-        { light: Colors.light.background, dark: Colors.dark.background },
-        'background'
-    );
-    const textColor = useThemeColor(
-        { light: Colors.light.text, dark: Colors.dark.text },
-        'text'
-    );
-    const iconColor = useThemeColor(
-        { light: Colors.light.icon, dark: Colors.dark.icon },
-        'icon'
-    );
-    const tabColor = useThemeColor(
-        { light: Colors.light.tabIconSelected, dark: Colors.dark.tabIconSelected },
-        'tabIconSelected'
-    );
-    const backIconColor = useThemeColor(
-        { light: Colors.light.backIcon, dark: Colors.dark.backIcon },
-        'backIcon'
-    );
-    const contentColor = useThemeColor(
-        { light: Colors.light.content, dark: Colors.dark.content },
-        'content'
-    );
+
 
     return (
         <ThemedView>
@@ -155,9 +132,9 @@ const ClienteAdmin = () => {
                         className={`px-4 py-2 rounded-md w-[45%] gap-2 ${
                         tipoCliente === 'natural' ? 'border border-[#634AFF]' : ''
                         }`}
-                        style={{ backgroundColor: contentColor }}
+                        style={{ backgroundColor: content }}
                     >
-                        <Icon source='account' size={20} color={iconColor} />
+                        <Icon source='account' size={20} color={icon} />
                         <ThemedText >Cliente Natural</ThemedText>
                     </Pressable>
                     <Pressable
@@ -165,9 +142,9 @@ const ClienteAdmin = () => {
                         className={`px-4 py-2 rounded-md w-[45%] gap-2 ${
                         tipoCliente === 'juridico' ? 'border border-[#634AFF]' : ''
                         }`}
-                        style={{ backgroundColor: contentColor }}
+                        style={{ backgroundColor: content }}
                     >
-                        <Icon source='office-building' size={20} color={iconColor} />
+                        <Icon source='office-building' size={20} color={icon} />
                         <ThemedText className='text-[#634AFF]'>Cliente Juridico</ThemedText>
                     </Pressable>
                 </ThemedView>

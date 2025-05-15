@@ -15,6 +15,7 @@ import ModalSelector from 'react-native-modal-selector';
 import ModeloService from '@/services/ModeloService';
 import ImagenService from '@/services/ImagenService';
 import AlmacenService from '@/services/AlmacenService';
+import { useAppColors } from '@/hooks/useAppColors';
   
 type Tipo = 'tipoCalzado' | 'modelo' | 'imagenModelo' | 'almacen' | '';
 type TipoCalzado = {
@@ -29,6 +30,8 @@ type TipoModelo= {
 
 SplashScreen.preventAutoHideAsync();
 const DatosAdmin = () => {
+
+    const { content, icon } = useAppColors();
     const [tipo, setTipo] = useState<Tipo>('');
     const [modelo, setModelo] = useState<string>('');
 
@@ -153,22 +156,6 @@ const DatosAdmin = () => {
       );
     };
   
-    const textColor = useThemeColor(
-        { light: Colors.light.text, dark: Colors.dark.text },
-        'text'
-    );
-    const iconColor = useThemeColor(
-        { light: Colors.light.icon, dark: Colors.dark.icon },
-        'icon'
-    );
-    const backIconColor = useThemeColor(
-        { light: Colors.light.backIcon, dark: Colors.dark.backIcon },
-        'backIcon'
-    );
-    const contentColor = useThemeColor(
-        { light: Colors.light.content, dark: Colors.dark.content },
-        'content'
-    );
 
     return (
         <ThemedView>
@@ -183,9 +170,9 @@ const DatosAdmin = () => {
                         className={`px-4 py-2 rounded-md w-[45%] gap-2 ${
                         tipo === 'tipoCalzado' ? 'border border-[#634AFF]' : ''
                         }`}
-                        style={{ backgroundColor: contentColor }}
+                        style={{ backgroundColor: content}}
                     >
-                        <Icon source='shoe-print' size={20} color={iconColor} />
+                        <Icon source='shoe-print' size={20} color={icon} />
                         <ThemedText >Tipo de Calzado</ThemedText>
                     </Pressable>
                     <Pressable
@@ -193,9 +180,9 @@ const DatosAdmin = () => {
                         className={`px-4 py-2 rounded-md w-[45%] gap-2 ${
                         tipo === 'modelo' ? 'border border-[#634AFF]' : ''
                         }`}
-                        style={{ backgroundColor: contentColor }}
+                        style={{ backgroundColor: content }}
                     >
-                        <Icon source='shoe-heel' size={20} color={iconColor} />
+                        <Icon source='shoe-heel' size={20} color={icon} />
                         <ThemedText className='text-[#634AFF]'>Modelo</ThemedText>
                     </Pressable>
                 </ThemedView>
@@ -206,9 +193,9 @@ const DatosAdmin = () => {
                         className={`px-4 py-2 rounded-md w-[45%] gap-2 ${
                             tipo === 'imagenModelo' ? 'border border-[#634AFF]' : ''
                         }`}
-                        style={{ backgroundColor: contentColor }}
+                        style={{ backgroundColor: content }}
                     >
-                        <Icon source='image' size={20} color={iconColor} />
+                        <Icon source='image' size={20} color={icon} />
                         <ThemedText >Imagen de Modelo</ThemedText>
                     </Pressable>
                     <Pressable
@@ -216,9 +203,9 @@ const DatosAdmin = () => {
                         className={`px-4 py-2 rounded-md w-[45%] gap-2 ${
                             tipo === 'almacen' ? 'border border-[#634AFF]' : ''
                         }`}
-                        style={{ backgroundColor: contentColor }}
+                        style={{ backgroundColor: content }}
                     >
-                        <Icon source='warehouse' size={20} color={iconColor} />
+                        <Icon source='warehouse' size={20} color={icon} />
                         <ThemedText >Almacen</ThemedText>
                     </Pressable>
                 </ThemedView>
