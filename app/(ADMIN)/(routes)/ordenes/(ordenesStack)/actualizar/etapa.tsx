@@ -10,8 +10,7 @@ import EtapaArmado from '@/components/etapas/Armado';
 import EtapaAlistado from '@/components/etapas/Alistado';
 
 const IndexEtapaOrdenAdmin = () => {
-  const { codigoOrden,etapa } = useLocalSearchParams();
-  console.log('datos',codigoOrden,etapa);
+  const { etapa } = useLocalSearchParams();
   const etapaComponents: Record<string, React.ReactNode> = {
     corte: <EtapaCorte />,
     perfilado: <EtapaPerfilado />,
