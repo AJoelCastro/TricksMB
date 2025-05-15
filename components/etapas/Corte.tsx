@@ -386,8 +386,8 @@ const EtapaCorte = () => {
       <ScrollView className='mx-4 gap-2'>
         <SafeAreaView>
           {tipoCliente === 'natural' && cliente && (
-            <View className='gap-2 mb-2'>
-              <View className='flex-row justify-between'>
+            <View className='mb-2'>
+              <View className='flex-row justify-between gap-4'>
                 <View className='w-[65%]'>
                   <TextInput
                     value={cliente.nombre}
@@ -396,7 +396,7 @@ const EtapaCorte = () => {
                     editable={false}
                   />
                 </View>
-                <View className='w-[30%]'>
+                <View className='flex-1'>
                   <TextInput
                     value={cliente.Dni}
                     mode='outlined'
@@ -409,8 +409,8 @@ const EtapaCorte = () => {
           )}
           
           {tipoCliente === 'juridico' && cliente && (
-            <View className='gap-2 mb-2'>
-              <View className='flex-row justify-between'>
+            <View className='mb-2'>
+              <View className='flex-row justify-between gap-8'>
                 <View className='w-[65%]'>
                   <TextInput
                     value={cliente.nombre}
@@ -419,7 +419,7 @@ const EtapaCorte = () => {
                     editable={false}
                   />
                 </View>
-                <View className='w-[30%]'>
+                <View className='flex-1'>
                   <TextInput
                     value={cliente.Ruc}
                     mode='outlined'
@@ -433,7 +433,7 @@ const EtapaCorte = () => {
           
           <View className='mb-3'>
             {empleados.map((empleado, index) => (
-              <View key={index} className='flex-row justify-between'>
+              <View key={index} className='flex-row justify-between gap-4 mb-4'>
                 <View className='w-[65%]'>
                   <TextInput
                     value={empleado.Nombres}
@@ -442,7 +442,7 @@ const EtapaCorte = () => {
                     editable={false}
                   />
                 </View>
-                <View className='w-[30%]'>
+                <View className='flex-1'>
                   <TextInput
                     value={empleado.DNI}
                     mode='outlined'
@@ -454,10 +454,10 @@ const EtapaCorte = () => {
             ))}
           </View>
           
-          <View className="gap-4 p-2">
-            <View className="flex-row justify-between items-stretch h-48">
+          <View className="gap-4 mb-4">
+            <View className="flex-row justify-between items-stretch">
               {/* Contenedor de la imagen */}
-              <View className="w-[30%] rounded-xl overflow-hidden justify-center items-center" style={{backgroundColor:Colors.dark.content}}>
+              <View className="w-[45%] rounded-xl overflow-hidden justify-center items-center" style={{backgroundColor:Colors.dark.content}}>
                 <Image
                   style={{ width: 200, height: 200 }}
                   contentFit="contain"
@@ -466,7 +466,7 @@ const EtapaCorte = () => {
               </View>
 
               {/* Contenedor de formulario */}
-              <View className="w-[65%] gap-2 justify-center">
+              <View className="flex-1 gap-2 justify-center">
                 <TextInput
                   mode="outlined"
                   label="Tipo de calzado"
@@ -499,11 +499,11 @@ const EtapaCorte = () => {
             </View>
           </View>
           
-          <View className='flex-row'>
+          <View className='flex-row gap-3'>
             <View className='flex-1'>
               {filas.map((fila, index) => (
                 <View key={fila.id} className='flex-row gap-2 mb-2'>
-                  <View className='w-[20%]'>
+                  <View className='w-[24%]'>
                     <TextInput
                       label='Talla'
                       keyboardType='numeric'
@@ -514,7 +514,7 @@ const EtapaCorte = () => {
                       editable={false}
                     />
                   </View>
-                  <View className='w-[20%]'>
+                  <View className='w-[24%]'>
                     <TextInput
                       label='Pares'
                       placeholder='Pares'
@@ -525,7 +525,7 @@ const EtapaCorte = () => {
                       editable={false}
                     />
                   </View>
-                  <View className='w-[45%]'>
+                  <View className='flex-1'>
                     <TextInput
                       label='Color'
                       placeholder='Color'
@@ -538,7 +538,7 @@ const EtapaCorte = () => {
                 </View>
               ))}
             </View>
-            <View className='flex-1'>
+            <View className='flex-1 mb-4'>
               {dataDetalleAreaTrabajo.map((fila, index) => (
                 <View key={fila.id} className='flex-row gap-2 mb-2'>
                   <View className='w-[25%]'>
@@ -571,7 +571,7 @@ const EtapaCorte = () => {
                       }}
                     />
                   </View>
-                  <View className='w-[45%]'>
+                  <View className='flex-1'>
                     <TextInput
                       label={'Comentario'}
                       placeholder='Comentario'

@@ -4,6 +4,7 @@ import Dashboard from '@/components/Dashboard'
 import { useLocalSearchParams } from 'expo-router'
 import DashboardSinScroll from '@/components/DashBoardSinScroll'
 import EtapaCorte from '@/components/etapas/Corte'
+import DashboardSinDrawerNiScroll from '@/components/DashboardSinDrawerNiScroll'
 
 const IndexEtapaOrdenAdmin = () => {
   const data = useLocalSearchParams();
@@ -12,9 +13,9 @@ const IndexEtapaOrdenAdmin = () => {
   const etapa = useLocalSearchParams().etapa;
   if(etapa === "corte"){
     return (
-      <DashboardSinScroll>
+      <DashboardSinDrawerNiScroll>
           <EtapaCorte></EtapaCorte>
-      </DashboardSinScroll>
+      </DashboardSinDrawerNiScroll>
     )
   }
   return (
