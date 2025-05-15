@@ -524,7 +524,8 @@ const EditarOrden: React.FC = () => {
       'content'
   );
   return (
-    <SafeAreaView className='mx-4 gap-2' style={{flex:1}}>
+    <SafeAreaView className='mx-4 gap-2 flex-1' >
+      
         {/* Búsqueda de pedido */}
         <View className='relative'>
           <TextInput

@@ -3,12 +3,13 @@ import React from 'react'
 import Dashboard from '@/components/Dashboard'
 import IndexActualizarOrden from '@/components/ordenes/Actualizar'
 import DashboardSinScroll from '@/components/DashBoardSinScroll'
+import DashboardSinDrawer from '@/components/DashboardSinDrawer'
 
 const IndexActualizarAdmin = () => {
   return (
-    <DashboardSinScroll>
+    <DashboardSinDrawer>
         <IndexActualizarOrden></IndexActualizarOrden>
-    </DashboardSinScroll>
+    </DashboardSinDrawer>
   )
 }
 

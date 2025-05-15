@@ -13,7 +13,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-const Dashboard = ({ children }: Props) => {
+const DashboardSinDrawer = ({ children }: Props) => {
 
   const [height, setHeight] = useState(Dimensions.get('window').height);
   const [typeScreen, setTypeScreen] = useState<string>('');
@@ -94,8 +94,8 @@ const Dashboard = ({ children }: Props) => {
   return (
     <ThemedView className='h-full' style={{ backgroundColor }}>
       <TopBar
-        icon1="menu"
-        onPress1={() => navigation.dispatch(DrawerActions.openDrawer())}
+        icon1="arrow-left"
+        onPress1={() => navigation.goBack()}
         icon2="bell"
         icon3="cog"
         onPress3={openActions}
@@ -162,4 +162,4 @@ const Dashboard = ({ children }: Props) => {
   );
 };
 
-export default Dashboard;
+export default DashboardSinDrawer;
