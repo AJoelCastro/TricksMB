@@ -105,18 +105,9 @@ const EtapaPerfilado = () => {
   const router = useRouter();
   const [cliente, setCliente] = useState<Cliente | null>(null);
   const [modelo, setModelo] = useState<Modelo | null>(null);
-  const [selectSerieInicio, setSelectSerieInicio] = useState<string>('');
-  const [selectSerieFin, setSelectSerieFin] = useState<string>('');
   const [tipoCliente, setTipoCliente] = useState<string>('');
   const [dni, setDni] = useState<string>('');
   const [ruc, setRuc] = useState<string>('');
-  const [nombreTaco, setNombreTaco] = useState<string>('');
-  const [tallaTaco, setTallaTaco] = useState<string>('');
-  const [material, setMaterial] = useState<string>('');
-  const [tipoMaterial, setTipoMaterial] = useState<string>('');
-  const [accesorios, setAccesorios] = useState<string>('');
-  const [suela, setSuela] = useState<string>('');
-  const [forro, setForro] = useState<string>('');
   const [tipoCalzado, setTipoCalzado] = useState<string>('');
   const [fechaEntrega, setFechaEntrega] = useState<Date>(new Date());
   const [idDetallePedido, setIdDetallePedido] = useState<string>('');
@@ -196,18 +187,9 @@ const EtapaPerfilado = () => {
   const resetearCampos = () => {
     setCliente(null);
     setModelo(null);
-    setSelectSerieInicio('');
-    setSelectSerieFin('');
     setTipoCliente('');
     setDni('');
     setRuc('');
-    setNombreTaco('');
-    setTallaTaco('');
-    setMaterial('');
-    setTipoMaterial('');
-    setAccesorios('');
-    setSuela('');
-    setForro('');
     setTipoCalzado('');
     setFechaEntrega(new Date());
     setFilas([]);
@@ -238,15 +220,8 @@ const EtapaPerfilado = () => {
         const codigoPedido = codigoOrden;
         const data = await DetallePedidoService.obtenerDetallePedido(codigoPedido);
         setIdDetallePedido(data.detallePedido.idDetalle_pedido);
-        setAccesorios(data.detallePedido.Accesorios);
-        setTallaTaco(data.detallePedido.Altura_taco);
         const fecha = new Date(data.detallePedido.Fecha_creacion);
         setCurrentDate(fecha.toISOString().split('T')[0]);
-        setForro(data.detallePedido.Forro);
-        setMaterial(data.detallePedido.Material);
-        setNombreTaco(data.detallePedido.Nombre_taco);
-        setSuela(data.detallePedido.Suela);
-        setTipoMaterial(data.detallePedido.Tipo_material);
         
         const dataTipoCalzado = await TipoCalzadoService.getTipoCalzadoByCodigoPedido(codigoPedido);
         setTipoCalzado(dataTipoCalzado.tipoCalzado.Nombre);
@@ -271,8 +246,6 @@ const EtapaPerfilado = () => {
         }
 
         const dataPedido = await PedidoService.getPedidoByCodigoPedido(codigoPedido);
-        setSelectSerieInicio(dataPedido.pedido.Serie_inicio);
-        setSelectSerieFin(dataPedido.pedido.Serie_final);
         setFechaEntrega(new Date(dataPedido.pedido.Fecha_entrega));
         
         const dataCliente = await ClienteService.getClienteByCodigoPedido(codigoPedido);
