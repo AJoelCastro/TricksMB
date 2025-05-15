@@ -433,12 +433,11 @@ const CrearOrden: React.FC = () => {
   }, [tipoCliente, dni, ruc]);
 
   return (
-    <ThemedView>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
       >
-        <ScrollView className='mx-4 gap-2'>
+        <ScrollView className='mx-4 gap-2 '>
           {/* Sección Cliente */}
           <View className='relative'>
             <TextInput
@@ -851,11 +850,8 @@ const CrearOrden: React.FC = () => {
             </ThemedText>
             <Icon source='check' size={20} color="white"  />
           </Pressable>
-
-          <View className='mb-32' />
         </ScrollView>
       </KeyboardAvoidingView>
-    </ThemedView>
   );
 };
 
