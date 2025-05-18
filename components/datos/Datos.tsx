@@ -158,10 +158,9 @@ const DatosAdmin = () => {
   
 
     return (
-        <ThemedView>
             <KeyboardAvoidingView 
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
-                className='p-2 h-full'
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                className='px-2' 
             >
                 {/* PRIMERA SECCION */}
                 <ThemedView className='flex-row justify-center gap-4 mt-4'>
@@ -377,7 +376,6 @@ const DatosAdmin = () => {
                 )}
 
             </KeyboardAvoidingView>
-        </ThemedView>
     );
   };
   

@@ -424,7 +424,7 @@ const CrearOrden: React.FC = () => {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <ScrollView className='mx-4 gap-2 '>
+        <ScrollView className='mx-4 gap-2 ' showsVerticalScrollIndicator={false}>
           {/* Sección Cliente */}
           <View className='relative'>
             <TextInput
