@@ -34,6 +34,7 @@ import { ThemedText } from '../ThemedText';
 
 import ShowError from '../ShowError';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import { useAppColors } from '@/hooks/useAppColors';
 // Types
 type Cliente = {
   id: number;
@@ -159,12 +160,14 @@ const EditarOrden: React.FC = () => {
   const [showTextInputCodigoPedido, setShowTextInputCodigoPedido] = useState<boolean>(false);
   const [idDetallePedido, setIdDetallePedido] = useState<number | null>(null);
   const [filas, setFilas] = useState<Caracteristica[]>([]);
+  const [filasFetched, setFilasFetched] = useState<Caracteristica[]>([]);
   const [filasEliminadas, setFilasEliminadas] = useState<Caracteristica[]>([]);
   const [filasCreadas, setFilasCreadas] = useState<Caracteristica[]>([]);
   const [fechaCreacion, setFechaCreacion] = useState<Date>(new Date());
+  
   const [width, setWidth] = useState(Dimensions.get('window').width);
   const [typeScreen, setTypeScreen] = useState<string>('');
-
+  const {icon, content} = useAppColors();
 
   useEffect(() => {
     // Convertir el valor numérico a un nombre legible
@@ -355,6 +358,7 @@ const EditarOrden: React.FC = () => {
         color: car.Color.toString(),
       }));
       setFilas(filasTransformadas);
+      setFilasFetched(filasTransformadas)
     } catch (error) {
       ShowError(error as Error);
     }
@@ -367,27 +371,22 @@ const EditarOrden: React.FC = () => {
         return;
       }
 
-      const datosPedido = {
-        nombreTaco,
-        alturaTaco: tallaTaco,
-        material,
-        tipoMaterial,
-        suela,
-        accesorios,
-        forro,
-      };
-
+      const datosPedido = {nombreTaco,alturaTaco: tallaTaco.toString(),material,tipoMaterial, suela,accesorios,forro};
       // Validar campos obligatorios
-      if (!Object.values(datosPedido).every(valor => valor && valor.trim() !== '')) {
+      if (!Object.values(datosPedido).every(valor => typeof valor === 'string' && valor.trim() !== '')){
         Alert.alert('Error', 'Por favor, completa todos los campos del pedido.');
         return;
       }
-
       // Procesar filas eliminadas
       for (const fila of filasEliminadas) {
-        await CaracteristicasService.deleteCaracteristicas(fila.id);
+        if(filasFetched.some(filaIn => filaIn.id === fila.id)){
+          await CaracteristicasService.deleteCaracteristicas(fila.id);
+        }
       }
 
+      console.log("filas",filas)
+      console.log("filasC",filasCreadas)
+      console.log("filasE",filasEliminadas)
       // Procesar filas existentes
       for (const fila of filas) {
         const datosCaracteristicas = {
@@ -396,9 +395,16 @@ const EditarOrden: React.FC = () => {
           cantidad: Number(fila.pares),
           color: fila.color,
         };
+        const datosCaracteristicas1 = {
+          idCaracteristicas: fila.id.toString(),
+          talla: fila.talla.toString(),
+          cantidad: fila.pares.toString(),
+          color: fila.color.toString(),
+        };
+        console.log("datos caracteristicas",datosCaracteristicas); 
 
-        if (!Object.values(datosCaracteristicas).every(valor => valor !== null && valor !== undefined)) {
-          Alert.alert('Error', 'Por favor, completa todos los campos de las características.');
+        if (!Object.values(datosCaracteristicas1).every(valor => typeof valor === 'string' && valor.trim() !== '')){
+          Alert.alert('Error', 'Por favor, completa todos los campos de caracteristicas.');
           return;
         }
 
@@ -440,6 +446,7 @@ const EditarOrden: React.FC = () => {
         Alert.alert('Error', 'Hubo un problema al actualizar el pedido.');
       }
     } catch (error) {
+      console.log(error);
       ShowError(error as Error);
     }
   };
@@ -507,22 +514,7 @@ const EditarOrden: React.FC = () => {
       cargarDetallePedido();
     }
   }, [codigoPedido, showTextInputCodigoPedido]);
-  const textColor = useThemeColor(
-    { light: Colors.light.text, dark: Colors.dark.text },
-    'text'
-  );
-  const iconColor = useThemeColor(
-      { light: Colors.light.icon, dark: Colors.dark.icon },
-      'icon'
-  );
-  const backIconColor = useThemeColor(
-      { light: Colors.light.backIcon, dark: Colors.dark.backIcon },
-      'backIcon'
-  );
-  const contentColor = useThemeColor(
-      { light: Colors.light.content, dark: Colors.dark.content },
-      'content'
-  );
+
   return (
     <SafeAreaView className='mx-4 gap-2 flex-1' >
       
@@ -554,7 +546,7 @@ const EditarOrden: React.FC = () => {
           />
 
           {showSuggestions && filteredSuggestions.length > 0 && (
-            <View className='absolute z-10 top-16 w-full rounded-md shadow-md max-h-80 right-0 left-0' style={{backgroundColor:contentColor, flex:1}}>
+            <View className='absolute z-10 top-16 w-full rounded-md shadow-md max-h-80 right-0 left-0' style={{backgroundColor:content, flex:1}}>
               <FlatList
                 data={filteredSuggestions}
                 keyExtractor={item => item.Codigo_pedido}
@@ -580,7 +572,7 @@ const EditarOrden: React.FC = () => {
             className={!showSuggestions ? 'opacity-0 h-0' : 'absolute inset-0 z-5 bg-transparent'}
           />
         </View>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           {/* Información del cliente */}
           {tipoCliente === 'natural' && cliente && (
             <View className='gap-2 mb-2'>
@@ -670,7 +662,7 @@ const EditarOrden: React.FC = () => {
             />
 
             {openDatePicker && (
-              <View style={{backgroundColor:contentColor}}>
+              <View style={{backgroundColor:content}}>
                 <DateTimePicker
                   value={fechaEntrega}
                   mode='date'
@@ -775,8 +767,8 @@ const EditarOrden: React.FC = () => {
                   setFilas(nuevasFilas);
                 }}
               />
-              
-              <TouchableOpacity onPress={() => handleEliminarFila(fila.id)}>
+              {/*disabled={filasFetched.some((fil)=>fil.id===fila.id )} en caso se quiera restringir el eliminar las filas que ya estan creadas*/}
+              <TouchableOpacity onPress={() => handleEliminarFila(fila.id)}> 
                 <Icon source='delete' size={20} color='red' />
               </TouchableOpacity>
             </View>
@@ -787,7 +779,7 @@ const EditarOrden: React.FC = () => {
             onPress={handleAgregarFila}
           >
             <ThemedText className='text-lg'>Agregar</ThemedText>
-            <Icon source='plus-circle' size={20} color={iconColor}/>
+            <Icon source='plus-circle' size={20} color={icon}/>
           </TouchableOpacity>
 
           {/* Detalle de la orden */}
