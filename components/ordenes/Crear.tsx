@@ -1,22 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  View, 
-  ScrollView, 
-  Text, 
-  TouchableOpacity, 
-  StyleSheet, 
-  Dimensions, 
-  Alert, 
-  Modal, 
-  FlatList, 
-  Platform, 
-  KeyboardAvoidingView, 
-  Pressable,
-  SafeAreaView 
-} from 'react-native';
-import { Button, Card, Divider, TextInput } from 'react-native-paper';
+import { View, ScrollView, Text, TouchableOpacity, StyleSheet, Dimensions, Alert, Modal, FlatList, Platform, KeyboardAvoidingView, Pressable,SafeAreaView,ScaledSize } from 'react-native';
+import { Icon, Card, Divider, TextInput } from 'react-native-paper';
 import { useRouter } from 'expo-router';
-import { Icon } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ModalSelector from 'react-native-modal-selector';
 import { Image } from 'expo-image';
@@ -63,8 +48,6 @@ type OpcionSelector = {
   label: string;
 };
 
-const { width } = Dimensions.get('window');
-
 const CrearOrden: React.FC = () => {
   // Estados
   const [cliente, setCliente] = useState<Cliente | null>(null);
@@ -94,6 +77,8 @@ const CrearOrden: React.FC = () => {
   const [showFilteredClientes, setshowFilteredClientes] = useState<boolean>(false);
   const [filas, setFilas] = useState<FilaDetalle[]>([]);
   const [currentDate] = useState<string>(new Date().toISOString().split('T')[0]);
+
+  const [width, setWidth]  = useState(Dimensions.get('window'));
 
   const router = useRouter();
 
@@ -420,10 +405,60 @@ const CrearOrden: React.FC = () => {
     }
   }, [tipoCliente, dni, ruc]);
 
+  useEffect(() => {
+    // Se ejecuta cada vez que cambia la orientación o tamaño de la pantala
+    const handleChange = ({ window }: { window: ScaledSize }) => {
+      setWidth(window.width);
+    };
+
+    // Escucha algun cambio de dimensiones
+    const subscription = Dimensions.addEventListener('change', handleChange);
+
+    // Se elimina el listener cuando el componente se desmonta
+    return () => {
+      subscription?.remove?.();
+    };
+  }, []);
+
+  useEffect(() => {
+    // Convertir el valor numérico a un nombre legible
+    const getOrientationName = (orientation: ScreenOrientation.Orientation) => {
+      switch (orientation) {
+        case ScreenOrientation.Orientation.PORTRAIT_UP:
+          return 'Portrait Up';
+        case ScreenOrientation.Orientation.PORTRAIT_DOWN:
+          return 'Portrait Down';
+        case ScreenOrientation.Orientation.LANDSCAPE_LEFT:
+          return 'Landscape Left';
+        case ScreenOrientation.Orientation.LANDSCAPE_RIGHT:
+          return 'Landscape Right';
+        default:
+          return 'Unknown';
+      }
+    };
+
+    // Se ejecuta cada vez que cambia la orientación
+    const subscription = ScreenOrientation.addOrientationChangeListener(event => {
+      const orientation = event.orientationInfo.orientation;
+      setTypeScreen(getOrientationName(orientation));
+    });
+
+    // Obtiene la orientación inicial
+    (async () => {
+      const orientation = await ScreenOrientation.getOrientationAsync();
+      setTypeScreen(getOrientationName(orientation));
+    })();
+
+    // Limpia el listener al desmontar
+    return () => {
+      ScreenOrientation.removeOrientationChangeListener(subscription);
+    };
+  }, []);
+
   return (
+    <SafeAreaView>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1 }}
       >
         <ScrollView className='mx-4 gap-2 '>
           {/* Sección Cliente */}
@@ -840,6 +875,7 @@ const CrearOrden: React.FC = () => {
           </Pressable>
         </ScrollView>
       </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
