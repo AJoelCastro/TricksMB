@@ -18,7 +18,6 @@ import { Colors } from '@/constants/Colors';
 import { ThemedView } from '../ThemedView';
 import { ThemedText } from '../ThemedText';
 
-
 // Types
 type Cliente = {
   identificador: string;
@@ -78,8 +77,8 @@ const CrearOrden: React.FC = () => {
   const [filas, setFilas] = useState<FilaDetalle[]>([]);
   const [currentDate] = useState<string>(new Date().toISOString().split('T')[0]);
 
-  const [width, setWidth]  = useState(Dimensions.get('window'));
-
+  const [width, setWidth]  = useState(Dimensions.get('window').width);
+  
   const router = useRouter();
 
   const iconColor = useThemeColor(
@@ -417,41 +416,6 @@ const CrearOrden: React.FC = () => {
     // Se elimina el listener cuando el componente se desmonta
     return () => {
       subscription?.remove?.();
-    };
-  }, []);
-
-  useEffect(() => {
-    // Convertir el valor numérico a un nombre legible
-    const getOrientationName = (orientation: ScreenOrientation.Orientation) => {
-      switch (orientation) {
-        case ScreenOrientation.Orientation.PORTRAIT_UP:
-          return 'Portrait Up';
-        case ScreenOrientation.Orientation.PORTRAIT_DOWN:
-          return 'Portrait Down';
-        case ScreenOrientation.Orientation.LANDSCAPE_LEFT:
-          return 'Landscape Left';
-        case ScreenOrientation.Orientation.LANDSCAPE_RIGHT:
-          return 'Landscape Right';
-        default:
-          return 'Unknown';
-      }
-    };
-
-    // Se ejecuta cada vez que cambia la orientación
-    const subscription = ScreenOrientation.addOrientationChangeListener(event => {
-      const orientation = event.orientationInfo.orientation;
-      setTypeScreen(getOrientationName(orientation));
-    });
-
-    // Obtiene la orientación inicial
-    (async () => {
-      const orientation = await ScreenOrientation.getOrientationAsync();
-      setTypeScreen(getOrientationName(orientation));
-    })();
-
-    // Limpia el listener al desmontar
-    return () => {
-      ScreenOrientation.removeOrientationChangeListener(subscription);
     };
   }, []);
 
