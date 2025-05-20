@@ -297,18 +297,10 @@ const EtapaPerfilado = () => {
           throw new Error('Error al actualizar el pedido');
         }
       }
-      
-      Alert.alert(
-        'Pedido actualizado',
-        'El pedido se ha actualizado correctamente',
-        [{ text: 'OK' }]
-      );
       obtenerEstadosDetalleAreaTrabajo();
-      resetearCampos();
       router.back();
     } catch (error) {
       mostrarError(error as Error);
-      resetearCampos();
       router.back();
     }
   };
@@ -325,7 +317,7 @@ const EtapaPerfilado = () => {
         const filasTransformadas = transformarDatosDetalleAreaTrabajo(dataExtra);
         setDataDetalleAreaTrabajo(filasTransformadas);
       } catch (error) {
-        console.error('Error al obtener los detalles del area de trabajo:', error);
+        mostrarError(error as Error);
       }
     };
     obtenerDetalleAreaTrab();
@@ -346,11 +338,12 @@ const EtapaPerfilado = () => {
       if (actualizar) {
         const nomArea = 'Armado';
         const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido);
-        alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`);
+        // alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`); aqui ira una notificacion
+      }else{
+        // aqui ira una notificacion
       }
     } catch (error) {
       mostrarError(error as Error);
-      resetearCampos();
       router.back();
     }
   };

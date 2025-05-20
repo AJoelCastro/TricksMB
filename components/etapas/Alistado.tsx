@@ -150,12 +150,11 @@ const EtapaAlistado = () => {
         identificador
       );
       if (!cliente) {
-        console.error('No se encontró el cliente');
-        return;
+        throw new Error('No se encontró el cliente');
       }
       setCliente(cliente);
     } catch (error) {
-      console.error('Error cargando cliente:', error);
+      mostrarError(error as Error);
     }
   };
 
@@ -167,12 +166,11 @@ const EtapaAlistado = () => {
         identificador
       );
       if (!cliente) {
-        console.error('No se encontró el cliente');
-        return;
+        throw new Error('No se encontró el cliente');
       }
       setCliente(cliente);
     } catch (error) {
-      console.error('Error cargando cliente:', error);
+      mostrarError(error as Error);
     }
   };
 
@@ -265,8 +263,7 @@ const EtapaAlistado = () => {
         }
         setEmpleados(dataEmpleados.detalleEmpleadoPedido);
       } catch (error) {
-        console.error('Error al obtener el pedido:', error);
-        Alert.alert('Error', 'Hubo un problema al obtener el pedido.');
+        mostrarError(error as Error);
       }
     };
     
@@ -298,17 +295,10 @@ const EtapaAlistado = () => {
         }
       }
       
-      Alert.alert(
-        'Pedido actualizado',
-        'El pedido se ha actualizado correctamente',
-        [{ text: 'OK' }]
-      );
       obtenerEstadosDetalleAreaTrabajo();
-      resetearCampos();
       router.back();
     } catch (error) {
       mostrarError(error as Error);
-      resetearCampos();
       router.back();
     }
   };
@@ -325,7 +315,7 @@ const EtapaAlistado = () => {
         const filasTransformadas = transformarDatosDetalleAreaTrabajo(dataExtra);
         setDataDetalleAreaTrabajo(filasTransformadas);
       } catch (error) {
-        console.error('Error al obtener los detalles del area de trabajo:', error);
+        mostrarError(error as Error);
       }
     };
     obtenerDetalleAreaTrab();
@@ -346,11 +336,12 @@ const EtapaAlistado = () => {
       if (actualizar) {
         const nomArea = 'Perfilado';
         const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido);
-        alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`);
+        // alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`); aqui ira una notificacion
+      }else{
+        // alert(`No se puede actualizar el pedido`); aqui ira una notificacion
       }
     } catch (error) {
       mostrarError(error as Error);
-      resetearCampos();
       router.back();
     }
   };

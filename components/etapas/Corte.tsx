@@ -26,6 +26,7 @@ import EmpleadoService from '@/services/EmpleadoService';
 import { Image } from 'expo-image';
 import { Colors } from '@/constants/Colors';
 import { ThemedText } from '../ThemedText';
+import CajaService from '@/services/CajaService';
 
 // Type definitions
 type Cliente = {
@@ -265,8 +266,7 @@ const EtapaCorte = () => {
         }
         setEmpleados(dataEmpleados.detalleEmpleadoPedido);
       } catch (error) {
-        console.error('Error al obtener el pedido:', error);
-        Alert.alert('Error', 'Hubo un problema al obtener el pedido.');
+        mostrarError(error as Error);
       }
     };
     
@@ -297,18 +297,10 @@ const EtapaCorte = () => {
           throw new Error('Error al actualizar el pedido');
         }
       }
-      
-      Alert.alert(
-        'Pedido actualizado',
-        'El pedido se ha actualizado correctamente',
-        [{ text: 'OK' }]
-      );
       obtenerEstadosDetalleAreaTrabajo();
-      resetearCampos();
       router.back();
     } catch (error) {
       mostrarError(error as Error);
-      resetearCampos();
       router.back();
     }
   };
@@ -325,7 +317,7 @@ const EtapaCorte = () => {
         const filasTransformadas = transformarDatosDetalleAreaTrabajo(dataExtra);
         setDataDetalleAreaTrabajo(filasTransformadas);
       } catch (error) {
-        console.error('Error al obtener los detalles del area de trabajo:', error);
+        mostrarError(error as Error);
       }
     };
     obtenerDetalleAreaTrab();
@@ -346,11 +338,18 @@ const EtapaCorte = () => {
       if (actualizar) {
         const nomArea = 'Perfilado';
         const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido);
-        alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`);
+        try {
+          const dataCaja = await CajaService.createCaja(codigoPedido);
+          // Alert.alert('Éxito', dataCaja.message); aqui ira una notificacion
+        } catch (error) {
+            throw error;
+        }
+        // Alert.alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`); aqui ira una notificacion
+      }else{
+        // Alert.alert('No se puede actualizar'); aqui ira una notificacion
       }
     } catch (error) {
       mostrarError(error as Error);
-      resetearCampos();
       router.back();
     }
   };
