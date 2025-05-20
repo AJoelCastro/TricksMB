@@ -165,22 +165,14 @@ const IndexActualizarOrden = () => {
     obtenerAreaTrabajo();
   },[estado])
 
-  useFocusEffect(
-    React.useCallback(() => {
-      if(areaTrabajo !== ''){
-        verificarProceso();
-      }
-    }, [])
-  )
-
   const verificarProceso = async () => {
     try {
       setCheckedEmpleados({});
       setEmpleadosAsignados([]);
+      setDataEmpleados([]);
       setShowEmpleadosAsignados(false);
       setEmpleados([]);
       setAreaTrabajo('');
-      setEstado('');
       const data = await DetallePedidoService.obtenerDetallePedido(codigoOrden);
       const codigoPedido = codigoOrden;
       setEstado(data.detallePedido.Estado);

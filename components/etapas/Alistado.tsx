@@ -334,8 +334,6 @@ const EtapaAlistado = () => {
       });
       
       if (actualizar) {
-        const nomArea = 'Perfilado';
-        const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido);
         // alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`); aqui ira una notificacion
       }else{
         // alert(`No se puede actualizar el pedido`); aqui ira una notificacion
