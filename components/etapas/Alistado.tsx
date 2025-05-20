@@ -258,7 +258,7 @@ const EtapaAlistado = () => {
         const filasTransformadas = transformarDatos(dataCaracteristicas.caracteristicas);
         setFilas(filasTransformadas);
         
-        const nomArea = 'Corte';
+        const nomArea = 'Alistado';
         const dataEmpleados = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
         if (!dataEmpleados) {
           return;

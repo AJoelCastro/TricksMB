@@ -258,7 +258,7 @@ const EtapaPerfilado = () => {
         const filasTransformadas = transformarDatos(dataCaracteristicas.caracteristicas);
         setFilas(filasTransformadas);
         
-        const nomArea = 'Corte';
+        const nomArea = 'Perfilado';
         const dataEmpleados = await EmpleadoService.obtenerAllDetalleEmpleadoPedido(nomArea, codigoPedido);
         if (!dataEmpleados) {
           return;
@@ -344,7 +344,7 @@ const EtapaPerfilado = () => {
       });
       
       if (actualizar) {
-        const nomArea = 'Perfilado';
+        const nomArea = 'Armado';
         const updateAreaTrabajo = await DetalleAreaTrabajoService.createDetalleAreaTrabajo(nomArea, codigoPedido);
         alert(`${updateAreaTrabajo.detallesAreaTrabajo.message}`);
       }
