@@ -161,10 +161,16 @@ const IndexActualizarOrden = () => {
       }
     }
   };
+  useEffect(() => {
+    obtenerAreaTrabajo();
+  },[estado])
+
   useFocusEffect(
-    useCallback(() => {
-      obtenerAreaTrabajo();
-    },[estado])
+    React.useCallback(() => {
+      if(areaTrabajo !== ''){
+        verificarProceso();
+      }
+    }, [])
   )
 
   const verificarProceso = async () => {
@@ -346,7 +352,7 @@ const IndexActualizarOrden = () => {
     {
       id: 3,
       title: 'armado',
-      icon: 'build',
+      icon: 'tools',
       color: estado === 'Editable' ? 'bg-gray-700' : 'bg-amber-500',
     },
     {
