@@ -430,9 +430,9 @@ const EtapaPerfilado = () => {
           <View className="gap-4 mb-4">
             <View className="flex-row justify-between items-stretch">
               {/* Contenedor de la imagen */}
-              <View className="w-[45%] rounded-xl overflow-hidden justify-center items-center" style={{backgroundColor:Colors.dark.content}}>
+              <View className="w-[45%] h-[250] rounded-xl overflow-hidden justify-center items-center" >
                 <Image
-                  style={{ width: 200, height: 200 }}
+                  style={{ width: '100%', height: '100%'}}
                   contentFit="contain"
                   source={{ uri: modelo?.imagenes?.[0] }}
                 />
