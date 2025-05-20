@@ -6,6 +6,7 @@ import {
   Pressable,
   Alert,
   FlatList,
+  SafeAreaView,
 } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -138,22 +139,9 @@ export default function AlmacenAdmin() {
       throw error;
     }
   };
-
-    const backgroundColor = useThemeColor(
-        { light: Colors.light.background, dark: Colors.dark.background },
-        'background'
-    );
-    const textColor = useThemeColor(
-        { light: Colors.light.text, dark: Colors.dark.text },
-        'text'
-    );
     const iconColor = useThemeColor(
         { light: Colors.light.icon, dark: Colors.dark.icon },
         'icon'
-    );
-    const tabColor = useThemeColor(
-        { light: Colors.light.tabIconSelected, dark: Colors.dark.tabIconSelected },
-        'tabIconSelected'
     );
     const backIconColor = useThemeColor(
         { light: Colors.light.backIcon, dark: Colors.dark.backIcon },
@@ -283,240 +271,240 @@ export default function AlmacenAdmin() {
   };
 
   return (
-    <ThemedView>
-        <ScrollView className='h-full'>
-        {/* SELECCIONAR ALMACEN */}
-        {almacenSeleccionado === '' ? (
-            <>
-            <ThemedView className='mx-4 mt-8'>
-                <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 24 }} >
-                SELECCIONA UN ALMACEN
-                </ThemedText>
-            </ThemedView>
-            <ScrollView className='w-full mt-4 gap-4'>
-                {almacenes?.map((almacen, index) => (
-                  <View key={index} style={{ 
-                    padding: 4, 
-                    marginTop: 4, 
-                    backgroundColor: contentColor,
-                    borderRadius: 8, // Añadido para simular el estilo de Card
-                    shadowColor: '#000', // Opcional: para efecto de sombra similar a Card
-                    shadowOffset: { width: 0, height: 2 }, // Opcional
-                    shadowOpacity: 0.1, // Opcional
-                    shadowRadius: 4, // Opcional
-                    elevation: 3, // Opcional (para Android)
-                  }}>
-                    <Pressable
-                      style={{ 
-                        padding: 16, 
-                        borderRadius: 8,
-                        flexDirection: 'row',
-                        gap: 16,
-                        justifyContent: 'space-between'
-                      }}
-                      onPress={() => setAlmacenSeleccionado(almacen.nombre)}
-                    >
-                      <View style={{ flex: 1, justifyContent: 'center' }}>
-                        <ThemedText style={{ 
-                          marginTop: 8,
-                          fontFamily: 'Inter-SemiBold', 
-                          fontSize: 16 
-                        }}>
-                          Nombre: {almacen.nombre}
-                        </ThemedText>
-                        <ThemedText style={{ 
-                          marginTop: 8,
-                          fontFamily: 'Inter-Regular', 
-                          fontSize: 16 
-                        }}>
-                          Stock total: {almacen.stock}
-                        </ThemedText>
-                      </View>
-                      <View>
-                        <Image
-                          source={{ uri: almacen.imagen }}
-                          style={{ width: 180, height: 180, borderRadius: 10 }}
-                        />
-                      </View>
-                    </Pressable>
-                  </View>
-                ))}
-            </ScrollView>
-            </>
-        ) : (
-            <View className='flex-1'>
-            <View>
-                {!showCamera && (
-                <View className='mx-4 mt-6'>
-                    <ThemedText type='subtitle' style={{fontSize:24}}>
-                    Almacén {almacenSeleccionado}
-                    </ThemedText>
-                </View>
-                )}
-            </View>
-            
-            <View className='flex-row justify-between p-4'>
-                <ThemedText className='font-normal text-2xl'>Camara</ThemedText>
-                <Switch
-                value={showCamera}
-                onValueChange={setShowCamera}
-                disabled={true}
-                />
-            </View>
-            
-            {/* CAMARA */}
-            {showCamera && (
-                <View className='p-4'>
-                <View style={{ position: 'relative' }}>
-                  <CameraView
-                    facing={facing}
-                    onBarcodeScanned={qrLeido ? handleBarcodeScanned : undefined}
-                    style={{
-                      flex: 1,
-                      height: 300,
-                      width: 300,
-                      alignSelf: 'center',
+    <SafeAreaView>
+      <ScrollView className='h-full'>
+      {/* SELECCIONAR ALMACEN */}
+      {almacenSeleccionado === '' ? (
+          <>
+          <ThemedView className='mx-4 mt-8'>
+              <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 24 }} >
+              SELECCIONA UN ALMACEN
+              </ThemedText>
+          </ThemedView>
+          <ScrollView className='w-full mt-4 gap-4'>
+              {almacenes?.map((almacen, index) => (
+                <View key={index} style={{ 
+                  padding: 4, 
+                  marginTop: 4, 
+                  backgroundColor: contentColor,
+                  borderRadius: 8, // Añadido para simular el estilo de Card
+                  shadowColor: '#000', // Opcional: para efecto de sombra similar a Card
+                  shadowOffset: { width: 0, height: 2 }, // Opcional
+                  shadowOpacity: 0.1, // Opcional
+                  shadowRadius: 4, // Opcional
+                  elevation: 3, // Opcional (para Android)
+                }}>
+                  <Pressable
+                    style={{ 
+                      padding: 16, 
+                      borderRadius: 8,
+                      flexDirection: 'row',
+                      gap: 16,
+                      justifyContent: 'space-between'
                     }}
-                  />
-                  
-                  {/* Botón de refrescar posicionado absolutamente */}
-                  <View style={{ 
-                    position: 'absolute', 
-                    bottom: 20, 
+                    onPress={() => setAlmacenSeleccionado(almacen.nombre)}
+                  >
+                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                      <ThemedText style={{ 
+                        marginTop: 8,
+                        fontFamily: 'Inter-SemiBold', 
+                        fontSize: 16 
+                      }}>
+                        Nombre: {almacen.nombre}
+                      </ThemedText>
+                      <ThemedText style={{ 
+                        marginTop: 8,
+                        fontFamily: 'Inter-Regular', 
+                        fontSize: 16 
+                      }}>
+                        Stock total: {almacen.stock}
+                      </ThemedText>
+                    </View>
+                    <View>
+                      <Image
+                        source={{ uri: almacen.imagen }}
+                        style={{ width: 180, height: 180, borderRadius: 10 }}
+                      />
+                    </View>
+                  </Pressable>
+                </View>
+              ))}
+          </ScrollView>
+          </>
+      ) : (
+          <View className='flex-1'>
+          <View>
+              {!showCamera && (
+              <View className='mx-4 mt-6'>
+                  <ThemedText type='subtitle' style={{fontSize:24}}>
+                  Almacén {almacenSeleccionado}
+                  </ThemedText>
+              </View>
+              )}
+          </View>
+          
+          <View className='flex-row justify-between p-4'>
+              <ThemedText className='font-normal text-2xl'>Camara</ThemedText>
+              <Switch
+              value={showCamera}
+              onValueChange={setShowCamera}
+              disabled={true}
+              />
+          </View>
+          
+          {/* CAMARA */}
+          {showCamera && (
+              <View className='p-4'>
+              <View style={{ position: 'relative' }}>
+                <CameraView
+                  facing={facing}
+                  onBarcodeScanned={qrLeido ? handleBarcodeScanned : undefined}
+                  style={{
+                    flex: 1,
+                    height: 300,
+                    width: 300,
                     alignSelf: 'center',
-                    width: 300, // Mismo ancho que la cámara para centrar correctamente
-                    alignItems: 'center'
-                  }}>
-                    <Pressable onPress={toggleCameraFacing}>
-                      <Icon source='refresh' size={32} color={iconColor} />
-                    </Pressable>
+                  }}
+                />
+                
+                {/* Botón de refrescar posicionado absolutamente */}
+                <View style={{ 
+                  position: 'absolute', 
+                  bottom: 20, 
+                  alignSelf: 'center',
+                  width: 300, // Mismo ancho que la cámara para centrar correctamente
+                  alignItems: 'center'
+                }}>
+                  <Pressable onPress={toggleCameraFacing}>
+                    <Icon source='refresh' size={32} color={iconColor} />
+                  </Pressable>
+                </View>
+              </View>
+              
+              <View className='flex-row justify-center gap-4 mt-8'>
+                  <Pressable
+                      className=' p-4 rounded-lg w-[45%]'
+                      onPress={() => setQrLeido(!qrLeido)}
+                      style={{ backgroundColor: backIconColor }}
+                  >
+                    <ThemedText className='text-center' style={{ fontFamily: 'Inter-Light', fontSize: 16 }}>
+                        Scanear QR
+                    </ThemedText>
+                  </Pressable>
+                  <Pressable
+                      className=' p-4 rounded-lg w-[45%]'
+                      onPress={() => {
+                        setQrLeido(false)
+                        setShowCamera(false)
+                        setAlmacenSeleccionado('')
+                        setShowRegisters(true)
+                      }}
+                  >
+                    <ThemedText className='text-center' style={{ fontFamily: 'Inter-Light', fontSize: 16 }}>
+                        Cancelar
+                    </ThemedText>
+                  </Pressable>
+              </View>
+              
+              {caja.length > 0 && (
+                  <View className='mt-4'>
+                  <Card style={{ borderRadius: 10, elevation: 5, backgroundColor: backIconColor }}>
+                      <View className='p-2'>
+                      <View className='items-center'>
+                          <ThemedText style={{ fontFamily: 'Inter-Black', fontSize: 18 }}>
+                          Ultimos QR leidos
+                          </ThemedText>
+                      </View>
+                      {caja.map(item => (
+                          <View key={item.idCaja}>
+                          <View className='m-2'>
+                              <Card.Content className='flex-row gap-4 justify-between'>
+                              <View>
+                                  <ThemedText style={{ fontFamily: 'Inter-Black', fontSize: 18 }}>
+                                  {item.tipoCalzado} {item.modelo}
+                                  </ThemedText>
+                                  <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 15 }}>
+                                  Caja: {item.idCaja}
+                                  </ThemedText>
+                                  <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 15 }}>
+                                  Talla: {item.talla}
+                                  </ThemedText>
+                                  <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 15 }}>
+                                  Color: {item.color}
+                                  </ThemedText>
+                                  <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 15 }}>
+                                  Creada: {item.fechaCreacion}
+                                  </ThemedText>
+                              </View>
+                              <Image source={item.imagenUrl} style={{ width: 100, height: 100 }} />
+                              </Card.Content>
+                              <Divider />
+                          </View>
+                          </View>
+                      ))}
+                      </View>
+                  </Card>
+                  
+                  <View className='flex-row justify-center gap-4 my-6'>
+                      <Pressable
+                          className=' p-4 rounded-lg w-[45%] justify-center'
+                          onPress={actualizarCaja}
+                          style={{ backgroundColor: backIconColor }}
+                      >
+                          <ThemedText className=' text-center' style={{ fontFamily: 'Inter-Light', fontSize: 16 }}>
+                              {tipoFlujo === 'Ingreso' ? 'Ingresar' : 'Retirar'}
+                          </ThemedText>
+                      </Pressable>
+                      <Pressable
+                          className=' p-4 rounded-lg w-[45%] justify-center'
+                          onPress={resetState}
+                          style={{ backgroundColor: backIconColor }}
+                      >
+                          <ThemedText className='text-center' style={{ fontFamily: 'Inter-Light', fontSize: 16 }}>
+                              Cancelar
+                          </ThemedText>
+                      </Pressable>
                   </View>
-                </View>
-                
-                <View className='flex-row justify-center gap-4 mt-8'>
-                    <Pressable
-                        className=' p-4 rounded-lg w-[45%]'
-                        onPress={() => setQrLeido(!qrLeido)}
-                        style={{ backgroundColor: backIconColor }}
-                    >
-                      <ThemedText className='text-center' style={{ fontFamily: 'Inter-Light', fontSize: 16 }}>
-                          Scanear QR
-                      </ThemedText>
-                    </Pressable>
-                    <Pressable
-                        className=' p-4 rounded-lg w-[45%]'
-                        onPress={() => {
-                          setQrLeido(false)
-                          setShowCamera(false)
-                          setAlmacenSeleccionado('')
-                          setShowRegisters(true)
-                        }}
-                    >
-                      <ThemedText className='text-center' style={{ fontFamily: 'Inter-Light', fontSize: 16 }}>
-                          Cancelar
-                      </ThemedText>
-                    </Pressable>
-                </View>
-                
-                {caja.length > 0 && (
-                    <View className='mt-4'>
-                    <Card style={{ borderRadius: 10, elevation: 5, backgroundColor: backIconColor }}>
-                        <View className='p-2'>
-                        <View className='items-center'>
-                            <ThemedText style={{ fontFamily: 'Inter-Black', fontSize: 18 }}>
-                            Ultimos QR leidos
-                            </ThemedText>
-                        </View>
-                        {caja.map(item => (
-                            <View key={item.idCaja}>
-                            <View className='m-2'>
-                                <Card.Content className='flex-row gap-4 justify-between'>
-                                <View>
-                                    <ThemedText style={{ fontFamily: 'Inter-Black', fontSize: 18 }}>
-                                    {item.tipoCalzado} {item.modelo}
-                                    </ThemedText>
-                                    <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 15 }}>
-                                    Caja: {item.idCaja}
-                                    </ThemedText>
-                                    <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 15 }}>
-                                    Talla: {item.talla}
-                                    </ThemedText>
-                                    <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 15 }}>
-                                    Color: {item.color}
-                                    </ThemedText>
-                                    <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 15 }}>
-                                    Creada: {item.fechaCreacion}
-                                    </ThemedText>
-                                </View>
-                                <Image source={item.imagenUrl} style={{ width: 100, height: 100 }} />
-                                </Card.Content>
-                                <Divider />
-                            </View>
-                            </View>
-                        ))}
-                        </View>
-                    </Card>
-                    
-                    <View className='flex-row justify-center gap-4 my-6'>
-                        <Pressable
-                            className=' p-4 rounded-lg w-[45%] justify-center'
-                            onPress={actualizarCaja}
-                            style={{ backgroundColor: backIconColor }}
-                        >
-                            <ThemedText className=' text-center' style={{ fontFamily: 'Inter-Light', fontSize: 16 }}>
-                                {tipoFlujo === 'Ingreso' ? 'Ingresar' : 'Retirar'}
-                            </ThemedText>
-                        </Pressable>
-                        <Pressable
-                            className=' p-4 rounded-lg w-[45%] justify-center'
-                            onPress={resetState}
-                            style={{ backgroundColor: backIconColor }}
-                        >
-                            <ThemedText className='text-center' style={{ fontFamily: 'Inter-Light', fontSize: 16 }}>
-                                Cancelar
-                            </ThemedText>
-                        </Pressable>
-                    </View>
-                    </View>
-                )}
-                </View>
-            )}
-            
-            {showRegisters && (
-                <View className='flex-row justify-center gap-4'>
-                <Pressable
-                    className='p-4 rounded-lg w-[45%] gap-1'
-                    onPress={() => {
-                        setShowRegisters(false);
-                        setShowCamera(true);
-                        setTipoFlujo('Ingreso');
-                    }}
-                    style={{ backgroundColor: backIconColor }}
-                >
-                    <Icon source='plus' size={24} color={iconColor} />
-                    <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 16 }}>
-                        Registrar Ingreso
-                    </ThemedText>
-                </Pressable>
-                <Pressable
-                    className='p-4 rounded-lg w-[45%] gap-1'
-                    onPress={() => {
-                        setShowRegisters(false);
-                        setShowCamera(true);
-                        setTipoFlujo('Salida');
-                    }}
-                    style={{ backgroundColor: backIconColor }}
-                >
-                    <Icon source='minus' size={24} color={iconColor} />
-                    <ThemedText  style={{ fontFamily: 'Inter-Light', fontSize: 16 }}>
-                    Registrar Salida
-                    </ThemedText>
-                </Pressable>
-                </View>
-            )}
-            </View>
-        )}
-        </ScrollView>
-    </ThemedView>
+                  </View>
+              )}
+              </View>
+          )}
+          
+          {showRegisters && (
+              <View className='flex-row justify-center gap-4'>
+              <Pressable
+                  className='p-4 rounded-lg w-[45%] gap-1'
+                  onPress={() => {
+                      setShowRegisters(false);
+                      setShowCamera(true);
+                      setTipoFlujo('Ingreso');
+                  }}
+                  style={{ backgroundColor: backIconColor }}
+              >
+                  <Icon source='plus' size={24} color={iconColor} />
+                  <ThemedText style={{ fontFamily: 'Inter-Light', fontSize: 16 }}>
+                      Registrar Ingreso
+                  </ThemedText>
+              </Pressable>
+              <Pressable
+                  className='p-4 rounded-lg w-[45%] gap-1'
+                  onPress={() => {
+                      setShowRegisters(false);
+                      setShowCamera(true);
+                      setTipoFlujo('Salida');
+                  }}
+                  style={{ backgroundColor: backIconColor }}
+              >
+                  <Icon source='minus' size={24} color={iconColor} />
+                  <ThemedText  style={{ fontFamily: 'Inter-Light', fontSize: 16 }}>
+                  Registrar Salida
+                  </ThemedText>
+              </Pressable>
+              </View>
+          )}
+          </View>
+      )}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
