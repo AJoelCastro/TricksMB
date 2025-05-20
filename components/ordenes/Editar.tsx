@@ -301,26 +301,6 @@ const EditarOrden: React.FC = () => {
     }
   };
 
-  const cargarModelosPorId = async () => {
-    try {
-      setDataModelos([]);
-      if (!tipoCalzado) return;
-      
-      const modelos = await ModeloService.getAllModeloById(tipoCalzado.idTipo);
-      const modelosConImagenes = await Promise.all(
-        modelos.modelo.map(async (modelo: any) => {
-          const imagen = await ModeloService.getImagenById(modelo.idModelo);
-          return {
-            ...modelo,
-            imagenes: imagen?.imagen?.map((img: any) => img.Url) || []
-          };
-        })
-      );
-      setDataModelos(modelosConImagenes);
-    } catch (error) {
-      mostrarError(error as Error);
-    }
-  };
 
   const cargarDetallePedido = async () => {
     try {
@@ -384,9 +364,24 @@ const EditarOrden: React.FC = () => {
         }
       }
 
-      console.log("filas",filas)
-      console.log("filasC",filasCreadas)
-      console.log("filasE",filasEliminadas)
+      // Procesar filas nuevas
+      for (const fila of filasCreadas) {
+        if (!fila.id || filas.some(f => f.id !== fila.id)) continue;
+
+        const datosCaracteristicas = {
+          idDetallePedido: idDetallePedido,
+          talla: fila.talla,
+          cantidad: fila.pares,
+          color: fila.color,
+        };
+
+        if (!Object.values(datosCaracteristicas).every(valor => valor && valor.toString().trim() !== '')) {
+          Alert.alert('Error', 'Por favor, completa todos los campos de las nuevas características.');
+          return;
+        }
+
+        await CaracteristicasService.crearCaracteristicas(datosCaracteristicas);
+      }
       // Procesar filas existentes
       for (const fila of filas) {
         const datosCaracteristicas = {
@@ -410,26 +405,9 @@ const EditarOrden: React.FC = () => {
 
         await CaracteristicasService.editCaracteristicas(datosCaracteristicas);
       }
-
-      // Procesar filas nuevas
-      for (const fila of filasCreadas) {
-        if (!fila.id || filas.some(f => f.id === fila.id)) continue;
-
-        const datosCaracteristicas = {
-          idDetallePedido: idDetallePedido,
-          talla: fila.talla,
-          cantidad: fila.pares,
-          color: fila.color,
-        };
-
-        if (!Object.values(datosCaracteristicas).every(valor => valor && valor.toString().trim() !== '')) {
-          Alert.alert('Error', 'Por favor, completa todos los campos de las nuevas características.');
-          return;
-        }
-
-        await CaracteristicasService.crearCaracteristicas(datosCaracteristicas);
-      }
-
+      console.log("filas",filas)
+      console.log("filasC",filasCreadas)
+      console.log("filasE",filasEliminadas)
       // Actualizar pedido principal
       const actualizar = await DetallePedidoService.updateDetallePedido(
         codigoPedido,

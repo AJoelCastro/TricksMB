@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -12,7 +12,7 @@ import {
   Alert,
   Dimensions,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { Divider, TextInput, Icon } from 'react-native-paper';
 
 import DetallePedidoService from '@/services/DetallePedidoService';
@@ -130,40 +130,42 @@ const IndexActualizarOrden = () => {
     }
   };
 
-  useEffect(() => {
-    const obtenerAreaTrabajo = async () => {
-      if (estado === 'Proceso') {
-        try {
-          const codigoPedido = codigoOrden;
-          const dataDetalleAreaTrabajo =
-            await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
-          let mayor = 0;
-          for (const item of dataDetalleAreaTrabajo.detallesAreaTrabajo) {
-            if (item.Area_trabajo_idArea_trabajo > mayor) {
-              mayor = item.Area_trabajo_idArea_trabajo;
-            }
+  const obtenerAreaTrabajo = async () => {
+    if (estado === 'Proceso') {
+      try {
+        const codigoPedido = codigoOrden;
+        const dataDetalleAreaTrabajo =
+          await DetalleAreaTrabajoService.obtenerTodos(codigoPedido);
+        let mayor = 0;
+        for (const item of dataDetalleAreaTrabajo.detallesAreaTrabajo) {
+          if (item.Area_trabajo_idArea_trabajo > mayor) {
+            mayor = item.Area_trabajo_idArea_trabajo;
           }
-          switch (mayor) {
-            case 1:
-              setAreaTrabajo('corte');
-              break;
-            case 2:
-              setAreaTrabajo('perfilado');
-              break;
-            case 3:
-              setAreaTrabajo('armado');
-              break;
-            case 4:
-              setAreaTrabajo('alistado');
-              break;
-          }
-        } catch (error) {
-          ShowError(error as Error);
         }
+        switch (mayor) {
+          case 1:
+            setAreaTrabajo('corte');
+            break;
+          case 2:
+            setAreaTrabajo('perfilado');
+            break;
+          case 3:
+            setAreaTrabajo('armado');
+            break;
+          case 4:
+            setAreaTrabajo('alistado');
+            break;
+        }
+      } catch (error) {
+        ShowError(error as Error);
       }
-    };
-    obtenerAreaTrabajo();
-  }, [estado]);
+    }
+  };
+  useFocusEffect(
+    useCallback(() => {
+      obtenerAreaTrabajo();
+    },[estado])
+  )
 
   const verificarProceso = async () => {
     try {
