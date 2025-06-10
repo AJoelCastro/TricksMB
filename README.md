@@ -76,7 +76,7 @@ Desde el menú principal, el usuario puede navegar entre las siguientes seccione
 #### Inventario General
 
 <p align="center">
-  <img src="./assets/readme/Inventario.jpeg" alt="Inventario General" width="500"/>
+  <img src="./assets/readme/Inventario.jpeg" alt="Inventario General" width="200" heigth="600"/>
 </p>
 ---
 
