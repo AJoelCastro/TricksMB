@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-
+import { ClerkProvider } from '@clerk/clerk-expo'
 import { AuthProvider } from '../contexts/AuthContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -13,7 +13,7 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const { background, text } = useAppColors();
   return (
-    <AuthProvider>
+    <ClerkProvider>
       <PaperProvider>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           <Stack>
@@ -45,6 +45,6 @@ export default function RootLayout() {
           </Stack>
         </ThemeProvider>
       </PaperProvider>
-    </AuthProvider>
+    </ClerkProvider>
   );
 }
