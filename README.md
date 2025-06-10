@@ -57,10 +57,10 @@ Desde el menú principal, el usuario puede navegar entre las siguientes seccione
 | Login                          | Menú                             | Inventario                      | Historial de Pedidos             | Crear Cliente             |
 |-------------------------------|----------------------------------|----------------------------------|----------------------------------|----------------------------------|
 | ![Login](./assets/readme/login.jpeg) | ![Menú](./assets/readme/drawer.jpeg)  | ![Inventario](./assets/readme/Inventario.jpeg) | ![Historial](./assets/readme/historial.jpeg) | ![Cliente](./assets/readme/crearCliente.jpeg) |
-| Almacen                          | Ordenes                             | Actualizar                      | Actualizar Orden             |
-| ![Almacen](./assets/readme/almacenes.jpeg) | ![CrearOrden](./assets/readme/ordenes.jpeg)  | ![Actualizar1](./assets/readme/opActualizar.jpeg) | ![Actualizar2](./assets/readme/opActualizar2.jpeg) |
-| Actualizar orden 1                          | Actualizar orden 2                            | Crear Datos en la BD                      | Detalle Almacen             |
-| ![Almacen](./assets/readme/opActualizar2.jpeg) | ![CrearOrden](./assets/readme/opActualizar3.jpeg)  | ![Actualizar1](./assets/readme/datos.jpeg) | ![Actualizar2](./assets/readme/detalle_almacen.jpeg) |
+| Almacen                          | Ordenes                             | Actualizar                      | Actualizar Orden             | Usuario                      |
+| ![Almacen](./assets/readme/almacenes.jpeg) | ![CrearOrden](./assets/readme/ordenes.jpeg)  | ![Actualizar1](./assets/readme/opActualizar.jpeg) | ![Actualizar2](./assets/readme/opActualizar2.jpeg) | ![Usuario](./assets/readme/dashboard.jpeg) |
+| Actualizar orden 1                          | Actualizar orden 2                            | Crear Datos en la BD                      | Detalle Almacen             | Ingresos y Salidas              |
+| ![Almacen](./assets/readme/opActualizar2.jpeg) | ![CrearOrden](./assets/readme/opActualizar3.jpeg)  | ![Actualizar1](./assets/readme/datos.jpeg) | ![Actualizar2](./assets/readme/detalle_almacen.jpeg) | ![Actualizar2](./assets/readme/ingresos_salidas.jpeg) |
 
 ---
 
