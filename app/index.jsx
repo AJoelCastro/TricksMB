@@ -66,9 +66,9 @@ const Home = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       
       <SafeAreaView className='flex-1 h-full ' style={{position:'relative', backgroundColor: background}}>
-        <View  style={{ height: '20%' }} >
+        <View  style={{ height: '35%' }} >
           <Image
-            source={require('@/assets/images/TricksLogo.png')}
+            source={require('@/assets/images/tricks_logo_white.svg')}
             style={{
               width: '100%',
               height: '100%',

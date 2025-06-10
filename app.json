@@ -4,7 +4,7 @@
     "slug": "tricksapp",
     "version": "1.0.0",
     "orientation": "default",
-    "icon": "./assets/images/TricksLogo.png",
+    "icon": "./assets/images/tricks_logo_black.svg",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -26,7 +26,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/TricksLogo.png",
+        "foregroundImage": "./assets/images/tricks_logo_black.svg",
         "backgroundColor": "#ffffff"
       },
       "softwareKeyboardLayoutMode": "resize",
@@ -46,7 +46,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/TricksLogo.png",
+          "image": "./assets/images/tricks_logo_black.svg",
           "contenFit": "cover",
           "backgroundColor": "#000000"
         }
