@@ -73,10 +73,11 @@ Desde el menú principal, el usuario puede navegar entre las siguientes seccione
 |-----------|---------------------|---------------------|
 | ![Almacén](./assets/readme/almacenes.jpeg) | ![Detalle](./assets/readme/detalle_almacen.jpeg) | ![Entradas y Salidas](./assets/readme/ingresos_salidas.jpeg) |
 
-| Inventario General |
-|--------------------|
-| ![Inventario](./assets/readme/Inventario.jpeg) |
+#### Inventario General
 
+<p align="center">
+  <img src="./assets/readme/Inventario.jpeg" alt="Inventario General" width="200" heigth="600"/>
+</p>
 ---
 
 ### 🏭 Órdenes de Producción
